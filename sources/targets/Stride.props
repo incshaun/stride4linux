@@ -10,6 +10,10 @@
   <!--Import Stride settings-->
   <Import Project="$(MSBuildThisFileDirectory)Stride.Core.props"/>
 
+  <Target Name="PrintInfo" BeforeTargets="BeforeBuild">
+  <Message Text="Build with: $(TargetFramework) $(StridePlatforms) $(StridePlatform) $(StrideGraphicsApis) $(RuntimeIdentifier) $(StrideSdkTargets)" Importance="high"/>
+  </Target>
+  
   <!-- Default GraphicsApi -->
   <PropertyGroup>
     <!-- When working in a specific API in the Stride Runtime or in the Stride solution (not in a game or app),
@@ -81,11 +85,11 @@
 
   <PropertyGroup>
     <StrideUI Condition="'$(TargetFramework)' != '$(StrideFrameworkUWP)'">SDL</StrideUI>
-    <StrideUI Condition="'$(TargetFramework)' == '$(StrideFrameworkWindows)' AND ('$(StrideGraphicsApi)' == 'Direct3D11' Or '$(StrideGraphicsApi)' == 'Direct3D12')">$(StrideUI);WINFORMS;WPF</StrideUI>
+<!--    <StrideUI Condition="'$(TargetFramework)' == '$(StrideFrameworkWindows)' AND ('$(StrideGraphicsApi)' == 'Direct3D11' Or '$(StrideGraphicsApi)' == 'Direct3D12')">$(StrideUI);WINFORMS;WPF</StrideUI>-->
 
     <DefineConstants Condition="$(StrideUI.Contains('SDL'))">$(DefineConstants);STRIDE_UI_SDL</DefineConstants>
     <DefineConstants Condition="$(StrideUI.Contains('WINFORMS'))">$(DefineConstants);STRIDE_UI_WINFORMS</DefineConstants>
-    <DefineConstants Condition="$(StrideUI.Contains('WPF'))">$(DefineConstants);STRIDE_UI_WPF</DefineConstants>
+<!--    <DefineConstants Condition="$(StrideUI.Contains('WPF'))">$(DefineConstants);STRIDE_UI_WPF</DefineConstants>-->
   </PropertyGroup>
   <!-- Build the StrideUIList using the value of StrideUI -->
   <ItemGroup Condition="'$(StrideUIList)' == ''">
@@ -97,7 +101,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ExecutableExtension Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</ExecutableExtension>
+<!--    <ExecutableExtension Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</ExecutableExtension>-->
+    <ExecutableExtension></ExecutableExtension>
   </PropertyGroup>
 
   <!-- Pack target -->

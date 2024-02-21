@@ -23,7 +23,7 @@ namespace Stride.EffectCompilerServer
     {
         private readonly Dictionary<string, SocketMessageLayer> gameStudioPerPackageName = new Dictionary<string, SocketMessageLayer>();
 
-        public EffectCompilerServer() : base($"/service/Stride.EffectCompilerServer/{StrideVersion.NuGetVersion}/Stride.EffectCompilerServer.exe")
+        public EffectCompilerServer() : base($"/service/Stride.EffectCompilerServer/{StrideVersion.NuGetVersion}/Stride.EffectCompilerServer")
         {
             // TODO: Asynchronously initialize Irony grammars to improve first compilation request performance?
         }
@@ -31,67 +31,67 @@ namespace Stride.EffectCompilerServer
         /// <inheritdoc/>
         protected override async void HandleClient(SimpleSocket clientSocket, string url)
         {
-            string[] urlSegments;
-            string urlParameters;
-            RouterHelper.ParseUrl(url, out urlSegments, out urlParameters);
-            var parameters = RouterHelper.ParseQueryString(urlParameters);
-            var mode = parameters["mode"];
-
-            // We accept everything
-            await AcceptConnection(clientSocket);
-
-            var socketMessageLayer = new SocketMessageLayer(clientSocket, true);
-
-            string packageName = parameters["packagename"];
-
-            if (mode == "gamestudio")
-            {
-                Console.WriteLine(@"GameStudio mode started!");
-
-                if (packageName == null)
-                    return;
-
-                lock (gameStudioPerPackageName)
-                {
-                    gameStudioPerPackageName[packageName] = socketMessageLayer;
-                }
-            }
-            else
-            {
-
-                Console.WriteLine(@"Client connected");
-
-                // Make a VFS that will access remotely the DatabaseFileProvider
-                // TODO: Is that how we really want to do that in the future?
-                var networkVFS = new NetworkVirtualFileProvider(socketMessageLayer, "/asset");
-                VirtualFileSystem.RegisterProvider(networkVFS);
-
-                // Create an effect compiler per connection
-                var effectCompiler = new EffectCompiler(networkVFS);
-                // TODO: This should come from an "init" packet
-                effectCompiler.SourceDirectories.Add(EffectCompilerBase.DefaultSourceShaderFolder);
-                effectCompiler.FileProvider = networkVFS;
-
-                socketMessageLayer.AddPacketHandler<RemoteEffectCompilerEffectRequest>(packet => ShaderCompilerRequestHandler(socketMessageLayer, effectCompiler, packet));
-
-                socketMessageLayer.AddPacketHandler<RemoteEffectCompilerEffectRequested>(packet =>
-                {
-                    if (packageName == null)
-                        return;
-
-                    SocketMessageLayer gameStudio;
-                    lock (gameStudioPerPackageName)
-                    {
-                        if (!gameStudioPerPackageName.TryGetValue(packageName, out gameStudio))
-                            return;
-                    }
-
-                    // Forward to game studio
-                    gameStudio.Send(packet);
-                });
-            }
-
-            Task.Run(() => socketMessageLayer.MessageLoop());
+//             string[] urlSegments;
+//             string urlParameters;
+//             RouterHelper.ParseUrl(url, out urlSegments, out urlParameters);
+//             var parameters = RouterHelper.ParseQueryString(urlParameters);
+//             var mode = parameters["mode"];
+// 
+//             // We accept everything
+//             await AcceptConnection(clientSocket);
+// 
+//             var socketMessageLayer = new SocketMessageLayer(clientSocket, true);
+// 
+//             string packageName = parameters["packagename"];
+// 
+//             if (mode == "gamestudio")
+//             {
+//                 Console.WriteLine(@"GameStudio mode started!");
+// 
+//                 if (packageName == null)
+//                     return;
+// 
+//                 lock (gameStudioPerPackageName)
+//                 {
+//                     gameStudioPerPackageName[packageName] = socketMessageLayer;
+//                 }
+//             }
+//             else
+//             {
+// 
+//                 Console.WriteLine(@"Client connected");
+// 
+//                 // Make a VFS that will access remotely the DatabaseFileProvider
+//                 // TODO: Is that how we really want to do that in the future?
+//                 var networkVFS = new NetworkVirtualFileProvider(socketMessageLayer, "/asset");
+//                 VirtualFileSystem.RegisterProvider(networkVFS);
+// 
+//                 // Create an effect compiler per connection
+//                 var effectCompiler = new EffectCompiler(networkVFS);
+//                 // TODO: This should come from an "init" packet
+//                 effectCompiler.SourceDirectories.Add(EffectCompilerBase.DefaultSourceShaderFolder);
+//                 effectCompiler.FileProvider = networkVFS;
+// 
+//                 socketMessageLayer.AddPacketHandler<RemoteEffectCompilerEffectRequest>(packet => ShaderCompilerRequestHandler(socketMessageLayer, effectCompiler, packet));
+// 
+//                 socketMessageLayer.AddPacketHandler<RemoteEffectCompilerEffectRequested>(packet =>
+//                 {
+//                     if (packageName == null)
+//                         return;
+// 
+//                     SocketMessageLayer gameStudio;
+//                     lock (gameStudioPerPackageName)
+//                     {
+//                         if (!gameStudioPerPackageName.TryGetValue(packageName, out gameStudio))
+//                             return;
+//                     }
+// 
+//                     // Forward to game studio
+//                     gameStudio.Send(packet);
+//                 });
+//             }
+// 
+//             Task.Run(() => socketMessageLayer.MessageLoop());
         }
 
         private static async Task ShaderCompilerRequestHandler(SocketMessageLayer socketMessageLayer, EffectCompiler effectCompiler, RemoteEffectCompilerEffectRequest remoteEffectCompilerEffectRequest)

@@ -71,7 +71,7 @@ namespace Stride.Shaders.Compiler
 
         public async Task<SocketMessageLayer> Connect(string packageName, CancellationToken cancellationToken)
         {
-            var url = $"/service/Stride.EffectCompilerServer/{StrideVersion.NuGetVersion}/Stride.EffectCompilerServer.exe";
+            var url = $"/service/Stride.EffectCompilerServer/{StrideVersion.NuGetVersion}/Stride.EffectCompilerServer";
             if (packageName != null)
                 url += string.Format("?packagename={0}", packageName);
 

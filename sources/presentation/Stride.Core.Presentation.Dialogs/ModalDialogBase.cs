@@ -3,7 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.WindowsAPICodePack.Dialogs;
+// using Microsoft.WindowsAPICodePack.Dialogs;
 using Stride.Core.Annotations;
 using Stride.Core.Presentation.Services;
 
@@ -12,7 +12,7 @@ namespace Stride.Core.Presentation.Dialogs
     public abstract class ModalDialogBase : IModalDialogInternal
     {
         private readonly IDispatcherService dispatcher;
-        protected CommonFileDialog Dialog;
+//         protected CommonFileDialog Dialog;
 
         protected ModalDialogBase([NotNull] IDispatcherService dispatcher)
         {
@@ -36,7 +36,7 @@ namespace Stride.Core.Presentation.Dialogs
         [NotNull]
         protected Task InvokeDialog()
         {
-            return dispatcher.InvokeAsync(() =>
+   /*         return dispatcher.InvokeAsync(() =>
             {
                 var result = Dialog.ShowDialog();
                 switch (result)
@@ -53,8 +53,10 @@ namespace Stride.Core.Presentation.Dialogs
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            });
+            });*/
+   return null;
         }
+            
 
         [NotNull]
         public abstract Task<DialogResult> ShowModal();

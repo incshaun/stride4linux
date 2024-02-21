@@ -78,29 +78,29 @@ namespace Stride.Core.Assets
                             Thread.Sleep(500);
                             if (!dialogNotNeeded.Task.IsCompleted)
                             {
-                                var splashScreen = new Stride.NuGetResolver.SplashScreenWindow();
-                                splashScreen.Show();
+//                                 var splashScreen = new Stride.NuGetResolver.SplashScreenWindow();
+//                                 splashScreen.Show();
 
                                 // Register log
-                                logger.SetupLogAction((level, message) =>
-                                {
-                                    splashScreen.Dispatcher.InvokeAsync(() =>
-                                    {
-                                        splashScreen.AppendMessage(level, message);
-                                    });
-                                });
-
-                                dialogNotNeeded.Task.ContinueWith(t =>
-                                {
-                                    splashScreen.Dispatcher.Invoke(() => splashScreen.Close());
-                                });
-
-                                splashScreen.Closed += (sender2, e2) =>
-                                    splashScreen.Dispatcher.InvokeShutdown();
-
-                                System.Windows.Threading.Dispatcher.Run();
-
-                                splashScreen.Close();
+//                                 logger.SetupLogAction((level, message) =>
+//                                 {
+//                                     splashScreen.Dispatcher.InvokeAsync(() =>
+//                                     {
+//                                         splashScreen.AppendMessage(level, message);
+//                                     });
+//                                 });
+// 
+//                                 dialogNotNeeded.Task.ContinueWith(t =>
+//                                 {
+//                                     splashScreen.Dispatcher.Invoke(() => splashScreen.Close());
+//                                 });
+// 
+//                                 splashScreen.Closed += (sender2, e2) =>
+//                                     splashScreen.Dispatcher.InvokeShutdown();
+// 
+//                                 System.Windows.Threading.Dispatcher.Run();
+// 
+//                                 splashScreen.Close();
                             }
                             dialogClosed.SetResult(true);
                         });

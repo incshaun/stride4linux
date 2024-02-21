@@ -3,12 +3,12 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Windows;
+//using System.Windows;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using System.Windows.Markup;
+//using System.Windows.Markup;
 
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -25,6 +25,7 @@ using System.Windows.Markup;
 
 //[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
 [assembly: InternalsVisibleTo("Stride.GameStudio")]
+[assembly: InternalsVisibleTo("Stride.GameStudio.Avalonia")]
 [assembly: InternalsVisibleTo("Stride.Core.Assets.Editor.Tests")]
 
 [assembly: ThemeInfo(

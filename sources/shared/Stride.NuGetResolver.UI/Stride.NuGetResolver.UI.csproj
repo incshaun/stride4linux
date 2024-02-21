@@ -5,11 +5,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <StrideBuildTags>WindowsTools</StrideBuildTags>
-    <UseWPF>true</UseWPF>
+    <UseWPF>false</UseWPF>
     <DefineConstants>STRIDE_NUGET_RESOLVER_UI;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
+  <Compile Remove="SplashScreenWindow.xaml.cs" />
     <Compile Include="..\Stride.NuGetResolver\NuGetAssemblyResolver.cs" Link="NuGetAssemblyResolver.cs" />
     <Compile Include="..\Stride.NuGetResolver\RestoreHelper.cs" Link="RestoreHelper.cs" />
   </ItemGroup>

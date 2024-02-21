@@ -6,21 +6,21 @@ using Stride.Core.Annotations;
 
 namespace Stride.Core.Translation.Presentation.ValueConverters
 {
-    public class Translate : LocalizableConverter<Translate>
-    {
-        public string Context { get; set; }
-
-        /// <inheritdoc />
-        [NotNull]
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var text = value?.ToString();
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-
-            return string.IsNullOrEmpty(Context)
-                ? TranslationManager.Instance.GetString(text, Assembly)
-                : TranslationManager.Instance.GetParticularString(Context, text, Assembly);
-        }
-    }
+//     public class Translate : LocalizableConverter<Translate>
+//     {
+//         public string Context { get; set; }
+// 
+//         /// <inheritdoc />
+//         [NotNull]
+//         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+//         {
+//             var text = value?.ToString();
+//             if (string.IsNullOrEmpty(text))
+//                 return string.Empty;
+// 
+//             return string.IsNullOrEmpty(Context)
+//                 ? TranslationManager.Instance.GetString(text, Assembly)
+//                 : TranslationManager.Instance.GetParticularString(Context, text, Assembly);
+//         }
+//     }
 }

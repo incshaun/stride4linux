@@ -16,7 +16,6 @@
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>_StrideIncludeNuGetResolver;$(TargetsForTfmSpecificBuildOutput)</TargetsForTfmSpecificBuildOutput>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.config;.exe</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <UseWPF Condition="'$(StrideNuGetResolverUI)' == 'true'">true</UseWPF>
   </PropertyGroup>
   <PropertyGroup>
   </PropertyGroup>

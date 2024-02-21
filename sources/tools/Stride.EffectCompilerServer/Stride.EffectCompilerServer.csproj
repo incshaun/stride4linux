@@ -7,11 +7,14 @@
     <TargetFramework>$(StrideEditorTargetFramework)</TargetFramework>
     <StrideBuildTags>WindowsTools</StrideBuildTags>
     <StrideAssemblyProcessor>true</StrideAssemblyProcessor>
+    <StrideSkipAutoPack>true</StrideSkipAutoPack>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../Stride.ConnectionRouter/RouterServiceServer.cs" Link="RouterServiceServer.cs" />
+    <Compile Include="../Stride.ConnectionRouter/RouterMessage.cs" Link="RouterMessage.cs" />
     <PackageReference Include="Mono.Options" />
   </ItemGroup>
   <ItemGroup>
@@ -21,7 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\engine\Stride.Assets\Stride.Assets.csproj" />
-    <ProjectReference Include="..\Stride.ConnectionRouter\Stride.ConnectionRouter.csproj" />
+<!--     <ProjectReference Include="..\Stride.ConnectionRouter\Stride.ConnectionRouter.csproj" /> -->
   </ItemGroup>
   <Import Project="..\..\shared\Stride.NuGetResolver.Targets\Stride.NuGetResolver.Targets.projitems" Label="Shared" />
   <Import Project="$(StrideSdkTargets)" />

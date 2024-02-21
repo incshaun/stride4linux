@@ -25,7 +25,7 @@
 
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>_StrideIncludeExtraAssemblies;$(TargetsForTfmSpecificBuildOutput)</TargetsForTfmSpecificBuildOutput>
-    <TargetsForTfmSpecificContentInPackage>_StrideIncludeNativeLibs;$(TargetsForTfmSpecificContentInPackage)</TargetsForTfmSpecificContentInPackage>
+<!--    <TargetsForTfmSpecificContentInPackage>_StrideIncludeNativeLibs;$(TargetsForTfmSpecificContentInPackage)</TargetsForTfmSpecificContentInPackage>-->
   </PropertyGroup>
   
   <Target Name="_StrideIncludeExtraAssemblies">
@@ -33,15 +33,15 @@
       <!-- Needed by .NET Core runtime to be able to load C++/CLI assemblies -->
       <BuildOutputInPackage Include="$(OutputPath)ijwhost.dll" Condition="Exists('$(OutputPath)ijwhost.dll')" />
       <BuildOutputInPackage Include="$(OutputPath)Stride.Importer.Assimp.dll" />
-      <BuildOutputInPackage Include="$(OutputPath)Stride.Importer.FBX.dll" />
-      <BuildOutputInPackage Include="$(OutputPath)Stride.Importer.FBX.ssdeps" />
+<!--       <BuildOutputInPackage Include="$(OutputPath)Stride.Importer.FBX.dll" /> -->
+<!--       <BuildOutputInPackage Include="$(OutputPath)Stride.Importer.FBX.ssdeps" /> -->
       <BuildOutputInPackage Include="$(OutputPath)Stride.Importer.Common.dll" />
     </ItemGroup>
   </Target>
 
-  <Target Name="_StrideIncludeNativeLibs">
+<!--  <Target Name="_StrideIncludeNativeLibs">
     <ItemGroup>
       <TfmSpecificPackageFile Include="$(OutputPath)runtimes\win-x64\native\libfbxsdk.dll" PackagePath="runtimes\win-x64\native\libfbxsdk.dll" />
     </ItemGroup>
-  </Target>
+  </Target>-->
 </Project>

@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.Collections.Generic;
-using System.Windows;
+//using System.Windows;
 using Stride.Core.Annotations;
 
 namespace Stride.Core.Presentation.View
@@ -44,7 +44,7 @@ namespace Stride.Core.Presentation.View
         /// <summary>
         /// Gets or sets the template associated with this <see cref="ITemplateProvider"/>
         /// </summary>
-        DataTemplate Template { get; set; }
+        object Template { get; set; }
         
         /// <summary>
         /// Gets or sets the rule to use when this provider can potentially override other providers that matches the same object.

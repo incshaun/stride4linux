@@ -7,7 +7,8 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
+// using System.Windows;
+using Avalonia;
 using Stride.Core;
 using Stride.Core.Annotations;
 using Stride.Core.Extensions;
@@ -320,7 +321,7 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         public object GetDynamicObject(string name)
         {
             name = EscapeName(name);
-            return GetChild(name) ?? GetCommand(name) ?? GetAssociatedData(name) ?? DependencyProperty.UnsetValue;
+            return GetChild(name) ?? GetCommand(name) ?? GetAssociatedData(name) ?? AvaloniaProperty.UnsetValue;
         }
 
         /// <inheritdoc/>

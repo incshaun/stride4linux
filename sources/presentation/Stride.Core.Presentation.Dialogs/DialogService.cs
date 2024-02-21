@@ -51,100 +51,117 @@ namespace Stride.Core.Presentation.Dialogs
 
         public async Task<MessageBoxResult> MessageBoxAsync(string message, MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
         {
-            return (MessageBoxResult)await DialogHelper.MessageBox(Dispatcher, message, ApplicationName, IDialogService.GetButtons(buttons), image);
+//             return (MessageBoxResult)await DialogHelper.MessageBox(Dispatcher, message, ApplicationName, IDialogService.GetButtons(buttons), image);
+                                    return MessageBoxResult.None;
+
         }
 
         public Task<int> MessageBoxAsync(string message, IReadOnlyCollection<DialogButtonInfo> buttons, MessageBoxImage image = MessageBoxImage.None)
         {
-            return DialogHelper.MessageBox(Dispatcher, message, ApplicationName, buttons, image);
+//              return DialogHelper.MessageBox(Dispatcher, message, ApplicationName, buttons, image);
+             return Task.FromResult (0);
+
         }
 
         public async Task<CheckedMessageBoxResult> CheckedMessageBoxAsync(string message, bool? isChecked, string checkboxMessage, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
         {
-            return await DialogHelper.CheckedMessageBox(Dispatcher, message, ApplicationName, isChecked, checkboxMessage, IDialogService.GetButtons(button), image);
+//             return await DialogHelper.CheckedMessageBox(Dispatcher, message, ApplicationName, isChecked, checkboxMessage, IDialogService.GetButtons(button), image);
+                                    return new CheckedMessageBoxResult (MessageBoxResult.None, false);
+
         }
 
         public Task<CheckedMessageBoxResult> CheckedMessageBoxAsync(string message, bool? isChecked, string checkboxMessage, IReadOnlyCollection<DialogButtonInfo> buttons, MessageBoxImage image = MessageBoxImage.None)
         {
-            return DialogHelper.CheckedMessageBox(Dispatcher, message, ApplicationName, isChecked, checkboxMessage, buttons, image);
+//             return DialogHelper.CheckedMessageBox(Dispatcher, message, ApplicationName, isChecked, checkboxMessage, buttons, image);
+                                    return Task.FromResult(new CheckedMessageBoxResult (MessageBoxResult.None, false));
+
         }
 
         public MessageBoxResult BlockingMessageBox(string message, MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
         {
-            return (MessageBoxResult)DialogHelper.BlockingMessageBox(Dispatcher, message, ApplicationName, IDialogService.GetButtons(buttons), image);
+//             return (MessageBoxResult)DialogHelper.BlockingMessageBox(Dispatcher, message, ApplicationName, IDialogService.GetButtons(buttons), image);
+                                    return MessageBoxResult.None;
+
         }
 
         public int BlockingMessageBox(string message, IEnumerable<DialogButtonInfo> buttons, MessageBoxImage image = MessageBoxImage.None)
         {
-            return DialogHelper.BlockingMessageBox(Dispatcher, message, ApplicationName, buttons, image);
+//             return DialogHelper.BlockingMessageBox(Dispatcher, message, ApplicationName, buttons, image);
+                                    return 0;
+
         }
 
         public CheckedMessageBoxResult BlockingCheckedMessageBox(string message, bool? isChecked, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
         {
-            return BlockingCheckedMessageBox(message, isChecked, DialogHelper.DontAskAgain, button, image);
+//             return BlockingCheckedMessageBox(message, isChecked, DialogHelper.DontAskAgain, button, image);
+                                    return new CheckedMessageBoxResult (MessageBoxResult.None, false);
+
         }
 
         public CheckedMessageBoxResult BlockingCheckedMessageBox(string message, bool? isChecked, string checkboxMessage, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
         {
-            return DialogHelper.BlockingCheckedMessageBox(Dispatcher, message, ApplicationName, isChecked, checkboxMessage, IDialogService.GetButtons(button), image);
+//             return DialogHelper.BlockingCheckedMessageBox(Dispatcher, message, ApplicationName, isChecked, checkboxMessage, IDialogService.GetButtons(button), image);
+                        return new CheckedMessageBoxResult (MessageBoxResult.None, false);
+
         }
 
         public CheckedMessageBoxResult BlockingCheckedMessageBox(string message, bool? isChecked, string checkboxMessage, IEnumerable<DialogButtonInfo> buttons, MessageBoxImage image = MessageBoxImage.None)
         {
-            return DialogHelper.BlockingCheckedMessageBox(Dispatcher, message, ApplicationName, isChecked, checkboxMessage, buttons, image);
+//             return DialogHelper.BlockingCheckedMessageBox(Dispatcher, message, ApplicationName, isChecked, checkboxMessage, buttons, image);
+                        return new CheckedMessageBoxResult (MessageBoxResult.None, false);
         }
 
         public async Task CloseMainWindow(Action onClosed)
         {
-            if (Application.Current.MainWindow is { } window)
-            {
-                if (window is IAsyncClosableWindow asyncClosable)
-                {
-                    var closed = await asyncClosable.TryClose();
-                    if (closed)
-                    {
-                        onClosed?.Invoke();
-                    }
-                }
-                else
-                {
-                    onClosedAction = onClosed;
-                    window.Closing -= MainWindowClosing;
-                    window.Closing += MainWindowClosing;
-                    window.Closed -= MainWindowClosed;
-                    window.Closed += MainWindowClosed;
-                    window.Close();
-                }
-            }
+//             if (Application.Current.MainWindow is { } window)
+//             {
+//                 if (window is IAsyncClosableWindow asyncClosable)
+//                 {
+//                     var closed = await asyncClosable.TryClose();
+//                     if (closed)
+//                     {
+//                         onClosed?.Invoke();
+//                     }
+//                 }
+//                 else
+//                 {
+//                     onClosedAction = onClosed;
+//                     window.Closing -= MainWindowClosing;
+//                     window.Closing += MainWindowClosing;
+//                     window.Closed -= MainWindowClosed;
+//                     window.Closed += MainWindowClosed;
+//                     window.Close();
+//                 }
+//             }
         }
 
         private void MainWindowClosing(object sender, CancelEventArgs e)
         {
-            ((Window)sender).Closing -= MainWindowClosing;
-            if (e.Cancel)
-            {
-                ((Window)sender).Closed -= MainWindowClosed;
-            }
+//             ((Window)sender).Closing -= MainWindowClosing;
+//             if (e.Cancel)
+//             {
+//                 ((Window)sender).Closed -= MainWindowClosed;
+//             }
         }
 
         private void MainWindowClosed(object sender, EventArgs e)
         {
-            ((Window)sender).Closed -= MainWindowClosed;
-            onClosedAction?.Invoke();
+//             ((Window)sender).Closed -= MainWindowClosed;
+//             onClosedAction?.Invoke();
         }
 
-        bool IDialogService.HasMainWindow => Application.Current.MainWindow is not null;
+        bool IDialogService.HasMainWindow => false;/*Application.Current.MainWindow is not null;*/
 
         void IDialogService.Exit(int exitCode)
         {
-            if (Application.Current is { } app)
-            {
-                app.Shutdown(exitCode);
-            }
-            else
-            {
-                Environment.Exit(exitCode);
-            }
+//             if (Application.Current is { } app)
+//             {
+//                 app.Shutdown(exitCode);
+//             }
+//             else
+//             {
+//                 Environment.Exit(exitCode);
+//             }
         }
 
         async Task<UFile> IDialogService.OpenFilePickerAsync(UDirectory initialPath, IReadOnlyList<FilePickerFilter> filters)

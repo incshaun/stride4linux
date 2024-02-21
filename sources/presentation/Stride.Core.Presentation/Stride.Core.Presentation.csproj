@@ -9,9 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+  <PackageReference Include="Avalonia" />
     <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+        <Compile Include="../../presentation/Stride.Core.Presentation.Wpf/Collections/ObservableSet.cs" Link="ObservableSet.cs" />
+        <Compile Include="../../presentation/Stride.Core.Presentation.Wpf/Collections/NonGenericObservableListWrapper.cs" Link="NonGenericObservableListWrapper.cs" />
+        <Compile Include="../../presentation/Stride.Core.Presentation.Wpf/Collections/NonGenericObservableCollectionWrapper.cs" Link="NonGenericObservableCollectionWrapper.cs" />
+
   </ItemGroup>
 
   <ItemGroup>

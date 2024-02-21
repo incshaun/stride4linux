@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Stride.Core.Assets.Editor.ViewModel;
+// using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.IO;
 using Stride.Core.Settings;
 using Stride.Core.Yaml;
@@ -21,8 +21,8 @@ namespace Stride.Core.Assets.Editor.Settings
         public static SettingsKey<string> FileDialogLastImportDirectory = new SettingsKey<string>("Internal/FileDialogLastImportDirectory", SettingsContainer, "");
         public static SettingsKey<string> FileDialogLastOpenSessionDirectory = new SettingsKey<string>("Internal/FileDialogLastOpenSessionDirectory", SettingsContainer, "");
         public static SettingsKey<string> TemplatesWindowDialogLastNewSessionTemplateDirectory = new SettingsKey<string>("Internal/TemplatesWindowDialogLastNewSessionTemplateDirectory", SettingsContainer, "");
-        public static SettingsKey<SortRule> AssetViewSortRule = new SettingsKey<SortRule>("Internal/AssetViewSortRule", SettingsContainer, SortRule.TypeOrderThenName);
-        public static SettingsKey<DisplayAssetMode> AssetViewDisplayMode = new SettingsKey<DisplayAssetMode>("Internal/AssetViewDisplayMode", SettingsContainer, DisplayAssetMode.AssetAndFolderInSelectedFolder);
+//         public static SettingsKey<SortRule> AssetViewSortRule = new SettingsKey<SortRule>("Internal/AssetViewSortRule", SettingsContainer, SortRule.TypeOrderThenName);
+//         public static SettingsKey<DisplayAssetMode> AssetViewDisplayMode = new SettingsKey<DisplayAssetMode>("Internal/AssetViewDisplayMode", SettingsContainer, DisplayAssetMode.AssetAndFolderInSelectedFolder);
 
         private static readonly SettingsProfile Profile;
 
@@ -69,7 +69,7 @@ namespace Stride.Core.Assets.Editor.Settings
         /// </summary>
         public static void WriteFile()
         {
-            SettingsContainer.SaveSettingsProfile(Profile, EditorPath.InternalConfigPath);
+//             SettingsContainer.SaveSettingsProfile(Profile, EditorPath.InternalConfigPath);
         }
 
         private static object LegacyMRUDeserializer(EventReader eventReader)
@@ -85,12 +85,14 @@ namespace Stride.Core.Assets.Editor.Settings
 
         private static string GetLatestInternalConfigPath()
         {
-            return GetInternalConfigPaths().FirstOrDefault(File.Exists) ?? EditorPath.InternalConfigPath;
+//             return GetInternalConfigPaths().FirstOrDefault(File.Exists) ?? EditorPath.InternalConfigPath;
+            return "hello";
         }
 
         private static IEnumerable<string> GetInternalConfigPaths()
         {
-            yield return EditorPath.InternalConfigPath;
+//             yield return EditorPath.InternalConfigPath;
+            return null;
         }
     }
 }

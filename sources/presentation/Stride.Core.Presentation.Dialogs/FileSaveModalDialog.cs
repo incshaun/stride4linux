@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.WindowsAPICodePack.Dialogs;
+// using Microsoft.WindowsAPICodePack.Dialogs;
 using Stride.Core.Annotations;
 using Stride.Core.Presentation.Services;
 
@@ -14,7 +14,7 @@ namespace Stride.Core.Presentation.Dialogs
         internal FileSaveModalDialog([NotNull] IDispatcherService dispatcher)
             : base(dispatcher)
         {
-            Dialog = new CommonSaveFileDialog();
+//             Dialog = new CommonSaveFileDialog();
             Filters = new List<FileDialogFilter>();
         }
 
@@ -25,28 +25,29 @@ namespace Stride.Core.Presentation.Dialogs
         public string FilePath { get; private set; }
 
         /// <inheritdoc/>
-        public string InitialDirectory { get { return SaveDlg.InitialDirectory; } set { SaveDlg.InitialDirectory = value; } }
+        public string InitialDirectory { get { return /*SaveDlg.InitialDirectory*/""; } set { /*SaveDlg.InitialDirectory = value;*/ } }
 
         /// <inheritdoc/>
-        public string DefaultFileName { get { return SaveDlg.DefaultFileName; } set { SaveDlg.DefaultFileName = value; } }
+        public string DefaultFileName { get { return /*SaveDlg.DefaultFileName;*/""; } set { /*SaveDlg.DefaultFileName = value;*/ } }
 
         /// <inheritdoc/>
-        public string DefaultExtension { get { return SaveDlg.DefaultExtension; } set { SaveDlg.DefaultExtension = value; } }
+        public string DefaultExtension { get { return /*SaveDlg.DefaultExtension;*/""; } set { /*SaveDlg.DefaultExtension = value;*/ } }
 
-        private CommonSaveFileDialog SaveDlg => (CommonSaveFileDialog)Dialog;
+//         private CommonSaveFileDialog SaveDlg => (CommonSaveFileDialog)Dialog;
 
         /// <inheritdoc/>
         public override async Task<DialogResult> ShowModal()
         {
-            SaveDlg.Filters.Clear();
-            foreach (var filter in Filters.Where(x => !string.IsNullOrEmpty(x.ExtensionList)))
-            {
-                SaveDlg.Filters.Add(new CommonFileDialogFilter(filter.Description, filter.ExtensionList));
-            }
-            SaveDlg.AlwaysAppendDefaultExtension = true;
-            await InvokeDialog();
-            FilePath = Result != DialogResult.Cancel ? SaveDlg.FileName : null;
-            return Result;
+//             SaveDlg.Filters.Clear();
+//             foreach (var filter in Filters.Where(x => !string.IsNullOrEmpty(x.ExtensionList)))
+//             {
+//                 SaveDlg.Filters.Add(new CommonFileDialogFilter(filter.Description, filter.ExtensionList));
+//             }
+//             SaveDlg.AlwaysAppendDefaultExtension = true;
+//             await InvokeDialog();
+//             FilePath = Result != DialogResult.Cancel ? SaveDlg.FileName : null;
+//             return Result;
+            return DialogResult.None;
         }
     }
 }

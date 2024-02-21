@@ -14,7 +14,7 @@ namespace Stride.Assets.Models
     {
         static FbxAssetImporter()
         {
-            NativeLibraryHelper.PreloadLibrary("libfbxsdk", typeof(FbxAssetImporter));
+//             NativeLibraryHelper.PreloadLibrary("libfbxsdk", typeof(FbxAssetImporter));
         }
 
         // Supported file extensions for this importer
@@ -31,20 +31,23 @@ namespace Stride.Assets.Models
         /// <inheritdoc/>
         public override EntityInfo GetEntityInfo(UFile localPath, Logger logger, AssetImporterParameters importParameters)
         {
-            var meshConverter = new Importer.FBX.MeshConverter(logger);
-            var entityInfo = meshConverter.ExtractEntity(localPath.FullPath, importParameters.IsTypeSelectedForOutput(typeof(TextureAsset)));
-            return entityInfo;
+//             var meshConverter = new Importer.FBX.MeshConverter(logger);
+//             var entityInfo = meshConverter.ExtractEntity(localPath.FullPath, importParameters.IsTypeSelectedForOutput(typeof(TextureAsset)));
+//             return entityInfo;
+            return null;
         }
 
         /// <inheritdoc/>
         public override void GetAnimationDuration(UFile localPath, Logger logger, AssetImporterParameters importParameters, out TimeSpan startTime, out TimeSpan endTime)
         {
-            var meshConverter = new Importer.FBX.MeshConverter(logger);
-            // Use the first animation stack by default
-            var durationInSeconds = meshConverter.GetAnimationDuration(localPath.FullPath, 0);
-
+//             var meshConverter = new Importer.FBX.MeshConverter(logger);
+//             // Use the first animation stack by default
+//             var durationInSeconds = meshConverter.GetAnimationDuration(localPath.FullPath, 0);
+// 
+//             startTime = TimeSpan.Zero;
+//             endTime = TimeSpan.FromSeconds(durationInSeconds);
             startTime = TimeSpan.Zero;
-            endTime = TimeSpan.FromSeconds(durationInSeconds);
+            endTime = TimeSpan.Zero;
         }
     }
 }
