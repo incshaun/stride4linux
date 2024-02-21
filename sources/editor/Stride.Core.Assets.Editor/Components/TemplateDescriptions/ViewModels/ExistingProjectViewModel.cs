@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Media.Imaging;
+//using System.Windows.Media.Imaging;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Assets.Templates;
 using Stride.Core.IO;
@@ -41,9 +41,9 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
 
         public UFile Path { get; }
         // TODO
-        public BitmapImage Icon => null;
+//        public BitmapImage Icon => null;
 
-        public IEnumerable<BitmapImage> Screenshots => Enumerable.Empty<BitmapImage>();
+//        public IEnumerable<BitmapImage> Screenshots => Enumerable.Empty<BitmapImage>();
 
         public ICommandBase ExploreCommand { get; }
 

@@ -13,7 +13,7 @@ using Stride.Core.Presentation.Collections;
 using Stride.Core.Presentation.Commands;
 using Stride.Core.Presentation.ViewModels;
 
-namespace Stride.Core.Presentation.ViewModel
+namespace Stride.Core.Presentation.ViewModels
 {
     /// <summary>
     /// A view model that monitors messages from one or several loggers and update an observable collection of <see cref="ILogMessage"/> using the dispatcher.

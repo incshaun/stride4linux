@@ -27,7 +27,6 @@ using Stride.Core.Presentation.Dirtiables;
 using Stride.Core.Presentation.Quantum;
 using Stride.Core.Presentation.Quantum.Presenters;
 using Stride.Core.Presentation.Services;
-using Stride.Core.Presentation.ViewModel;
 using Stride.Core.Quantum;
 using Stride.Core.Quantum.References;
 using Stride.Core.Translation;

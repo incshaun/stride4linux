@@ -4,11 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Stride.Core.Assets.Editor.Services;
-using Stride.Core.Assets.Editor.View.Behaviors;
+// using Stride.Core.Assets.Editor.View.Behaviors;
 using Stride.Core.Annotations;
 using Stride.Core.Extensions;
 using Stride.Core.IO;
-using Stride.Core.Presentation.ViewModel;
 using Stride.Core.Translation;
 using Stride.Core.Presentation.ViewModels;
 
@@ -85,7 +84,8 @@ namespace Stride.Core.Assets.Editor.ViewModel
 
         bool IAddChildViewModel.CanAddChildren(IReadOnlyCollection<object> children, AddChildModifiers modifiers, out string message)
         {
-            message = DragDropBehavior.InvalidDropAreaMessage;
+//            message = DragDropBehavior.InvalidDropAreaMessage;
+            message = "Disabled for the moment";
             return false;
         }
 

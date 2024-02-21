@@ -15,7 +15,7 @@ using Stride.Core.Assets.Editor.Components.TemplateDescriptions;
 using Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels;
 using Stride.Core.Assets.Editor.Services;
 using Stride.Core.Assets.Editor.Settings;
-using Stride.Core.Assets.Editor.View.Behaviors;
+//using Stride.Core.Assets.Editor.View.Behaviors;
 using Stride.Core.Assets.Editor.ViewModel.Progress;
 using Stride.Core.Assets.Templates;
 using Stride.Core.Assets.Tracking;
@@ -28,7 +28,7 @@ using Stride.Core.Presentation.Collections;
 using Stride.Core.Presentation.Commands;
 using Stride.Core.Presentation.Core;
 using Stride.Core.Presentation.Dirtiables;
-using Stride.Core.Presentation.Interop;
+//using Stride.Core.Presentation.Interop;
 using Stride.Core.Presentation.Services;
 using Stride.Core.Translation;
 using Stride.Core.Presentation.ViewModels;
@@ -816,7 +816,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
 
             try
             {
-                SafeClipboard.SetText(SingleSelectedAsset.Url);
+//                SafeClipboard.SetText(SingleSelectedAsset.Url);
             }
             catch (SystemException e)
             {
@@ -1011,7 +1011,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
                 if (string.IsNullOrEmpty(text))
                     return false;
 
-                SafeClipboard.SetText(text);
+//                SafeClipboard.SetText(text);
                 return true;
             }
             catch (SystemException e)
@@ -1024,7 +1024,8 @@ namespace Stride.Core.Assets.Editor.ViewModel
 
         private bool CanPaste()
         {
-            return ServiceProvider.TryGet<ICopyPasteService>()?.CanPaste(SafeClipboard.GetText(), typeof(List<AssetItem>), typeof(List<AssetItem>), typeof(List<AssetItem>)) ?? false;
+//            return ServiceProvider.TryGet<ICopyPasteService>()?.CanPaste(SafeClipboard.GetText(), typeof(List<AssetItem>), typeof(List<AssetItem>), typeof(List<AssetItem>)) ?? false;
+            return false;
         }
 
         private async Task Paste()
@@ -1044,70 +1045,70 @@ namespace Stride.Core.Assets.Editor.ViewModel
                 return;
             }
 
-            var text = SafeClipboard.GetText();
-            if (string.IsNullOrWhiteSpace(text))
-                return;
-
-            var pastedAssets = new List<AssetItem>();
-            pastedAssets = ServiceProvider.TryGet<ICopyPasteService>()?.DeserializeCopiedData(text, pastedAssets, typeof(List<AssetItem>)).Items.FirstOrDefault()?.Data as List<AssetItem>;
-            if (pastedAssets == null)
-                return;
-
-            var updatedAssets = new List<AssetItem>();
-            var root = directory.Root;
-            var project = (root as ProjectCodeViewModel)?.Project;
-            foreach (var assetItem in pastedAssets)
-            {
-                // Perform allowed asset types validation
-                if (!root.AcceptAssetType(assetItem.Asset.GetType()))
-                {
-                    // Skip invalid assets
-                    continue;
-                }
-
-                var location = UPath.Combine(directory.Path, assetItem.Location);
-
-                // Check if we are pasting to package or a project (with a source code)
-                if (project != null)
-                {
-                    // Link source project
-                    assetItem.SourceFolder = project.Package.RootDirectory;
-                }
-
-                // Resolve folders to paste collisions with those existing in a directory
-                var assetLocationDir = assetItem.Location.FullPath;
-                {
-                    // Split path into two parts
-                    int firstSeparator = assetLocationDir.IndexOf(DirectoryBaseViewModel.Separator, StringComparison.Ordinal);
-                    if (firstSeparator > 0)
-                    {
-                        // Left: (folder)
-                        // /
-                        // Right: (..folders..) / (file.ext)
-                        UDirectory leftPart = assetLocationDir.Remove(firstSeparator);
-                        UFile rightPart = assetLocationDir.Substring(firstSeparator + 1);
-
-                        // Find valid left part location (if already in use)
-                        leftPart = NamingHelper.ComputeNewName(leftPart, e => directory.GetDirectory(e) != null, "{0} ({1})");
-
-                        // Fix location: (paste directory) / left/ right
-                        location = UPath.Combine(Path.Combine(directory.Path, leftPart), rightPart);
-                    }
-                }
-
-                var updatedAsset = assetItem.Clone(true, location, assetItem.Asset);
-                updatedAssets.Add(updatedAsset);
-            }
-
-            if (updatedAssets.Count == 0)
-                return;
-
-            var viewModels = package.PasteAssets(updatedAssets, project);
-
-            var referencerViewModels = AssetViewModel.ComputeRecursiveReferencerAssets(viewModels);
-            viewModels.AddRange(referencerViewModels);
-            Session.NotifyAssetPropertiesChanged(viewModels);
-            UpdateCommands();
+//             var text = SafeClipboard.GetText();
+//             if (string.IsNullOrWhiteSpace(text))
+//                 return;
+// 
+//             var pastedAssets = new List<AssetItem>();
+//             pastedAssets = ServiceProvider.TryGet<ICopyPasteService>()?.DeserializeCopiedData(text, pastedAssets, typeof(List<AssetItem>)).Items.FirstOrDefault()?.Data as List<AssetItem>;
+//             if (pastedAssets == null)
+//                 return;
+// 
+//             var updatedAssets = new List<AssetItem>();
+//             var root = directory.Root;
+//             var project = (root as ProjectCodeViewModel)?.Project;
+//             foreach (var assetItem in pastedAssets)
+//             {
+//                 // Perform allowed asset types validation
+//                 if (!root.AcceptAssetType(assetItem.Asset.GetType()))
+//                 {
+//                     // Skip invalid assets
+//                     continue;
+//                 }
+// 
+//                 var location = UPath.Combine(directory.Path, assetItem.Location);
+// 
+//                 // Check if we are pasting to package or a project (with a source code)
+//                 if (project != null)
+//                 {
+//                     // Link source project
+//                     assetItem.SourceFolder = project.Package.RootDirectory;
+//                 }
+// 
+//                 // Resolve folders to paste collisions with those existing in a directory
+//                 var assetLocationDir = assetItem.Location.FullPath;
+//                 {
+//                     // Split path into two parts
+//                     int firstSeparator = assetLocationDir.IndexOf(DirectoryBaseViewModel.Separator, StringComparison.Ordinal);
+//                     if (firstSeparator > 0)
+//                     {
+//                         // Left: (folder)
+//                         // /
+//                         // Right: (..folders..) / (file.ext)
+//                         UDirectory leftPart = assetLocationDir.Remove(firstSeparator);
+//                         UFile rightPart = assetLocationDir.Substring(firstSeparator + 1);
+// 
+//                         // Find valid left part location (if already in use)
+//                         leftPart = NamingHelper.ComputeNewName(leftPart, e => directory.GetDirectory(e) != null, "{0} ({1})");
+// 
+//                         // Fix location: (paste directory) / left/ right
+//                         location = UPath.Combine(Path.Combine(directory.Path, leftPart), rightPart);
+//                     }
+//                 }
+// 
+//                 var updatedAsset = assetItem.Clone(true, location, assetItem.Asset);
+//                 updatedAssets.Add(updatedAsset);
+//             }
+// 
+//             if (updatedAssets.Count == 0)
+//                 return;
+// 
+//             var viewModels = package.PasteAssets(updatedAssets, project);
+// 
+//             var referencerViewModels = AssetViewModel.ComputeRecursiveReferencerAssets(viewModels);
+//             viewModels.AddRange(referencerViewModels);
+//             Session.NotifyAssetPropertiesChanged(viewModels);
+//             UpdateCommands();
         }
 
         public void AddAssetFilter(AssetFilterViewModel filter)
@@ -1506,7 +1507,8 @@ namespace Stride.Core.Assets.Editor.ViewModel
                 message = Tr._p("Message", "Drop files");
                 return true;
             }
-            message = DragDropBehavior.InvalidDropAreaMessage;
+//             message = DragDropBehavior.InvalidDropAreaMessage;
+message = "Currently disabled";
             return false;
         }
 

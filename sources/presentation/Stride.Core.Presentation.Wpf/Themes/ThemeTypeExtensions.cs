@@ -3,21 +3,22 @@
 
 namespace Stride.Core.Presentation.Themes
 {
-    public enum ThemeType
-    {
-        // Dark themes
-        [Display("Expression Dark (Default)")]
-        ExpressionDark,
-        [Display("Dark Steel")]
-        DarkSteel,
-        [Display("Divided")]
-        Divided,
-
-        // Light themes
-        [Display("Light Steel Blue (Experimental)")]
-        LightSteelBlue,
-    }
-
+// Moved to separate file.
+//     public enum ThemeType
+//     {
+//         // Dark themes
+//         [Display("Expression Dark (Default)")]
+//         ExpressionDark,
+//         [Display("Dark Steel")]
+//         DarkSteel,
+//         [Display("Divided")]
+//         Divided,
+// 
+//         // Light themes
+//         [Display("Light Steel Blue (Experimental)")]
+//         LightSteelBlue,
+//     }
+// 
     public static class ThemeTypeExtensions
     {
         public static IconThemeSelector.ThemeBase GetThemeBase(this ThemeType themeType)

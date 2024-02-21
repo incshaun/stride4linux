@@ -3020,21 +3020,21 @@ typedef uint32_t uint4 __attribute__((ext_vector_type(4)));
 	#define __strcpy_chk __builtin___strcpy_chk
 #endif
 
-#if !__has_builtin(__builtin___strlcat_chk)
-	#error \"__strlcat_chk clang built-in not available\"
-	// zc*cC*zz
-	extern size_t __strlcat_chk(...);
-#else
-	#define __strlcat_chk __builtin___strlcat_chk
-#endif
+//#if !__has_builtin(__builtin___strlcat_chk)
+//	#error \"__strlcat_chk clang built-in not available\"
+//	// zc*cC*zz
+//	extern size_t __strlcat_chk(...);
+//#else
+//	#define __strlcat_chk __builtin___strlcat_chk
+//#endif
 
-#if !__has_builtin(__builtin___strlcpy_chk)
-	#error \"__strlcpy_chk clang built-in not available\"
-	// zc*cC*zz
-	extern size_t __strlcpy_chk(...);
-#else
-	#define __strlcpy_chk __builtin___strlcpy_chk
-#endif
+//#if !__has_builtin(__builtin___strlcpy_chk)
+//	#error \"__strlcpy_chk clang built-in not available\"
+//	// zc*cC*zz
+//	extern size_t __strlcpy_chk(...);
+//#else
+//	#define __strlcpy_chk __builtin___strlcpy_chk
+//#endif
 
 #if !__has_builtin(__builtin___strncat_chk)
 	#error \"__strncat_chk clang built-in not available\"

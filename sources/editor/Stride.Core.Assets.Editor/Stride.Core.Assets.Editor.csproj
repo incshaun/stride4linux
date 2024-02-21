@@ -7,6 +7,7 @@
     <StrideAssemblyProcessorOptions>--auto-module-initializer --serialization</StrideAssemblyProcessorOptions>
     <StrideLocalized>true</StrideLocalized>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <StrideSkipAutoPack>true</StrideSkipAutoPack>
   </PropertyGroup>
   <ItemGroup>
 <!--     <PackageReference Include="Dirkster.AvalonDock" /> -->
@@ -36,11 +37,12 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-<!--    <ProjectReference Include="..\..\assets\Stride.Core.Assets.Quantum\Stride.Core.Assets.Quantum.csproj" />
-    <ProjectReference Include="..\..\presentation\Stride.Core.Presentation.Dialogs\Stride.Core.Presentation.Dialogs.csproj" />-->
-<!--     <ProjectReference Include="..\..\presentation\Stride.Core.Presentation.Quantum\Stride.Core.Presentation.Quantum.csproj" /> -->
+    <ProjectReference Include="../../presentation/Stride.Core.Presentation/Stride.Core.Presentation.csproj" />
+    <ProjectReference Include="..\..\assets\Stride.Core.Assets.Quantum\Stride.Core.Assets.Quantum.csproj" />
+    <ProjectReference Include="..\..\presentation\Stride.Core.Presentation.Dialogs\Stride.Core.Presentation.Dialogs.csproj" />
+    <ProjectReference Include="..\..\presentation\Stride.Core.Presentation.Quantum\Stride.Core.Presentation.Quantum.csproj" />
     <ProjectReference Include="..\..\assets\Stride.Core.Assets\Stride.Core.Assets.csproj" IncludeAssets="Build" />
-<!--     <ProjectReference Include="..\..\presentation\Stride.Core.Translation.Presentation\Stride.Core.Translation.Presentation.csproj" /> -->
+    <ProjectReference Include="..\..\presentation\Stride.Core.Translation.Presentation\Stride.Core.Translation.Presentation.csproj" />
   </ItemGroup>
   <!-- Resources -->
   <ItemGroup>
@@ -69,8 +71,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="..\..\editor\Stride.Core.MostRecentlyUsedFiles\Stride.Core.MostRecentlyUsedFiles.projitems" Label="Shared" />
-<!--   <Import Project="$(StrideSdkTargets)" /> -->
-<Target Name="Build"/>
+  <Import Project="$(StrideSdkTargets)" />
 
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>_StrideIncludeExtraAssemblies;$(TargetsForTfmSpecificBuildOutput)</TargetsForTfmSpecificBuildOutput>

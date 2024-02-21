@@ -139,7 +139,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
                 Dispatcher.InvokeAsync(async () =>
                 {
                     asset.SetThumbnailData(e.Data);
-                    await e.Data.PrepareForPresentation(Dispatcher);
+//                    await e.Data.PrepareForPresentation(Dispatcher);
                 });
             }
         }

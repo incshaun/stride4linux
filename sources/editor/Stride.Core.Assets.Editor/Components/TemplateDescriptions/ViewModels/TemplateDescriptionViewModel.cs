@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Media.Imaging;
+//using System.Windows.Media.Imaging;
 using Stride.Core.Assets.Templates;
 using Stride.Core.Extensions;
 using Stride.Core.IO;
@@ -23,11 +23,11 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
             if (template == null) throw new ArgumentNullException(nameof(template));
             Template = template;
             var asmName = Assembly.GetExecutingAssembly().GetName().Name;
-            if (!string.IsNullOrEmpty(template.Icon))
-                Icon = LoadImage(GetPath(template.Icon));
-            if (Icon == null)
-                Icon = LoadImage($@"pack://application:,,,/{asmName};component/Resources/Images/default-template-icon.png");
-            Screenshots = template.Screenshots.Select(GetPath).Select(LoadImage).NotNull().ToList();
+//             if (!string.IsNullOrEmpty(template.Icon))
+//                 Icon = LoadImage(GetPath(template.Icon));
+//             if (Icon == null)
+//                 Icon = LoadImage($@"pack://application:,,,/{asmName};component/Resources/Images/default-template-icon.png");
+//             Screenshots = template.Screenshots.Select(GetPath).Select(LoadImage).NotNull().ToList();
 
         }
 
@@ -45,9 +45,9 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
 
         public string DefaultOutputName => Template.DefaultOutputName;
 
-        public BitmapImage Icon { get; }
+//        public BitmapImage Icon { get; }
 
-        public IEnumerable<BitmapImage> Screenshots { get; }
+//        public IEnumerable<BitmapImage> Screenshots { get; }
 
         public TemplateDescription GetTemplate()
         {
@@ -59,21 +59,21 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
             return UPath.Combine(Template.FullPath.GetFullDirectory(), imagePath);
         }
 
-        private static BitmapImage LoadImage(string path)
-        {
-            try
-            {
-                if (!path.StartsWith("pack:", StringComparison.Ordinal) && !File.Exists(path))
-                {
-                    return null;
-                }
-
-                return new BitmapImage(new Uri(path));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+//         private static BitmapImage LoadImage(string path)
+//         {
+//             try
+//             {
+//                 if (!path.StartsWith("pack:", StringComparison.Ordinal) && !File.Exists(path))
+//                 {
+//                     return null;
+//                 }
+// 
+//                 return new BitmapImage(new Uri(path));
+//             }
+//             catch (Exception)
+//             {
+//                 return null;
+//             }
+//         }
     }
 }

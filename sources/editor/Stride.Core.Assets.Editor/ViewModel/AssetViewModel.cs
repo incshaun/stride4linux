@@ -7,8 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
+//using System.Windows.Controls;
+//using System.Windows.Media.Imaging;
 using Stride.Core.Assets.Analysis;
 using Stride.Core.Assets.Editor.Components.Properties;
 using Stride.Core.Assets.Editor.Quantum;
@@ -119,12 +119,12 @@ namespace Stride.Core.Assets.Editor.ViewModel
                 assetCommands.Add(new MenuCommandInfo(ServiceProvider, createDerivedAssetCommand)
                 {
                     DisplayName = "Create derived asset",
-                    Icon = new Image { Source = new BitmapImage(new Uri("/Stride.Core.Assets.Editor;component/Resources/Icons/copy_link-32.png", UriKind.RelativeOrAbsolute)) },
+//                     Icon = new Image { Source = new BitmapImage(new Uri("/Stride.Core.Assets.Editor;component/Resources/Icons/copy_link-32.png", UriKind.RelativeOrAbsolute)) },
                 });
                 assetCommands.Add(new MenuCommandInfo(ServiceProvider, clearArchetypeCommand)
                 {
                     DisplayName = "Clear archetype",
-                    Icon = new Image { Source = new BitmapImage(new Uri("/Stride.Core.Assets.Editor;component/Resources/Icons/delete_link-32.png", UriKind.RelativeOrAbsolute)) },
+//                     Icon = new Image { Source = new BitmapImage(new Uri("/Stride.Core.Assets.Editor;component/Resources/Icons/delete_link-32.png", UriKind.RelativeOrAbsolute)) },
                 });
             }).Forget();
             NodeContainer = parameters.Container;

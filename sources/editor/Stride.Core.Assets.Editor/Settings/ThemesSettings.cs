@@ -23,7 +23,7 @@ namespace Stride.Core.Presentation.Themes
 
         public static void Initialize()
         {
-            ThemeController.CurrentTheme = ThemeName.GetValue();
+ //           ThemeController.CurrentTheme = ThemeName.GetValue();
         }
     }
 }

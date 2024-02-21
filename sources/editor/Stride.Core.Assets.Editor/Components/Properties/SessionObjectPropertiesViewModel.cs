@@ -40,9 +40,9 @@ namespace Stride.Core.Assets.Editor.Components.Properties
             var dialogService = ServiceProvider.Get<IDialogService>();
             var documentationService = session.ServiceProvider.Get<UserDocumentationService>();
 
-            RegisterNodePresenterCommand(new CopyPropertyCommand());
-            RegisterNodePresenterCommand(new PastePropertyCommand());
-            RegisterNodePresenterCommand(new ReplacePropertyCommand());
+//            RegisterNodePresenterCommand(new CopyPropertyCommand());
+//            RegisterNodePresenterCommand(new PastePropertyCommand());
+//            RegisterNodePresenterCommand(new ReplacePropertyCommand());
             RegisterNodePresenterCommand(new BrowseDirectoryCommand(dialogService, new SessionInitialDirectoryProvider(session)));
             RegisterNodePresenterCommand(new BrowseFileCommand(dialogService, new SessionInitialDirectoryProvider(session)));
             RegisterNodePresenterCommand(new FetchAssetCommand(session));

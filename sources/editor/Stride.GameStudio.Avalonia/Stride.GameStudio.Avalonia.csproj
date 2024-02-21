@@ -19,6 +19,7 @@
     <StrideSTAThreadOnMain>true</StrideSTAThreadOnMain>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <StrideSkipAutoPack>true</StrideSkipAutoPack>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Stride.GameStudio.Avalonia.Program</StartupObject>
@@ -60,6 +61,8 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../presentation/Stride.Core.Presentation/Stride.Core.Presentation.csproj" />
+    <ProjectReference Include="../Stride.Core.Assets.Editor/Stride.Core.Assets.Editor.csproj" />
     <ProjectReference Include="..\..\engine\Stride.Debugger\Stride.Debugger.csproj" />
     <ProjectReference Include="..\..\tools\Stride.ConnectionRouter\Stride.ConnectionRouter.csproj" />
     <ProjectReference Include="..\..\tools\Stride.PackageInstall\Stride.PackageInstall.csproj">

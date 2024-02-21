@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.Collections.Generic;
-using System.Windows.Media.Imaging;
+//using System.Windows.Media.Imaging;
 using Stride.Core.Assets.Templates;
 
 namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
@@ -21,9 +21,9 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
 
         string DefaultOutputName { get; }
 
-        BitmapImage Icon { get; }
+//        BitmapImage Icon { get; }
 
-        IEnumerable<BitmapImage> Screenshots { get; }
+//        IEnumerable<BitmapImage> Screenshots { get; }
 
         TemplateDescription GetTemplate();
     }
