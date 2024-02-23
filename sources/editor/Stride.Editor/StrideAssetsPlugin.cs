@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
+//using System.Windows;
 using Stride.Core.Assets;
 using Stride.Core.Assets.Editor.Extensions;
 using Stride.Core.Assets.Editor.Services;
@@ -27,25 +27,25 @@ namespace Stride.Editor
         private readonly Dictionary<object, object> enumImagesDictionary = new Dictionary<object, object>();
         private readonly List<ITemplateProvider> templateProviderList = new List<ITemplateProvider>();
 
-        protected virtual void RegisterResourceDictionary(ResourceDictionary dictionary)
-        {
-            foreach (object entry in dictionary.Keys)
-            {
-                if (entry is Enum)
-                {
-                    enumImagesDictionary.Add(entry, dictionary[entry]);
-                }
-            }
-
-            foreach (object value in dictionary.Values)
-            {
-                var provider = value as ITemplateProvider;
-                if (provider != null)
-                {
-                    templateProviderList.Add(provider);
-                }
-            }
-        }
+//         protected virtual void RegisterResourceDictionary(ResourceDictionary dictionary)
+//         {
+//             foreach (object entry in dictionary.Keys)
+//             {
+//                 if (entry is Enum)
+//                 {
+//                     enumImagesDictionary.Add(entry, dictionary[entry]);
+//                 }
+//             }
+// 
+//             foreach (object value in dictionary.Values)
+//             {
+//                 var provider = value as ITemplateProvider;
+//                 if (provider != null)
+//                 {
+//                     templateProviderList.Add(provider);
+//                 }
+//             }
+//         }
 
         protected abstract void Initialize(ILogger logger);
 

@@ -9,7 +9,7 @@ using StrideEffects;
 using Stride.Core.BuildEngine;
 using Stride.Core.Mathematics;
 using Stride.Core.Serialization.Contents;
-using Stride.Assets.Presentation.Preview.Views;
+// using Stride.Assets.Presentation.Preview.Views;
 using Stride.Assets.Textures;
 using Stride.Editor.Preview;
 using Stride.Rendering;

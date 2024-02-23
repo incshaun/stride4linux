@@ -76,10 +76,11 @@ namespace Stride.Editor.Preview
             RenderingMode = gameSettings.GetOrCreate<EditorSettings>().RenderingMode;
 
             await Initialize();
-            PreviewViewModel = await ProvideViewModel();
-            previewView = await ProvideView();
+//             PreviewViewModel = await ProvideViewModel();
+//             previewView = await ProvideView();
             FinalizeInitialization();
-            return previewView;
+//             return previewView;
+            return null;
         }
 
         /// <inheritdoc/>
@@ -241,18 +242,18 @@ namespace Stride.Editor.Preview
             initCompletionSource.SetResult(0);
         }
 
-        private async Task<IPreviewView> ProvideView()
-        {
-            var viewAttribute = GetType().GetCustomAttribute<AssetPreviewAttribute>();
-            var viewType = viewAttribute != null ? viewAttribute.ViewType ?? AssetPreviewAttribute.DefaultViewType : AssetPreviewAttribute.DefaultViewType;
-
-            return await Builder.Dispatcher.InvokeAsync(() =>
-            {
-                var view = (IPreviewView)Activator.CreateInstance(viewType);
-                view.InitializeView(Builder, this);
-                return view;
-            });
-        }
+//         private async Task<IPreviewView> ProvideView()
+//         {
+//             var viewAttribute = GetType().GetCustomAttribute<AssetPreviewAttribute>();
+//             var viewType = viewAttribute != null ? viewAttribute.ViewType ?? AssetPreviewAttribute.DefaultViewType : AssetPreviewAttribute.DefaultViewType;
+// 
+//             return await Builder.Dispatcher.InvokeAsync(() =>
+//             {
+//                 var view = (IPreviewView)Activator.CreateInstance(viewType);
+//                 view.InitializeView(Builder, this);
+//                 return view;
+//             });
+//         }
         
         private async Task<IAssetPreviewViewModel> ProvideViewModel()
         {

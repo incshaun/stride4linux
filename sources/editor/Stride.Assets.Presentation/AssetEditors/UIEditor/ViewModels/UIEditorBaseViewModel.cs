@@ -426,15 +426,15 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.ViewModels
                 var confirmMessage = Tr._p("Message", "Are you sure you want to delete this UI element?");
                 if (elementsToDelete.Count > 1)
                     confirmMessage = string.Format(Tr._p("Message", "Are you sure you want to delete these {0} UI elements?"), elementsToDelete.Count);
-                var buttons = DialogHelper.CreateButtons(new[] { Tr._p("Button", "Delete"), Tr._p("Button", "Cancel") }, 1, 2);
-                var result = await ServiceProvider.Get<IDialogService>().CheckedMessageBoxAsync(confirmMessage, false, DialogHelper.DontAskAgain, buttons, MessageBoxImage.Question);
-                if (result.Result != 1)
-                    return;
-                if (result.IsChecked == true)
-                {
-                    UIEditorSettings.AskBeforeDeletingUIElements.SetValue(false);
-                    UIEditorSettings.Save();
-                }
+//                 var buttons = DialogHelper.CreateButtons(new[] { Tr._p("Button", "Delete"), Tr._p("Button", "Cancel") }, 1, 2);
+//                 var result = await ServiceProvider.Get<IDialogService>().CheckedMessageBoxAsync(confirmMessage, false, DialogHelper.DontAskAgain, buttons, MessageBoxImage.Question);
+//                 if (result.Result != 1)
+//                     return;
+//                 if (result.IsChecked == true)
+//                 {
+//                     UIEditorSettings.AskBeforeDeletingUIElements.SetValue(false);
+//                     UIEditorSettings.Save();
+//                 }
             }
 
             var hadActiveRoot = elementsToDelete.Any(x => ReferenceEquals(x, ActiveRoot));
@@ -582,7 +582,8 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.ViewModels
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private IEnumerable<UIElementViewModel> GetElementsAtPosition(ref Vector3 worldPosition)
         {
-            return Controller.AdornerService.GetElementIdsAtPosition(ref worldPosition).Select(id => FindPartViewModel(new AbsoluteId(Asset.Id, id))).OfType<UIElementViewModel>();
+//             return Controller.AdornerService.GetElementIdsAtPosition(ref worldPosition).Select(id => FindPartViewModel(new AbsoluteId(Asset.Id, id))).OfType<UIElementViewModel>();
+return null;
         }
 
         private void GroupInto(IUIElementFactory factory)

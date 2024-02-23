@@ -21,7 +21,7 @@ using Stride.Core.Presentation.Dirtiables;
 using Stride.Core.Presentation.Services;
 using Stride.Core.Presentation.ViewModels;
 using Stride.Core.Translation;
-using RoslynWorkspace = Stride.Assets.Presentation.AssetEditors.ScriptEditor.RoslynWorkspace;
+// using RoslynWorkspace = Stride.Assets.Presentation.AssetEditors.ScriptEditor.RoslynWorkspace;
 
 namespace Stride.Assets.Presentation.ViewModel
 {

@@ -7,6 +7,7 @@ using System.Linq;
 using Stride.Core.Assets;
 using Stride.Core.Assets.Editor.Quantum;
 using Stride.Core.Assets.Editor.View.Behaviors;
+using Stride.Core.Assets.Editor;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Assets.Quantum;
 using Stride.Core.Assets.Quantum.Visitors;

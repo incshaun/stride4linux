@@ -6,7 +6,7 @@ using System.Linq;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Presentation.Quantum;
 using Stride.Core.Presentation.Quantum.ViewModels;
-using Stride.Assets.Presentation.NodePresenters.Commands;
+// using Stride.Assets.Presentation.NodePresenters.Commands;
 using Stride.Assets.Presentation.ViewModel.Commands;
 using Stride.Assets.Scripts;
 
@@ -46,8 +46,8 @@ namespace Stride.Assets.Presentation.ViewModel
         public override void AddChildren(IReadOnlyCollection<object> children, AddChildModifiers modifiers)
         {
             var symbol = (Symbol)children.Select(x => (NodeViewModel)x).First().NodeValue;
-            var command = TargetNode.GetCommand(SetSymbolReferenceCommand.CommandName);
-            command.Execute(symbol);
+//             var command = TargetNode.GetCommand(SetSymbolReferenceCommand.CommandName);
+//             command.Execute(symbol);
         }
     }
 }

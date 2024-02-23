@@ -81,7 +81,7 @@ Stride.UI
 Stride.Video
 Stride.VirtualReality
 Stride.Voxels
-
+Stride.Core.Translation.Presentation
 
 
 

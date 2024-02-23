@@ -43,23 +43,23 @@ namespace Stride.Assets.Presentation.Templates
             while (files == null)
             {
                 var assetTypeName = TypeDescriptorFactory.Default.AttributeRegistry.GetAttribute<DisplayAttribute>(assetType)?.Name ?? assetType.Name;
-                var buttons = DialogHelper.CreateButtons(new[]
-                {
-                    Tr._p("Button", "Create"),
-                    Tr._p("Button", "Select a source..."),
-                    Tr._p("Button", "Cancel")
-                }, 1, 3);
-                var result = await DialogHelper.MessageBox(DispatcherService.Create(),
-                    string.Format(Tr._p("Message", "Do you want to create this {0} without a source file?"), assetTypeName),
-                    EditorViewModel.Instance.EditorName, buttons, MessageBoxImage.Question);
-
-                // Close without clicking a button or Cancel
-                if (result == 0 || result == 3)
-                    return false;
-
-                // Create without source
-                if (result == 1)
-                    break;
+//                 var buttons = DialogHelper.CreateButtons(new[]
+//                 {
+//                     Tr._p("Button", "Create"),
+//                     Tr._p("Button", "Select a source..."),
+//                     Tr._p("Button", "Cancel")
+//                 }, 1, 3);
+//                 var result = await DialogHelper.MessageBox(DispatcherService.Create(),
+//                     string.Format(Tr._p("Message", "Do you want to create this {0} without a source file?"), assetTypeName),
+//                     EditorViewModel.Instance.EditorName, buttons, MessageBoxImage.Question);
+// 
+//                 // Close without clicking a button or Cancel
+//                 if (result == 0 || result == 3)
+//                     return false;
+// 
+//                 // Create without source
+//                 if (result == 1)
+//                     break;
 
                 // Display the file picker again
                 files = await BrowseForSourceFiles(description, true);

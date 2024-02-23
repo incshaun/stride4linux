@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Stride.Core.Assets.Compiler;
 using Stride.Animations;
 using Stride.Assets.Models;
-using Stride.Assets.Presentation.Preview.Views;
+// using Stride.Assets.Presentation.Preview.Views;
 using Stride.Assets.Presentation.ViewModel.Preview;
 using Stride.Editor.Build;
 using Stride.Editor.Preview;

@@ -7,7 +7,7 @@ using Stride.Core.Reflection;
 using Stride.Core.Translation;
 using Stride.Core.Translation.Providers;
 using Stride.Assets.Entities;
-using Stride.Assets.Presentation.Templates;
+// using Stride.Assets.Presentation.Templates;
 using Stride.Assets.SpriteFont;
 using Stride.Rendering;
 using Stride.Rendering.Materials;
@@ -27,7 +27,7 @@ namespace Stride.Assets.Presentation
             // We need access to the AssetQuantumRegistry from the SessionTemplateGenerator so for now we register graph types in the module initializer.
             AssetQuantumRegistry.RegisterAssembly(typeof(Module).Assembly);
             // Register default template
-            StrideTemplates.Register();
+//             StrideTemplates.Register();
             // Initialize translation
             TranslationManager.Instance.RegisterProvider(new GettextTranslationProvider());
         }

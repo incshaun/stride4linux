@@ -6,7 +6,7 @@ using System.Linq;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Extensions;
 using Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewModels;
-using Stride.Assets.Presentation.NodePresenters.Commands;
+// using Stride.Assets.Presentation.NodePresenters.Commands;
 using Stride.Assets.Presentation.ViewModel.Commands;
 
 namespace Stride.Assets.Presentation.ViewModel
@@ -55,8 +55,8 @@ namespace Stride.Assets.Presentation.ViewModel
             var index = subEntity.Components.IndexOf(x => TargetNode.Type.IsInstanceOfType(x));
             if (index >= 0)
             {
-                var command = TargetNode.GetCommand(SetComponentReferenceCommand.CommandName);
-                command.Execute(new SetComponentReferenceCommand.Parameter { Entity = subEntity, Index = index });
+//                 var command = TargetNode.GetCommand(SetComponentReferenceCommand.CommandName);
+//                 command.Execute(new SetComponentReferenceCommand.Parameter { Entity = subEntity, Index = index });
             }
         }
     }

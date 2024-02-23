@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using Stride.Core.Assets.Compiler;
 using Stride.Assets.Models;
-using Stride.Assets.Presentation.Preview.Views;
+// using Stride.Assets.Presentation.Preview.Views;
 using Stride.Editor.Preview;
 using Stride.Engine;
 using Stride.Rendering;

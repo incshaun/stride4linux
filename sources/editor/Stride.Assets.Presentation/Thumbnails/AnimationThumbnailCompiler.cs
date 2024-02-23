@@ -11,7 +11,7 @@ using Stride.Core.Serialization.Contents;
 using Stride.Animations;
 using Stride.Assets.Models;
 using Stride.Assets.Presentation.Resources.Thumbnails;
-using Stride.Assets.Presentation.ViewModel.Preview;
+// using Stride.Assets.Presentation.ViewModel.Preview;
 using Stride.Editor.Resources;
 using Stride.Editor.Thumbnails;
 using Stride.Engine;
@@ -38,19 +38,19 @@ namespace Stride.Assets.Presentation.Thumbnails
         protected override void CompileThumbnail(ThumbnailCompilerContext context, string thumbnailStorageUrl, AssetItem assetItem, Package originalPackage, AssetCompilerResult result)
         {
             // A model asset should have been generated during CompileWithDependencies()
-            var modelAssetItem = AnimationPreviewViewModel.FindModelForPreview(assetItem);
-
-            if (modelAssetItem != null)
-            {
-                result.BuildSteps.Add(new ThumbnailBuildStep(new AnimationThumbnailBuildCommand(context, thumbnailStorageUrl, assetItem, modelAssetItem, originalPackage,
-                    new ThumbnailCommandParameters(assetItem.Asset, thumbnailStorageUrl, context.ThumbnailResolution))));
-            }
-            else
-            {
-                // If no model could be found, uses default thumbnail instead
-                var gameSettings = context.GetGameSettingsAsset();
-                result.BuildSteps.Add(new StaticThumbnailCommand<AnimationAsset>(thumbnailStorageUrl, StaticThumbnails.AnimationThumbnail, context.ThumbnailResolution, gameSettings.GetOrCreate<RenderingSettings>().ColorSpace == ColorSpace.Linear, assetItem.Package));
-            }
+//             var modelAssetItem = AnimationPreviewViewModel.FindModelForPreview(assetItem);
+// 
+//             if (modelAssetItem != null)
+//             {
+//                 result.BuildSteps.Add(new ThumbnailBuildStep(new AnimationThumbnailBuildCommand(context, thumbnailStorageUrl, assetItem, modelAssetItem, originalPackage,
+//                     new ThumbnailCommandParameters(assetItem.Asset, thumbnailStorageUrl, context.ThumbnailResolution))));
+//             }
+//             else
+//             {
+//                 // If no model could be found, uses default thumbnail instead
+//                 var gameSettings = context.GetGameSettingsAsset();
+//                 result.BuildSteps.Add(new StaticThumbnailCommand<AnimationAsset>(thumbnailStorageUrl, StaticThumbnails.AnimationThumbnail, context.ThumbnailResolution, gameSettings.GetOrCreate<RenderingSettings>().ColorSpace == ColorSpace.Linear, assetItem.Package));
+//             }
         }
 
         /// <summary>

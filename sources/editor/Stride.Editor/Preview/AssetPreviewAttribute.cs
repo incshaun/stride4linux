@@ -47,6 +47,6 @@ namespace Stride.Editor.Preview
         /// <summary>
         /// Gets the default view to use when <see cref="ViewType"/> is <c>null</c>.
         /// </summary>
-        public static Type DefaultViewType => typeof(StridePreviewView);
+//         public static Type DefaultViewType => typeof(StridePreviewView);
     }
 }

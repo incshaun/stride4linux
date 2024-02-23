@@ -4,7 +4,7 @@ using Stride.Core.Assets.Editor.Extensions;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Assets.Skyboxes;
 using Stride.Core.Presentation.Quantum;
-using Stride.Core.Presentation.ViewModel;
+using Stride.Core.Presentation.ViewModels;
 using Stride.Core.Quantum;
 
 namespace Stride.Assets.Presentation.ViewModel

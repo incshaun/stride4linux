@@ -181,7 +181,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Services
                 Game.InitializeContentScene();
                 Game.LoadEntities(entities);
             });
-            RecoveryService.IsActive = true;
+//             RecoveryService.IsActive = true;
             return true;
         }
 

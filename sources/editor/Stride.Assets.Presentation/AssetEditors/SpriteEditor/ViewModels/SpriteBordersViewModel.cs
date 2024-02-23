@@ -1,7 +1,7 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
-using System.Windows;
+//using System.Windows;
 using Stride.Core.Mathematics;
 using Stride.Core.Presentation.Quantum;
 using Stride.Core.Quantum;
@@ -25,8 +25,8 @@ namespace Stride.Assets.Presentation.AssetEditors.SpriteEditor.ViewModels
             var spriteBordersNode = spriteNode[nameof(SpriteInfo.Borders)];
             borderBinding = new MemberGraphNodeBinding<Vector4>(spriteBordersNode, nameof(Borders), OnPropertyChanging, OnPropertyChanged, UndoRedoService);
 
-            DependentProperties.Add(nameof(Borders), new[] { nameof(ActualBorders) });
-            DependentProperties.Add(nameof(ScaleFactor), new[] { nameof(ActualBorders) });
+//             DependentProperties.Add(nameof(Borders), new[] { nameof(ActualBorders) });
+//             DependentProperties.Add(nameof(ScaleFactor), new[] { nameof(ActualBorders) });
         }
         
         /// <inheritdoc/>
@@ -57,7 +57,7 @@ namespace Stride.Assets.Presentation.AssetEditors.SpriteEditor.ViewModels
 
         public bool Locked { get { return locked; } set { SetValue(ref locked, value); } }
 
-        public Thickness ActualBorders => new Thickness(Borders.X * ScaleFactor, Borders.Y * ScaleFactor, Borders.Z * ScaleFactor, Borders.W * ScaleFactor);
+//         public Thickness ActualBorders => new Thickness(Borders.X * ScaleFactor, Borders.Y * ScaleFactor, Borders.Z * ScaleFactor, Borders.W * ScaleFactor);
 
         private Rectangle TextureRegion => (Rectangle)textureRegionNode.Retrieve();
 

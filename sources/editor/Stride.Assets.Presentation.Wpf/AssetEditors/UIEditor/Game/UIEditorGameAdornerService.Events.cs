@@ -26,7 +26,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Game
         /// Current position of dragging.
         /// </summary>
         private Vector3 currentPosition;
-        private IResizingAdorner dragAdorner;
+//         private IResizingAdorner dragAdorner;
         /// <summary>
         /// Indicates that the <see cref="dragAdorner"/> is currently being dragged.
         /// </summary>
@@ -111,7 +111,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Game
             }
 
             // start drag
-            dragAdorner = resizingAdorners[0]; // hit results have been order by Z already
+//             dragAdorner = resizingAdorners[0]; // hit results have been order by Z already
             isInProgress = true;
         }
 
@@ -254,7 +254,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Game
             if (!isDragging)
                 return;
             
-            dragAdorner?.OnResizingCompleted();
+//             dragAdorner?.OnResizingCompleted();
         }
 
         /// <summary>

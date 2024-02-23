@@ -19,11 +19,11 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
 <!--    <PackageReference Include="RoslynPad.Editor.Windows" />
-    <PackageReference Include="RoslynPad.Roslyn.Windows" />
-    <PackageReference Include="RoslynPad.Roslyn" />-->
-    <Compile Include="Module.cs">
+    <PackageReference Include="RoslynPad.Roslyn.Windows" />-->
+    <PackageReference Include="RoslynPad.Roslyn" />
+    <!--<Compile Include="Module.cs">
       <Link>Module.cs</Link>
-    </Compile>
+    </Compile>-->
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
@@ -59,15 +59,26 @@
     <None Remove="EditorPackage\outputpath\**" />
   </ItemGroup>
   <ItemGroup>
-<!--    <ProjectReference Include="..\..\assets\Stride.Core.Assets.Quantum\Stride.Core.Assets.Quantum.csproj" />
+    <ProjectReference Include="..\..\assets\Stride.Core.Assets.Quantum\Stride.Core.Assets.Quantum.csproj" />
     <ProjectReference Include="..\..\presentation\Stride.Core.Presentation.Dialogs\Stride.Core.Presentation.Dialogs.csproj" />
-    <ProjectReference Include="..\..\presentation\Stride.Core.Presentation.Graph\Stride.Core.Presentation.Graph.csproj" />
+<!--     <ProjectReference Include="..\..\presentation\Stride.Core.Presentation.Graph\Stride.Core.Presentation.Graph.csproj" /> -->
     <ProjectReference Include="..\..\presentation\Stride.Core.Translation.Presentation\Stride.Core.Translation.Presentation.csproj" />
     <ProjectReference Include="..\..\tools\Stride.Graphics.RenderDocPlugin\Stride.Graphics.RenderDocPlugin.csproj" />
     <ProjectReference Include="..\..\tools\Stride.Core.ProjectTemplating\Stride.Core.ProjectTemplating.csproj" />
     <ProjectReference Include="..\Stride.Core.Assets.Editor\Stride.Core.Assets.Editor.csproj" />
     <ProjectReference Include="..\Stride.Editor\Stride.Editor.csproj" />
-    <ProjectReference Include="..\Stride.Samples.Templates\Stride.Samples.Templates.csproj" />-->
+    <ProjectReference Include="..\Stride.Samples.Templates\Stride.Samples.Templates.csproj" />
+    
+  <Compile Remove="AssetEditors\VisualScriptEditor\**" />
+  <Compile Remove="AssetEditors\ScriptEditor\**" />
+  <Compile Remove="NodePresenters\**" />
+  <Compile Remove="ViewModel\Preview\**" />
+  <Compile Remove="Preview\**" />
+  <Compile Remove="ViewModel/CodeViewModel.cs" />
+  <Compile Remove="TemplateProviders/ScriptVariableReferenceTemplateProvider.cs" />
+  <Compile Remove="TemplateProviders/ModelNodeLinkNameTemplateProvider.cs" />
+  <Compile Remove="TemplateProviders/ModelComponentMaterialTemplateProvider.cs" />
+  
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -106,7 +117,7 @@
     <None Include="Templates\Core\**" />
     <None Include="Templates\Assets\**" />
   </ItemGroup>
-<!--   <Import Project="$(StrideSdkTargets)" /> -->
+  <Import Project="$(StrideSdkTargets)" />
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>_StrideIncludeExtraAssemblies;$(TargetsForTfmSpecificBuildOutput)</TargetsForTfmSpecificBuildOutput>
 

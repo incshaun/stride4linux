@@ -6,7 +6,7 @@ using System.Linq;
 using Stride.Core.Assets;
 using Stride.Core;
 using Stride.Core.Mathematics;
-using Stride.Assets.Presentation.Preview.Views;
+// using Stride.Assets.Presentation.Preview.Views;
 using Stride.Assets.Sprite;
 using Stride.Assets.Textures;
 using Stride.Editor.Preview;

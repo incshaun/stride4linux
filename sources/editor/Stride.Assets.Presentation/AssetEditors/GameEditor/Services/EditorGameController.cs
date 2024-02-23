@@ -5,7 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+// using System.Windows.Forms;
 using Stride.Core.Assets.Editor.Services;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Assets.Quantum;
@@ -13,7 +13,7 @@ using Stride.Core;
 using Stride.Core.Annotations;
 using Stride.Core.Diagnostics;
 using Stride.Core.Mathematics;
-using Stride.Core.Presentation.Controls;
+//using Stride.Core.Presentation.Controls;
 using Stride.Core.Presentation.Services;
 using Stride.Assets.Presentation.AssetEditors.GameEditor.Game;
 using Stride.Assets.Presentation.AssetEditors.GameEditor.ViewModels;
@@ -25,7 +25,7 @@ using Stride.Editor.Engine;
 using Stride.Engine.Processors;
 using Stride.Games;
 using Stride.Shaders.Compiler;
-using Point = System.Windows.Point;
+// using Point = System.Windows.Point;
 
 namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
 {
@@ -121,7 +121,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
         /// <inheritdoc/>
         public SessionNodeContainer GameSideNodeContainer { get; }
 
-        public GameEngineHost EditorHost => GameForm.Host;
+//         public GameEngineHost EditorHost => GameForm.Host;
 
         /// <inheritdoc/>
         public Task GameContentLoaded => gameContentLoadedTaskSource.Task;
@@ -131,9 +131,9 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
         /// <summary>
         /// The game form hosting the scene view.
         /// </summary>
-        protected EmbeddedGameForm GameForm { get; private set; }
+//         protected EmbeddedGameForm GameForm { get; private set; }
 
-        protected EditorGameRecoveryService RecoveryService { get; private set; }
+//         protected EditorGameRecoveryService RecoveryService { get; private set; }
 
         /// <summary>
         /// Indicates whether this controller has been destroyed.
@@ -167,7 +167,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             Loader.Dispose();
             EditorDebugTools.UnregisterDebugPage(debugPage);
             UnregisterFromDragDropEvents();
-            GameForm?.Host?.Dispose();
+//             GameForm?.Host?.Dispose();
             IsDestroying = true;
 
             // Clean after everything
@@ -176,7 +176,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
                 if (serviceRegistry != null)
                     await serviceRegistry.DisposeAsync();
                 Game.Exit();
-                GameForm?.Dispose();
+//                 GameForm?.Dispose();
             }, int.MaxValue)
             // Ensure the properties are correctly set, even in case of a failure (default continuation)
             .ContinueWith(t =>
@@ -223,9 +223,9 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             sceneGameThread.Start();
             // Wait for the game to start
             await gameStartedTaskSource.Task;
-            GameForm.MouseDown += (sender, e) => lastClickPosition = Control.MousePosition;
+//             GameForm.MouseDown += (sender, e) => lastClickPosition = Control.MousePosition;
             // Initialize the WPF GameEngineHwndHost on this thread
-            GameForm.Host = new GameEngineHost(windowHandle);
+//             GameForm.Host = new GameEngineHost(windowHandle);
 
             // TODO: we could check if the game fails to create.
             return true;
@@ -243,13 +243,14 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
 
         public Vector3 GetMousePositionInScene(bool lastRightClick)
         {
-            EnsureNotDestroyed();
-            if (IsDestroying)
-                return Vector3.Zero;
-            var mousePosition = lastRightClick ? lastClickPosition : Control.MousePosition;
-            var localPosition = GameForm.Host.PointFromScreen(new Point(mousePosition.X, mousePosition.Y));
-            var relativePos = new Vector2((float)(localPosition.X / GameForm.Host.ActualWidth), (float)(localPosition.Y / GameForm.Host.ActualHeight));
-            return Game.GetPositionInScene(relativePos);
+//             EnsureNotDestroyed();
+//             if (IsDestroying)
+//                 return Vector3.Zero;
+//             var mousePosition = lastRightClick ? lastClickPosition : Control.MousePosition;
+//             var localPosition = GameForm.Host.PointFromScreen(new Point(mousePosition.X, mousePosition.Y));
+//             var relativePos = new Vector2((float)(localPosition.X / GameForm.Host.ActualWidth), (float)(localPosition.Y / GameForm.Host.ActualHeight));
+//             return Game.GetPositionInScene(relativePos);
+            return new Vector3();
         }
 
         public void TriggerActiveRenderStageReevaluation()
@@ -260,13 +261,13 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             Game.TriggerActiveRenderStageReevaluation();
         }
 
-        public void ChangeCursor(Cursor cursor)
-        {
-            EnsureNotDestroyed();
-            if (IsDestroying)
-                return;
-            GameForm.Cursor = cursor;
-        }
+//         public void ChangeCursor(Cursor cursor)
+//         {
+//             EnsureNotDestroyed();
+//             if (IsDestroying)
+//                 return;
+//             GameForm.Cursor = cursor;
+//         }
 
         /// <inheritdoc/>
         public Task InvokeAsync(Action callback, CancellationToken token = default)
@@ -387,19 +388,19 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
         protected virtual void InitializeServices([NotNull] EditorGameServiceRegistry services)
         {
             services.Add(new EditorGameDebugService());
-            services.Add(RecoveryService = new EditorGameRecoveryService(Editor) { IsActive = true });
+//             services.Add(RecoveryService = new EditorGameRecoveryService(Editor) { IsActive = true });
         }
 
         private void SceneGameRunThread()
         {
             // Create the form from this thread
-            GameForm = new EmbeddedGameForm
-            {
-                TopLevel = false,
-                Visible = false,
-            };
-            windowHandle = GameForm.Handle;
-            var context = new GameContextWinforms(GameForm) { InitializeDatabase = false };
+//             GameForm = new EmbeddedGameForm
+//             {
+//                 TopLevel = false,
+//                 Visible = false,
+//             };
+//             windowHandle = GameForm.Handle;
+//             var context = new GameContextWinforms(GameForm) { InitializeDatabase = false };
             RegisterToDragDropEvents();
 
             // Wait for shaders to be loaded
@@ -412,7 +413,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
 
             // Notify game start
             gameStartedTaskSource.SetResult(true);
-            Game.Run(context);
+//             Game.Run(context);
             Game.Dispose();
         }
 

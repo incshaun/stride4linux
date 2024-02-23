@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Stride.Core.Assets.Editor.View.Behaviors;
+using Stride.Core.Assets.Editor;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Assets.Quantum;
 using Stride.Core.Annotations;

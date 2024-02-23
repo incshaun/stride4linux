@@ -2,8 +2,8 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
+// using System.Windows.Controls;
+// using System.Windows.Media.Imaging;
 using Stride.Core.Assets;
 using Stride.Core.Assets.Editor.Components.TemplateDescriptions;
 using Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels;
@@ -32,12 +32,12 @@ namespace Stride.Assets.Presentation.ViewModel
             CreateSkeletonCommand = new AnonymousCommand(ServiceProvider, CreateSkeleton);
 
             // FIXME: tooltip, icons, etc. should not be created on the view model side (see PDX-2952)
-            Dispatcher.Invoke(() => assetCommands.Add(new MenuCommandInfo(ServiceProvider, CreateSkeletonCommand)
-            {
-                DisplayName = "Create Skeleton",
-                Tooltip = "Create a skeleton asset",
-                Icon = new Image { Source = new BitmapImage(new Uri("/Stride.Assets.Presentation;component/Resources/Icons/create_skeleton-16.png", UriKind.RelativeOrAbsolute))},
-            }));
+//             Dispatcher.Invoke(() => assetCommands.Add(new MenuCommandInfo(ServiceProvider, CreateSkeletonCommand)
+//             {
+//                 DisplayName = "Create Skeleton",
+//                 Tooltip = "Create a skeleton asset",
+//                 Icon = new Image { Source = new BitmapImage(new Uri("/Stride.Assets.Presentation;component/Resources/Icons/create_skeleton-16.png", UriKind.RelativeOrAbsolute))},
+//             }));
         }
 
         public ICommandBase CreateSkeletonCommand { get; }

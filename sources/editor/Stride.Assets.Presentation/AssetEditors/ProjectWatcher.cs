@@ -19,7 +19,7 @@ using Stride.Core.IO;
 using Microsoft.CodeAnalysis.MSBuild;
 using Stride.Core.Collections;
 using Stride.Core.Extensions;
-using Stride.Assets.Presentation.AssetEditors.ScriptEditor;
+// using Stride.Assets.Presentation.AssetEditors.ScriptEditor;
 using Project = Microsoft.CodeAnalysis.Project;
 
 namespace Stride.Assets.Presentation.AssetEditors
@@ -67,7 +67,7 @@ namespace Stride.Assets.Presentation.AssetEditors
 
         private MSBuildWorkspace msbuildWorkspace;
 
-        private Lazy<Task<RoslynHost>> roslynHost = new Lazy<Task<RoslynHost>>(() => Task.Factory.StartNew(() => new RoslynHost()));
+//         private Lazy<Task<RoslynHost>> roslynHost = new Lazy<Task<RoslynHost>>(() => Task.Factory.StartNew(() => new RoslynHost()));
 
         public ProjectWatcher(SessionViewModel session, bool trackBinaries = true)
         {
@@ -158,7 +158,7 @@ namespace Stride.Assets.Presentation.AssetEditors
             }
         }
 
-        public Task<RoslynHost> RoslynHost => roslynHost.Value;
+//         public Task<RoslynHost> RoslynHost => roslynHost.Value;
 
         public Project CurrentGameExecutable => gameExecutable;
 
@@ -376,8 +376,8 @@ namespace Stride.Assets.Presentation.AssetEditors
         {
             if (msbuildWorkspace == null)
             {
-                var host = await RoslynHost;
-                msbuildWorkspace = MSBuildWorkspace.Create(ImmutableDictionary<string, string>.Empty, host.HostServices);
+//                 var host = await RoslynHost;
+//                 msbuildWorkspace = MSBuildWorkspace.Create(ImmutableDictionary<string, string>.Empty, host.HostServices);
             }
             await msbuildWorkspace.OpenSolutionAsync(session.SolutionPath.ToWindowsPath());
 

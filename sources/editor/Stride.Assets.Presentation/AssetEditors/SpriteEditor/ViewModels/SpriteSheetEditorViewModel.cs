@@ -29,7 +29,7 @@ using Stride.Assets.Sprite;
 
 namespace Stride.Assets.Presentation.AssetEditors.SpriteEditor.ViewModels
 {
-    using WindowsPoint = System.Windows.Point;
+//     using WindowsPoint = System.Windows.Point;
 
     public enum SpriteSheetEditorToolMode
     {
@@ -73,7 +73,7 @@ namespace Stride.Assets.Presentation.AssetEditors.SpriteEditor.ViewModels
             DuplicateSelectedImagesCommand = new AnonymousCommand(ServiceProvider, DuplicateSelectedImages);
             CopyImageCommand = new AnonymousCommand(ServiceProvider, CopyImages, CanCopyImages);
             PasteImageCommand = new AnonymousCommand(ServiceProvider, PasteImages, () => pasteMonitor.Get(CanPasteImages));
-            FindSpriteRegionCommand = new AnonymousCommand<WindowsPoint>(ServiceProvider, FindSpriteRegion);
+//             FindSpriteRegionCommand = new AnonymousCommand<WindowsPoint>(ServiceProvider, FindSpriteRegion);
             ToggleSelectionHighlightCommand = new AnonymousCommand(ServiceProvider, () => SelectionHighlightEnabled = !SelectionHighlightEnabled);
             ToggleToolModeCommand = new AnonymousCommand<SpriteSheetEditorToolMode>(ServiceProvider, ToggleToolMode);
             ToggleUseMagicWandCommand = new AnonymousCommand(ServiceProvider, () => ToggleToolMode(SpriteSheetEditorToolMode.MagicWand));
@@ -500,66 +500,66 @@ namespace Stride.Assets.Presentation.AssetEditors.SpriteEditor.ViewModels
             SelectedSprites.AddRange(imagesToSelect.Select(FindViewModel));
         }
 
-        private void FindSpriteRegion(WindowsPoint initialPoint)
-        {
-            if (CurrentSprite == null)
-                return;
-
-            switch (ToolMode)
-            {
-                case SpriteSheetEditorToolMode.None:
-                    // nothing to do
-                    break;
-
-                case SpriteSheetEditorToolMode.ColorPick:
-                    var color = Cache.PickPixelColor(CurrentSprite.GetSpriteInfo().Source, initialPoint.ToVector2());
-                    if (color.HasValue)
-                    {
-                        ColorKey = color.Value;
-                    }
-                    ToolMode = SpriteSheetEditorToolMode.None;
-                    break;
-
-                case SpriteSheetEditorToolMode.MagicWand:
-                    var spriteRegion = Cache.FindSpriteRegion(CurrentSprite.GetSpriteInfo().Source, initialPoint.ToVector2(), MagicWandUseTransparency, Asset.Asset.ColorKeyColor);
-                    if (spriteRegion.HasValue && spriteRegion.Value.Width > 0 && spriteRegion.Value.Height > 0)
-                    {
-                        // TODO: pass the ctrl state to the command somehow, we shouldn't access to Keyboard from the VM
-                        var isUnion = System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Control);
-                        if (isUnion)
-                        {
-                            // Merge the two regions
-                            var initialRect = (Rectangle)CurrentSprite.TextureRegion.Region;
-                            spriteRegion = Rectangle.Union(initialRect, spriteRegion.Value);
-                        }
-                        using (var transaction = UndoRedoService.CreateTransaction())
-                        {
-                            CurrentSprite.TextureRegion.Region = new RectangleF
-                            {
-                                Left = spriteRegion.Value.Left,
-                                Top = spriteRegion.Value.Top,
-                                Width = spriteRegion.Value.Width,
-                                Height = spriteRegion.Value.Height
-                            };
-                            if (!isUnion)
-                            {
-                                // It's a new region, reset the sprite borders
-                                CurrentSprite.SpriteBorders.Borders = Vector4.Zero;
-                            }
-                            UndoRedoService.SetName(transaction, "Update selected region");
-                        }
-                    }
-                    break;
-
-                case SpriteSheetEditorToolMode.SpriteCenter:
-                case SpriteSheetEditorToolMode.Borders:
-                    // Nothing to do
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+//         private void FindSpriteRegion(WindowsPoint initialPoint)
+//         {
+//             if (CurrentSprite == null)
+//                 return;
+// 
+//             switch (ToolMode)
+//             {
+//                 case SpriteSheetEditorToolMode.None:
+//                     // nothing to do
+//                     break;
+// 
+//                 case SpriteSheetEditorToolMode.ColorPick:
+//                     var color = Cache.PickPixelColor(CurrentSprite.GetSpriteInfo().Source, initialPoint.ToVector2());
+//                     if (color.HasValue)
+//                     {
+//                         ColorKey = color.Value;
+//                     }
+//                     ToolMode = SpriteSheetEditorToolMode.None;
+//                     break;
+// 
+//                 case SpriteSheetEditorToolMode.MagicWand:
+//                     var spriteRegion = Cache.FindSpriteRegion(CurrentSprite.GetSpriteInfo().Source, initialPoint.ToVector2(), MagicWandUseTransparency, Asset.Asset.ColorKeyColor);
+//                     if (spriteRegion.HasValue && spriteRegion.Value.Width > 0 && spriteRegion.Value.Height > 0)
+//                     {
+//                         // TODO: pass the ctrl state to the command somehow, we shouldn't access to Keyboard from the VM
+//                         var isUnion = System.Windows.Input.Keyboard.Modifiers.HasFlag(System.Windows.Input.ModifierKeys.Control);
+//                         if (isUnion)
+//                         {
+//                             // Merge the two regions
+//                             var initialRect = (Rectangle)CurrentSprite.TextureRegion.Region;
+//                             spriteRegion = Rectangle.Union(initialRect, spriteRegion.Value);
+//                         }
+//                         using (var transaction = UndoRedoService.CreateTransaction())
+//                         {
+//                             CurrentSprite.TextureRegion.Region = new RectangleF
+//                             {
+//                                 Left = spriteRegion.Value.Left,
+//                                 Top = spriteRegion.Value.Top,
+//                                 Width = spriteRegion.Value.Width,
+//                                 Height = spriteRegion.Value.Height
+//                             };
+//                             if (!isUnion)
+//                             {
+//                                 // It's a new region, reset the sprite borders
+//                                 CurrentSprite.SpriteBorders.Borders = Vector4.Zero;
+//                             }
+//                             UndoRedoService.SetName(transaction, "Update selected region");
+//                         }
+//                     }
+//                     break;
+// 
+//                 case SpriteSheetEditorToolMode.SpriteCenter:
+//                 case SpriteSheetEditorToolMode.Borders:
+//                     // Nothing to do
+//                     break;
+// 
+//                 default:
+//                     throw new ArgumentOutOfRangeException();
+//             }
+//         }
 
         private void ToggleToolMode(SpriteSheetEditorToolMode newMode)
         {

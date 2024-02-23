@@ -17,14 +17,6 @@ using Stride.Core.Translation;
 
 namespace Stride.Core.Assets.Editor.View.Behaviors
 {
-    public static class DragDropBehavior
-    {
-        /// <summary>
-        /// Can't drop here
-        /// </summary>
-        public static readonly string InvalidDropAreaMessage = Tr._p("Message", "Can't drop here");
-    }
-
     /// <summary>
     /// Base class for drag and drop behaviors.
     /// </summary>

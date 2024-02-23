@@ -13,7 +13,6 @@ namespace Stride.Core.Presentation.Interop
     /// Wrapper around <see cref="Clipboard"/> that catches <see cref="COMException"/> related to clipboard errors. 
     /// </summary>
     public static class SafeClipboard
-    {
         // ReSharper disable InconsistentNaming
         public const int CLIPBRD_E_CANT_OPEN = unchecked((int)0x800401D0);
         public const int CLIPBRD_E_CANT_SET = unchecked((int)0x800401D2);

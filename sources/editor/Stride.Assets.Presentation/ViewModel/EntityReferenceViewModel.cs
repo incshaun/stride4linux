@@ -5,7 +5,7 @@ using System.Linq;
 
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewModels;
-using Stride.Assets.Presentation.NodePresenters.Commands;
+// using Stride.Assets.Presentation.NodePresenters.Commands;
 using Stride.Assets.Presentation.ViewModel.Commands;
 
 namespace Stride.Assets.Presentation.ViewModel
@@ -44,8 +44,8 @@ namespace Stride.Assets.Presentation.ViewModel
         public override void AddChildren(IReadOnlyCollection<object> children, AddChildModifiers modifiers)
         {
             var subEntity = (EntityViewModel)children.First();
-            var command = TargetNode.GetCommand(SetEntityReferenceCommand.CommandName);
-            command.Execute(subEntity);
+//             var command = TargetNode.GetCommand(SetEntityReferenceCommand.CommandName);
+//             command.Execute(subEntity);
         }
     }
 }

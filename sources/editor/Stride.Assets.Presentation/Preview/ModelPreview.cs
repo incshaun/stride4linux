@@ -3,7 +3,7 @@
 using Stride.Core.Assets.Compiler;
 using Stride.Core.IO;
 using Stride.Assets.Models;
-using Stride.Assets.Presentation.Preview.Views;
+// using Stride.Assets.Presentation.Preview.Views;
 using Stride.Editor.Preview;
 using Stride.Engine;
 using Stride.Rendering;

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Stride.Core.Mathematics;
 using Stride.Assets.Materials;
-using Stride.Assets.Presentation.Preview.Views;
+// using Stride.Assets.Presentation.Preview.Views;
 using Stride.Editor.Preview;
 using Stride.Engine;
 using Stride.Graphics.GeometricPrimitives;

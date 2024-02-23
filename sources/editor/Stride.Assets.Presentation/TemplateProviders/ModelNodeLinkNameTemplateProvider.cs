@@ -3,7 +3,7 @@
 
 using Stride.Core.Presentation.Quantum.View;
 using Stride.Core.Presentation.Quantum.ViewModels;
-using Stride.Assets.Presentation.NodePresenters.Keys;
+// using Stride.Assets.Presentation.NodePresenters.Keys;
 using Stride.Engine;
 
 namespace Stride.Assets.Presentation.TemplateProviders

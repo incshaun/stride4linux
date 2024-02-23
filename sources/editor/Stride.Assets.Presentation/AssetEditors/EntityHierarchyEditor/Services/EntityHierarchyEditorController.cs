@@ -41,7 +41,7 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Services
         public override async Task<bool> CreateScene()
         {
             await InvokeAsync(Game.InitializeContentScene);
-            RecoveryService.IsActive = true;
+//             RecoveryService.IsActive = true;
             return true;
         }
 

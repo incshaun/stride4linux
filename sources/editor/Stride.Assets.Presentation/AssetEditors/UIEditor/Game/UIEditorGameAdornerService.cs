@@ -388,17 +388,17 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Game
             layer.SetHighlightAdorner(new HighlightAdorner(this, gameSideElement));
 
             // Create move adorner
-            layer.Add(new MoveAdorner(this, gameSideElement));
+//             layer.Add(new MoveAdorner(this, gameSideElement));
 
             // Create sizing adorners
-            layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.TopLeft));
-            layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.Top));
-            layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.TopRight));
-            layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.Right));
-            layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.BottomRight));
-            layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.Bottom));
-            layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.BottomLeft));
-            layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.Left));
+//             layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.TopLeft));
+//             layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.Top));
+//             layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.TopRight));
+//             layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.Right));
+//             layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.BottomRight));
+//             layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.Bottom));
+//             layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.BottomLeft));
+//             layer.Add(new SizingAdorner(this, gameSideElement, ResizingDirection.Left));
 
             // Add to collection and canvas
             adornerLayers.Add(gameSideElement.Id, layer);
@@ -444,7 +444,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Game
         private void DoHideAllAdorners()
         {
             adornerLayers.Values.ForEach(l => l.Hide());
-            selectedAdorners.Clear();
+//             selectedAdorners.Clear();
         }
 
         private void DoHighlightAdorner(Guid elementId)
@@ -476,7 +476,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Game
         private void DoSelectElement(Guid elementId)
         {
             var layer = GetAdornerLayer(elementId);
-            selectedAdorners.Add(elementId);
+//             selectedAdorners.Add(elementId);
 
             // Make sure adorners will be rendered correctly the next time
             layer.Invalidate();
@@ -524,10 +524,10 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Game
                 if (adornerCanvas == null)
                     continue;
 
-                adornerCanvas.PreviewTouchDown += PreviewTouchDown;
-                adornerCanvas.PreviewTouchMove += PreviewTouchMove;
-                adornerCanvas.TouchMove += TouchMove;
-                adornerCanvas.TouchUp += TouchUp;
+//                 adornerCanvas.PreviewTouchDown += PreviewTouchDown;
+//                 adornerCanvas.PreviewTouchMove += PreviewTouchMove;
+//                 adornerCanvas.TouchMove += TouchMove;
+//                 adornerCanvas.TouchUp += TouchUp;
                 break;
             }
 

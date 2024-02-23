@@ -14,7 +14,7 @@ using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Serialization;
 using Stride.Assets.Effect;
 using Stride.Assets.Presentation.ViewModel;
-using Stride.ConnectionRouter;
+// using Stride.ConnectionRouter;
 using Stride.Engine.Network;
 using Stride.Shaders.Compiler;
 using Stride.Core.Presentation.Commands;
@@ -69,10 +69,10 @@ namespace Stride.Assets.Presentation
             this.session = session;
             this.dispatcher = session.ServiceProvider.Get<IDispatcherService>();
 
-            routerLaunchedTask = Task.Run(() =>
-            {
-                RouterHelper.EnsureRouterLaunched();
-            });
+//             routerLaunchedTask = Task.Run(() =>
+//             {
+//                 RouterHelper.EnsureRouterLaunched();
+//             });
 
             TrackPackages(session.LocalPackages);
             session.LocalPackages.CollectionChanged += LocalPackages_CollectionChanged;

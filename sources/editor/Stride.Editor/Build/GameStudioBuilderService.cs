@@ -31,8 +31,8 @@ namespace Stride.Editor.Build
             this.createDebugTools = createDebugTools;
             if (createDebugTools)
             {
-                assetBuilderServiceDebugPage = EditorDebugTools.CreateLogDebugPage(GlobalLogger.GetLogger("AssetBuilderService"), "AssetBuilderService");
-                effectCompilerServiceDebugPage = EditorDebugTools.CreateLogDebugPage(GlobalLogger.GetLogger("EffectCompilerCache"), "EffectCompilerCache");
+//                assetBuilderServiceDebugPage = EditorDebugTools.CreateLogDebugPage(GlobalLogger.GetLogger("AssetBuilderService"), "AssetBuilderService");
+//                 effectCompilerServiceDebugPage = EditorDebugTools.CreateLogDebugPage(GlobalLogger.GetLogger("EffectCompilerCache"), "EffectCompilerCache");
             }
 
             SessionViewModel = sessionViewModel ?? throw new ArgumentNullException(nameof(sessionViewModel));
@@ -87,8 +87,8 @@ namespace Stride.Editor.Build
             base.Dispose();
             if (createDebugTools)
             {
-                EditorDebugTools.UnregisterDebugPage(assetBuilderServiceDebugPage);
-                EditorDebugTools.UnregisterDebugPage(effectCompilerServiceDebugPage);
+//                 EditorDebugTools.UnregisterDebugPage(assetBuilderServiceDebugPage);
+//                 EditorDebugTools.UnregisterDebugPage(effectCompilerServiceDebugPage);
             }
             if (!IsDisposed)
             {

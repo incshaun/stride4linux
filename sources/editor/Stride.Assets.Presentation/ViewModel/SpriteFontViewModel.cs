@@ -58,40 +58,40 @@ namespace Stride.Assets.Presentation.ViewModel
 
             bool srgb;
             var gameSettings = Session.CurrentProject?.Package.GetGameSettingsAsset();
-            if (gameSettings == null)
-            {
-                var buttons = DialogHelper.CreateButtons(new[] { ColorSpace.Linear.ToString(), ColorSpace.Gamma.ToString(), Tr._p("Button", "Cancel") }, 1, 3);
-                var result = await dialogService.MessageBoxAsync(Tr._p("Message", "Which color space do you want to use?"), buttons, MessageBoxImage.Question);
-                // Close without clicking a button or Cancel
-                if (result == 0 || result == 3)
-                    return;
-                srgb = result == 2;
-            }
-            else
-            {
-                srgb = gameSettings.GetOrCreate<RenderingSettings>().ColorSpace == ColorSpace.Linear;
-            }
-
-            var precompiledFontAsset = (font.FontType is SignedDistanceFieldSpriteFontType) ?
-                font.GeneratePrecompiledSDFSpriteFont(AssetItem, UFile.Combine(directory, precompiledName)) : 
-                font.GeneratePrecompiledSpriteFont(AssetItem, UFile.Combine(directory, precompiledName), srgb);
-
-            // NOTE: following code could be factorized with AssetFactoryViewModel
-            var defaultLocation = UFile.Combine(Directory.Path, precompiledName);
-            var assetItem = new AssetItem(defaultLocation, precompiledFontAsset);
-            AssetViewModel assetViewModel;
-            using (var transaction = UndoRedoService.CreateTransaction())
-            {
-                // FIXME: do we need to delete the generated file upon undo?
-                assetViewModel = Directory.Package.CreateAsset(Directory, assetItem, true, null);
-                UndoRedoService.SetName(transaction, $"Create Asset '{precompiledName}'");
-            }
-
-            Session.CheckConsistency();
-            if (assetViewModel != null)
-            {
-                Session.ActiveAssetView.SelectAssetCommand.Execute(assetViewModel);
-            }
+//             if (gameSettings == null)
+//             {
+//                 var buttons = DialogHelper.CreateButtons(new[] { ColorSpace.Linear.ToString(), ColorSpace.Gamma.ToString(), Tr._p("Button", "Cancel") }, 1, 3);
+//                 var result = await dialogService.MessageBoxAsync(Tr._p("Message", "Which color space do you want to use?"), buttons, MessageBoxImage.Question);
+//                 // Close without clicking a button or Cancel
+//                 if (result == 0 || result == 3)
+//                     return;
+//                 srgb = result == 2;
+//             }
+//             else
+//             {
+//                 srgb = gameSettings.GetOrCreate<RenderingSettings>().ColorSpace == ColorSpace.Linear;
+//             }
+// 
+//             var precompiledFontAsset = (font.FontType is SignedDistanceFieldSpriteFontType) ?
+//                 font.GeneratePrecompiledSDFSpriteFont(AssetItem, UFile.Combine(directory, precompiledName)) : 
+//                 font.GeneratePrecompiledSpriteFont(AssetItem, UFile.Combine(directory, precompiledName), srgb);
+// 
+//             // NOTE: following code could be factorized with AssetFactoryViewModel
+//             var defaultLocation = UFile.Combine(Directory.Path, precompiledName);
+//             var assetItem = new AssetItem(defaultLocation, precompiledFontAsset);
+//             AssetViewModel assetViewModel;
+//             using (var transaction = UndoRedoService.CreateTransaction())
+//             {
+//                 // FIXME: do we need to delete the generated file upon undo?
+//                 assetViewModel = Directory.Package.CreateAsset(Directory, assetItem, true, null);
+//                 UndoRedoService.SetName(transaction, $"Create Asset '{precompiledName}'");
+//             }
+// 
+//             Session.CheckConsistency();
+//             if (assetViewModel != null)
+//             {
+//                 Session.ActiveAssetView.SelectAssetCommand.Execute(assetViewModel);
+//             }
         }
     }
 }

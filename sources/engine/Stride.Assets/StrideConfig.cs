@@ -235,21 +235,21 @@ namespace Stride.Assets
         /// <returns>true if any of the components in the dictionary are available, false otherwise</returns>
         internal static bool IsVSComponentAvailableAnyVersion(IDictionary<Version, string> vsVersionToComponent)
         {
-            if (vsVersionToComponent == null) { throw new ArgumentNullException("vsVersionToComponent"); }
-
-            foreach (var pair in vsVersionToComponent)
-            {
-                if (pair.Key == VS2015Version)
-                {
-                    return IsFileInProgramFilesx86Exist(pair.Value);
-                }
-                else
-                {
-                    return VisualStudioVersions.AvailableVisualStudioInstances.Any(
-                        ideInfo => ideInfo.PackageVersions.ContainsKey(pair.Value)
-                    );
-                }
-            }
+//             if (vsVersionToComponent == null) { throw new ArgumentNullException("vsVersionToComponent"); }
+// 
+//             foreach (var pair in vsVersionToComponent)
+//             {
+//                 if (pair.Key == VS2015Version)
+//                 {
+//                     return IsFileInProgramFilesx86Exist(pair.Value);
+//                 }
+//                 else
+//                 {
+//                     return VisualStudioVersions.AvailableVisualStudioInstances.Any(
+//                         ideInfo => ideInfo.PackageVersions.ContainsKey(pair.Value)
+//                     );
+//                 }
+//             }
             return false;
         }
 
