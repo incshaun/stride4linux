@@ -12,24 +12,24 @@ using Avalonia.Controls;
 //using System.Windows;
 //using System.Windows.Interop;
 //using System.Windows.Threading;
-// using Stride.Core.Assets;
-// using Stride.Core.Assets.Editor.Services;
-// using Stride.Core.Assets.Editor.Settings;
-// using Stride.Core.Assets.Editor.View.DebugTools;
-// using Stride.Core.Assets.Editor.ViewModel;
-// using Stride.Core;
-// using Stride.Core.Extensions;
-// using Stride.Core.Serialization;
-// using Stride.Core.Presentation.Commands;
-// using Stride.Core.Presentation.Extensions;
-// using Stride.Core.Presentation.Interop;
-// using Stride.Core.Presentation.Windows;
-// using Stride.Core.Translation;
+using Stride.Core.Assets;
+using Stride.Core.Assets.Editor.Services;
+using Stride.Core.Assets.Editor.Settings;
+using Stride.Core.Assets.Editor.View.DebugTools;
+using Stride.Core.Assets.Editor.ViewModel;
+using Stride.Core;
+using Stride.Core.Extensions;
+using Stride.Core.Serialization;
+using Stride.Core.Presentation.Commands;
+using Stride.Core.Presentation.Extensions;
+using Stride.Core.Presentation.Interop;
+using Stride.Core.Presentation.Windows;
+using Stride.Core.Translation;
 // using AvalonDock.Layout;
-// using Stride.GameStudio.ViewModels;
-// using Stride.GameStudio.Helpers;
-// using Stride.GameStudio.AssetsEditors;
-// using Stride.GameStudio.Layout;
+using Stride.GameStudio.Avalonia.ViewModels;
+using Stride.GameStudio.Avalonia.Helpers;
+// using Stride.GameStudio.Avalonia.AssetsEditors;
+// using Stride.GameStudio.Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Interactivity;
 using Avalonia;
@@ -42,52 +42,52 @@ using Avalonia.Platform;
 //using Stride.Assets.Presentation.Test;
 #endif
 
-namespace Stride.GameStudio.View
+namespace Stride.GameStudio.Avalonia.View
 {
     /// <summary>
     /// Interaction logic for GameStudioWindow.xaml
     /// </summary>
     public partial class AGameStudioWindow : Window//, IAsyncClosableWindow
     {
-//         private DebugWindow debugWindow;
-//         private bool forceClose;
-//         private readonly ADockingLayoutManager dockingLayout;
-//         private readonly AAssetEditorsManager assetEditorsManager;
-//         private TaskCompletionSource<bool> closingTask;
-// 
-// #if DEBUG
-//         private const bool TestMenuVisible = true;
-// #else
-//         private const bool TestMenuVisible = false;
-// #endif
+        private DebugWindow debugWindow;
+        private bool forceClose;
+//        private readonly ADockingLayoutManager dockingLayout;
+//        private readonly AAssetEditorsManager assetEditorsManager;
+        private TaskCompletionSource<bool> closingTask;
 
-//         public AGameStudioWindow(EditorViewModel editor)
-//         {
-//             if (editor == null) throw new ArgumentNullException(nameof(editor));
-//             if (editor.Session == null) throw new ArgumentException($@"A valid session must exist before creating a {nameof(GameStudioWindow)}", nameof(editor));
-//             DataContext = editor; // Must be set before calling InitializeComponent
-// 
-//             dockingLayout = new ADockingLayoutManager(this, editor.Session);
-//             assetEditorsManager = new AAssetEditorsManager(dockingLayout, editor.Session);
-//             editor.ServiceProvider.Get<IEditorDialogService>().AssetEditorsManager = assetEditorsManager;
-// 
-//             OpenDebugWindowCommand = new AnonymousCommand(editor.ServiceProvider, OpenDebugWindow);
-//             CreateTestAssetCommand = new AnonymousCommand(editor.ServiceProvider, CreateTestAsset);
-//             CreateUnitTestAssetCommand = new AnonymousCommand(editor.ServiceProvider, CreateUnitTestAsset);
-//             BreakDebuggerCommand = new AnonymousCommand(editor.ServiceProvider, BreakDebugger);
-//             EditorSettings.ResetEditorLayout.Command = new AnonymousTaskCommand(editor.ServiceProvider, ResetAllLayouts);
-// 
-//             Loaded += GameStudioLoaded;
-// //            Initialized += GameStudioLoaded;
-// //            Application.Current.Activated += (s, e) => editor.ServiceProvider.Get<IEditorDialogService>().ShowDelayedNotifications();
-//             //            Loaded += GameStudioLoaded;
-// 
-//             OpenMetricsProjectSession(editor);
-// 
-//             InitializeComponent();
-//         }
-//         private async Task ResetAllLayouts()
-//         {
+#if DEBUG
+        private const bool TestMenuVisible = true;
+#else
+        private const bool TestMenuVisible = false;
+#endif
+
+        public AGameStudioWindow(EditorViewModel editor)
+        {
+            if (editor == null) throw new ArgumentNullException(nameof(editor));
+//            if (editor.Session == null) throw new ArgumentException($@"A valid session must exist before creating a {nameof(GameStudioWindow)}", nameof(editor));
+            DataContext = editor; // Must be set before calling InitializeComponent
+
+//            dockingLayout = new ADockingLayoutManager(this, editor.Session);
+//            assetEditorsManager = new AAssetEditorsManager(dockingLayout, editor.Session);
+//            editor.ServiceProvider.Get<IEditorDialogService>().AssetEditorsManager = assetEditorsManager;
+
+            OpenDebugWindowCommand = new AnonymousCommand(editor.ServiceProvider, OpenDebugWindow);
+            CreateTestAssetCommand = new AnonymousCommand(editor.ServiceProvider, CreateTestAsset);
+            CreateUnitTestAssetCommand = new AnonymousCommand(editor.ServiceProvider, CreateUnitTestAsset);
+            BreakDebuggerCommand = new AnonymousCommand(editor.ServiceProvider, BreakDebugger);
+            EditorSettings.ResetEditorLayout.Command = new AnonymousTaskCommand(editor.ServiceProvider, ResetAllLayouts);
+
+            Loaded += GameStudioLoaded;
+//            Initialized += GameStudioLoaded;
+//            Application.Current.Activated += (s, e) => editor.ServiceProvider.Get<IEditorDialogService>().ShowDelayedNotifications();
+            //            Loaded += GameStudioLoaded;
+
+            OpenMetricsProjectSession(editor);
+
+            InitializeComponent();
+        }
+        private async Task ResetAllLayouts()
+        {
 //             var assets = assetEditorsManager.OpenedAssets.Select(x => x.Id).ToList();
 //             if (assets.Count > 0)
 //             {
@@ -110,92 +110,92 @@ namespace Stride.GameStudio.View
 // 
 //             // Reopen editors
 //             await ReopenAssetEditors(assets);
-//         }
-// 
-//         private static void OpenMetricsProjectSession(EditorViewModel editor)
-//         {
-//             var projectUid = editor.Session.CurrentProject?.Project.Id ?? Guid.Empty;
-// 
-//             var execProfiles = editor.Session.LocalPackages.OfType<ProjectViewModel>().Where(x => x.Type == ProjectType.Executable);
-//             var sessionPlatforms = new HashSet<PlatformType>();
-//             foreach (var execProfile in execProfiles)
-//             {
-//                 if (execProfile.Platform != PlatformType.Shared)
-//                 {
-//                     sessionPlatforms.Add(execProfile.Platform);
-//                 }
-//             }
-//             if (sessionPlatforms.Count > 0)
-//             {
-//                 var metricData = new StringBuilder();
-//                 foreach (var sessionPlatform in sessionPlatforms)
-//                 {
-//                     metricData.Append($"#platform:{sessionPlatform}|");
-//                 }
-//                 metricData.Remove(metricData.Length - 1, 1);
-// 
-//                 StrideGameStudio.MetricsClient?.OpenProjectSession($"#projectUid:{projectUid}|{metricData}");
-//             }
-//             else
-//             {
-//                 StrideGameStudio.MetricsClient?.OpenProjectSession($"#projectUid:{projectUid}|#platform:None");
-//             }
-//         }
-// 
-//         protected override void OnClosed(EventArgs e)
-//         {
-//             base.OnClosed(e);
-// 
-//             CloseMetricsProjectSession();
-//         }
-// 
-//         private static void CloseMetricsProjectSession()
-//         {
-//             StrideGameStudio.MetricsClient?.CloseProjectSession();
-//         }
-// 
-//         public EditorViewModel Editor => (EditorViewModel)DataContext;
-// 
-//         public string EditorTitle => Editor.Session.SolutionPath != null ? $"{Editor.Session.SolutionPath.GetFileName()} - {StrideGameStudio.EditorName}" : StrideGameStudio.EditorName;
-// 
-//         public ICommandBase OpenDebugWindowCommand { get; }
-// 
-//         public ICommandBase CreateTestAssetCommand { get; }
-// 
-//         public ICommandBase CreateUnitTestAssetCommand { get; }
-// 
-//         public ICommandBase BreakDebuggerCommand { get; }
-// 
-//         public bool IsTestMenuVisible => TestMenuVisible;
-// 
-//         /// <inheritdoc />
-//         public Task<bool> TryClose()
-//         {
-//             Editor.Session.Dispatcher.EnsureAccess();
-// 
-//             if (closingTask == null)
-//             {
-//                 closingTask = new TaskCompletionSource<bool>();
-//                 Close();
-//             }
-//             return closingTask.Task;
-//         }
-// 
-//         protected override void OnClosing(WindowClosingEventArgs e)
-//         {
-//             base.OnClosing(e);
-//             if (forceClose)
-//             {
-//                 // Stop listening to clipboard
-//  //               ClipboardMonitor.UnregisterListener(this);
-//                 return;
-//             }
-//             // We need to run async stuff before closing, so let's always cancel the close at first.
-//             e.Cancel = true;
-//             // This method will shutdown the application if the session has been successfully closed.
-//             SaveAndClose().Forget();
-//         }
-// 
+        }
+
+        private static void OpenMetricsProjectSession(EditorViewModel editor)
+        {
+            var projectUid = editor.Session.CurrentProject?.Project.Id ?? Guid.Empty;
+
+            var execProfiles = editor.Session.LocalPackages.OfType<ProjectViewModel>().Where(x => x.Type == ProjectType.Executable);
+            var sessionPlatforms = new HashSet<PlatformType>();
+            foreach (var execProfile in execProfiles)
+            {
+                if (execProfile.Platform != PlatformType.Shared)
+                {
+                    sessionPlatforms.Add(execProfile.Platform);
+                }
+            }
+            if (sessionPlatforms.Count > 0)
+            {
+                var metricData = new StringBuilder();
+                foreach (var sessionPlatform in sessionPlatforms)
+                {
+                    metricData.Append($"#platform:{sessionPlatform}|");
+                }
+                metricData.Remove(metricData.Length - 1, 1);
+
+                StrideGameStudio.MetricsClient?.OpenProjectSession($"#projectUid:{projectUid}|{metricData}");
+            }
+            else
+            {
+                StrideGameStudio.MetricsClient?.OpenProjectSession($"#projectUid:{projectUid}|#platform:None");
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            CloseMetricsProjectSession();
+        }
+
+        private static void CloseMetricsProjectSession()
+        {
+            StrideGameStudio.MetricsClient?.CloseProjectSession();
+        }
+
+        public EditorViewModel Editor => (EditorViewModel)DataContext;
+
+        public string EditorTitle => Editor.Session.SolutionPath != null ? $"{Editor.Session.SolutionPath.GetFileName()} - {StrideGameStudio.EditorName}" : StrideGameStudio.EditorName;
+
+        public ICommandBase OpenDebugWindowCommand { get; }
+
+        public ICommandBase CreateTestAssetCommand { get; }
+
+        public ICommandBase CreateUnitTestAssetCommand { get; }
+
+        public ICommandBase BreakDebuggerCommand { get; }
+
+        public bool IsTestMenuVisible => TestMenuVisible;
+
+        /// <inheritdoc />
+        public Task<bool> TryClose()
+        {
+            Editor.Session.Dispatcher.EnsureAccess();
+
+            if (closingTask == null)
+            {
+                closingTask = new TaskCompletionSource<bool>();
+                Close();
+            }
+            return closingTask.Task;
+        }
+
+        protected override void OnClosing(WindowClosingEventArgs e)
+        {
+            base.OnClosing(e);
+            if (forceClose)
+            {
+                // Stop listening to clipboard
+ //               ClipboardMonitor.UnregisterListener(this);
+                return;
+            }
+            // We need to run async stuff before closing, so let's always cancel the close at first.
+            e.Cancel = true;
+            // This method will shutdown the application if the session has been successfully closed.
+            SaveAndClose().Forget();
+        }
+
 //         internal void RegisterAssetPreview(LayoutAnchorable assetPreviewAnchorable)
 //         {
 //             // We listen to the events here instead of via xaml because DockingLayoutManager essentially breaks
@@ -222,9 +222,9 @@ namespace Stride.GameStudio.View
 //         {
 //             (Editor as GameStudioViewModel)?.Preview?.RenderPreviewCommand?.Execute(anchorable.IsSelected);
 //         }
-// 
-//         private void InitializeWindowSize()
-//         {
+
+        private void InitializeWindowSize()
+        {
 //             var previousWorkAreaWidth = GameStudioInternalSettings.WorkAreaWidth.GetValue();
 //             var previousWorkAreaHeight = GameStudioInternalSettings.WorkAreaHeight.GetValue();
 //             var wasWindowMaximized = GameStudioInternalSettings.WindowMaximized.GetValue();
@@ -250,42 +250,42 @@ namespace Stride.GameStudio.View
 // //                this.CenterToArea(workArea);
 //                 WindowState = WindowState.Normal;
 //             }
-//         }
-// 
-//         private void GameStudioLoaded(object sender, EventArgs e)
-//         {
-//             if (!Editor.Session.IsEditorInitialized)
-//             {
-//                 // Size the window to best fit the current screen size
-//                 InitializeWindowSize();
-//                 // Load the docking layout
+        }
+
+        private void GameStudioLoaded(object sender, EventArgs e)
+        {
+            if (!Editor.Session.IsEditorInitialized)
+            {
+                // Size the window to best fit the current screen size
+                InitializeWindowSize();
+                // Load the docking layout
 //                 dockingLayout.ReloadCurrentLayout();
-//                 // Restore visible/hidden status of panes
+                // Restore visible/hidden status of panes
 //                 GameStudioViewModel.GameStudio.Panels.LoadFromSettings();
-//                 // Initialize plugins
-//                 Editor.Session.ServiceProvider.Get<IAssetsPluginService>().Plugins.ForEach(x => x.InitializeSession(Editor.Session));
-//                 // Open assets that were being edited in the previous session
+                // Initialize plugins
+                Editor.Session.ServiceProvider.Get<IAssetsPluginService>().Plugins.ForEach(x => x.InitializeSession(Editor.Session));
+                // Open assets that were being edited in the previous session
 //                 ReopenAssetEditors(dockingLayout.LoadOpenAssets().ToList()).Forget();
-// 
-//                 // Listen to clipboard
-// //                ClipboardMonitor.RegisterListener(this);
-//                 // Notify start
+
+                // Listen to clipboard
+//                ClipboardMonitor.RegisterListener(this);
+                // Notify start
 //                 Program.NotifyGameStudioStarted();
-// 
-//                 Editor.Session.PluginsInitialized();
-// 
-// /*                foreach (var window in Application.Current.Windows.Cast<Window>().Where(x => !Equals(x, this)))
-//                 {
-//                     var childHwnd = new WindowInteropHelper(window).Handle;
-//                     var parentHwnd = new WindowInteropHelper(this).Handle;
-//                     var handleRef = new HandleRef(window, childHwnd);
-//                     NativeHelper.SetWindowLong(handleRef, NativeHelper.WindowLongType.HwndParent, parentHwnd);
-//                 }*/
-//             }
-//         }
-// 
-//         private async Task SaveAndClose()
-//         {
+
+                Editor.Session.PluginsInitialized();
+
+/*                foreach (var window in Application.Current.Windows.Cast<Window>().Where(x => !Equals(x, this)))
+                {
+                    var childHwnd = new WindowInteropHelper(window).Handle;
+                    var parentHwnd = new WindowInteropHelper(this).Handle;
+                    var handleRef = new HandleRef(window, childHwnd);
+                    NativeHelper.SetWindowLong(handleRef, NativeHelper.WindowLongType.HwndParent, parentHwnd);
+                }*/
+            }
+        }
+
+        private async Task SaveAndClose()
+        {
 //             try
 //             {
 //                 // Save MRUs
@@ -336,23 +336,23 @@ namespace Stride.GameStudio.View
 //             {
 //                 closingTask = null;
 //             }
-//         }
-// 
-//         /// <summary>
-//         /// Opens assets that were being edited in the previous session.
-//         /// </summary>
-//         /// <param name="assetIds">The list of asset ids for which to reopen the editor.</param>
-//         private async Task ReopenAssetEditors(IReadOnlyCollection<AssetId> assetIds)
-//         {
-//             if (assetIds.Count == 0)
-//             {
-//                 // If no data, try to open the default scene
-//                 OpenDefaultScene(Editor.Session);
-//                 return;
-//             }
-//             // Open assets
-//             var assets = assetIds.Select(x => Editor.Session.GetAssetById(x)).NotNull().ToList();
-//             Editor.Session.ActiveAssetView.SelectAssets(assets.Last().Yield());
+        }
+
+        /// <summary>
+        /// Opens assets that were being edited in the previous session.
+        /// </summary>
+        /// <param name="assetIds">The list of asset ids for which to reopen the editor.</param>
+        private async Task ReopenAssetEditors(IReadOnlyCollection<AssetId> assetIds)
+        {
+            if (assetIds.Count == 0)
+            {
+                // If no data, try to open the default scene
+                OpenDefaultScene(Editor.Session);
+                return;
+            }
+            // Open assets
+            var assets = assetIds.Select(x => Editor.Session.GetAssetById(x)).NotNull().ToList();
+            Editor.Session.ActiveAssetView.SelectAssets(assets.Last().Yield());
 //             foreach (var asset in assets)
 //             {
 //                 // HACK: temporary open and await asset editor sequentially
@@ -362,89 +362,89 @@ namespace Stride.GameStudio.View
 //             assetEditorsManager.CloseAllHiddenWindows();
 //             // Save list of opened asset editors
 //             dockingLayout.SaveOpenAssets(assetEditorsManager.OpenedAssets);
-//         }
-// 
-//         private async void OpenDefaultScene(SessionViewModel session)
-//         {
-//             var startupPackage = session.LocalPackages.OfType<ProjectViewModel>().SingleOrDefault(x => x.IsCurrentProject);
-//             if (startupPackage == null)
-//                 return;
-// 
-//             var gameSettingsAsset = startupPackage.Assets.FirstOrDefault(x => x.Url == Assets.GameSettingsAsset.GameSettingsLocation);
-//             if (gameSettingsAsset == null)
-//             {
-//                 // Scan dependencies for game settings
-//                 // TODO: Scanning order? (direct dependencies first)
-//                 // TODO: Switch to using startupPackage.Dependencies view model instead
-//                 foreach (var dependency in startupPackage.PackageContainer.FlattenedDependencies)
-//                 {
-//                     if (dependency.Package == null)
-//                         continue;
-// 
-//                     var dependencyPackageViewModel = session.AllPackages.First(x => x.Package == dependency.Package);
-//                     if (dependencyPackageViewModel == null)
-//                         continue;
-// 
-//                     gameSettingsAsset = dependencyPackageViewModel.Assets.FirstOrDefault(x => x.Url == Assets.GameSettingsAsset.GameSettingsLocation);
-//                     if (gameSettingsAsset != null)
-//                         break;
-//                 }
-//             }
-// 
-//             if (gameSettingsAsset == null)
-//                 return;
-// 
-//             var defaultScene = ((Assets.GameSettingsAsset)gameSettingsAsset?.Asset)?.DefaultScene;
-//             if (defaultScene == null)
-//                 return;
-// 
-//             var defaultSceneReference = AttachedReferenceManager.GetAttachedReference(defaultScene);
-//             if (defaultSceneReference == null)
-//                 return;
-// 
-//             var asset = session.GetAssetById(defaultSceneReference.Id);
-//             if (asset == null)
-//                 return;
-// 
-//             Editor.Session.ActiveAssetView.SelectAssets(asset.Yield());
-// 
+        }
+
+        private async void OpenDefaultScene(SessionViewModel session)
+        {
+            var startupPackage = session.LocalPackages.OfType<ProjectViewModel>().SingleOrDefault(x => x.IsCurrentProject);
+            if (startupPackage == null)
+                return;
+
+            var gameSettingsAsset = startupPackage.Assets.FirstOrDefault(x => x.Url == Assets.GameSettingsAsset.GameSettingsLocation);
+            if (gameSettingsAsset == null)
+            {
+                // Scan dependencies for game settings
+                // TODO: Scanning order? (direct dependencies first)
+                // TODO: Switch to using startupPackage.Dependencies view model instead
+                foreach (var dependency in startupPackage.PackageContainer.FlattenedDependencies)
+                {
+                    if (dependency.Package == null)
+                        continue;
+
+                    var dependencyPackageViewModel = session.AllPackages.First(x => x.Package == dependency.Package);
+                    if (dependencyPackageViewModel == null)
+                        continue;
+
+                    gameSettingsAsset = dependencyPackageViewModel.Assets.FirstOrDefault(x => x.Url == Assets.GameSettingsAsset.GameSettingsLocation);
+                    if (gameSettingsAsset != null)
+                        break;
+                }
+            }
+
+            if (gameSettingsAsset == null)
+                return;
+
+            var defaultScene = ((Assets.GameSettingsAsset)gameSettingsAsset?.Asset)?.DefaultScene;
+            if (defaultScene == null)
+                return;
+
+            var defaultSceneReference = AttachedReferenceManager.GetAttachedReference(defaultScene);
+            if (defaultSceneReference == null)
+                return;
+
+            var asset = session.GetAssetById(defaultSceneReference.Id);
+            if (asset == null)
+                return;
+
+            Editor.Session.ActiveAssetView.SelectAssets(asset.Yield());
+
 //             await assetEditorsManager.OpenAssetEditorWindow(asset);
-//         }
-// 
-//         private void OpenDebugWindow()
-//         {
+        }
+
+        private void OpenDebugWindow()
+        {
 //             if (debugWindow == null)
 //             {
 //                 debugWindow = new DebugWindow();
 //                 debugWindow.Show();
 //                 debugWindow.Closed += (s, e) => debugWindow = null;
 //             }
-//         }
-// 
-//         private void CreateTestAsset()
-//         {
-// #if DEBUG
-//             var package = Editor.Session.CurrentProject;
-//             if (package != null)
-//             {
-//                 using (var transaction = Editor.Session.UndoRedoService.CreateTransaction())
-//                 {
-//                     var dir = package.AssetMountPoint;
-//                     var name = NamingHelper.ComputeNewName("TestAsset", x => dir.Assets.Any(y => string.Equals(x, y.Name, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        private void CreateTestAsset()
+        {
+#if DEBUG
+            var package = Editor.Session.CurrentProject;
+            if (package != null)
+            {
+                using (var transaction = Editor.Session.UndoRedoService.CreateTransaction())
+                {
+                    var dir = package.AssetMountPoint;
+                    var name = NamingHelper.ComputeNewName("TestAsset", x => dir.Assets.Any(y => string.Equals(x, y.Name, StringComparison.OrdinalIgnoreCase)));
 //                     var asset = TestAsset.CreateNew();
 //                     var assetItem = new AssetItem(name, asset);
 //                     var assetViewModel = package.CreateAsset(dir, assetItem, true, null);
 //                     Editor.Session.NotifyAssetPropertiesChanged(new[] { assetViewModel });
 //                     Editor.Session.ActiveAssetView.SelectAssets(new[] { assetViewModel });
 //                     Editor.Session.UndoRedoService.SetName(transaction, $"Create test asset '{name}'");
-//                 }
-//             }
-// #endif
-//         }
-// 
-//         private void CreateUnitTestAsset()
-//         {
-// #if DEBUG
+                }
+            }
+#endif
+        }
+
+        private void CreateUnitTestAsset()
+        {
+#if DEBUG
 //             var package = Editor.Session.CurrentProject;
 //             if (package != null)
 //             {
@@ -460,42 +460,42 @@ namespace Stride.GameStudio.View
 //                     Editor.Session.UndoRedoService.SetName(transaction, $"Create test asset '{name}'");
 //                 }
 //             }
-// #endif
-//         }
-// 
-//         // ReSharper disable once MemberCanBeMadeStatic.Local
-//         private void BreakDebugger()
-//         {
-//             // You can access SessionViewModel.Instance from here to debug
-//             System.Diagnostics.Debugger.Break();
-//         }
-// 
+#endif
+        }
+
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void BreakDebugger()
+        {
+            // You can access SessionViewModel.Instance from here to debug
+            System.Diagnostics.Debugger.Break();
+        }
+
 //         private void EditorWindowPreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 //         {
 //             ((EditorViewModel)DataContext).Status.DiscardStatus();
 //         }
-// 
-//         /*      protected override void OnStateChanged(EventArgs e)
-//               {
-//                   base.OnStateChanged(e);
-//                   // To handle window changing screen
-//                   AdjustMaxSizeWithTaskbar();
-//               }*/
-// 
-//         void AdjustMaxSizeWithTaskbar()
-//         {
-//             // There's an issue were auto-hide taskbars cannot be focused while WPF windows are maximized
-//             // decreasing, even slightly, the maximum size fixes that issue
-//             var v = this.GetWorkArea();
-//             MaxWidth = v.Width;
-//             // Yes, works even when the taskbar is on the left and right of the screen, somehow
-//             MaxHeight = v.Height - 0.1d;
-//         }
-// 
-//         private PixelRect GetWorkArea()
-//         {
-//             Screen screen = Screens.ScreenFromWindow(this);
-//             return screen.WorkingArea;
-//         }
+
+        /*      protected override void OnStateChanged(EventArgs e)
+              {
+                  base.OnStateChanged(e);
+                  // To handle window changing screen
+                  AdjustMaxSizeWithTaskbar();
+              }*/
+
+        void AdjustMaxSizeWithTaskbar()
+        {
+            // There's an issue were auto-hide taskbars cannot be focused while WPF windows are maximized
+            // decreasing, even slightly, the maximum size fixes that issue
+            var v = this.GetWorkArea();
+            MaxWidth = v.Width;
+            // Yes, works even when the taskbar is on the left and right of the screen, somehow
+            MaxHeight = v.Height - 0.1d;
+        }
+
+        private PixelRect GetWorkArea()
+        {
+            Screen screen = Screens.ScreenFromWindow(this);
+            return screen.WorkingArea;
+        }
     }
 }

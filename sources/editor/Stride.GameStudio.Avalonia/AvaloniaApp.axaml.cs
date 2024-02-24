@@ -21,7 +21,7 @@ using Stride.Core.Assets.Editor.Settings;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.IO;
 using Stride.Core.Presentation.Windows;
-using Stride.GameStudio.View;
+using Stride.GameStudio.Avalonia.View;
 using System.Diagnostics;
 using System.Linq;
 using System;
@@ -30,7 +30,7 @@ using Stride.GameStudio.Avalonia.ViewModels;
 using Stride.Core.MostRecentlyUsedFiles;
 using Stride.Assets.Presentation;
 using Stride.Core.Assets;
-// using Stride.GameStudio.Plugin;
+// using Stride.GameStudio.Avalonia.Plugin;
 using Stride.Core.Translation;
 using Stride.Core.Translation.Providers;
 using Stride.Core.Assets.Editor;
@@ -92,18 +92,20 @@ public partial class AvaloniaApp : Application
 
     private EventHandler doDialog;
 
-//     private async Task DoShowProjectSelectionDialogAsync(NewOrOpenSessionTemplateCollectionViewModel viewModel, Window mainWindowRoot, IViewModelServiceProvider serviceProvider, GameStudioViewModel editor)
-//     {
-//         bool? completed;
-//         mainWindowRoot.Activated -= doDialog;
-// 
-//         try
-//         {
-//             // temporary while testing gamestudiowindow.
+    private async Task DoShowProjectSelectionDialogAsync(NewOrOpenSessionTemplateCollectionViewModel viewModel, Window mainWindowRoot, IViewModelServiceProvider serviceProvider, GameStudioViewModel editor)
+    {
+        bool? completed;
+        mainWindowRoot.Activated -= doDialog;
+
+        try
+        {
+            // temporary while testing gamestudiowindow.
 //         await editor.OpenSession(new Stride.Core.IO.UFile("C:/Users/sbanga/Documents/Stride Projects/VRSandbox/VRSandbox.sln"));
-//         var mainWindowX = new AGameStudioWindow(editor);
-//         mainWindowX.Show();
-//         return;
+        var mainWindowX = new AGameStudioWindow(editor);
+        mainWindowX.Show();
+                            Console.WriteLine ("Showing GameStudioWindow");
+
+        return;
 // 
 // 
 //         var startupWindow = new AProjectSelectionWindow(viewModel);
@@ -167,12 +169,12 @@ public partial class AvaloniaApp : Application
 //             // Otherwise, exit.
 // //            app.Shutdown();
 //         }
-//         }
-//         catch (Exception ex)
-//         {
-//             var a = 1;
-//         }
-//     }
+        }
+        catch (Exception ex)
+        {
+            var a = 1;
+        }
+    }
 
     public override void OnFrameworkInitializationCompleted()
     {
@@ -294,9 +296,9 @@ public partial class AvaloniaApp : Application
             // We use a MRU that contains the older version projects to display in the editor
             //var mru = new MostRecentlyUsedFileCollection(InternalSettings.LoadProfileCopy, InternalSettings.MostRecentlyUsedSessions, InternalSettings.WriteFile);
             //mru.LoadFromSettings();
-//             var editor = new GameStudioViewModel(serviceProvider, mru);
+            var editor = new GameStudioViewModel(serviceProvider, mru);
 //            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
-            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
+//            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
 //             AssetsPlugin.RegisterPlugin(typeof(StrideEditorPlugin));
 
             // Attempt to load the startup session, if available
@@ -312,7 +314,7 @@ public partial class AvaloniaApp : Application
                 }
             }*/
 // 
-//              var viewModel = new NewOrOpenSessionTemplateCollectionViewModel(serviceProvider/*, startupWindow*/);
+              var viewModel = new NewOrOpenSessionTemplateCollectionViewModel(serviceProvider/*, startupWindow*/);
 //            var startupWindow = new AProjectSelectionWindow(viewModel);
 
 //            startupWindow.Templates = viewModel;
@@ -321,13 +323,16 @@ public partial class AvaloniaApp : Application
 
             //desktop.MainWindow = startupWindow;
             //startupWindow.ShowModal();
-//              doDialog = (s, e) => DoShowProjectSelectionDialogAsync(viewModel, mainWindow, serviceProvider, editor);
-//              mainWindow.Activated += doDialog;
+            doDialog = (s, e) => DoShowProjectSelectionDialogAsync(viewModel, mainWindow, serviceProvider, editor);
+            mainWindow.Activated += doDialog;
             //await startupWindow.ShowDialog(mainWindow);
 
             mainWindow.Show();
         }
 
         base.OnFrameworkInitializationCompleted();
+        
+                    Console.WriteLine ("Framework Initialization Complete");
+
     }
 }

@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using Stride.Core.Presentation.Services;
 
-namespace Stride.GameStudio.Services
+namespace Stride.GameStudio.Avalonia.Services
 {
     /// <summary>
     /// An interface representing a modal dialog to prompt user some credentials

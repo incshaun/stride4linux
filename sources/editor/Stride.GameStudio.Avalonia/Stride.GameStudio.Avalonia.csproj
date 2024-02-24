@@ -32,6 +32,7 @@
     <PackageReference Include="Avalonia" />
  <PackageReference Include="Avalonia.Desktop" />
  <PackageReference Include="Avalonia.ReactiveUI" />    
+ <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="System.Resources.Extensions" />
     <PackageReference Include="ServiceWire" />
     <PackageReference Include="SharpDX" />

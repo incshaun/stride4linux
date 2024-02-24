@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace Stride.GameStudio
+namespace Stride.GameStudio.Avalonia
 {
     public partial class AvaloniaMainWindow : Window
     {
@@ -9,10 +9,10 @@ namespace Stride.GameStudio
         {
             InitializeComponent();
         }
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+//        private void InitializeComponent()
+//        {
+//            AvaloniaXamlLoader.Load(this);
+//        }
 
     }
 }

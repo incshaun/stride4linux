@@ -3,7 +3,7 @@
 using Stride.Core.Assets.Editor.View;
 using Stride.Core.Extensions;
 using Stride.Core.Presentation.Services;
-using Stride.GameStudio.View;
+using Stride.GameStudio.Avalonia.View;
 
 namespace Stride.GameStudio.Avalonia.Services
 {

@@ -3,7 +3,7 @@
 			 xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
 	     x:Class="Stride.GameStudio.Avalonia.AvaloniaApp" 
 			 
-			 
+		
 	     RequestedThemeVariant="Default">
 
    
@@ -20,5 +20,9 @@
 		<Color x:Key="RegionColor">Transparent</Color>	
 		
 	</Application.Resources>
+	
+<Application.Styles>
+		<FluentTheme />
+	</Application.Styles>
 
 </Application>

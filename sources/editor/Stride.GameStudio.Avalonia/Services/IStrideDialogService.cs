@@ -2,7 +2,7 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using Stride.Core.Assets.Editor.Services;
 
-namespace Stride.GameStudio.Services
+namespace Stride.GameStudio.Avalonia.Services
 {
     /// <summary>
     /// This interface represents the dialog service used for the GameStudio. It extends <see cref="IEditorDialogService"/> with some GameStudio-specific dialogs.
