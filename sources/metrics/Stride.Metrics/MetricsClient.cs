@@ -88,46 +88,46 @@ namespace Stride.Metrics
         /// appId</exception>
         public MetricsClient(MetricAppId appId, int? heartbeatRateMs = null, string endpointUrl = null, string versionOverride = null)
         {
-            if (heartbeatRateMs != null)
-            {
-                heartbeatRate = heartbeatRateMs.Value;
-            }
-
-            if (endpointUrl == null)
-            {
-                endpointUrl = "https://metrics.stride3d.net";
-            }
-            if (appId == null) throw new ArgumentNullException(nameof(appId));
-
-            // Make sure the endpoint ends with /
-            if (!endpointUrl.EndsWith("/"))
-            {
-                endpointUrl += "/";
-            }
-
-            this.versionOverride = versionOverride;
-
-            // Get special env variable
-            var disableIdStr = Environment.GetEnvironmentVariable(EnvSpecial);
-            if (disableIdStr != null)
-            {
-                Guid.TryParse(disableIdStr, out specialGuid);
-            }
-
-            scheduledTasks = new BlockingCollection<Action>();
-            httpClient = new HttpClient {BaseAddress = new Uri(endpointUrl)};
-            this.appId = appId;
-
-            // Get installation guid
-            installGuid = GetInstallGuid(appId, out rootRegistryKey, out appRegistryKey);
-
-            heartbeatStopwatch.Start();
-
-            // Use a custom task scheduler
-            metricSenderThread = new Thread(MetricThreadSender) { Name = "MetricThreadSender" };
-            metricSenderThread.Start();
-
-            scheduledTasks.Add(Initialize);
+//             if (heartbeatRateMs != null)
+//             {
+//                 heartbeatRate = heartbeatRateMs.Value;
+//             }
+// 
+//             if (endpointUrl == null)
+//             {
+//                 endpointUrl = "https://metrics.stride3d.net";
+//             }
+//             if (appId == null) throw new ArgumentNullException(nameof(appId));
+// 
+//             // Make sure the endpoint ends with /
+//             if (!endpointUrl.EndsWith("/"))
+//             {
+//                 endpointUrl += "/";
+//             }
+// 
+//             this.versionOverride = versionOverride;
+// 
+//             // Get special env variable
+//             var disableIdStr = Environment.GetEnvironmentVariable(EnvSpecial);
+//             if (disableIdStr != null)
+//             {
+//                 Guid.TryParse(disableIdStr, out specialGuid);
+//             }
+// 
+//             scheduledTasks = new BlockingCollection<Action>();
+//             httpClient = new HttpClient {BaseAddress = new Uri(endpointUrl)};
+//             this.appId = appId;
+// 
+//             // Get installation guid
+//             installGuid = GetInstallGuid(appId, out rootRegistryKey, out appRegistryKey);
+// 
+//             heartbeatStopwatch.Start();
+// 
+//             // Use a custom task scheduler
+//             metricSenderThread = new Thread(MetricThreadSender) { Name = "MetricThreadSender" };
+//             metricSenderThread.Start();
+// 
+//             scheduledTasks.Add(Initialize);
         }
 
         private void MetricThreadSender()
@@ -183,17 +183,17 @@ namespace Stride.Metrics
 
         public void Dispose()
         {
-            if (disposed)
-            {
-                throw new InvalidOperationException("Cannot dispose an object already disposed");
-            }
-
-            scheduledTasks.Add(CloseApplication);
-            metricSenderThread.Join(TimeSpan.FromMinutes(1));
-
-            httpClient.Dispose();
-
-            disposed = true;
+//             if (disposed)
+//             {
+//                 throw new InvalidOperationException("Cannot dispose an object already disposed");
+//             }
+// 
+//             scheduledTasks.Add(CloseApplication);
+//             metricSenderThread.Join(TimeSpan.FromMinutes(1));
+// 
+//             httpClient.Dispose();
+// 
+//             disposed = true;
         }
 
         private void OpenApplication()

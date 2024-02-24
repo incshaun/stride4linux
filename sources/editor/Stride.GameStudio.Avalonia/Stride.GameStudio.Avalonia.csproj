@@ -35,8 +35,8 @@
     <PackageReference Include="System.Resources.Extensions" />
     <PackageReference Include="ServiceWire" />
     <PackageReference Include="SharpDX" />
-    <PackageReference Include="Stride.Metrics" />
-    <PackageReference Include="Stride.CrashReport" />
+<!--     <PackageReference Include="Stride.Metrics" /> -->
+<!--     <PackageReference Include="Stride.CrashReport" /> -->
     <PackageReference Include="Mono.Cecil" />
     <Reference Include="Stride.Core.AssemblyProcessor">
       <HintPath Condition="$(TargetFramework.StartsWith('net8'))">..\..\..\deps\AssemblyProcessor\netstandard2.0\Stride.Core.AssemblyProcessor.dll</HintPath>
@@ -61,8 +61,11 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../metrics/Stride.Metrics/Stride.Metrics.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Presentation/Stride.Core.Presentation.csproj" />
+    <ProjectReference Include="../../presentation/Stride.Core.Presentation.Avalonia/Stride.Core.Presentation.Avalonia.csproj" />
     <ProjectReference Include="../Stride.Core.Assets.Editor/Stride.Core.Assets.Editor.csproj" />
+    <ProjectReference Include="../Stride.Core.Assets.Editor.Avalonia/Stride.Core.Assets.Editor.Avalonia.csproj" />
     <ProjectReference Include="..\..\engine\Stride.Debugger\Stride.Debugger.csproj" />
     <ProjectReference Include="..\..\tools\Stride.ConnectionRouter\Stride.ConnectionRouter.csproj" />
     <ProjectReference Include="..\..\tools\Stride.PackageInstall\Stride.PackageInstall.csproj">

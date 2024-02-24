@@ -1,0 +1,34 @@
+<Project>
+
+  <Import Project="..\..\targets\Stride.Core.props" />
+
+  <PropertyGroup>
+    <TargetFramework>$(StrideEditorTargetFramework)</TargetFramework>
+    <StrideAssemblyProcessor>true</StrideAssemblyProcessor>
+    <StrideAssemblyProcessorOptions>--auto-module-initializer --serialization</StrideAssemblyProcessorOptions>
+    <StrideLocalized>true</StrideLocalized>
+    <RestorePackages>true</RestorePackages>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
+    <PackageReference Include="Avalonia" />
+    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../assets/Stride.Core.Assets/Stride.Core.Assets.csproj" />
+    <ProjectReference Include="../Stride.Core.Assets.Editor/Stride.Core.Assets.Editor.csproj" />
+    <ProjectReference Include="../../presentation/Stride.Core.Presentation/Stride.Core.Presentation.csproj" />
+    <ProjectReference Include="../../presentation/Stride.Core.Presentation.Avalonia/Stride.Core.Presentation.Avalonia.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(StrideSdkTargets)" />
+</Project>

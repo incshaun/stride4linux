@@ -8,7 +8,7 @@ using Stride.Core.Assets.Editor.Services;
 using Stride.Core.Presentation.View;
 using Stride.Core.Presentation.ViewModels;
 using Stride.GameStudio.Avalonia.Helpers;
-// using Stride.GameStudio.Avalonia.Services;
+using Stride.GameStudio.Avalonia.Services;
 using Stride.Graphics;
 
 using Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels;
@@ -58,18 +58,18 @@ public partial class AvaloniaApp : Application
         AvaloniaXamlLoader.Load(this);
     }
 
-//     private static IViewModelServiceProvider InitializeServiceProvider()
-//     {
-//         // TODO: this should be done elsewhere
-//         var dispatcherService = new DispatcherService(Dispatcher.UIThread);
-//         var dialogService = new StrideDialogService(dispatcherService, StrideGameStudio.EditorName);
-//         var pluginService = new PluginService();
-//         var services = new List<object> { new DispatcherService(Dispatcher.UIThread), dialogService, pluginService };
+    private static IViewModelServiceProvider InitializeServiceProvider()
+    {
+        // TODO: this should be done elsewhere
+        var dispatcherService = new DispatcherService(Dispatcher.UIThread);
+        var dialogService = new StrideDialogService(dispatcherService, StrideGameStudio.EditorName);
+        var pluginService = new PluginService();
+        var services = new List<object> { new DispatcherService(Dispatcher.UIThread), dialogService, pluginService };
 //         if (renderDocManager != null)
 //             services.Add(renderDocManager);
-//         var serviceProvider = new ViewModelServiceProvider(services);
-//         return serviceProvider;
-//     }
+        var serviceProvider = new ViewModelServiceProvider(services);
+        return serviceProvider;
+    }
 
     private static void InitializeLanguageSettings()
     {
@@ -274,7 +274,7 @@ public partial class AvaloniaApp : Application
             }
 
             InitializeLanguageSettings();
-//             var serviceProvider = InitializeServiceProvider();
+            var serviceProvider = InitializeServiceProvider();
 
             try
             {
