@@ -63,6 +63,7 @@ namespace Stride.GameStudio.Avalonia.View
 
         public AGameStudioWindow(EditorViewModel editor)
         {
+            Console.WriteLine ("Creating GameStudioWindow");
             if (editor == null) throw new ArgumentNullException(nameof(editor));
 //            if (editor.Session == null) throw new ArgumentException($@"A valid session must exist before creating a {nameof(GameStudioWindow)}", nameof(editor));
             DataContext = editor; // Must be set before calling InitializeComponent
@@ -71,20 +72,26 @@ namespace Stride.GameStudio.Avalonia.View
 //            assetEditorsManager = new AAssetEditorsManager(dockingLayout, editor.Session);
 //            editor.ServiceProvider.Get<IEditorDialogService>().AssetEditorsManager = assetEditorsManager;
 
+            Console.WriteLine ("Initializing GameStudioWindow D");
+
             OpenDebugWindowCommand = new AnonymousCommand(editor.ServiceProvider, OpenDebugWindow);
             CreateTestAssetCommand = new AnonymousCommand(editor.ServiceProvider, CreateTestAsset);
             CreateUnitTestAssetCommand = new AnonymousCommand(editor.ServiceProvider, CreateUnitTestAsset);
             BreakDebuggerCommand = new AnonymousCommand(editor.ServiceProvider, BreakDebugger);
             EditorSettings.ResetEditorLayout.Command = new AnonymousTaskCommand(editor.ServiceProvider, ResetAllLayouts);
+            Console.WriteLine ("Initializing GameStudioWindow C");
 
             Loaded += GameStudioLoaded;
 //            Initialized += GameStudioLoaded;
 //            Application.Current.Activated += (s, e) => editor.ServiceProvider.Get<IEditorDialogService>().ShowDelayedNotifications();
             //            Loaded += GameStudioLoaded;
 
-            OpenMetricsProjectSession(editor);
+            Console.WriteLine ("Initializing GameStudioWindow B");
+//             OpenMetricsProjectSession(editor);
+            Console.WriteLine ("Initializing GameStudioWindow A");
 
             InitializeComponent();
+            Console.WriteLine ("Initialized GameStudioWindow");
         }
         private async Task ResetAllLayouts()
         {
@@ -254,7 +261,7 @@ namespace Stride.GameStudio.Avalonia.View
 
         private void GameStudioLoaded(object sender, EventArgs e)
         {
-            if (!Editor.Session.IsEditorInitialized)
+            if ((Editor.Session != null) && !Editor.Session.IsEditorInitialized)
             {
                 // Size the window to best fit the current screen size
                 InitializeWindowSize();

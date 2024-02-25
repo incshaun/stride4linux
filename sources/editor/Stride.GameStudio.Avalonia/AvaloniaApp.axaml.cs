@@ -100,7 +100,7 @@ public partial class AvaloniaApp : Application
         try
         {
             // temporary while testing gamestudiowindow.
-//         await editor.OpenSession(new Stride.Core.IO.UFile("C:/Users/sbanga/Documents/Stride Projects/VRSandbox/VRSandbox.sln"));
+        await editor.OpenSession(new Stride.Core.IO.UFile("C:/Users/sbanga/Documents/Stride Projects/VRSandbox/VRSandbox.sln"));
         var mainWindowX = new AGameStudioWindow(editor);
         mainWindowX.Show();
                             Console.WriteLine ("Showing GameStudioWindow");
@@ -172,6 +172,7 @@ public partial class AvaloniaApp : Application
         }
         catch (Exception ex)
         {
+            Console.WriteLine ("Bad thing happened: " + ex);
             var a = 1;
         }
     }
