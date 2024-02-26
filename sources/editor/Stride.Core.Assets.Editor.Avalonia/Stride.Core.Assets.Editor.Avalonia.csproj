@@ -28,6 +28,7 @@
     <ProjectReference Include="../Stride.Core.Assets.Editor/Stride.Core.Assets.Editor.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Presentation/Stride.Core.Presentation.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Presentation.Avalonia/Stride.Core.Presentation.Avalonia.csproj" />
+    <ProjectReference Include="../../presentation/Stride.Core.Translation.Presentation.Avalonia/Stride.Core.Translation.Presentation.Avalonia.csproj" />
   </ItemGroup>
 
   <Import Project="$(StrideSdkTargets)" />
