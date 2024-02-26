@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-// using Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views;
+using Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views;
 using Stride.Core.Assets.Editor.Services;
 using Stride.Core.Presentation.View;
 using Stride.Core.Presentation.ViewModels;
@@ -100,41 +100,43 @@ public partial class AvaloniaApp : Application
         try
         {
             // temporary while testing gamestudiowindow.
-        await editor.OpenSession(new Stride.Core.IO.UFile("C:/Users/sbanga/Documents/Stride Projects/VRSandbox/VRSandbox.sln"));
-        var mainWindowX = new AGameStudioWindow(editor);
-        mainWindowX.Show();
-                            Console.WriteLine ("Showing GameStudioWindow");
+//             Console.WriteLine ("Opening project");
+//         await editor.OpenSession(new Stride.Core.IO.UFile("/mountpoints/bigA/tmp/VRSandbox/VRSandbox.sln"));
+//         Console.WriteLine ("Project open: " + editor.Session);
+//         var mainWindowX = new AGameStudioWindow(editor);
+//         mainWindowX.Show();
+//                             Console.WriteLine ("Showing GameStudioWindow");
+// 
+//         return;
 
-        return;
-// 
-// 
-//         var startupWindow = new AProjectSelectionWindow(viewModel);
-// 
-//         startupWindow.Templates = viewModel;
-//         await startupWindow.ShowDialog(mainWindowRoot);
-// 
-//         // The user selected a template to instantiate
-//         if (startupWindow.NewSessionParameters != null)
-//         {
-//             // Clean existing entry in the MRU data
-//             var directory = startupWindow.NewSessionParameters.OutputDirectory;
-//             var name = startupWindow.NewSessionParameters.OutputName;
-//             var mruData = new MRUAdditionalDataCollection(InternalSettings.LoadProfileCopy, GameStudioInternalSettings.MostRecentlyUsedSessionsData, InternalSettings.WriteFile);
-//             mruData.RemoveFile(UFile.Combine(UDirectory.Combine(directory, name), new UFile(name + SessionViewModel.SolutionExtension)));
-// 
-//             completed = await editor.NewSession(startupWindow.NewSessionParameters);
-//         }
-//         // The user selected a path to open
-//         else if (startupWindow.ExistingSessionPath != null)
-//         {
-//             completed = await editor.OpenSession(startupWindow.ExistingSessionPath);
-//         }
-//         // The user cancelled from the new/open project window, so exit the application
-//         else
-//         {
-//             completed = true;
-//         }
-// 
+
+        var startupWindow = new AProjectSelectionWindow(viewModel);
+
+        startupWindow.Templates = viewModel;
+        await startupWindow.ShowDialog(mainWindowRoot);
+
+        // The user selected a template to instantiate
+        if (startupWindow.NewSessionParameters != null)
+        {
+            // Clean existing entry in the MRU data
+            var directory = startupWindow.NewSessionParameters.OutputDirectory;
+            var name = startupWindow.NewSessionParameters.OutputName;
+            var mruData = new MRUAdditionalDataCollection(InternalSettings.LoadProfileCopy, GameStudioInternalSettings.MostRecentlyUsedSessionsData, InternalSettings.WriteFile);
+            mruData.RemoveFile(UFile.Combine(UDirectory.Combine(directory, name), new UFile(name + SessionViewModel.SolutionExtension)));
+
+            completed = await editor.NewSession(startupWindow.NewSessionParameters);
+        }
+        // The user selected a path to open
+        else if (startupWindow.ExistingSessionPath != null)
+        {
+            completed = await editor.OpenSession(startupWindow.ExistingSessionPath);
+        }
+        // The user cancelled from the new/open project window, so exit the application
+        else
+        {
+            completed = true;
+        }
+
 //         if (completed != true)
 //         {
 //             var windowsClosed = new List<Task>();
@@ -155,20 +157,20 @@ public partial class AvaloniaApp : Application
 //  //           app.Shutdown();
 //             return;
 //         }
-// 
-//         if (editor.Session != null)
-//         {
-//             // If a session was correctly loaded, show the main window
-//             var mainWindow = new AGameStudioWindow(editor);
-//             //System.Windows.Application.Current.MainWindow = mainWindow;
-//             //WindowManager.ShowMainWindow(mainWindow);
-//             mainWindow.Show();
-//         }
-//         else
-//         {
-//             // Otherwise, exit.
-// //            app.Shutdown();
-//         }
+
+        if (editor.Session != null)
+        {
+            // If a session was correctly loaded, show the main window
+            var mainWindow = new AGameStudioWindow(editor);
+            //System.Windows.Application.Current.MainWindow = mainWindow;
+            //WindowManager.ShowMainWindow(mainWindow);
+            mainWindow.Show();
+        }
+        else
+        {
+            // Otherwise, exit.
+//            app.Shutdown();
+        }
         }
         catch (Exception ex)
         {
