@@ -1,0 +1,180 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+                    xmlns:view="clr-namespace:Stride.Core.Assets.Editor.View"
+                    xmlns:viewModel="clr-namespace:Stride.Core.Assets.Editor.ViewModel"
+                    xmlns:behaviors="clr-namespace:Stride.Core.Assets.Editor.View.Behaviors"
+                    mc:Ignorable="d">
+
+  <ResourceDictionary.MergedDictionaries>
+  </ResourceDictionary.MergedDictionaries>
+
+
+  <SolidColorBrush x:Key="EmphasisColorBrush" Color="#316B8F"/>
+
+  <!-- STYLE USED FOR TOOLBAR BUTTONS -->
+  <ControlTheme x:Key="ToolBarIconMenuItemStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+    <Setter Property="MinWidth" Value="20"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Margin" Value="2,0"/>
+    <Setter Property="Padding" Value="2"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="MenuItem">
+          <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="17" Width="Auto" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource ToolBarToggleButtonHoverBackground}" Opacity="0" x:Name="HoverBorder"/>
+              <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}"
+                                Width="{Binding Path=Content.(Image.Source).(BitmapSource.PixelWidth), RelativeSource={RelativeSource Self}, FallbackValue=Auto}"
+                                Height="{Binding Path=Content.(Image.Source).(BitmapSource.PixelHeight), RelativeSource={RelativeSource Self}, FallbackValue=Auto}"
+                                x:Name="Icon" VerticalAlignment="Center"  />
+              <ContentPresenter Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" Margin="2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+              <Popup Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="SubMenuPopup" Focusable="false"  >
+                <Grid x:Name="SubMenu">
+                  <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1"/>
+                  <StackPanel IsItemsHost="True"  />
+                </Grid>
+              </Popup>
+            </Grid>
+          </Border>
+          <!-- <ControlTemplate.Triggers>
+            <Trigger Property="IsSuspendingPopupAnimation" Value="true">
+              <Setter Property="PopupAnimation" Value="None" TargetName="SubMenuPopup" />
+            </Trigger>
+            <Trigger Property="Header" Value="{x:Null}">
+              <Setter Property="Visibility" Value="Collapsed" TargetName="HeaderHost" />
+            </Trigger>
+            <Trigger Property="IsHighlighted" Value="True">
+              <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
+              <Setter Property="Foreground" Value="Black" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Foreground" Value="Gray" />
+              <Setter TargetName="Icon" Property="Opacity" Value="0.5" />
+            </Trigger>
+          </ControlTemplate\.Triggers> -->
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="ToolBarDropDownMenuItemStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+    <Setter Property="MinWidth" Value="0"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="2,0"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="MenuItem">
+          <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}">
+            <Grid>
+              <Border Background="{DynamicResource ToolBarToggleButtonHoverBackground}" Opacity="0" x:Name="HoverBorder"/>
+              <Path x:Name="Path" Margin="{TemplateBinding Padding}" HorizontalAlignment="Stretch" Width="6" Height="4" Fill="{DynamicResource GlyphBrush}" Stretch="Fill" Stroke="{DynamicResource GlyphBrush}" StrokeThickness="1" Data="M5.2422477,11.132184 L11.5544,11.132184 8.6412958,4.4969033 z" RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                  <RotateTransform Angle="180"/>
+                </Path.RenderTransform>
+              </Path>
+              <Popup IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="SubMenuPopup" Focusable="false"  >
+                <Grid x:Name="SubMenu">
+                  <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1"/>
+                  <StackPanel IsItemsHost="True"  />
+                </Grid>
+              </Popup>
+            </Grid>
+          </Border>
+          <!-- <ControlTemplate.Triggers>
+            <Trigger Property="IsSuspendingPopupAnimation" Value="true">
+              <Setter Property="PopupAnimation" Value="None" TargetName="SubMenuPopup" />
+            </Trigger>
+            <Trigger Property="IsHighlighted" Value="True">
+              <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
+              <Setter Property="Foreground" Value="Black" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Foreground" Value="Gray" />
+              <Setter TargetName="Path" Property="Opacity" Value="0.5" />
+            </Trigger>
+          </ControlTemplate\.Triggers> -->
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+  <DataTemplate x:Key="DragVisualTemplate" >
+    <Border Background="{StaticResource BackgroundBrush}" BorderBrush="{StaticResource NormalBorderBrush}"
+                            BorderThickness="1" Padding="4" >
+      <StackPanel>
+        <ItemsControl ItemsSource="{Binding PreviewItems}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="{StaticResource ImageFolder}" Margin="0,0,5,0"/>
+                <!-- ReSharper disable Xaml.BindingWithContextNotResolved - This is why we use a PriorityBinding, we don't know what object is bound. -->
+                <TextBlock Text="{Binding DisplayName, Mode=OneWay}"/>
+                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <StackPanel Orientation="Horizontal">
+          <Image Source="{StaticResource ImageAcceptingDrop}" Margin="0,0,5,0" IsVisible="{Binding IsAccepted}"/>
+          <Image Source="{StaticResource ImageRejectingDrop}" Margin="0,0,5,0" IsVisible="{Binding IsRejected}"/>
+          <TextBlock Text="{Binding Message, Mode=OneWay}"/>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </DataTemplate>
+
+  <ControlTheme x:Key="ImageButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Setter Property="Margin" Value="2,0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Background" Value="Transparent"/>
+    
+    <Setter Property="Width" Value="16"/>
+    <Setter Property="Height" Value="16"/>
+  </ControlTheme>
+
+  <ControlTheme x:Key="MenuGroupSeparatorStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+    <Setter Property="Margin" Value="0"/>
+    <!-- IsEnabled=False is necessary for proper navigation in the menu (this separator will be skipped). -->
+    <Setter Property="IsEnabled" Value="False"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="MenuItem">
+          <Grid Background="{StaticResource BackgroundBrush}" MinHeight="20">
+            <ContentPresenter Margin="8,2" VerticalAlignment="Center">
+            </ContentPresenter>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="MenuGroupWithItemsStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+    <Setter Property="Margin" Value="0" />
+    <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
+    
+    <Setter Property="StaysOpenOnClick" Value="True" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="MenuItem">
+          <StackPanel>
+            <Grid Background="{StaticResource BackgroundBrush}" MinHeight="20">
+              <ContentPresenter Margin="8,2" VerticalAlignment="Center"/>
+            </Grid>
+            <StackPanel IsItemsHost="True" />
+          </StackPanel>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+  
+
+</ResourceDictionary>
