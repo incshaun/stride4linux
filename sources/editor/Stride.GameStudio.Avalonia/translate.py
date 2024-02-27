@@ -7,7 +7,7 @@ sourcesDir = "../../../sources/"
 # Replace the using statements.
 def translateHeaders (contents):
 
-  contents = re.sub ("using System.Windows;", "using Avalonia;", contents)
+  contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;", contents)
   contents = re.sub ("using System.Windows.Data;", "using Avalonia.Data;\nusing Avalonia.Data.Converters;", contents)
   contents = re.sub ("using System.Windows.Markup;", "using Avalonia.Markup.Xaml;", contents)
   contents = re.sub ("using System.Xaml;", "", contents)
@@ -171,10 +171,15 @@ def translateXAML (sourceFile):
 
 #translateCS ("presentation/Stride.Core.Translation.Presentation.Wpf/MarkupExtensions/MarkupExtensionHelper.cs")
 #translateCS ("presentation/Stride.Core.Translation.Presentation.Wpf/MarkupExtensions/LocalizeExtension.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeResourceDictionary.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeController.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
-translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/LightSteelBlueTheme.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
