@@ -1,8 +1,10 @@
 import os
 import re
-import regex
+import regex # for more interesting regex operations.
+import diff_match_patch
 
 sourcesDir = "../../../sources/"
+generatedDir = "../../../generated"
 
 # Replace the using statements.
 def translateHeaders (contents):
@@ -27,13 +29,16 @@ def translateNames (contents):
 def translateCS (sourceFile):
   
   sourceFileName = os.path.basename (sourceFile)
-  sourceFileDir = os.path.join (sourcesDir, os.path.dirname (sourceFile))
-  destFile = os.path.join (sourceFileDir.replace ("Wpf", "Avalonia"), sourceFileName)
+  sourceFileDir = os.path.dirname (sourceFile)
+  generatedFileDir = os.path.join (generatedDir, sourceFileDir.replace ("Wpf", "Avalonia"))
+  generatedFile = os.path.join (generatedDir, sourceFileDir.replace ("Wpf", "Avalonia"), sourceFileName)
+  generatedDiffFile = os.path.join (generatedDir, sourceFileDir.replace ("Wpf", "Avalonia"), sourceFileName + ".diff")
+  destFile = os.path.join (sourcesDir, sourceFileDir.replace ("Wpf", "Avalonia"), sourceFileName)
   
-  print ("Translating", sourceFileDir, sourceFileName, destFile)
+  #print ("Translating", sourceFileDir, sourceFileName, generatedFileDir, generatedFile, generatedDiffFile, destFile)
 
   # read source.
-  fle = open (os.path.join (sourceFileDir, sourceFileName), "r")
+  fle = open (os.path.join (sourcesDir, sourceFileDir, sourceFileName), "r")
   contents = fle.read ()
   fle.close ()
   
@@ -42,10 +47,65 @@ def translateCS (sourceFile):
   contents = translateNames (contents)
     
   # write translated file.
-  os.makedirs (os.path.dirname (destFile), exist_ok = True)
-  fle = open (destFile, "w")
+  os.makedirs (os.path.dirname (generatedFile), exist_ok = True)
+  fle = open (generatedFile, "w")
   fle.write (contents)
   fle.close ()
+  
+  # Now we try to preserve any changes that have been made.
+  # Either the destFile already exists, and there is no diff - so generate a diff 
+  # OR
+  # No destFile exists and there is a diff - so patch to create the dest.
+  # OR
+  # Both destFile and diff exist - warn the user to remove one or the other.
+  # OR
+  # Neither exist, just copy generated file directly to destination.
+  if os.path.isfile (destFile):
+    if os.path.isfile (generatedDiffFile):
+      print ("Both destination and diff file exist. Remove one to have it regenerated.")
+      print ("  Remove the destination file to have it regenerated in response to third party updates in the repo")
+      print ("  Remove the diff file to discard local changes to the class e.g., if translation filters change.")
+      print ()
+      print ("To remove destination file:")
+      print ("  rm " + destFile)
+      print ()
+      print ("To remove diff file:")
+      print ("  rm " + generatedDiffFile)
+      print ()
+      exit (0)
+    else:
+      # No diff, generate.
+      print ("Destination file already exists, generating diff file: " + generatedDiffFile)
+      fle = open (destFile, "r")
+      destcontents = fle.read ()
+      fle.close ()
+      dmp = diff_match_patch.diff_match_patch ()
+      patches = dmp.patch_make (contents, destcontents)
+      diff = dmp.patch_toText (patches)
+      os.makedirs (os.path.dirname (generatedDiffFile), exist_ok = True)
+      fle = open (generatedDiffFile, "w")
+      fle.writelines (diff)
+      fle.close ()
+  else:
+    if os.path.isfile (generatedDiffFile):
+      # No destination file, generate from diff.
+      print ("Creating destination file " + destFile + " from translation and an existing diff")
+      fle = open (generatedDiffFile, "r")
+      diffcontents = fle.read ()
+      fle.close ()
+      dmp = diff_match_patch.diff_match_patch ()
+      patches = dmp.patch_fromText (diffcontents)
+      new_text, _ = dmp.patch_apply(patches, contents)
+      fle = open (destFile, "w")
+      fle.writelines (new_text)
+      fle.close ()
+    else:
+      # Neither file exists, just write directly to destination.
+      print ("Creating destination file " + destFile + " by translation")
+      fle = open (destFile, "w")
+      fle.writelines (contents)
+      fle.close ()
+    
 
 def translateConstants (contents):
   contents = re.sub ("xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"", "xmlns=\"https://github.com/avaloniaui\"", contents)
@@ -103,6 +163,9 @@ def translateProperties (contents):
   # Currently don't have a way to deal with PopupAnimation.
   contents = re.sub ("PopupAnimation=\".*\"", "", contents)
   
+  # Bitmap image
+  contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"pack://application:,,,/Stride.Core.Presentation.Wpf;component/Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
+  
   # As many versions of the visibility property, given that we're translating 3 states, to boolean.
   contents = re.sub ("Visibility=\"\{Binding (.*), Converter=\{sd:VisibleOrCollapsed\}\}\"", r'IsVisible="{Binding \1}"', contents)
 
@@ -114,7 +177,7 @@ def translateProperties (contents):
   contents = re.sub ("<Setter Property=\"SnapsToDevicePixels\" Value=\"True\"/>", "", contents)
   contents = re.sub ("AllowsTransparency=\"(.*?)\"", "", contents)
   contents = re.sub ("KeyboardNavigation.DirectionalNavigation=\"Cycle\"", "", contents)  # possibly investigate WrapSelection?
-
+  contents = re.sub (re.compile ("<Setter Property=\"WindowChrome.WindowChrome\">(.*?)</Setter>", re.DOTALL), "", contents)  
 
   # ResourceDictionary with source.
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\" /\>", r'<ResourceInclude Source="\1.axaml" />', contents)
