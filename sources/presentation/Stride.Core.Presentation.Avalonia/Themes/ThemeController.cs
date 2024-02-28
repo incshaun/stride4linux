@@ -9,21 +9,20 @@ namespace Stride.Core.Presentation.Themes
     /// <summary>
     /// This class contains properties to control theming of icons, etc.
     /// </summary>
-    public static class ThemeController
+    public class ThemeController
     {
         /// <summary>
         /// The main purpose of this property is for Luminosity Check feature of
         /// <see cref="ImageThemingUtilities.TransformDrawing(Media.Drawing, IconTheme, bool)"/>.
         /// </summary>
-        public static readonly AvaloniaProperty IsDarkProperty =
-            AvaloniaProperty.RegisterAttached("IsDark", typeof(bool), typeof(ThemeController), new PropertyMetadata(false));
+        public static readonly AttachedProperty<bool> IsDarkProperty = AvaloniaProperty<bool>.RegisterAttached<ThemeController, Control, bool>("IsDark", false);
 
-        public static bool GetIsDark(DependencyObject obj)
+        public static bool GetIsDark(AvaloniaObject obj)
         {
             return (bool)obj.GetValue(IsDarkProperty);
         }
 
-        public static void SetIsDark(DependencyObject obj, bool value)
+        public static void SetIsDark(AvaloniaObject obj, bool value)
         {
             obj.SetValue(IsDarkProperty, value);
         }

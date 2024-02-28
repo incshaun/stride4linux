@@ -9,6 +9,9 @@
                     mc:Ignorable="d">
 
   <ResourceDictionary.MergedDictionaries>
+<!--    <ResourceInclude Source="/Stride.Core.Presentation.Wpf;component/Themes/ThemeSelector.axaml" />
+    <ResourceInclude Source="ImageDictionary.axaml" />
+    <ResourceInclude Source="../Themes/ThemeSelector.axaml" />-->
   </ResourceDictionary.MergedDictionaries>
 
 
