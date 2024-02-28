@@ -62,10 +62,10 @@
 					</Grid.Styles>
 
 					<TextBlock Grid.Row="0" Grid.Column="0" Text="{sd:Localize Name:}" Margin="20,0" VerticalAlignment="Center"/>
-<!--					<sd:ATextBox Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding Name}">
+					<sd:TextBox Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding Name}">
 						<i:Interaction.Behaviors>
 						</i:Interaction.Behaviors>
-					</sd:ATextBox>-->
+					</sd:TextBox>
 					<TextBlock Grid.Row="1" Grid.Column="0" Text="{sd:Localize Location:}" Margin="20,0" VerticalAlignment="Center"/>
 					<DockPanel Grid.Row="1" Grid.Column="1">
 						<Button DockPanel.Dock="Right" Command="{Binding BrowseDirectoryCommand}" CommandParameter="Location" ToolTip.Tip="{sd:Localize Browse directory, Context=ToolTip}">

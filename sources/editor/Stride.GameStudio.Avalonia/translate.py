@@ -83,9 +83,11 @@ def writeDest (contents, generatedFile, generatedDiffFile, destFile):
 # Replace the using statements.
 def translateHeaders (contents):
 
-  contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;", contents)
+  contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;", contents)
   contents = re.sub ("using System.Windows.Data;", "using Avalonia.Data;\nusing Avalonia.Data.Converters;", contents)
   contents = re.sub ("using System.Windows.Markup;", "using Avalonia.Markup.Xaml;", contents)
+  contents = re.sub ("using System.Windows.Input;", "using Avalonia.Input;", contents)
+  contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;", contents)
   contents = re.sub ("using System.Xaml;", "", contents)
   return contents
 
@@ -102,7 +104,31 @@ def translateNames (contents):
 
 # Translate the various forms of styled property.
 def translateProperties (contents):
+
+  # Handle DependencyProperty.Register
+  # Without handler.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);")
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
   
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
+  commands = ""
+  classname = ""
+  for match in re.findall (pat, contents):
+    print (match)
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
+    classname = match[5];
+  #contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
+  
+  # patch in commands to an existing static constructor.
+  if len (commands) > 0:
+    print ("Match", "static " + classname + "(\s*)\(\)")
+    contents = re.sub (re.compile ("static " + classname + "(\s*)\(\)(\s*){", re.DOTALL), r"static " + classname + "()\n\t\t{\n" + commands, contents)
+  
+  print (commands)
+    
+    
+    
+    
   # handle RegisterAttached.
   contents = re.sub (re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\((.*?)\)\);", re.DOTALL), r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4, \7);", contents)
   return contents
@@ -339,9 +365,10 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Translation.Presentation.Wpf/MarkupExtensions/LocalizeExtension.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeResourceDictionary.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeController.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBox.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
-translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")
