@@ -83,12 +83,24 @@ def writeDest (contents, generatedFile, generatedDiffFile, destFile):
 # Replace the using statements.
 def translateHeaders (contents):
 
-  contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;", contents)
+  headers = ""
+  if re.findall ("DataTemplate", contents):
+    headers += "using Avalonia.Markup.Xaml.Templates;\n"
+  if re.findall ("RoutedEvent", contents):
+    headers += "using Avalonia.Interactivity;\n"
+  if re.findall ("OnApplyTemplate", contents):
+    headers += "using Avalonia.Controls.Primitives;\n"
+
+  contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
   contents = re.sub ("using System.Windows.Data;", "using Avalonia.Data;\nusing Avalonia.Data.Converters;", contents)
   contents = re.sub ("using System.Windows.Markup;", "using Avalonia.Markup.Xaml;", contents)
   contents = re.sub ("using System.Windows.Input;", "using Avalonia.Input;", contents)
-  contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;", contents)
+  contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;\n" + headers, contents)
   contents = re.sub ("using System.Xaml;", "", contents)
+  
+  # Remove internal, hopefully avoid boxing.
+  contents = re.sub ("using Stride.Core.Presentation.Internal;", "", contents)
+  
   return contents
 
 def translateAnnotations (contents):
@@ -98,14 +110,36 @@ def translateAnnotations (contents):
 
 def translateNames (contents):
   #contents = re.sub ("DependencyProperty", "AvaloniaProperty", contents)
+  contents = re.sub ("ICommand", "ICommandSource", contents)
+  contents = re.sub ("RoutedCommand", "ICommandSource", contents) # provisional.
+  contents = re.sub ("\.CanExecute\(", ".Command.CanExecute(", contents) # provisional.
+  contents = re.sub ("\.Execute\(", ".Command.Execute(", contents) # provisional.
+  
+  
+  contents = re.sub ("CancelRoutedEventHandler", "EventHandler<CancelRoutedEventArgs>", contents)
+  contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional
+  contents = re.sub ("ExecutedRoutedEventArgs", "RoutedEventArgs", contents)
+  contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
+  contents = re.sub ("DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
+  contents = re.sub ("System.Windows.Controls.TextBox", "Avalonia.Controls.TextBox", contents)
   contents = re.sub ("DependencyObject", "AvaloniaObject", contents)
   contents = re.sub ("\.ProvideValue\(.*\)", "", contents) # is this true in general?
+
+  contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
+
+
+  contents = re.sub ("BooleanBoxes.FalseBox", "false", contents)
+  contents = re.sub ("value.Box\(\)", "value", contents)
   return contents
 
 # Translate the various forms of styled property.
 def translateProperties (contents):
 
   # Handle DependencyProperty.Register
+  # Without initializing argument
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\(([^,\)]*?)\)\);")
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4);", contents)
+  
   # Without handler.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
@@ -114,23 +148,52 @@ def translateProperties (contents):
   commands = ""
   classname = ""
   for match in re.findall (pat, contents):
-    print (match)
+    #print (match)
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
     classname = match[5];
-  #contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
   
   # patch in commands to an existing static constructor.
   if len (commands) > 0:
-    print ("Match", "static " + classname + "(\s*)\(\)")
+    #print ("Match", "static " + classname + "(\s*)\(\)")
     contents = re.sub (re.compile ("static " + classname + "(\s*)\(\)(\s*){", re.DOTALL), r"static " + classname + "()\n\t\t{\n" + commands, contents)
   
-  print (commands)
+  #print (commands)
     
     
     
     
   # handle RegisterAttached.
   contents = re.sub (re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\((.*?)\)\);", re.DOTALL), r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4, \7);", contents)
+  
+  
+  
+  
+  
+  # Routed events.
+  pat = re.compile ("public static readonly RoutedEvent (.*?)(\s*)\=(\s*)EventManager.RegisterRoutedEvent\((.*?), RoutingStrategy\.(.*?), typeof\(([^,\)]*?)\), typeof\(([^,\)]*?)\)\);")
+  contents = re.sub (pat, r"public static readonly RoutedEvent \1 = RoutedEvent.Register<\7, RoutedEventArgs>(\4, RoutingStrategies.\5);", contents)
+  
+  
+  # Focus
+  pat = re.compile ("protected override void OnGotKeyboardFocus\(KeyboardFocusChangedEventArgs e\)(\s*){(\s*)base.OnGotKeyboardFocus\(e\);")
+  contents = re.sub (pat, r"protected override void OnGotFocus(GotFocusEventArgs e)\n\t\t{\n\t\t\tbase.OnGotFocus(e);", contents)
+  pat = re.compile ("protected override void OnLostKeyboardFocus\(KeyboardFocusChangedEventArgs e\)") # with no call to base.
+  contents = re.sub (pat, r"protected override void OnLostFocus(RoutedEventArgs e)", contents)
+  pat = re.compile ("base.OnLostKeyboardFocus\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnLostFocus(e);", contents)
+  
+  # Mouse
+  pat = re.compile ("protected override void OnMouseDown\(MouseButtonEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
+  pat = re.compile ("base.OnMouseDown\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
+  
+  # OnApplyTemplate
+  pat = re.compile ("public override void OnApplyTemplate\(\)(\s*){(\s*)base.OnApplyTemplate\(\);")
+  contents = re.sub (pat, r"protected override void OnApplyTemplate(TemplateAppliedEventArgs e)\n\t\t{\n\t\t\tbase.OnApplyTemplate(e);", contents)
+  
+  
   return contents
 
 # Translate a .cs file from Wpf to Avalonia equivalent.
@@ -366,6 +429,7 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeResourceDictionary.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeController.cs")
 translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBox.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBoxBase.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")

@@ -5,10 +5,14 @@ using System.ComponentModel;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls.Primitives;
+
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Input;
-using Stride.Core.Presentation.Internal;
+
 
 namespace Stride.Core.Presentation.Controls
 {
@@ -25,7 +29,7 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="UseTimedValidation"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty UseTimedValidationProperty = DependencyProperty.Register("UseTimedValidation", typeof(bool), typeof(TextBox), new PropertyMetadata(BooleanBoxes.FalseBox, OnUseTimedValidationPropertyChanged));
+        public static readonly StyledProperty<bool> UseTimedValidationProperty = StyledProperty<bool>.Register<TextBox, bool>("UseTimedValidation", false);
 
         /// <summary>
         /// Identifies the <see cref="ValidationDelay"/> dependency property.
@@ -35,25 +39,25 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="TrimmedText"/> dependency property.
         /// </summary>
-        public static readonly DependencyPropertyKey TrimmedTextPropertyKey = DependencyProperty.RegisterReadOnly("TrimmedText", typeof(string), typeof(TextBox), new PropertyMetadata(""));
+//         public static readonly DependencyPropertyKey TrimmedTextPropertyKey = DependencyProperty.RegisterReadOnly("TrimmedText", typeof(string), typeof(TextBox), new PropertyMetadata(""));
 
         /// <summary>
         /// Identifies the <see cref="TrimmedText"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty TrimmedTextProperty = TrimmedTextPropertyKey.DependencyProperty;
+//         public static readonly DependencyProperty TrimmedTextProperty = TrimmedTextPropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Clears the current <see cref="System.Windows.Controls.TextBox.Text"/> of a text box.
+        /// Clears the current <see cref="Avalonia.Controls.TextBox.Text"/> of a text box.
         /// </summary>
-        public static RoutedCommand ClearTextCommand { get; }
+        public static ICommandSource ClearTextCommand { get; }
         
         static TextBox()
 		{
 			UseTimedValidationProperty.Changed.AddClassHandler<TextBox>(OnUseTimedValidationPropertyChanged);
 
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(typeof(TextBox)));
-            ClearTextCommand = new RoutedCommand("ClearTextCommand", typeof(System.Windows.Controls.TextBox));
-            CommandManager.RegisterClassCommandBinding(typeof(System.Windows.Controls.TextBox), new CommandBinding(ClearTextCommand, OnClearTextCommand));
+            ClearTextCommand = new ICommandSource("ClearTextCommand", typeof(Avalonia.Controls.TextBox));
+            CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(ClearTextCommand, OnClearTextCommand));
         }
 
         public TextBox()
@@ -65,7 +69,7 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Gets or sets whether the text should be automatically validated after a delay defined by the <see cref="ValidationDelay"/> property.
         /// </summary>
-        public bool UseTimedValidation { get { return (bool)GetValue(UseTimedValidationProperty); } set { SetValue(UseTimedValidationProperty, value.Box()); } }
+        public bool UseTimedValidation { get { return (bool)GetValue(UseTimedValidationProperty); } set { SetValue(UseTimedValidationProperty, value); } }
 
         /// <summary>
         /// Gets or sets the amount of time before a validation of input text happens, in milliseconds.
@@ -80,9 +84,9 @@ namespace Stride.Core.Presentation.Controls
         public string TrimmedText { get { return (string)GetValue(TrimmedTextPropertyKey.DependencyProperty); } private set { SetValue(TrimmedTextPropertyKey, value); } }
 
         /// <inheritdoc/>
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
+        protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+		{
+			base.OnApplyTemplate(e);
 
             trimmedTextBlock = GetTemplateChild("PART_TrimmedText") as TextBlock;
             if (trimmedTextBlock == null)
@@ -126,7 +130,7 @@ namespace Stride.Core.Presentation.Controls
             return arrangedSize;
         }
 
-        private static void OnUseTimedValidationPropertyChanged(AvaloniaObject sender, DependencyPropertyChangedEventArgs e)
+        private static void OnUseTimedValidationPropertyChanged(AvaloniaObject sender, AvaloniaPropertyChangedEventArgs e)
         {
             var txt = (TextBox)sender;
             if ((bool)e.NewValue)
@@ -135,7 +139,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private static void OnClearTextCommand(object sender, ExecutedRoutedEventArgs e)
+        private static void OnClearTextCommand(object sender, RoutedEventArgs e)
         {
             var textBox = sender as TextBox;
             textBox?.Clear();
