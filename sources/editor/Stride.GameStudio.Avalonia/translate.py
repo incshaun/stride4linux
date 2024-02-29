@@ -124,6 +124,7 @@ def translateNames (contents):
   contents = re.sub ("DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
   contents = re.sub ("System.Windows.Controls.TextBox", "Avalonia.Controls.TextBox", contents)
   contents = re.sub ("DependencyObject", "AvaloniaObject", contents)
+  contents = re.sub ("DependencyProperty.UnsetValue", "AvaloniaProperty.UnsetValue", contents)
   contents = re.sub ("\.ProvideValue\(.*\)", "", contents) # is this true in general?
 
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
@@ -202,13 +203,19 @@ def translateProperties (contents):
 def translateCS (sourceFile):
   
   sourceFileName = os.path.basename (sourceFile)
+  name, extension = os.path.splitext (sourceFileName) 
+  if name.endswith (".xaml"):
+    basename, _ = os.path.splitext (name)
+    basename += ".axaml"
+  else:
+    basename = name
   sourceFileDir = os.path.dirname (sourceFile)
   generatedFileDir = os.path.join (generatedDir, sourceFileDir.replace ("Wpf", "Avalonia"))
-  generatedFile = os.path.join (generatedDir, sourceFileDir.replace ("Wpf", "Avalonia"), sourceFileName)
-  generatedDiffFile = os.path.join (generatedDir, sourceFileDir.replace ("Wpf", "Avalonia"), sourceFileName + ".diff")
-  destFile = os.path.join (sourcesDir, sourceFileDir.replace ("Wpf", "Avalonia"), sourceFileName)
+  generatedFile = os.path.join (generatedDir, sourceFileDir.replace ("Wpf", "Avalonia"), basename + ".cs")
+  generatedDiffFile = os.path.join (generatedDir, sourceFileDir.replace ("Wpf", "Avalonia"), basename + ".cs" + ".diff")
+  destFile = os.path.join (sourcesDir, sourceFileDir.replace ("Wpf", "Avalonia"), basename + ".cs")
   
-  #print ("Translating", sourceFileDir, sourceFileName, generatedFileDir, generatedFile, generatedDiffFile, destFile)
+  #print ("Translating", sourceFileDir, sourceFileName, generatedFileDir, generatedFile, generatedDiffFile, destFile, name, extension)
 
   # read source.
   contents = readSource (os.path.join (sourcesDir, sourceFileDir, sourceFileName))
@@ -364,6 +371,7 @@ def translateTags (contents):
 
   # ResourceDictionary with source.
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\" /\>", r'<ResourceInclude Source="\1.axaml" />', contents)
+  contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\"/\>", r'<ResourceInclude Source="\1.axaml" />', contents)
 
   # Dropshadowbitmap
   contents = re.sub ("<DropShadowBitmapEffect (.*?)/>", r'<DropShadowEffect \1/>', contents) # one line style
@@ -432,7 +440,12 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeController.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBox.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBoxBase.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/UDirectoryToString.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/UDirectoryToString.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/TemplateBrowserUserControl.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/TemplateProviders/DataTypeTemplateSelector.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/SumNum.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ConverterHelper.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/DoubleExtension.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
@@ -440,6 +453,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/UDirecto
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/LightSteelBlueTheme.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/TemplateBrowserUserControl.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

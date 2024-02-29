@@ -41,6 +41,7 @@ using Avalonia.Metadata;
 [assembly: Avalonia.Metadata.XmlnsPrefix("http://schemas.stride3d.net/xaml/presentation", "sd")]
 [assembly: Avalonia.Metadata.XmlnsDefinition("http://schemas.stride3d.net/xaml/presentation", "Stride.Core.Assets.Editor")]
 [assembly: Avalonia.Metadata.XmlnsDefinition("http://schemas.stride3d.net/xaml/presentation", "Stride.Core.Assets.Editor.Components.Status.Views")]
+[assembly: Avalonia.Metadata.XmlnsDefinition("http://schemas.stride3d.net/xaml/presentation", "Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels")]
 [assembly: Avalonia.Metadata.XmlnsDefinition("http://schemas.stride3d.net/xaml/presentation", "Stride.Core.Assets.Editor.Quantum.ViewModels")]
 [assembly: Avalonia.Metadata.XmlnsDefinition("http://schemas.stride3d.net/xaml/presentation", "Stride.Core.Assets.Editor.Settings.ViewModels")]
 [assembly: Avalonia.Metadata.XmlnsDefinition("http://schemas.stride3d.net/xaml/presentation", "Stride.Core.Assets.Editor.View")]

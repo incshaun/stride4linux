@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
+<!--       <Link>Properties\SharedAssemblyInfo.cs</Link> -->
     </Compile>
   </ItemGroup>
 
@@ -25,10 +25,11 @@
 
   <ItemGroup>
     <ProjectReference Include="../../assets/Stride.Core.Assets/Stride.Core.Assets.csproj" />
-    <ProjectReference Include="../Stride.Core.Assets.Editor/Stride.Core.Assets.Editor.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Presentation/Stride.Core.Presentation.csproj" />
+    <ProjectReference Include="../../presentation/Stride.Core.Presentation.Dialogs/Stride.Core.Presentation.Dialogs.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Presentation.Avalonia/Stride.Core.Presentation.Avalonia.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Translation.Presentation.Avalonia/Stride.Core.Translation.Presentation.Avalonia.csproj" />
+    <ProjectReference Include="../Stride.Core.Assets.Editor/Stride.Core.Assets.Editor.csproj" />
   </ItemGroup>
 
   <Import Project="$(StrideSdkTargets)" />

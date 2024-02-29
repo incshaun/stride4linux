@@ -102,6 +102,6 @@
 			</DockPanel>
 		</Grid>
 
-<!-- 		<views:ATemplateBrowserUserControl Margin="10"/> -->
+		<views:TemplateBrowserUserControl Margin="10"/>
 	</DockPanel>
 </sd:AModalWindow>
