@@ -93,14 +93,19 @@ def translateHeaders (contents):
     headers += "using Avalonia.Controls.Primitives;\n"
   if re.findall ("BitmapScalingMode", contents):
     headers += "using Avalonia.Media.Imaging;\n"
+  if re.findall ("TextRange", contents):
+    headers += "using Avalonia.Media.TextFormatting;\n"
 
+  contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
   contents = re.sub ("using System.Windows.Data;", "using Avalonia.Data;\nusing Avalonia.Data.Converters;", contents)
   contents = re.sub ("using System.Windows.Markup;", "using Avalonia.Markup.Xaml;", contents)
+  contents = re.sub ("using System.Windows.Threading;", "using Avalonia.Threading;", contents)
   contents = re.sub ("using System.Windows.Input;", "using Avalonia.Input;", contents)
   contents = re.sub ("using System.Windows.Documents;", "using Avalonia.Controls.Documents;", contents)
   contents = re.sub ("using System.Windows.Media.Imaging;", "using Avalonia.Media.Imaging;", contents)
   contents = re.sub ("using System.Windows.Media;", "using Avalonia.Media;", contents)
+  contents = re.sub ("using Microsoft.Xaml.Behaviors;", "using Avalonia.Xaml.Interactivity;", contents)
   contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;\n", contents)
   contents = re.sub ("using System.Xaml;", "", contents)
   if len (headers) > 0:
@@ -119,7 +124,13 @@ def translateAnnotations (contents):
 def translateNames (contents):
   #contents = re.sub ("DependencyProperty", "AvaloniaProperty", contents)
   contents = re.sub ("ICommand ", "ICommandSource ", contents)
+  contents = re.sub ("<ICommand>", "<ICommandSource>", contents)
+  contents = re.sub (", ICommand>", ", ICommandSource>", contents)
+  contents = re.sub ("\(ICommand\)", "(ICommandSource)", contents)
+  contents = re.sub ("as ICommand;", " as ICommandSource;", contents)
   contents = re.sub ("RoutedCommand", "ICommandSource", contents) # provisional.
+  contents = re.sub ("Command\.CanExecuteChanged \-\=", "Command.Command.CanExecuteChanged -=", contents) # provisional.
+  contents = re.sub ("Command\.CanExecuteChanged \+\=", "Command.Command.CanExecuteChanged +=", contents) # provisional.
   contents = re.sub ("\.CanExecute\(", ".Command.CanExecute(", contents) # provisional.
   contents = re.sub ("\.Execute\(", ".Command.Execute(", contents) # provisional.
   
@@ -136,6 +147,7 @@ def translateNames (contents):
   contents = re.sub ("\.ProvideValue\(.*\)", "", contents) # is this true in general?
   contents = re.sub ("\(FrameworkElement ", "(Control ", contents) # is this true in general?
   contents = re.sub (" FrameworkElement;", " Control;", contents) # is this true in general?
+  contents = re.sub ("UIElement\.", "Control.", contents) # is this true in general?
 
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
 
@@ -147,6 +159,23 @@ def translateNames (contents):
 
   contents = re.sub ("= (.*?)\.FindVisualChildOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1);', contents)
 
+  contents = re.sub ("<ButtonBase>", "<Button>", contents)
+  contents = re.sub ("\(ButtonBase\)", "(Button)", contents)
+  contents = re.sub ("as ButtonBase;", "as Button;", contents)
+
+  contents = re.sub ("StyledProperty<Brush>", "StyledProperty<IBrush>", contents)
+  contents = re.sub (", Brush>", ", IBrush>", contents)
+
+  contents = re.sub ("Window\.GetWindow\((.*?)\)", r"TopLevel.GetTopLevel(\1 as Control) as Window", contents)
+
+  # RichTextBox - provisional fix.
+  contents = re.sub ("RichTextBox", r"Avalonia.Controls.TextBox", contents)
+  contents = re.sub ("new FlowDocument\(new Paragraph\(\)\)", r'new string("")', contents)
+  contents = re.sub ("FlowDocument", r"string", contents)
+  contents = re.sub ("TextBox\.Document", r"TextBox.Text", contents)
+
+  contents = re.sub ("GetTemplateChild\(\"(.*?)\"\) as (.*?);", r'e.NameScope.Find<\2>("\1");', contents)
+  
   contents = re.sub ("BooleanBoxes.FalseBox", "false", contents)
   contents = re.sub ("BooleanBoxes.TrueBox", "true", contents)
   contents = re.sub ("value.Box\(\)", "value", contents)
@@ -213,7 +242,8 @@ def translateProperties (contents):
   # OnApplyTemplate
   pat = re.compile ("public override void OnApplyTemplate\(\)(\s*){(\s*)base.OnApplyTemplate\(\);")
   contents = re.sub (pat, r"protected override void OnApplyTemplate(TemplateAppliedEventArgs e)\n\t\t{\n\t\t\tbase.OnApplyTemplate(e);", contents)
-  
+  if re.findall ("OnApplyTemplate", contents):
+    contents = re.sub (": Control", r": TemplatedControl", contents)
   
   return contents
 
@@ -377,6 +407,9 @@ def translateTags (contents):
   # Tooltip
   contents = re.sub ("Tooltip=\"(.*?)\"", r'Tooltip.Tip="\1"', contents)
 
+  # Case sensitive ok.
+  contents = re.sub ("DialogResult=\"Ok\"", r'DialogResult="Ok"', contents)
+
   # ContentSource  
   contents = re.sub ("ContentSource=\"(.*?)\"", r'ContentTemplate="\1"', contents)
 
@@ -486,8 +519,11 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/NumericToBool.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/InvertBool.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/UFileToString.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ModalWindow.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ButtonCloseWindowBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CloseWindowBehavior.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextLogViewer.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
@@ -497,7 +533,7 @@ translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml.
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/LightSteelBlueTheme.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/TemplateBrowserUserControl.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

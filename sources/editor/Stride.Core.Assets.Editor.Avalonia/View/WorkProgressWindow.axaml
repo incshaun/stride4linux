@@ -21,17 +21,17 @@
       <TextBlock DockPanel.Dock="Top" Text="{sd:Localize Operation cancelled.}" Margin="0,0,0,10" IsVisible="{Binding IsCancelled}"/>
       <ProgressBar Height="25" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Value="{Binding ProgressValue}" IsIndeterminate="{Binding IsIndeterminate}"/>
     </DockPanel>
-<!--     <sd:TextLogViewer Grid.Row="1" Margin="20" LogMessages="{Binding Log.Messages}" CanClearLog="False"/> -->
+    <sd:TextLogViewer Grid.Row="1" Margin="20" LogMessages="{Binding Log.Messages}" CanClearLog="False"/>
     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
       <UniformGrid Rows="1" Margin="20,0,20,20">
         <Button Content="{sd:Localize Close, Context=Button}" Margin="10,0,0,0" Padding="16,4" IsCancel="True" IsEnabled="{Binding WorkDone}">
           <i:Interaction.Behaviors>
-<!--             <sd:ButtonCloseWindowBehavior DialogResult="OK"/> -->
+            <sd:ButtonCloseWindowBehavior DialogResult="Ok"/>
           </i:Interaction.Behaviors>
         </Button>
         <Button Content="{sd:Localize Cancel, Context=Button}" Margin="10,0,0,0" Padding="16,4" Command="{Binding CancelCommand}" IsVisible="{Binding IsCancellable}" IsEnabled="{Binding WorkDone, Converter={sd:InvertBool}}">
           <i:Interaction.Behaviors>
-<!--             <sd:ButtonCloseWindowBehavior DialogResult="Cancel"/> -->
+            <sd:ButtonCloseWindowBehavior DialogResult="Cancel"/>
           </i:Interaction.Behaviors>
         </Button>
       </UniformGrid>
