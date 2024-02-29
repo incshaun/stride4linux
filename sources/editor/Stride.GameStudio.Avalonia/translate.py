@@ -98,6 +98,7 @@ def translateHeaders (contents):
   contents = re.sub ("using System.Windows.Data;", "using Avalonia.Data;\nusing Avalonia.Data.Converters;", contents)
   contents = re.sub ("using System.Windows.Markup;", "using Avalonia.Markup.Xaml;", contents)
   contents = re.sub ("using System.Windows.Input;", "using Avalonia.Input;", contents)
+  contents = re.sub ("using System.Windows.Documents;", "using Avalonia.Controls.Documents;", contents)
   contents = re.sub ("using System.Windows.Media.Imaging;", "using Avalonia.Media.Imaging;", contents)
   contents = re.sub ("using System.Windows.Media;", "using Avalonia.Media;", contents)
   contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;\n", contents)
@@ -133,6 +134,8 @@ def translateNames (contents):
   contents = re.sub ("DependencyObject", "AvaloniaObject", contents)
   contents = re.sub ("DependencyProperty.UnsetValue", "AvaloniaProperty.UnsetValue", contents)
   contents = re.sub ("\.ProvideValue\(.*\)", "", contents) # is this true in general?
+  contents = re.sub ("\(FrameworkElement ", "(Control ", contents) # is this true in general?
+  contents = re.sub (" FrameworkElement;", " Control;", contents) # is this true in general?
 
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
 
@@ -142,6 +145,7 @@ def translateNames (contents):
   contents = re.sub ("BitmapScalingMode.Unspecified", r' BitmapInterpolationMode.Unspecified', contents)
   contents = re.sub ("RenderOptions.SetBitmapScalingMode", r' RenderOptions.SetBitmapInterpolationMode', contents)
 
+  contents = re.sub ("= (.*?)\.FindVisualChildOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1);', contents)
 
   contents = re.sub ("BooleanBoxes.FalseBox", "false", contents)
   contents = re.sub ("BooleanBoxes.TrueBox", "true", contents)
@@ -361,6 +365,7 @@ def translateTags (contents):
   
   # Bitmap image
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"pack://application:,,,/Stride.Core.Presentation.Wpf;component/Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
+  contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"\.\./Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
   contents = re.sub ("BitmapScalingMode=\"NearestNeighbor\"", r'BitmapInterpolationMode="LowQuality"', contents)
   
   # As many versions of the visibility property, given that we're translating 3 states, to boolean.
@@ -382,6 +387,7 @@ def translateTags (contents):
   contents = re.sub ("KeyboardNavigation.DirectionalNavigation=\"Cycle\"", "", contents)  # possibly investigate WrapSelection?
   contents = re.sub (re.compile ("<Setter Property=\"WindowChrome.WindowChrome\">(.*?)</Setter>", re.DOTALL), "", contents)  
   contents = re.sub ("WindowChrome.IsHitTestVisibleInChrome=\"(.*?)\"", "", contents)
+  contents = re.sub ("DashCap=\"Flat\"", "", contents)
 
   # ResourceDictionary with source.
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\" /\>", r'<ResourceInclude Source="\1.axaml" />', contents)
@@ -468,8 +474,12 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeTypeExtensions.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/IconThemeSelector.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Commands/DisabledCommand.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ObjectToBool.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ObjectToBool.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/OneWayValueConverter.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/Status/Views/ToolTipHelper.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/NumericToBool.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/InvertBool.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/UFileToString.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
@@ -478,6 +488,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ObjectTo
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/LightSteelBlueTheme.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/TemplateBrowserUserControl.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
