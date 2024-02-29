@@ -75,6 +75,7 @@ def writeDest (contents, generatedFile, generatedDiffFile, destFile):
     else:
       # Neither file exists, just write directly to destination.
       print ("Creating destination file " + destFile + " by translation")
+      os.makedirs (os.path.dirname (destFile), exist_ok = True)
       fle = open (destFile, "w")
       fle.writelines (contents)
       fle.close ()
@@ -129,6 +130,7 @@ def translateNames (contents):
 
 
   contents = re.sub ("BooleanBoxes.FalseBox", "false", contents)
+  contents = re.sub ("BooleanBoxes.TrueBox", "true", contents)
   contents = re.sub ("value.Box\(\)", "value", contents)
   return contents
 
@@ -428,8 +430,9 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Translation.Presentation.Wpf/MarkupExtensions/LocalizeExtension.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeResourceDictionary.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeController.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBox.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBoxBase.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBox.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextBoxBase.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/UDirectoryToString.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")

@@ -71,20 +71,20 @@
 						<Button DockPanel.Dock="Right" Command="{Binding BrowseDirectoryCommand}" CommandParameter="Location" ToolTip.Tip="{sd:Localize Browse directory, Context=ToolTip}">
 							<Image Source="{StaticResource VectorOpenFolder}" Width="16" Height="16" Margin="-1"/>
 						</Button>
-						<!--<sd:ATextBox Margin="2" sd:Trimming.TextTrimming="WordEllipsis" sd:Trimming.TrimmingSource="Middle" sd:Trimming.WordSeparators="/\\"
+<!--						<sd:TextBox Margin="2" sd:Trimming.TextTrimming="WordEllipsis" sd:Trimming.TrimmingSource="Middle" sd:Trimming.WordSeparators="/\\"
 									  Text="{Binding Location, Converter={sd:UDirectoryToString}}">-->
-<!--						<sd:ATextBox Margin="2" 
-									  Text="{Binding Location}">
+						<sd:TextBox Margin="2" 
+									  Text="{Binding Location, Converter={sd:UDirectoryToString}}">
 							<i:Interaction.Behaviors>
 							</i:Interaction.Behaviors>
-						</sd:ATextBox>-->
+						</sd:TextBox>
 					</DockPanel>
 					<TextBlock Grid.Row="2" Grid.Column="0" Text="{sd:Localize Solution name:}" Margin="20,0" VerticalAlignment="Center"/>
-<!--					<sd:ATextBox Grid.Row="2" Grid.Column="1" Margin="2" WatermarkContent="{sd:Localize (Auto-generate solution name)}"
+					<sd:TextBox Grid.Row="2" Grid.Column="1" Margin="2" WatermarkContent="{sd:Localize (Auto-generate solution name)}"
 								  Text="{Binding SolutionName}">
 						<i:Interaction.Behaviors>
 						</i:Interaction.Behaviors>
-					</sd:ATextBox>-->
+					</sd:TextBox>
 					<TextBlock Grid.Row="3" Grid.Column="0" Text="{sd:Localize Solution location:}" Margin="20,0" VerticalAlignment="Center"/>
 					<DockPanel Grid.Row="3" Grid.Column="1">
 						<Button DockPanel.Dock="Right" Command="{Binding BrowseDirectoryCommand}" CommandParameter="SolutionLocation" ToolTip.Tip="Browse directory">
@@ -92,11 +92,11 @@
 						</Button>
 						<!--<sd:ATextBox Margin="2" WatermarkContent="{sd:Localize (Same location)}" sd:Trimming.TextTrimming="WordEllipsis" sd:Trimming.TrimmingSource="Middle" sd:Trimming.WordSeparators="/\\"
 									  Text="{Binding SolutionLocation, Converter={sd:UDirectoryToString}}">-->
-<!--						<sd:ATextBox Margin="2" WatermarkContent="{sd:Localize (Same location)}"
+						<sd:TextBox Margin="2" WatermarkContent="{sd:Localize (Same location)}"
 									  Text="{Binding SolutionLocation}">
 							<i:Interaction.Behaviors>
 							</i:Interaction.Behaviors>
-						</sd:ATextBox>-->
+						</sd:TextBox>
 					</DockPanel>
 				</Grid>
 			</DockPanel>

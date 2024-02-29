@@ -55,15 +55,15 @@ namespace Stride.Core.Presentation.Controls
 		{
 			UseTimedValidationProperty.Changed.AddClassHandler<TextBox>(OnUseTimedValidationPropertyChanged);
 
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(typeof(TextBox)));
-            ClearTextCommand = new ICommandSource("ClearTextCommand", typeof(Avalonia.Controls.TextBox));
-            CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(ClearTextCommand, OnClearTextCommand));
+//             DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(typeof(TextBox)));
+//             ClearTextCommand = new ICommandSource("ClearTextCommand", typeof(Avalonia.Controls.TextBox));
+//             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(ClearTextCommand, OnClearTextCommand));
         }
 
         public TextBox()
         {
-            if (DesignerProperties.GetIsInDesignMode(this) == false)
-                validationTimer = new Timer(x => Dispatcher.InvokeAsync(Validate), null, Timeout.Infinite, Timeout.Infinite);
+//             if (DesignerProperties.GetIsInDesignMode(this) == false)
+//                 validationTimer = new Timer(x => Dispatcher.InvokeAsync(Validate), null, Timeout.Infinite, Timeout.Infinite);
         }
 
         /// <summary>
@@ -81,16 +81,16 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Gets the trimmed text to display when the control does not have the focus, depending of the value of the <see cref="TextTrimming"/> property.
         /// </summary>
-        public string TrimmedText { get { return (string)GetValue(TrimmedTextPropertyKey.DependencyProperty); } private set { SetValue(TrimmedTextPropertyKey, value); } }
+//         public string TrimmedText { get { return (string)GetValue(TrimmedTextPropertyKey.DependencyProperty); } private set { SetValue(TrimmedTextPropertyKey, value); } }
 
         /// <inheritdoc/>
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 		{
 			base.OnApplyTemplate(e);
 
-            trimmedTextBlock = GetTemplateChild("PART_TrimmedText") as TextBlock;
-            if (trimmedTextBlock == null)
-                throw new InvalidOperationException("A part named 'PART_TrimmedText' must be present in the ControlTemplate, and must be of type 'TextBlock'.");
+//             trimmedTextBlock = GetTemplateChild("PART_TrimmedText") as TextBlock;
+//             if (trimmedTextBlock == null)
+//                 throw new InvalidOperationException("A part named 'PART_TrimmedText' must be present in the ControlTemplate, and must be of type 'TextBlock'.");
         }
 
         /// <summary>
@@ -112,11 +112,11 @@ namespace Stride.Core.Presentation.Controls
                 }
             }
             
-            var availableWidth = ActualWidth;
-            if (trimmedTextBlock != null)
-                availableWidth -= trimmedTextBlock.Margin.Left + trimmedTextBlock.Margin.Right;
-
-            TrimmedText = Trimming.ProcessTrimming(this, Text, availableWidth);
+//             var availableWidth = ActualWidth;
+//             if (trimmedTextBlock != null)
+//                 availableWidth -= trimmedTextBlock.Margin.Left + trimmedTextBlock.Margin.Right;
+// 
+//             TrimmedText = Trimming.ProcessTrimming(this, Text, availableWidth);
         }
 
         protected override Size ArrangeOverride(Size arrangeBounds)
@@ -126,7 +126,7 @@ namespace Stride.Core.Presentation.Controls
             if (trimmedTextBlock != null)
                 availableWidth -= trimmedTextBlock.Margin.Left + trimmedTextBlock.Margin.Right;
 
-            TrimmedText = Trimming.ProcessTrimming(this, Text, availableWidth);
+//             TrimmedText = Trimming.ProcessTrimming(this, Text, availableWidth);
             return arrangedSize;
         }
 

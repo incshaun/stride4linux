@@ -52,7 +52,7 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="ValidateWithEnter"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<bool> ValidateWithEnterProperty = StyledProperty<bool>.Register<TextBoxBase, bool>("ValidateWithEnter", BooleanBoxes.TrueBox);
+        public static readonly StyledProperty<bool> ValidateWithEnterProperty = StyledProperty<bool>.Register<TextBoxBase, bool>("ValidateWithEnter", true);
 
         /// <summary>
         /// Identifies the <see cref="ValidateOnTextChange"/> dependency property.
@@ -62,12 +62,12 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="ValidateOnLostFocus"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<bool> ValidateOnLostFocusProperty = StyledProperty<bool>.Register<TextBoxBase, bool>("ValidateOnLostFocus", BooleanBoxes.TrueBox);
+        public static readonly StyledProperty<bool> ValidateOnLostFocusProperty = StyledProperty<bool>.Register<TextBoxBase, bool>("ValidateOnLostFocus", true);
 
         /// <summary>
         /// Identifies the <see cref="CancelWithEscape"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<bool> CancelWithEscapeProperty = StyledProperty<bool>.Register<TextBoxBase, bool>("CancelWithEscape", BooleanBoxes.TrueBox);
+        public static readonly StyledProperty<bool> CancelWithEscapeProperty = StyledProperty<bool>.Register<TextBoxBase, bool>("CancelWithEscape", true);
 
         /// <summary>
         /// Identifies the <see cref="CancelOnLostFocus"/> dependency property.
@@ -119,7 +119,7 @@ namespace Stride.Core.Presentation.Controls
 			ValidateOnLostFocusProperty.Changed.AddClassHandler<TextBoxBase>(OnLostFocusActionChanged);
 			CancelOnLostFocusProperty.Changed.AddClassHandler<TextBoxBase>(OnLostFocusActionChanged);
 
-            TextProperty.OverrideMetadata(typeof(TextBoxBase), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.Journal, OnTextChanged, null, true, UpdateSourceTrigger.Explicit));
+//             TextProperty.OverrideMetadata(typeof(TextBoxBase), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.Journal, OnTextChanged, null, true, UpdateSourceTrigger.Explicit));
         }
 
         public TextBoxBase()
@@ -130,7 +130,7 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Gets whether this TextBox contains a non-empty text.
         /// </summary>
-        public bool HasText { get { return (bool)GetValue(HasTextPropertyKey.DependencyProperty); } private set { SetValue(HasTextPropertyKey, value); } }
+//         public bool HasText { get { return (bool)GetValue(HasTextPropertyKey.DependencyProperty); } private set { SetValue(HasTextPropertyKey, value); } }
 
         /// <summary>
         /// Gets or sets whether the associated text box should get keyboard focus when this behavior is attached.
@@ -247,25 +247,25 @@ namespace Stride.Core.Presentation.Controls
             var coercedText = CoerceTextForValidation(Text);
             SetCurrentValue(TextProperty, coercedText);
 
-            BindingExpression expression = GetBindingExpression(TextProperty);
-            try
-            {
-                expression?.UpdateSource();
-            }
-            catch (TargetInvocationException ex) when (ex.InnerException is InvalidCastException)
-            {
-                var textBindingFailedArgs = new RoutedEventArgs(TextToSourceValueConversionFailedEvent);
-                RaiseEvent(textBindingFailedArgs);
-            }
+//             BindingExpression expression = GetBindingExpression(TextProperty);
+//             try
+//             {
+//                 expression?.UpdateSource();
+//             }
+//             catch (TargetInvocationException ex) when (ex.InnerException is InvalidCastException)
+//             {
+//                 var textBindingFailedArgs = new RoutedEventArgs(TextToSourceValueConversionFailedEvent);
+//                 RaiseEvent(textBindingFailedArgs);
+//             }
 
             ClearUndoStack();
 
-            var validatedArgs = new ValidationRoutedEventArgs<string>(ValidatedEvent, coercedText);
-            OnValidated();
-
-            RaiseEvent(validatedArgs);
-            if (ValidateCommand != null && ValidateCommand.Command.CanExecute(ValidateCommandParameter))
-                ValidateCommand.Command.Execute(ValidateCommandParameter);
+//             var validatedArgs = new ValidationRoutedEventArgs<string>(ValidatedEvent, coercedText);
+//             OnValidated();
+// 
+//             RaiseEvent(validatedArgs);
+//             if (ValidateCommand != null && ValidateCommand.Command.CanExecute(ValidateCommandParameter))
+//                 ValidateCommand.Command.Execute(ValidateCommandParameter);
             validating = false;
             HasChangesToValidate = false;
         }
@@ -287,8 +287,8 @@ namespace Stride.Core.Presentation.Controls
             if (IsReadOnly)
                 return;
 
-            BindingExpression expression = GetBindingExpression(TextProperty);
-            expression?.UpdateTarget();
+//             BindingExpression expression = GetBindingExpression(TextProperty);
+//             expression?.UpdateTarget();
 
             ClearUndoStack();
 
@@ -427,7 +427,7 @@ namespace Stride.Core.Presentation.Controls
         private static void OnTextChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
             var input = (TextBoxBase)d;
-            input.HasText = e.NewValue != null && ((string)e.NewValue).Length > 0;
+//             input.HasText = e.NewValue != null && ((string)e.NewValue).Length > 0;
             if (!input.validating)
                 input.HasChangesToValidate = true;
 
