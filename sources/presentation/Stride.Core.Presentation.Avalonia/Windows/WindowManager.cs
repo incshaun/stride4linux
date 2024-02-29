@@ -22,7 +22,7 @@ namespace Stride.Core.Presentation.Windows
     /// A singleton class to manage the windows of an application and their relation to each other. It introduces the concept of blocking window,
     /// which can block the main window of the application but does not interact with modal windows.
     /// </summary>
-    public class AWindowManager : IDisposable
+    public class WindowManager : IDisposable
     {
         // TODO: this list should be completely external
         private static readonly string[] DebugWindowTypeNames =
@@ -35,9 +35,9 @@ namespace Stride.Core.Presentation.Windows
             "Snoop.SnoopUI",
         };
 
-        private static readonly List<AWindowInfo> ModalWindowsList = new List<AWindowInfo>();
-        private static readonly List<AWindowInfo> BlockingWindowsList = new List<AWindowInfo>();
-        private static readonly HashSet<AWindowInfo> AllWindowsList = new HashSet<AWindowInfo>();
+        private static readonly List<WindowInfo> ModalWindowsList = new List<WindowInfo>();
+        private static readonly List<WindowInfo> BlockingWindowsList = new List<WindowInfo>();
+        private static readonly HashSet<WindowInfo> AllWindowsList = new HashSet<WindowInfo>();
 
         // This must remains a field to prevent garbage collection!
 //        private static NativeHelper.WinEventDelegate winEventProc;
@@ -48,14 +48,14 @@ namespace Stride.Core.Presentation.Windows
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowManager"/> class.
         /// </summary>
-        public AWindowManager([NotNull] Dispatcher dispatcher)
+        public WindowManager([NotNull] Dispatcher dispatcher)
         {
             if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
             if (initialized) throw new InvalidOperationException("An instance of WindowManager is already existing.");
 
             initialized = true;
 //            winEventProc = WinEventProc;
-            AWindowManager.dispatcher = dispatcher;
+            WindowManager.dispatcher = dispatcher;
             uint processId = (uint)Process.GetCurrentProcess().Id;
 //             hook = NativeHelper.SetWinEventHook(NativeHelper.EVENT_OBJECT_SHOW, NativeHelper.EVENT_OBJECT_HIDE, IntPtr.Zero, winEventProc, processId, 0, NativeHelper.WINEVENT_OUTOFCONTEXT);
 //             if (hook == IntPtr.Zero)
@@ -73,17 +73,17 @@ namespace Stride.Core.Presentation.Windows
         /// <summary>
         /// Gets the current main window.
         /// </summary>
-        public static AWindowInfo MainWindow { get; private set; }
+        public static WindowInfo MainWindow { get; private set; }
 
         /// <summary>
         /// Gets the collection of currently visible modal windows.
         /// </summary>
-        public static IReadOnlyList<AWindowInfo> ModalWindows => ModalWindowsList;
+        public static IReadOnlyList<WindowInfo> ModalWindows => ModalWindowsList;
 
         /// <summary>
         /// Gets the collection of currently visible blocking windows.
         /// </summary>
-        public static IReadOnlyList<AWindowInfo> BlockingWindows => BlockingWindowsList;
+        public static IReadOnlyList<WindowInfo> BlockingWindows => BlockingWindowsList;
 
         /// <inheritdoc/>
         public void Dispose()
@@ -120,7 +120,7 @@ namespace Stride.Core.Presentation.Windows
             }
             Logger.Info($"Main window showing. ({window})");
 
-            MainWindow = new AWindowInfo(window);
+            MainWindow = new WindowInfo(window);
             AllWindowsList.Add(MainWindow);
 
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -137,7 +137,7 @@ namespace Stride.Core.Presentation.Windows
             if (window == null) throw new ArgumentNullException(nameof(window));
             CheckDispatcher();
 
-            var windowInfo = new AWindowInfo(window) { IsBlocking = true };
+            var windowInfo = new WindowInfo(window) { IsBlocking = true };
             if (BlockingWindowsList.Contains(windowInfo))
                 throw new InvalidOperationException("This window has already been shown as blocking.");
 
@@ -251,7 +251,7 @@ namespace Stride.Core.Presentation.Windows
             var windowInfo = Find(hwnd);
             if (windowInfo == null)
             {
-                windowInfo = new AWindowInfo(hwnd);
+                windowInfo = new WindowInfo(hwnd);
 
                 // Ignore window created on separate UI threads
                 if (windowInfo.Window?.Dispatcher != dispatcher)
@@ -381,7 +381,7 @@ namespace Stride.Core.Presentation.Windows
         }*/
 
   /*      [CanBeNull]
-        internal static AWindowInfo Find(IntPtr hwnd)
+        internal static WindowInfo Find(IntPtr hwnd)
         {
             if (hwnd == IntPtr.Zero)
                 return null;
@@ -390,7 +390,7 @@ namespace Stride.Core.Presentation.Windows
             if (result != null)
                 return result;
 
-            var window = AWindowInfo.FromHwnd(hwnd);
+            var window = WindowInfo.FromHwnd(hwnd);
 
             // Ignore window created on separate UI threads
             if (window == null || window.Dispatcher != dispatcher)

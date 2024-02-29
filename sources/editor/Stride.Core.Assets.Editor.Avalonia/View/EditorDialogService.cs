@@ -164,82 +164,82 @@ return null;
 // 
         public async void ShowProgressWindow(WorkProgressViewModel workProgress, int minDelay)
         {
-//             if (workProgress == null) throw new ArgumentNullException(nameof(workProgress));
-//             // Tell the work progress view model that a window will be open for it
-//             workProgress.NotifyWindowWillOpen();
-// 
-//             // Create a container object for the work progress to put it in the queue
-//             var progress = new PendingWorkProgress(workProgress);
-// 
-//             // As soon as the work is finished, we should display the window, even if the delay is not complete
-//             workProgress.WorkFinished += (sender, e) => progress.ReadyToDisplay.TrySetResult(0);
-//             if (workProgress.WorkDone)
-//                 progress.ReadyToDisplay.TrySetResult(0);
-// 
-//             // Compute the list of progress window that should be displayed before this one
-//             List<PendingWorkProgress> precedingWindows;
-//             lock (pendingProgressWindows)
-//             {
-//                 precedingWindows = new List<PendingWorkProgress>(pendingProgressWindows);
-//                 pendingProgressWindows.Add(progress);
-//             }
-//             // Enqueue a task to display the window when it's ready.
-//             DisplayProgressWindow(precedingWindows, progress);
-// 
-//             // Wait the delay before notifying that we're ready to display
-//             await Task.Delay(minDelay);
-//             progress.ReadyToDisplay.TrySetResult(0);
+            if (workProgress == null) throw new ArgumentNullException(nameof(workProgress));
+            // Tell the work progress view model that a window will be open for it
+            workProgress.NotifyWindowWillOpen();
+
+            // Create a container object for the work progress to put it in the queue
+            var progress = new PendingWorkProgress(workProgress);
+
+            // As soon as the work is finished, we should display the window, even if the delay is not complete
+            workProgress.WorkFinished += (sender, e) => progress.ReadyToDisplay.TrySetResult(0);
+            if (workProgress.WorkDone)
+                progress.ReadyToDisplay.TrySetResult(0);
+
+            // Compute the list of progress window that should be displayed before this one
+            List<PendingWorkProgress> precedingWindows;
+            lock (pendingProgressWindows)
+            {
+                precedingWindows = new List<PendingWorkProgress>(pendingProgressWindows);
+                pendingProgressWindows.Add(progress);
+            }
+            // Enqueue a task to display the window when it's ready.
+            DisplayProgressWindow(precedingWindows, progress);
+
+            // Wait the delay before notifying that we're ready to display
+            await Task.Delay(minDelay);
+            progress.ReadyToDisplay.TrySetResult(0);
         }
-// 
-//         private async void DisplayProgressWindow(List<PendingWorkProgress> precedingWindows, PendingWorkProgress nextWindow)
-//         {
-//             // Wait for all preceding windows to be displayed first
-//             await Task.WhenAll(precedingWindows.Select(x => x.Displayed.Task));
-//             // Then wait for the next window to be ready to display
-//             await nextWindow.ReadyToDisplay.Task;
-// 
-//             // Check if we should actually display the window
-//             if (!nextWindow.WorkProgress.WorkDone || nextWindow.WorkProgress.ShouldStayOpen())
-//             {
-//                 await nextWindow.WorkProgress.Dispatcher.InvokeAsync(() =>
-//                 {
-//                     var progressWindow = new AWorkProgressWindow(nextWindow.WorkProgress);
-// 
-//                     // Remove this window from the list of pending window
-//                     lock (pendingProgressWindows)
-//                     {
-//                         pendingProgressWindows.Remove(nextWindow);
-//                     }
-// 
-//                     try
-//                     {
-//                         // Notify in the next frame that the window has been displayed
-//                         nextWindow.WorkProgress.Dispatcher.InvokeAsync(() => nextWindow.Displayed.SetResult(0));
-//                         //                       WindowManager.ShowBlockingWindow(progressWindow);
-//                         progressWindow.Show();
-//                     }
-//                     catch (Exception e)
-//                     {
-//                         // On Windows 8, an exception might occur in the System.Windows.Shell.WindowChromeWorker class
-//                         // if the progress window is closed programmatically, apparently if this happens too early after
-//                         // loading it. Let's ignore the exception for the moment, as a workaround.
-//                         e.Ignore();
-//                     }
-//                 });
-//             }
-//             else
-//             {
-//                 // Remove this window from the list of pending window
-//                 lock (pendingProgressWindows)
-//                 {
-//                     pendingProgressWindows.Remove(nextWindow);
-//                 }
-//                 // Notify that the window should be considered as displayed.
-//                 nextWindow.Displayed.SetResult(0);
-//             }
-// 
-//             nextWindow.WorkProgress.NotifyWindowClosed();
-//         }
+
+        private async void DisplayProgressWindow(List<PendingWorkProgress> precedingWindows, PendingWorkProgress nextWindow)
+        {
+            // Wait for all preceding windows to be displayed first
+            await Task.WhenAll(precedingWindows.Select(x => x.Displayed.Task));
+            // Then wait for the next window to be ready to display
+            await nextWindow.ReadyToDisplay.Task;
+
+            // Check if we should actually display the window
+            if (!nextWindow.WorkProgress.WorkDone || nextWindow.WorkProgress.ShouldStayOpen())
+            {
+                await nextWindow.WorkProgress.Dispatcher.InvokeAsync(() =>
+                {
+                    var progressWindow = new WorkProgressWindow(nextWindow.WorkProgress);
+
+                    // Remove this window from the list of pending window
+                    lock (pendingProgressWindows)
+                    {
+                        pendingProgressWindows.Remove(nextWindow);
+                    }
+
+                    try
+                    {
+                        // Notify in the next frame that the window has been displayed
+                        nextWindow.WorkProgress.Dispatcher.InvokeAsync(() => nextWindow.Displayed.SetResult(0));
+                        //                       WindowManager.ShowBlockingWindow(progressWindow);
+                        progressWindow.Show();
+                    }
+                    catch (Exception e)
+                    {
+                        // On Windows 8, an exception might occur in the System.Windows.Shell.WindowChromeWorker class
+                        // if the progress window is closed programmatically, apparently if this happens too early after
+                        // loading it. Let's ignore the exception for the moment, as a workaround.
+                        e.Ignore();
+                    }
+                });
+            }
+            else
+            {
+                // Remove this window from the list of pending window
+                lock (pendingProgressWindows)
+                {
+                    pendingProgressWindows.Remove(nextWindow);
+                }
+                // Notify that the window should be considered as displayed.
+                nextWindow.Displayed.SetResult(0);
+            }
+
+            nextWindow.WorkProgress.NotifyWindowClosed();
+        }
 
         public void ClearKeyboardFocus()
         {

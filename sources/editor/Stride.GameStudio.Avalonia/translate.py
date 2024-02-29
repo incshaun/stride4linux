@@ -372,6 +372,7 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"\{Binding (.*), Converter=\{sd:VisibleOrCollapsed\}\}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"Hidden\"", r'IsVisible="false"', contents)
   contents = re.sub ("Visibility=\"Collapsed\"", r'IsVisible="false"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:InvertBool}}"', contents)
 
   # Tooltip
   contents = re.sub ("Tooltip=\"(.*?)\"", r'Tooltip.Tip="\1"', contents)
@@ -388,7 +389,12 @@ def translateTags (contents):
   contents = re.sub (re.compile ("<Setter Property=\"WindowChrome.WindowChrome\">(.*?)</Setter>", re.DOTALL), "", contents)  
   contents = re.sub ("WindowChrome.IsHitTestVisibleInChrome=\"(.*?)\"", "", contents)
   contents = re.sub ("DashCap=\"Flat\"", "", contents)
+  contents = re.sub ("d:DataContext=\"{d:DesignInstance (.*?)}\"", "", contents)
 
+  # xmlsn:i
+  contents = re.sub ("xmlns:i=\"http://schemas.microsoft.com/xaml/behaviors\"", "xmlns:i=\"clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity\"", contents)
+  
+  
   # ResourceDictionary with source.
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\" /\>", r'<ResourceInclude Source="\1.axaml" />', contents)
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\"/\>", r'<ResourceInclude Source="\1.axaml" />', contents)
@@ -480,6 +486,8 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/NumericToBool.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/InvertBool.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/UFileToString.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ModalWindow.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
@@ -488,7 +496,8 @@ def translateXAML (sourceFile):
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/LightSteelBlueTheme.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/TemplateBrowserUserControl.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

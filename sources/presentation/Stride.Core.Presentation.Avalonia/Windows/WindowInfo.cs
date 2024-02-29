@@ -13,7 +13,7 @@ namespace Stride.Core.Presentation.Windows
     /// <summary>
     /// A container object for windows and their related information.
     /// </summary>
-    public class AWindowInfo : IEquatable<AWindowInfo>
+    public class WindowInfo : IEquatable<WindowInfo>
     {
         private IntPtr hwnd;
         private bool isShown;
@@ -22,7 +22,7 @@ namespace Stride.Core.Presentation.Windows
         /// Initializes a new instance of the <see cref="WindowInfo"/> class.
         /// </summary>
         /// <param name="window">The window represented by this object.</param>
-        public AWindowInfo([NotNull] Window window)
+        public WindowInfo([NotNull] Window window)
         {
             Window = window ?? throw new ArgumentNullException(nameof(window));
         }
@@ -31,7 +31,7 @@ namespace Stride.Core.Presentation.Windows
         /// Initializes a new instance of the <see cref="WindowInfo"/> class.
         /// </summary>
         /// <param name="hwnd">The hwnd of the window represented by this object.</param>
-  /*      internal AWindowInfo(IntPtr hwnd)
+  /*      internal WindowInfo(IntPtr hwnd)
         {
             if (hwnd == IntPtr.Zero) throw new ArgumentException(@"The hwnd cannot be null", nameof(hwnd));
             var window = FromHwnd(hwnd);
@@ -106,7 +106,7 @@ namespace Stride.Core.Presentation.Windows
         /// Gets the owner of this window.
         /// </summary>
         [CanBeNull]
-        public AWindowInfo Owner
+        public WindowInfo Owner
         {
             get
             {
@@ -115,11 +115,11 @@ namespace Stride.Core.Presentation.Windows
 
                 /*               if (Window?.Owner != null)
                                {
-                                   return AWindowManager.Find(ToHwnd(Window.Owner as Window));
+                                   return WindowManager.Find(ToHwnd(Window.Owner as Window));
                                }
 
                                var owner = HwndHelper.GetOwner(Hwnd);
-                               return owner != IntPtr.Zero ? (AWindowManager.Find(owner) ?? new AWindowInfo(owner)) : null;*/
+                               return owner != IntPtr.Zero ? (WindowManager.Find(owner) ?? new WindowInfo(owner)) : null;*/
                 return null;
             }
             internal set
@@ -154,7 +154,7 @@ namespace Stride.Core.Presentation.Windows
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as AWindowInfo);
+            return Equals(obj as WindowInfo);
         }
 
         /// <inheritdoc/>
@@ -170,19 +170,19 @@ namespace Stride.Core.Presentation.Windows
         }*/
 
         /// <inheritdoc/>
-        public static bool operator ==(AWindowInfo left, AWindowInfo right)
+        public static bool operator ==(WindowInfo left, WindowInfo right)
         {
             return Equals(left, right);
         }
 
         /// <inheritdoc/>
-        public static bool operator !=(AWindowInfo left, AWindowInfo right)
+        public static bool operator !=(WindowInfo left, WindowInfo right)
         {
             return !Equals(left, right);
         }
 
         /// <inheritdoc/>
-        public bool Equals(AWindowInfo other)
+        public bool Equals(WindowInfo other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;

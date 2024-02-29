@@ -19,7 +19,7 @@ using System.Collections.ObjectModel;
 
 namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views
 {
-    public partial class AProjectSelectionWindow : AModalWindow
+    public partial class AProjectSelectionWindow : ModalWindow
     {
         public AProjectSelectionWindow(NewOrOpenSessionTemplateCollectionViewModel ctx)
         {

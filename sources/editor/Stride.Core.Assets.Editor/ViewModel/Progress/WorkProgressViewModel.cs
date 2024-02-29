@@ -218,7 +218,7 @@ namespace Stride.Core.Assets.Editor.ViewModel.Progress
             }
         }
 
-        internal void NotifyWindowWillOpen()
+        public void NotifyWindowWillOpen()
         {
             if (windowWillOpen)
                 throw new InvalidOperationException("This WorkProgressViewModel is already associated to a progress window");
@@ -226,7 +226,7 @@ namespace Stride.Core.Assets.Editor.ViewModel.Progress
             windowWillOpen = true;
         }
 
-        internal void NotifyWindowClosed()
+        public void NotifyWindowClosed()
         {
             workProgressClosed.TrySetResult(0);
         }
