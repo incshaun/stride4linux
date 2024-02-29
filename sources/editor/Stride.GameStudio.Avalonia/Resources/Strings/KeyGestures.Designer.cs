@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Stride.GameStudio.Resources.Strings {
+namespace Stride.GameStudio.Avalonia.Resources.Strings {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Stride.GameStudio.Resources.Strings {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Stride.GameStudio.Resources.Strings.KeyGestures", typeof(KeyGestures).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Stride.GameStudio.Avalonia.Resources.Strings.KeyGestures", typeof(KeyGestures).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
