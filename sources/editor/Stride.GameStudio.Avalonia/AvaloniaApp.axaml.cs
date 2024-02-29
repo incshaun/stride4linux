@@ -100,14 +100,14 @@ public partial class AvaloniaApp : Application
         try
         {
             // temporary while testing gamestudiowindow.
-//             Console.WriteLine ("Opening project");
-//         await editor.OpenSession(new Stride.Core.IO.UFile("/mountpoints/bigA/tmp/VRSandbox/VRSandbox.sln"));
-//         Console.WriteLine ("Project open: " + editor.Session);
-//         var mainWindowX = new AGameStudioWindow(editor);
-//         mainWindowX.Show();
-//                             Console.WriteLine ("Showing GameStudioWindow");
-// 
-//         return;
+            Console.WriteLine ("Opening project");
+        await editor.OpenSession(new Stride.Core.IO.UFile("/mountpoints/bigA/tmp/VRSandbox/VRSandbox.sln"));
+        Console.WriteLine ("Project open: " + editor.Session);
+        var mainWindowX = new AGameStudioWindow(editor);
+        mainWindowX.Show();
+                            Console.WriteLine ("Showing GameStudioWindow");
+
+        return;
 
 
         var startupWindow = new AProjectSelectionWindow(viewModel);

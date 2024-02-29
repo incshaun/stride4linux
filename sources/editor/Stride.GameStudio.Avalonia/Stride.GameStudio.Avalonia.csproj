@@ -33,6 +33,10 @@
  <PackageReference Include="Avalonia.Desktop" />
  <PackageReference Include="Avalonia.ReactiveUI" />    
  <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Dock.Avalonia" />
+    <PackageReference Include="Dock.Model.Avalonia" />
+    <PackageReference Include="Dock.Serializer" />
+ 
     <PackageReference Include="System.Resources.Extensions" />
     <PackageReference Include="ServiceWire" />
     <PackageReference Include="SharpDX" />

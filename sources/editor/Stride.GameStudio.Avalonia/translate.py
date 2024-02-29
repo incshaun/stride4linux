@@ -91,13 +91,19 @@ def translateHeaders (contents):
     headers += "using Avalonia.Interactivity;\n"
   if re.findall ("OnApplyTemplate", contents):
     headers += "using Avalonia.Controls.Primitives;\n"
+  if re.findall ("BitmapScalingMode", contents):
+    headers += "using Avalonia.Media.Imaging;\n"
 
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
   contents = re.sub ("using System.Windows.Data;", "using Avalonia.Data;\nusing Avalonia.Data.Converters;", contents)
   contents = re.sub ("using System.Windows.Markup;", "using Avalonia.Markup.Xaml;", contents)
   contents = re.sub ("using System.Windows.Input;", "using Avalonia.Input;", contents)
-  contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;\n" + headers, contents)
+  contents = re.sub ("using System.Windows.Media.Imaging;", "using Avalonia.Media.Imaging;", contents)
+  contents = re.sub ("using System.Windows.Media;", "using Avalonia.Media;", contents)
+  contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;\n", contents)
   contents = re.sub ("using System.Xaml;", "", contents)
+  if len (headers) > 0:
+    contents = re.sub ("\nnamespace", headers + "\nnamespace", contents)
   
   # Remove internal, hopefully avoid boxing.
   contents = re.sub ("using Stride.Core.Presentation.Internal;", "", contents)
@@ -111,7 +117,7 @@ def translateAnnotations (contents):
 
 def translateNames (contents):
   #contents = re.sub ("DependencyProperty", "AvaloniaProperty", contents)
-  contents = re.sub ("ICommand", "ICommandSource", contents)
+  contents = re.sub ("ICommand ", "ICommandSource ", contents)
   contents = re.sub ("RoutedCommand", "ICommandSource", contents) # provisional.
   contents = re.sub ("\.CanExecute\(", ".Command.CanExecute(", contents) # provisional.
   contents = re.sub ("\.Execute\(", ".Command.Execute(", contents) # provisional.
@@ -123,16 +129,24 @@ def translateNames (contents):
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
   contents = re.sub ("DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
   contents = re.sub ("System.Windows.Controls.TextBox", "Avalonia.Controls.TextBox", contents)
+  contents = re.sub ("System.Windows.Media", "Avalonia.Media", contents)
   contents = re.sub ("DependencyObject", "AvaloniaObject", contents)
   contents = re.sub ("DependencyProperty.UnsetValue", "AvaloniaProperty.UnsetValue", contents)
   contents = re.sub ("\.ProvideValue\(.*\)", "", contents) # is this true in general?
 
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
 
+  contents = re.sub (" ImageSource ", " IImage ", contents)
+  contents = re.sub ("\(ImageSource ", "(IImage ", contents)
+  contents = re.sub (" BitmapScalingMode ", r' BitmapInterpolationMode ', contents)
+  contents = re.sub ("BitmapScalingMode.Unspecified", r' BitmapInterpolationMode.Unspecified', contents)
+  contents = re.sub ("RenderOptions.SetBitmapScalingMode", r' RenderOptions.SetBitmapInterpolationMode', contents)
+
 
   contents = re.sub ("BooleanBoxes.FalseBox", "false", contents)
   contents = re.sub ("BooleanBoxes.TrueBox", "true", contents)
   contents = re.sub ("value.Box\(\)", "value", contents)
+  contents = re.sub ("result.Box\(\)", "result", contents)
   return contents
 
 # Translate the various forms of styled property.
@@ -445,7 +459,17 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/TemplateProviders/DataTypeTemplateSelector.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/SumNum.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ConverterHelper.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/DoubleExtension.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/DoubleExtension.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/ImageExtensions.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/ImageExtension.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ImageThemingUtilities.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/IconTheme.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Drawing/HslColor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeTypeExtensions.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Themes/IconThemeSelector.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Commands/DisabledCommand.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ObjectToBool.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/OneWayValueConverter.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
