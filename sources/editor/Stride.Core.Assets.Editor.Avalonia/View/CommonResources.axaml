@@ -9,7 +9,7 @@
                     mc:Ignorable="d">
 
   <ResourceDictionary.MergedDictionaries>
-<!--     <ResourceInclude Source="avares://Stride.Core.Presentation.Avalonia/Themes/ThemeSelector.axaml" /> -->
+    <ResourceInclude Source="avares://Stride.Core.Presentation.Avalonia/Themes/ThemeSelector.axaml" />
     <ResourceInclude Source="ImageDictionary.axaml" />
 <!--     <ResourceInclude Source="../Themes/ThemeSelector.axaml" /> -->
   </ResourceDictionary.MergedDictionaries>

@@ -14,10 +14,14 @@ namespace Stride.Core.Presentation.Themes
         private Uri dividedSource;
         private Uri expressionLightSource;
         
-        public ThemeResourceDictionary (): base ((Uri) null)
+        public ThemeResourceDictionary (Uri? baseUri) : base (baseUri)
         {
         }
         
+        public ThemeResourceDictionary (IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
         // New themes are added here as new properties.
 
         public Uri ExpressionDarkSource
