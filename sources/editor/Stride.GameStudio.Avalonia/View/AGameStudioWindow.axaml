@@ -811,7 +811,7 @@
 										<!--<ToolBar Grid.Row="1" Margin="6,2" ItemsSource="{Binding Session.AssetTags.Tags}" HorizontalAlignment="Stretch" Visibility="{Binding Session.AssetTags.Tags.Count, Converter={sd:Chained {sd:NumericToBool}, {sd:VisibleOrCollapsed}}}"
 											 Style="{StaticResource TagToolBarStyle}">-->
 										<ItemsControl Grid.Row="1" Margin="6,2" ItemsSource="{Binding Session.AssetTags.Tags}" HorizontalAlignment="Stretch" IsVisible="{Binding Session.AssetTags.Tags.Count, Converter={sd:NumericToBool}}"
-											 Theme="{StaticResource TagToolBarStyle}">
+											 >
 											<ItemsControl.ItemTemplate>
 												<DataTemplate>
 													<!--<sd:ATagControl Height="20" Margin="2" ToolTip="{Binding Name}" IsVisible="{Binding Assets.Count, Converter={sd:NumericToBool}}"

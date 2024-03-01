@@ -1,0 +1,146 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ctrl="clr-namespace:Stride.Core.Presentation.Controls"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:cvt="clr-namespace:Stride.Core.Presentation.ValueConverters"
+                    xmlns:mwt="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+                    xmlns:interactivity="clr-namespace:Stride.Core.Presentation.Interactivity"
+                    xmlns:behaviors="clr-namespace:Stride.Core.Presentation.Behaviors"
+                    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+                    xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+                    mc:Ignorable="d">
+
+  <!--<ControlTheme TargetType="{x:Type ctrl:PropertyGrid}">
+    <Setter Property="Control.Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ctrl:PropertyGrid}">
+          <ScrollViewer
+          HorizontalScrollBarVisibility="Disabled"
+          VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}">
+            <ItemsPresenter/>
+          </ScrollViewer>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>-->
+
+  <SolidColorBrush x:Key="RedBrush" Color="#FFDC4E4E" />
+  <SolidColorBrush x:Key="GreenBrush" Color="#FF65C36A" />
+  <SolidColorBrush x:Key="BlueBrush" Color="#FF3F74D1" />
+  <SolidColorBrush x:Key="AlphaBrush" Color="#FFBCBCBC" />
+
+  <!-- ### EditableListBox ################################################################################################################################################# -->
+  <SolidColorBrush x:Key="GlyphBrush" Color="Black" />
+
+  <ControlTheme x:Key="PropertyExpanderStyle" TargetType="{x:Type Expander}">
+    <Setter Property="Padding" Value="10,0,0,0" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type Expander}">
+          <Grid>
+            <Border IsVisible="false" x:Name="ExpandSite" Padding="0">
+              <Border BorderThickness="0" Margin="0" Padding="0" VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch">
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  Focusable="false" />
+              </Border>
+            </Border>
+          </Grid>
+          <!-- <ControlTemplate.Triggers>
+            <Trigger Property="IsExpanded" Value="True">
+              <Setter Property="Visibility" Value="Visible" TargetName="ExpandSite" />
+            </Trigger>
+          </ControlTemplate.Triggers> -->
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+
+  <ControlTheme x:Key="DefaultTextBoxStyle" TargetType="ctrl:TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ctrl:TextBox">
+          <!-- <ControlTemplate.Triggers>
+            <Trigger Property="HasText" Value="True">
+              <Setter TargetName="Watermark" Property="Visibility" Value="Hidden" />
+            </Trigger>
+            <Trigger Property="UIElement.IsEnabled" Value="False">
+              <Setter TargetName="Bd" Property="Panel.Background"
+                      Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+              <Setter Property="TextElement.Foreground"
+                      Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+              <Setter TargetName="PART_TrimmedText" Property="Foreground"
+                      Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+            </Trigger>
+          </ControlTemplate.Triggers> -->
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Setter Property="WatermarkContentTemplate">
+      <Setter.Value>
+        <DataTemplate>
+          <TextBlock Text="{Binding Mode=OneTime}" IsHitTestVisible="False"  />
+        </DataTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+
+  <ControlTheme x:Key="DefaultLogViewerStyle" TargetType="ctrl:TextLogViewer">
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ctrl:TextLogViewer">
+          <DockPanel>
+<!--            <ToolBarTray DockPanel.Dock="Top"
+                         Visibility="{Binding IsToolBarVisible, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:VisibleOrCollapsed}}">
+              <ToolBar
+                Visibility="{Binding CanClearLog, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:VisibleOrCollapsed}}">
+                <Button x:Name="PART_ClearLog" Content="Clear" />
+              </ToolBar>
+              <ToolBar Header="Filters"
+                       Visibility="{Binding CanFilterLog, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:VisibleOrCollapsed}}">
+                <ToggleButton Padding="4,0" Content="Debug"
+                              IsChecked="{Binding ShowDebugMessages, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                <ToggleButton Padding="4,0" Content="Verbose"
+                              IsChecked="{Binding ShowVerboseMessages, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                <ToggleButton Padding="4,0" Content="Infomation"
+                              IsChecked="{Binding ShowInfoMessages, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                <ToggleButton Padding="4,0" Content="Warnings"
+                              IsChecked="{Binding ShowWarningMessages, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                <ToggleButton Padding="4,0" Content="Errors"
+                              IsChecked="{Binding ShowErrorMessages, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                <ToggleButton Padding="4,0" Content="Fatal errors"
+                              IsChecked="{Binding ShowFatalMessages, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                <ToggleButton Padding="4,0" Content="Show Stacktrace"
+                              IsChecked="{Binding ShowStacktrace, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                <Separator />
+              </ToolBar>
+              <ToolBar Header="Search"
+                       Visibility="{Binding CanSearchLog, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:VisibleOrCollapsed}}">
+                <ctrl:TextBox UseTimedValidation="True" x:Name="PART_SearchTextBox" Width="150"
+                              Text="{Binding SearchToken, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                              WatermarkContent="Search" />
+                <Button Padding="4,0" x:Name="PART_PreviousResult" Content="&lt;" />
+                <Button Padding="4,0" x:Name="PART_NextResult" Content="&gt;" />
+                <ToggleButton Padding="4,0"
+                              IsChecked="{Binding SearchMatchCase, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                              Content="Match case" />
+                <ToggleButton Padding="4,0"
+                              IsChecked="{Binding SearchMatchWord, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                              Content="Match whole word" />
+              </ToolBar>
+            </ToolBarTray>-->
+            <TextBox x:Name="PART_LogTextBox" IsReadOnly="True"  FontFamily="Consolas, Courrier New" FontSize="11" />
+          </DockPanel>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+
+
+</ResourceDictionary>

@@ -30,6 +30,7 @@
     <ProjectReference Include="../../presentation/Stride.Core.Presentation.Avalonia/Stride.Core.Presentation.Avalonia.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Translation.Presentation.Avalonia/Stride.Core.Translation.Presentation.Avalonia.csproj" />
     <ProjectReference Include="../Stride.Core.Assets.Editor/Stride.Core.Assets.Editor.csproj" />
+    <AvaloniaResource Include="Resources\**" />
   </ItemGroup>
 
   <Import Project="$(StrideSdkTargets)" />

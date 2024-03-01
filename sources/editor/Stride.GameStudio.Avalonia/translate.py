@@ -148,6 +148,7 @@ def translateNames (contents):
   contents = re.sub ("\(FrameworkElement ", "(Control ", contents) # is this true in general?
   contents = re.sub (" FrameworkElement;", " Control;", contents) # is this true in general?
   contents = re.sub ("UIElement\.", "Control.", contents) # is this true in general?
+  contents = re.sub (": UIElement", ": Control", contents) # is this true in general?
 
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
 
@@ -180,6 +181,10 @@ def translateNames (contents):
   contents = re.sub ("BooleanBoxes.TrueBox", "true", contents)
   contents = re.sub ("value.Box\(\)", "value", contents)
   contents = re.sub ("result.Box\(\)", "result", contents)
+  
+  contents = re.sub (", IAttachedObject", "", contents)
+  contents = re.sub ("Microsoft\.Xaml\.Behaviors\.Interaction\.GetBehaviors", "Avalonia.Xaml.Interactivity.Interaction.GetBehaviors", contents)
+  
   return contents
 
 # Translate the various forms of styled property.
@@ -523,7 +528,10 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ModalWindow.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ButtonCloseWindowBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CloseWindowBehavior.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextLogViewer.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextLogViewer.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Interactivity/BehaviorCollection.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/NumericTextBoxDragBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/MouseMoveCaptureBehaviorBase.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
@@ -534,6 +542,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextLogViewer.c
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/TemplateBrowserUserControl.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

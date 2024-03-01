@@ -27,7 +27,7 @@
                     xmlns:themes="clr-namespace:Stride.Core.Presentation.Themes"
                     mc:Ignorable="d">
   <ResourceDictionary.MergedDictionaries>
-<!--     <ResourceInclude Source="generic.xaml"/> -->
+    <ResourceInclude Source="generic.axaml"/>
 <!--     <ResourceInclude Source="avares://Stride.Core.Presentation.Avalonia/Resources/VectorResources.axaml" /> -->
     <!--
     // ExpressionDark is the default/fallback theme.
