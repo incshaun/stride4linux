@@ -4,7 +4,7 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
                     xmlns:view="clr-namespace:Stride.Core.Assets.Editor.View"
-                    xmlns:viewModel="clr-namespace:Stride.Core.Assets.Editor.ViewModel"
+                    xmlns:viewModel="using:Stride.Core.Assets.Editor.ViewModel"
                     xmlns:behaviors="clr-namespace:Stride.Core.Assets.Editor.View.Behaviors"
                     mc:Ignorable="d">
 
@@ -178,6 +178,74 @@
     </Setter>
   </ControlTheme>
 
-  
+  			<TreeDataTemplate x:Key="AssetMountPointTemplate" ItemsSource="{Binding SubDirectories}" DataType="viewModel:AssetMountPointViewModel">
+				<StackPanel Orientation="Horizontal">
+					<Image x:Name="DirectoryImage" Source="{StaticResource ImageRootFolder}" Margin="0,0,5,0"/>
+					<TextBlock>
+						<Run Text="{Binding Name, Mode=OneWay}"/>
+						<Run Text="{Binding IsDirty, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter=*}"/>
+					</TextBlock>
+				</StackPanel>
+			</TreeDataTemplate>
+	
+	<TreeDataTemplate x:Key="DirectoryTemplate" ItemsSource="{Binding SubDirectories}" DataType="viewModel:DirectoryViewModel">
+		<StackPanel Orientation="Horizontal">
+			<Image x:Name="DirectoryImage" Source="{StaticResource ImageFolder}" Margin="0,0,5,0"/>
+			<TextBlock>
+				<Run Text="{Binding Name, Mode=OneWay}"/>
+				<Run Text="{Binding IsDirty, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter=*}"/>
+			</TextBlock>
+		</StackPanel>
+	</TreeDataTemplate>
+
+	<TreeDataTemplate x:Key="DependencyCategoryTemplate" ItemsSource="{Binding Content}" DataType="viewModel:ICategoryViewModel">
+		<StackPanel Orientation="Horizontal">
+			<Image Source="{StaticResource ImageDepsRoot}" Margin="0,0,5,0"/>
+			<TextBlock>
+				<Run Text="{Binding Name, Mode=OneWay}"/>
+				<Run Text="{Binding IsDirty, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter=*}"/>
+			</TextBlock>
+		</StackPanel>
+	</TreeDataTemplate>
+
+	<TreeDataTemplate x:Key="ProjectTemplate" ItemsSource="{Binding Content}" DataType="viewModel:ProjectViewModel">
+			<StackPanel Orientation="Horizontal">
+				<Image Width="16" Height="16" Source="{Binding GenericType, Converter={sd:StaticResourceConverter}}" Margin="0,0,5,0"/>
+				<TextBlock x:Name="ProjectText">
+					<Run Text="{Binding Name, Mode=OneWay}"/>
+					<Run Text="{Binding IsDirty, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter=*}"/>
+				</TextBlock>
+			</StackPanel>
+		<!--<DataTemplate.Triggers>
+					--><!--<DataTrigger Binding="{Binding IsCurrentProject, Mode=OneWay}" Value="True">
+						<Setter TargetName="ProjectText" Property="FontWeight" Value="UltraBold"/>
+					</DataTrigger>--><!--
+				</DataTemplate.Triggers>-->
+			</TreeDataTemplate>
+	
+			<TreeDataTemplate x:Key="ProjectCodeTemplate" ItemsSource="{Binding SubDirectories}" DataType="viewModel:ProjectCodeViewModel">
+				<StackPanel Orientation="Horizontal">
+					<Image x:Name="DirectoryImage" Source="{StaticResource ImageRootFolder}" Margin="0,0,5,0"/>
+					<TextBlock>
+						<Run Text="{Binding Name, Mode=OneWay}"/>
+						<Run Text="{Binding IsDirty, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter=*}"/>
+					</TextBlock>
+				</StackPanel>
+			</TreeDataTemplate>
+	
+			<DataTemplate x:Key="PackageReferenceTemplate" DataType="viewModel:PackageReferenceViewModel">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="{StaticResource ImagePackageReference}" Margin="0,0,5,0"/>
+					<TextBlock Text="{Binding Name, Mode=OneWay}"/>
+				</StackPanel>
+			</DataTemplate>
+
+	<TreeDataTemplate x:Key="PackageTemplate" ItemsSource="{Binding AssetMountPoint.SubDirectories}" DataType="viewModel:PackageViewModel">
+		<StackPanel Orientation="Horizontal" Margin="0,2">
+			<Image Source="{StaticResource ImagePackage}" Margin="0,0,5,0"/>
+			<sd:TextBox Text="{Binding Name}" GetFocusOnLoad="True" SelectAllOnFocus="True" ValidateOnLostFocus="True"/>
+		</StackPanel>
+	</TreeDataTemplate>
+
 
 </ResourceDictionary>

@@ -351,8 +351,6 @@
         <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
 
-      							<sd:TextLogViewer Grid.Row="0" LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/>
-
 		<!-- TOOLBAR ROW -->
 		<!--<ToolBarTray Grid.Row="0" Visibility="{Binding Session, Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrCollapsed}}}">
 			<ToolBar>
@@ -580,7 +578,99 @@
 												<!--<ItemsControl x:Name="DirectoryTreeView1" ItemsSource="{Binding Session.PackageCategories.Values, Source={x:Static vm:GameStudioViewModel.GameStudio}}" ></ItemsControl>-->
 												
 												
-									</DockPanel>
+												<sd:ATreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values, Source={x:Static vm:GameStudioViewModel.GameStudio}}" IsVirtualizing="False">
+														<sd:ATreeView.Resources>
+												<ContextMenu x:Key="ContextMenu">
+													<MenuItem Header="{sd:Localize Folder, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
+													<MenuItem Header="{sd:Localize Create folder, Context=Menu}" Command="{Binding Session.NewDirectoryCommand}" CommandParameter="{Binding Session.ActiveAssetView.SelectedLocations}" Icon="{sd:Image {StaticResource ImageNewFolder}}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
+
+													<!--<MenuItem Header="{sd:Localize Package, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{sd:AMultiBinding {Binding Session.IsUpdatePackageEnabled}, {Binding Session.AddExistingProjectCommand.IsEnabled}, {Binding Session.AddDependencyCommand.IsEnabled}, {Binding Session.SetCurrentProjectCommand.IsEnabled}}"/>--><!--
+													<MenuItem Header="{sd:Localize Update package, Context=Menu}" ItemsSource="{Binding Session.UpdatePackageViewModel.Templates}" Icon="{sd:Image {StaticResource ImageAddNewProject}}" IsVisible="{Binding Session.IsUpdatePackageEnabled}">
+														<MenuItem.ItemContainerStyle>
+															<Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}" d:DataContext="{d:DesignInstance viewModels1:TemplateDescriptionViewModel}">
+																<Setter Property="Command" Value="{Binding UpdatePackageCommand}"/>
+															</Style>
+														</MenuItem.ItemContainerStyle>
+														<MenuItem.ItemTemplate>
+															<DataTemplate DataType="viewModels1:TemplateDescriptionViewModel">
+																<DockPanel Width="384">
+																	<Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="48" Height="48" Margin="2"/>
+																	<DockPanel Margin="18,0">
+																		<TextBlock DockPanel.Dock="Top" FontSize="16" Text="{Binding Name}"/>
+																		<TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextTrimming="WordEllipsis"/>
+																	</DockPanel>
+																</DockPanel>
+															</DataTemplate>
+														</MenuItem.ItemTemplate>
+													</MenuItem>
+													--><MenuItem Header="{sd:Localize Add dependency..., Context=Menu}" Command="{Binding Session.AddDependencyCommand}" Icon="{sd:Image {StaticResource ImageAddDependency}}" IsVisible="{Binding Session.AddDependencyCommand.IsEnabled}"/>
+													<MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand}" CommandParameter="{Binding}" Icon="{sd:Image {StaticResource ImageStartupProject}}" IsVisible="{Binding Session.SetCurrentProjectCommand.IsEnabled}"/>
+													<MenuItem Header="{sd:Localize Package properties, Context=Menu}" Command="{Binding Session.ActivatePackagePropertiesCommand}" Icon="{sd:Image {StaticResource ImagePackageProperties}}" IsVisible="{Binding Session.ActivatePackagePropertiesCommand.IsEnabled}"/>
+
+													<!--<MenuItem Header="{sd:Localize Solution, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{sd:AMultiBinding {Binding Session.NewPackageCommand.IsEnabled}, {Binding Session.AddExistingPackageCommand.IsEnabled}, {Binding Session.OpenInIDECommand.IsEnabled}, Converter={sd:AMultiChained {sd:AOrMultiConverter}, {sd:VisibleOrCollapsed}}}"/>-->
+													<MenuItem Header="{sd:Localize New project..., Context=Menu}" Command="{Binding Session.NewProjectCommand}" Icon="{sd:Image {StaticResource ImageAddNewPackage}}" IsVisible="{Binding Session.NewProjectCommand.IsEnabled}"/>
+													<MenuItem Header="{sd:Localize Add existing project..., Context=Menu}" Command="{Binding Session.AddExistingProjectCommand}" Icon="{sd:Image {StaticResource ImageAddExistingProject}}" IsVisible="{Binding Session.AddExistingProjectCommand.IsEnabled}"/>
+													<MenuItem Header="{sd:Localize Open in IDE, Context=Menu}" Command="{Binding Session.OpenInIDECommand}" Icon="{sd:Image {StaticResource ImageVisualStudio}}" IsVisible="{Binding Session.OpenInIDECommand.IsEnabled}"/>
+
+													<MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+													<!--<MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="ApplicationCommands.Cut" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCut}}"/>
+													<MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="ApplicationCommands.Copy" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCopy}}"/>
+													<MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="ApplicationCommands.Paste" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImagePaste}}"/>
+													<MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="ApplicationCommands.Delete" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
+													<MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding Session.RenameDirectoryOrPackageCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}}" CommandParameter="{Binding Session.ActiveAssetView.SelectedLocations}" Icon="{sd:Image {StaticResource ImageRename}}" IsVisible="{Binding Session.RenameDirectoryOrPackageCommand.IsEnabled}" InputGesture="F2"/>
+
+													<MenuItem Header="{sd:Localize Asset, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
+													<MenuItem Header="{sd:Localize Add asset..., Context=Menu}" Command="{Binding Session.ActiveAssetView.ShowAddAssetDialogCommand}" InputGesture="{x:Static strings:KeyGestures.AddAsset}" Icon="{sd:Image {StaticResource ImageNewAsset}}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
+
+													<MenuItem Header="{sd:Localize Explore, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{Binding Session.ExploreCommand.IsEnabled}"/>
+													<MenuItem Header="{sd:Localize Show in Explorer, Context=Menu}" Command="{Binding Session.ExploreCommand}" CommandParameter="{Binding}" Icon="{sd:Image {StaticResource ImageExplore}}" IsVisible="{Binding Session.ExploreCommand.IsEnabled}"/>
+
+												</ContextMenu>
+											</sd:ATreeView.Resources>
+											<i:Interaction.Behaviors>
+												<!--<sd:DragOverAutoScrollBehavior/>
+												<sd:ATreeViewAutoExpandBehavior/>
+												<sd:ATreeViewDragDropBehavior DragVisualTemplate="{StaticResource DragVisualTemplate}"/>-->
+												<sd:TreeViewBindableSelectedItemsBehavior SelectedItems="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
+												<!--<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Cut" Command="{Binding Session.ActiveAssetView.CutLocationsCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
+												<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" Command="{Binding Session.ActiveAssetView.CopyLocationsCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
+												<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding Session.ActiveAssetView.PasteCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
+												<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding Session.DeleteSelectedSolutionItemsCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
+											</i:Interaction.Behaviors>
+													<sd:ATreeView.ItemContainerTheme>
+<!-- 														<ControlTheme TargetType="{x:Type sd:ATreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}"> -->
+														<ControlTheme TargetType="{x:Type sd:ATreeViewItem}" >
+															<!--<Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={sd:AAssetToExpandedAtInitialization}}"/>-->
+															<!--<Setter Property="IsEditable" Value="{Binding IsEditable, Mode=OneTime}" d:DataContext="{d:DesignInstance sd:IIsEditableViewModel}"/>
+													<Setter Property="IsEditing" Value="{Binding IsEditing, Mode=TwoWay}" d:DataContext="{d:DesignInstance sd:IIsEditableViewModel}"/>-->
+															<Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+															<!--<Setter Property="TemplateSelectorEdit" Value="{StaticResource SolutionTreeViewEditTemplate}"/>
+													-->
+															<!--<Setter Property="sd:Interaction.Behaviors">
+														<Setter.Value>
+															<sd:BehaviorCollection>
+																<sd:ATreeViewStopEditOnLostFocusBehavior/>
+															</sd:BehaviorCollection>
+														</Setter.Value>
+													</Setter>-->
+														</ControlTheme>
+													</sd:ATreeView.ItemContainerTheme>
+													<sd:ATreeView.DataTemplates>
+
+														<StaticResource ResourceKey="AssetMountPointTemplate"></StaticResource>
+														<StaticResource ResourceKey="DirectoryTemplate"></StaticResource>
+														<StaticResource ResourceKey="DependencyCategoryTemplate"></StaticResource>
+														<StaticResource ResourceKey="ProjectTemplate"></StaticResource>
+														<StaticResource ResourceKey="ProjectCodeTemplate"></StaticResource>
+														<StaticResource ResourceKey="PackageReferenceTemplate"></StaticResource>
+														<StaticResource ResourceKey="PackageTemplate"></StaticResource>
+
+													</sd:ATreeView.DataTemplates>
+
+
+												</sd:ATreeView>
+
+												</DockPanel>
 
 
 

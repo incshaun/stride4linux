@@ -95,6 +95,12 @@ def translateHeaders (contents):
     headers += "using Avalonia.Media.Imaging;\n"
   if re.findall ("TextRange", contents):
     headers += "using Avalonia.Media.TextFormatting;\n"
+  if re.findall ("EventHandler", contents):
+    headers += "using System;\n"
+  if re.findall ("VisualTreeHelper", contents):
+    headers += "using Avalonia.VisualTree;\n"
+  if re.findall ("LogicalTreeHelper", contents):
+    headers += "using Avalonia.LogicalTree;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -134,6 +140,9 @@ def translateNames (contents):
   contents = re.sub ("\.CanExecute\(", ".Command.CanExecute(", contents) # provisional.
   contents = re.sub ("\.Execute\(", ".Command.Execute(", contents) # provisional.
   
+  contents = re.sub ("static DependencyProperty", "static AvaloniaProperty", contents) # provisional.
+  contents = re.sub ("DependencyProperty property", "AvaloniaProperty property", contents) # provisional.
+  contents = re.sub ("\(DependencyProperty\)", "(AvaloniaProperty)", contents)
   
   contents = re.sub ("CancelRoutedEventHandler", "EventHandler<CancelRoutedEventArgs>", contents)
   contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional
@@ -142,7 +151,13 @@ def translateNames (contents):
   contents = re.sub ("DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
   contents = re.sub ("System.Windows.Controls.TextBox", "Avalonia.Controls.TextBox", contents)
   contents = re.sub ("System.Windows.Media", "Avalonia.Media", contents)
-  contents = re.sub ("DependencyObject", "AvaloniaObject", contents)
+  contents = re.sub (" DependencyObject ", " AvaloniaObject ", contents)
+  contents = re.sub ("\(DependencyObject ", "(AvaloniaObject ", contents)
+  contents = re.sub ("<DependencyObject,", "<AvaloniaObject,", contents)
+  contents = re.sub (" DependencyObject>", " AvaloniaObject>", contents)
+  contents = re.sub ("<DependencyObject>", "<AvaloniaObject>", contents)
+  contents = re.sub (": DependencyObject", ": AvaloniaObject", contents)
+  contents = re.sub ("as DependencyObject", "as AvaloniaObject", contents)
   contents = re.sub ("DependencyProperty.UnsetValue", "AvaloniaProperty.UnsetValue", contents)
   contents = re.sub ("\.ProvideValue\(.*\)", "", contents) # is this true in general?
   contents = re.sub ("\(FrameworkElement ", "(Control ", contents) # is this true in general?
@@ -152,6 +167,8 @@ def translateNames (contents):
 
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
 
+  contents = re.sub ("Application.Current.TryFindResource\(value\)", "ResourceNodeExtensions.FindResource(Application.Current, value)", contents)
+
   contents = re.sub (" ImageSource ", " IImage ", contents)
   contents = re.sub ("\(ImageSource ", "(IImage ", contents)
   contents = re.sub (" BitmapScalingMode ", r' BitmapInterpolationMode ', contents)
@@ -159,6 +176,9 @@ def translateNames (contents):
   contents = re.sub ("RenderOptions.SetBitmapScalingMode", r' RenderOptions.SetBitmapInterpolationMode', contents)
 
   contents = re.sub ("= (.*?)\.FindVisualChildOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1);', contents)
+  contents = re.sub ("LogicalTreeHelper\.GetChildren", r'LogicalExtensions.GetLogicalChildren', contents)
+  contents = re.sub ("LogicalTreeHelper\.GetParent", r'LogicalExtensions.GetLogicalParent', contents)
+  contents = re.sub ("VisualTreeHelper\.GetParent", r'Avalonia.VisualTree.VisualExtensions.GetVisualParent', contents)
 
   contents = re.sub ("<ButtonBase>", "<Button>", contents)
   contents = re.sub ("\(ButtonBase\)", "(Button)", contents)
@@ -181,6 +201,8 @@ def translateNames (contents):
   contents = re.sub ("BooleanBoxes.TrueBox", "true", contents)
   contents = re.sub ("value.Box\(\)", "value", contents)
   contents = re.sub ("result.Box\(\)", "result", contents)
+
+  contents = re.sub (": HeaderedItemsControl", ": Avalonia.Controls.TreeViewItem", contents)
   
   contents = re.sub (", IAttachedObject", "", contents)
   contents = re.sub ("Microsoft\.Xaml\.Behaviors\.Interaction\.GetBehaviors", "Avalonia.Xaml.Interactivity.Interaction.GetBehaviors", contents)
@@ -199,8 +221,17 @@ def translateProperties (contents):
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
   
-  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
   commands = ""
+
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
+  classname = ""
+  for match in re.findall (pat, contents):
+    #print (match)
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
+    classname = match[5];
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
+
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
   classname = ""
   for match in re.findall (pat, contents):
     #print (match)
@@ -219,8 +250,16 @@ def translateProperties (contents):
       if re.findall (pat, contents): # already a static class.
         contents = re.sub (pat, r"static " + classname + "()\n\t\t{\n" + commands + "\t\t}\n\n\t\tpublic " + classname + "()\n\t\t{", contents)
       else:
-        print ("Could not find a spot to add the property classhandlers")
-        exit (0)
+        pat = re.compile ("public class " + classname + "(.*?){", re.DOTALL) # add to classheader.
+        if re.findall (pat, contents): # already a static class.
+          contents = re.sub (pat, r"public class " + classname + "\1{\n\t\tstatic " + classname + "()\n\t\t{\n" + commands + "\t\t}\n", contents)
+        else:
+          pat = re.compile ("public abstract class (.*?) (.*?){", re.DOTALL) # add to classheader.
+          if re.findall (pat, contents): # already a static class.
+            contents = re.sub (pat, r"public abstract class \1 \2{\n\t\tstatic \1 ()\n\t\t{\n" + commands + "\t\t}\n", contents)
+          else:
+            print ("Could not find a spot to add the property classhandlers")
+            exit (0)
       
   #print (commands)
     
@@ -537,10 +576,18 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ModalWindow.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ButtonCloseWindowBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CloseWindowBehavior.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextLogViewer.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextLogViewer.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Interactivity/BehaviorCollection.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/NumericTextBoxDragBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/MouseMoveCaptureBehaviorBase.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TreeViewItemEventArgs.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ExpandableItemsControl.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/DependencyObjectExtensions.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/TreeViewBindableSelectedItemsBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/BindableSelectedItemsBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/DeferredBehaviorBase.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/BoolToParam.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/StaticResourceConverter.cs")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
