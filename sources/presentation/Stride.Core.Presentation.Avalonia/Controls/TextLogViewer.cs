@@ -160,9 +160,30 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="TextLogViewer"/> class.
         /// </summary>
-        public TextLogViewer()
-        {
-            Console.WriteLine ("TextLogViewer: " + logTextBox);
+        static TextLogViewer()
+		{
+			LogMessagesProperty.Changed.AddClassHandler<TextLogViewer>(LogMessagesPropertyChanged);
+			SearchTokenProperty.Changed.AddClassHandler<TextLogViewer>(SearchTokenChanged);
+			SearchMatchCaseProperty.Changed.AddClassHandler<TextLogViewer>(SearchTokenChanged);
+			SearchMatchWordProperty.Changed.AddClassHandler<TextLogViewer>(SearchTokenChanged);
+			SearchMatchBrushProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			DebugBrushProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			VerboseBrushProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			InfoBrushProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			WarningBrushProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			ErrorBrushProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			FatalBrushProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			ShowDebugMessagesProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			ShowVerboseMessagesProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			ShowInfoMessagesProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			ShowWarningMessagesProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			ShowErrorMessagesProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			ShowFatalMessagesProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+			ShowStacktraceProperty.Changed.AddClassHandler<TextLogViewer>(TextPropertyChanged);
+		}
+
+		public TextLogViewer()
+		{
             Loaded += (s, e) =>
             {
                 try
@@ -297,7 +318,6 @@ namespace Stride.Core.Presentation.Controls
         /// <inheritdoc/>
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 		{
-            Console.WriteLine ("OnApplyTemplate: " + logTextBox.Text + " - " + logTextBox);
 			base.OnApplyTemplate(e);
 
             logTextBox = e.NameScope.Find<Avalonia.Controls.TextBox>("PART_LogTextBox");
@@ -346,7 +366,6 @@ namespace Stride.Core.Presentation.Controls
 
         private void AppendText([NotNull] string document, [NotNull] IEnumerable<ILogMessage> logMessages)
         {
-            Console.WriteLine ("AppendText: " + logTextBox.Text + " - " + logTextBox);
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (logMessages == null) throw new ArgumentNullException(nameof(logMessages));
             if (logTextBox != null)
@@ -473,7 +492,7 @@ namespace Stride.Core.Presentation.Controls
 //             var offset = selectionRect.Top + logTextBox.VerticalOffset;
 //             logTextBox.ScrollToVerticalOffset(offset - logTextBox.ActualHeight / 2);
 //             logTextBox.BringIntoView();
-//             currentResult = resultIndex;
+            currentResult = resultIndex;
         }
 
         private bool ShouldDisplayMessage(LogMessageType type)

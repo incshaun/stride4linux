@@ -211,8 +211,17 @@ def translateProperties (contents):
   # patch in commands to an existing static constructor.
   if len (commands) > 0:
     #print ("Match", "static " + classname + "(\s*)\(\)")
-    contents = re.sub (re.compile ("static " + classname + "(\s*)\(\)(\s*){", re.DOTALL), r"static " + classname + "()\n\t\t{\n" + commands, contents)
-  
+    pat = re.compile ("static " + classname + "(\s*)\(\)(\s*){", re.DOTALL)
+    if re.findall (pat, contents): # already a static class.
+      contents = re.sub (pat, r"static " + classname + "()\n\t\t{\n" + commands, contents)
+    else:
+      pat = re.compile ("public " + classname + "(\s*)\(\)(\s*){", re.DOTALL)
+      if re.findall (pat, contents): # already a static class.
+        contents = re.sub (pat, r"static " + classname + "()\n\t\t{\n" + commands + "\t\t}\n\n\t\tpublic " + classname + "()\n\t\t{", contents)
+      else:
+        print ("Could not find a spot to add the property classhandlers")
+        exit (0)
+      
   #print (commands)
     
     
@@ -528,7 +537,7 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ModalWindow.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ButtonCloseWindowBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CloseWindowBehavior.cs")
-#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextLogViewer.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TextLogViewer.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Interactivity/BehaviorCollection.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/NumericTextBoxDragBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/MouseMoveCaptureBehaviorBase.cs")

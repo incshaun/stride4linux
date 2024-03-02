@@ -89,11 +89,11 @@
   </ControlTheme>
 
 
-  <ControlTheme x:Key="DefaultLogViewerStyle" TargetType="ctrl:TextLogViewer">
+  <ControlTheme x:Key="DefaultLogViewerStyle" TargetType="{x:Type ctrl:TextLogViewer}">
     <Setter Property="Focusable" Value="False" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="ctrl:TextLogViewer">
+        <ControlTemplate TargetType="{x:Type ctrl:TextLogViewer}">
           <DockPanel>
 <!--            <ToolBarTray DockPanel.Dock="Top"
                          Visibility="{Binding IsToolBarVisible, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:VisibleOrCollapsed}}">
@@ -141,6 +141,6 @@
     </Setter>
   </ControlTheme>
 
-
+<ControlTheme x:Key="{x:Type ctrl:TextLogViewer}"  TargetType="{x:Type ctrl:TextLogViewer}" BasedOn="{StaticResource DefaultLogViewerStyle}" />
 
 </ResourceDictionary>

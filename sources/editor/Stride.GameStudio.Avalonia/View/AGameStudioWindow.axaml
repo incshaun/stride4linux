@@ -351,6 +351,8 @@
         <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
 
+      							<sd:TextLogViewer Grid.Row="0" LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/>
+
 		<!-- TOOLBAR ROW -->
 		<!--<ToolBarTray Grid.Row="0" Visibility="{Binding Session, Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrCollapsed}}}">
 			<ToolBar>
@@ -702,7 +704,7 @@
 										
 										
 										-->
-							<!--<sd:TextLogViewer LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/>-->
+							<sd:TextLogViewer LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/>
 							<!--
 										
 										
@@ -726,7 +728,7 @@
 										
 										
 										-->
-							<!--<sd:TextLogViewer LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/>-->
+<!-- 							<sd:TextLogViewer LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/> -->
 							<!--
 										
 										
