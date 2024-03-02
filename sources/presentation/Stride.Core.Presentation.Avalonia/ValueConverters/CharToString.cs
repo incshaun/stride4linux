@@ -2,34 +2,29 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.Globalization;
-using Avalonia;
-using Avalonia.Controls;
-
-using Stride.Core.Presentation.Internal;
-
+using Stride.Core.Annotations;
 
 namespace Stride.Core.Presentation.ValueConverters
 {
     /// <summary>
-    /// This converter will convert a boolean to the object given in parameter if its true,
-    /// and to <see cref="AvaloniaProperty.UnsetValue"/> if it's false.
-    /// <see cref="ConvertBack"/> is supported and will return whether the given object is different from
-    /// <see cref="AvaloniaProperty.UnsetValue"/>.
+    /// This converter will convert a <see cref="char"/> value to a string containing only this char.
     /// </summary>
-    public class BoolToParam : ValueConverterBase<BoolToParam>
+    public class CharToString : ValueConverterBase<CharToString>
     {
         /// <inheritdoc/>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = ConverterHelper.ConvertToBoolean(value, culture);
-            return result ? parameter : AvaloniaProperty.UnsetValue;
+            return value is char ? value.ToString() : string.Empty;
         }
 
         /// <inheritdoc/>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = value != AvaloniaProperty.UnsetValue;
-            return result.Box ();
+            var str = value as string;
+            if (!string.IsNullOrEmpty(str))
+                return str[0];
+
+            return targetType == typeof(char) ? (object)default(char) : null;
         }
     }
 }

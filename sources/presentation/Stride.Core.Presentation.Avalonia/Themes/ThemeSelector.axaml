@@ -75,6 +75,212 @@
 
   
 
+	<!-- For Avalonia TreeView, not the Stride version -->
+	<ControlTheme x:Key="{x:Type TreeView}" TargetType="{x:Type TreeView}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TreeView}">
+					<Grid>
+						<Border x:Name="Border" Background="{DynamicResource ControlBackgroundBrush}" BorderBrush="{x:Null}" BorderThickness="1" CornerRadius="0">
+							<ScrollViewer Theme="{DynamicResource NuclearScrollViewer}" Focusable="False" Padding="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  >
+								<ItemsPresenter />
+							</ScrollViewer>
+						</Border>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</ControlTheme>
+
+	<ControlTemplate x:Key="TreeExpanderToggleButton" TargetType="{x:Type ToggleButton}">
+		<Grid Background="Transparent">
+			<Path IsVisible="{Binding !IsChecked, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Center" x:Name="Up_Arrow" VerticalAlignment="Center" Fill="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ctrl:ATreeViewItem}}, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter={StaticResource GlyphHeaderBrush}, FallbackValue={StaticResource GlyphBrush}}"
+						Data="M 0 6 V 0 l 5 3 z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0"/>
+			<Path IsVisible="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center" Fill="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ctrl:ATreeViewItem}}, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter={StaticResource GlyphHeaderBrush}, FallbackValue={StaticResource GlyphBrush}}"
+						Data="M 0 0 H 6 L 3 6 Z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0"/>
+		</Grid>
+	
+	</ControlTemplate>
+
+	<!--  TREE VIEWS  -->
+	<ControlTheme x:Key="{x:Type ctrl:ATreeView}" TargetType="{x:Type ctrl:ATreeView}">
+		<ControlTheme.Resources>
+			<ResourceDictionary />
+		</ControlTheme.Resources>
+		<Setter Property="Panel.Background" Value="{StaticResource ControlBackgroundBrush}"/>
+		<!--<Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="False" />-->
+		<Setter Property="Border.BorderBrush" Value="{StaticResource SolidBorderBrush}" />
+		<Setter Property="Border.BorderThickness" Value="0" />
+		<Setter Property="Padding" Value="1" />
+		<Setter Property="TextElement.Foreground" Value="{StaticResource TextBrush}"/>
+		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+		<!--<Setter Property="VerticalContentAlignment" Value="Center"/>-->
+		<Setter Property="ItemsPanel">
+			<ItemsPanelTemplate>
+				<!--<WrapPanel />-->
+			<ctrl:AVirtualizingTreePanel />
+			</ItemsPanelTemplate>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ctrl:ATreeView}">
+					<Border BorderThickness="{TemplateBinding Border.BorderThickness}"
+									  BorderBrush="{TemplateBinding Border.BorderBrush}" Name="Bd" >
+						<ScrollViewer  x:Name="PART_Scroller"
+											HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+											VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+											Background="{TemplateBinding Panel.Background}"
+                                
+                                
+											Focusable="False">
+							<ItemsPresenter x:Name="content" DockPanel.Dock="Top"
+											
+						ItemsPanel="{TemplateBinding ItemsPanel}"
+     										/>
+						</ScrollViewer>
+					</Border>
+					<!--<ControlTemplate.Triggers>
+            <Trigger Property="UIElement.IsEnabled" Value="False">
+              <Setter Property="Panel.Background" TargetName="Bd">
+                <Setter.Value>
+                  -->
+					<!--<DynamicResource ResourceKey="{x:Static SystemColors.ControlBrushKey}" />-->
+					<!--
+                </Setter.Value>
+              </Setter>
+            </Trigger>
+          </ControlTemplate.Triggers>-->
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</ControlTheme>
+
+	<ControlTheme x:Key="{x:Type ctrl:ATreeViewItem}" TargetType="{x:Type ctrl:ATreeViewItem}">
+		<ControlTheme.Resources>
+			<ResourceDictionary />
+		</ControlTheme.Resources>
+		<Setter Property="Background" Value="Transparent"/>
+		<!--<Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl, AncestorLevel=1}, FallbackValue=Left}" />-->
+		<!--<Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl, AncestorLevel=1}, FallbackValue=Center}" />-->
+		<Setter Property="Padding" Value="1,4" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Margin" Value="0" />
+		<!--<Setter Property="FocusVisualStyle">
+			<Setter.Value>
+				--><!--<Style TargetType="{x:Type IFrameworkInputElement}">
+          <Style.Resources>
+            <ResourceDictionary />
+          </Style.Resources>
+          <Setter Property="Control.Template">
+            <Setter.Value>
+              <ControlTemplate>
+                <Rectangle />
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>--><!--
+			</Setter.Value>
+		</Setter>-->
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ctrl:ATreeViewItem}">
+					<StackPanel Background="Transparent" x:Name="stacki">
+						<Grid x:Name="border" Background="Transparent"  VerticalAlignment="Center">
+							<Rectangle x:Name="Background" IsHitTestVisible="False" Opacity="1" Fill="{TemplateBinding Background}"/>
+							<Rectangle x:Name="HoverRectangle" IsHitTestVisible="False" Opacity="0" Fill="{StaticResource NormalBrush}"/>
+							<Rectangle x:Name="SelectedRectangle" IsHitTestVisible="False" Opacity="0" Fill="{StaticResource SelectedBackgroundBrush}"/>
+							<DockPanel x:Name="ct" Margin="{TemplateBinding Padding}">
+								<Control DockPanel.Dock="Left" Margin="{Binding Offset, RelativeSource={RelativeSource TemplatedParent}, Converter={cvt:NumericToThickness}, ConverterParameter={me:Thickness 1,0,0,0}}"/>
+								<ToggleButton DockPanel.Dock="Left"
+													IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ctrl:ATreeViewItem}},Path=IsExpanded,FallbackValue=false}"
+													IsVisible="{Binding RelativeSource={RelativeSource AncestorType={x:Type ctrl:ATreeViewItem}},Path=HasItems, FallbackValue=false}"
+													ClickMode="Press" Name="Expander" HorizontalAlignment="Right">
+						<ToggleButton.Theme>
+                    <ControlTheme TargetType="{x:Type ToggleButton}">
+						<ControlTheme.Resources>
+                        <ResourceDictionary />
+                      </ControlTheme.Resources>
+                      <Setter Property="Focusable" Value="False" />
+                      <Setter Property="Width" Value="8" />
+                      <Setter Property="Height" Value="8" />
+                      <Setter Property="Margin" Value="0,0,4,0" />
+                      <Setter Property="Template" Value="{StaticResource TreeExpanderToggleButton}"/>
+					</ControlTheme>
+                  </ToggleButton.Theme>
+								</ToggleButton>
+								<ContentPresenter x:Name="content"
+                                  
+												  Content="{TemplateBinding HeaderedContentControl.Header}"
+												  ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
+                                  
+                                 
+                                  
+                                  
+                                   >
+									<ContentPresenter.Resources>
+                    <ControlTheme x:Key="TreeViewItemTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                      
+									<!--<Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ctrl:ATreeViewItem}}, Mode=OneWay}" Value="True">
+                          <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}"/>
+                        </DataTrigger>
+                      </Style.Triggers>-->
+									
+                    </ControlTheme>
+                  </ContentPresenter.Resources>
+								</ContentPresenter>
+							</DockPanel>
+							<Rectangle x:Name="FocusVisualElement" Stroke="#4CFFFFFF" StrokeThickness="1" RadiusX="1" RadiusY="1" Opacity="0" IsHitTestVisible="False" Margin="1,1,1,1"/>
+						</Grid>
+						<ItemsPresenter x:Name="itemsPresenter" IsVisible="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=false}"
+							
+						ItemsPanel="{TemplateBinding ItemsPanel}"
+    							
+										/>
+					</StackPanel>
+					<!--<ControlTemplate.Triggers>
+            <MultiTrigger>
+              <MultiTrigger.Conditions>
+                <Condition Property="IsFocused" Value="True" />
+                <Condition Property="IsSelected" Value="False" />
+              </MultiTrigger.Conditions>
+              <Setter Property="Opacity" TargetName="FocusVisualElement" Value="1"/>
+            </MultiTrigger>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter Property="Opacity" TargetName="SelectedRectangle" Value="1"/>
+            </Trigger>
+            <MultiTrigger>
+              <MultiTrigger.Conditions>
+                <Condition Property="IsMouseOver" Value="True" SourceName="border"/>
+                <Condition Property="Selector.IsSelected" Value="False" />
+              </MultiTrigger.Conditions>
+              <Setter Property="Opacity" TargetName="HoverRectangle" Value="1"/>
+            </MultiTrigger>
+            <Trigger Property="IsEnabled" Value="false">
+              <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
+            </Trigger>
+
+            <Trigger Property="ctrl:ATreeViewItem.IsEditing" Value="True">
+              <Setter TargetName="content" Property="ContentPresenter.ContentTemplate"
+                      Value="{Binding TemplateEdit, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ctrl:ATreeViewItem}, AncestorLevel=1}}"/>
+              <Setter TargetName="content" Property="ContentPresenter.ContentTemplateSelector"
+                      Value="{Binding TemplateSelectorEdit, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ctrl:ATreeViewItem}, AncestorLevel=1}}"/>
+              <Setter Property="Padding" Value="0" />
+            </Trigger>
+          </ControlTemplate.Triggers>-->
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ItemsPanel">
+			<ItemsPanelTemplate>
+				<!--<WrapPanel />-->
+				<ctrl:AVirtualizingTreePanel />
+			</ItemsPanelTemplate>
+		</Setter>
+
+	</ControlTheme>
 
 
 

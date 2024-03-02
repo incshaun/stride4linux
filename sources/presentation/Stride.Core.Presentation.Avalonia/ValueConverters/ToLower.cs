@@ -2,14 +2,17 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.Globalization;
-using Stride.Core.Annotations;
 
 namespace Stride.Core.Presentation.ValueConverters
 {
-    public abstract partial class ValueConverterBase<T>
+    /// <summary>
+    /// Transforms string into lower case.
+    /// </summary>
+    public class ToLower : OneWayValueConverter<ToLower>
     {
-        public abstract object Convert(object value, [NotNull] Type targetType, object parameter, CultureInfo culture);
-
-        public abstract object ConvertBack(object value, [NotNull] Type targetType, object parameter, CultureInfo culture);
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (value as string)?.ToLower(culture);
+        }
     }
 }

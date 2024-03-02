@@ -9,12 +9,12 @@ using Stride.Core.Settings;
 
 namespace Stride.Core.Assets.Editor.Components.Properties
 {
-    internal class PackageSettingsWrapper
+    public class PackageSettingsWrapper
     {
         /// <summary>
         /// An helper class to wrap a <see cref="SettingsKey"/> in the context of a given <see cref="SettingsProfile"/> into a simple object.
         /// </summary>
-        internal class SettingsKeyWrapper
+        public class SettingsKeyWrapper
         {
             protected readonly SettingsProfile Profile;
 

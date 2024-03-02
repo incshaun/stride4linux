@@ -1,35 +1,34 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
+using System.Collections.Generic;
 using System.Globalization;
-using Avalonia;
-using Avalonia.Controls;
-
-using Stride.Core.Presentation.Internal;
-
+using Stride.Core.Annotations;
 
 namespace Stride.Core.Presentation.ValueConverters
 {
     /// <summary>
-    /// This converter will convert a boolean to the object given in parameter if its true,
-    /// and to <see cref="AvaloniaProperty.UnsetValue"/> if it's false.
-    /// <see cref="ConvertBack"/> is supported and will return whether the given object is different from
-    /// <see cref="AvaloniaProperty.UnsetValue"/>.
+    /// This value converter will join an enumerable of strings with the separator given as parameter (or using a single space character as separator
+    /// if the parameter is null).
     /// </summary>
-    public class BoolToParam : ValueConverterBase<BoolToParam>
+    public class JoinStrings : ValueConverterBase<JoinStrings>
     {
         /// <inheritdoc/>
+        [NotNull]
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = ConverterHelper.ConvertToBoolean(value, culture);
-            return result ? parameter : AvaloniaProperty.UnsetValue;
+            var strings = (IEnumerable<string>)value;
+            var separator = (string)parameter;
+            return string.Join(separator ?? " ", strings);
         }
 
         /// <inheritdoc/>
+        [NotNull]
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = value != AvaloniaProperty.UnsetValue;
-            return result.Box ();
+            var str = (string)value;
+            var separator = (string)parameter;
+            return str.Split(new[] { separator ?? " "}, StringSplitOptions.None);
         }
     }
 }

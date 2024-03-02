@@ -18,7 +18,7 @@ namespace Stride.Core.Assets.Editor.Settings.ViewModels
     /// <summary>
     /// This class is an implementation of the <see cref="CategoryViewModel{TParent,TChildren}"/> class that represents a category of settings.
     /// </summary>
-    internal class SettingsCategoryViewModel : DispatcherViewModel, IComparable<SettingsCategoryViewModel>, IPropertyProviderViewModel
+    public class SettingsCategoryViewModel : DispatcherViewModel, IComparable<SettingsCategoryViewModel>, IPropertyProviderViewModel
     {
         private readonly AssetNodeContainer nodeContainer;
         private readonly SettingsContainerNode settingsList = new SettingsContainerNode();

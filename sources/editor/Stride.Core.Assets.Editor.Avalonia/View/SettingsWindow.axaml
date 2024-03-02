@@ -1,0 +1,99 @@
+<sd:ModalWindow x:Class="Stride.Core.Assets.Editor.View.SettingsWindow"
+                  xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+                  xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+                  xmlns:behaviors="clr-namespace:Stride.Core.Assets.Editor.View.Behaviors"
+                  xmlns:valueConverters="clr-namespace:Stride.Core.Assets.Editor.View.ValueConverters"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:edvw="clr-namespace:Stride.Core.Assets.Editor.View"
+                  xmlns:viewModels="clr-namespace:Stride.Core.Assets.Editor.Settings.ViewModels"
+                  xmlns:viewModels1="clr-namespace:Stride.Core.Presentation.Quantum.ViewModels;assembly=Stride.Core.Presentation.Quantum"
+                  mc:Ignorable="d" 
+                  ShowInTaskbar="False"
+                  Title="{sd:Localize Settings}" Height="768" Width="1024" Theme="{DynamicResource WindowChromeStyle}"
+        >
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="CommonResources.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Window.Resources>
+  <DockPanel>
+    <UniformGrid Rows="1" DockPanel.Dock="Bottom" Margin="20" HorizontalAlignment="Right">
+      <Button Margin="10,0,0,0" Padding="20,4" Content="{sd:Localize Save and close, Context=Button}">
+        <i:Interaction.Behaviors>
+          <sd:ButtonCloseWindowBehavior Command="{Binding ValidateChangesCommand}"/>
+        </i:Interaction.Behaviors>
+      </Button>
+      <Button Margin="10,0,0,0" Padding="20,4" Content="{sd:Localize Cancel, Context=Button}" IsCancel="True">
+        <i:Interaction.Behaviors>
+          <sd:ButtonCloseWindowBehavior Command="{Binding DiscardChangesCommand}"/>
+        </i:Interaction.Behaviors>
+      </Button>
+    </UniformGrid>
+
+    <Grid Margin="20">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="2*"/>
+      </Grid.ColumnDefinitions>
+
+ <!--     <sd:TreeView Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" SelectionMode="Single">
+        <sd:TreeView.ItemContainerStyle>
+          <ControlTheme x:Key="{x:Type sd:TreeViewItem}" TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
+            <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={valueConverters:SettingsCategoryToExpandedAtInitialization}}"/>
+          </ControlTheme>
+        </sd:TreeView.ItemContainerStyle>
+        <sd:TreeView.ItemTemplate>
+          <HierarchicalDataTemplate ItemsSource="{Binding SubCategories}">
+            <TextBlock Text="{Binding Name}"/>
+          </HierarchicalDataTemplate>
+        </sd:TreeView.ItemTemplate>
+      </sd:TreeView>-->
+
+      <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
+
+ <!--     <sd:PropertyView NameColumnSize="310" Grid.Column="2" ItemsSource="{Binding ViewModel.RootNode.Children}" BorderThickness="1" Background="{DynamicResource BackgroundBrush}" Padding="5">
+        <sd:PropertyView.ItemContainerStyle>
+          <ControlTheme BasedOn="{StaticResource {x:Type sd:PropertyViewItem}}" TargetType="sd:PropertyViewItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HeaderTemplate">
+              <Setter.Value>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels1:NodeViewModel">
+                  <ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.HeaderProviders}"/>
+                </HierarchicalDataTemplate>
+              </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="sd:PropertyViewItem">
+                  <Border BorderThickness="{TemplateBinding Border.BorderThickness}" BorderBrush="{TemplateBinding Border.BorderBrush}" 
+                                            IsVisible="{Binding IsVisible}" >
+                    <DockPanel>
+                      <Border DockPanel.Dock="Top" Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}"  Name="PART_Header" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"  />
+                      </Border>
+                      <Border DockPanel.Dock="Bottom" Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.FooterProviders}" Name="PART_Footer" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"  />
+                      </Border>
+                      <Expander x:Name="propertyExpander" IsExpanded="{TemplateBinding IsExpanded}" Theme="{StaticResource PropertyExpanderStyle}">
+                        <ItemsPresenter Name="ItemsHost"/>
+                      </Expander>
+                    </DockPanel>
+                  </Border>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
+          </ControlTheme>
+        </sd:PropertyView.ItemContainerStyle>
+        <i:Interaction.Behaviors>
+          <behaviors:PropertyViewAutoExpandNodesBehavior ViewModel="{Binding ViewModel, Mode=OneWay}"/>
+        </i:Interaction.Behaviors>
+      </sd:PropertyView>-->
+    </Grid>
+  </DockPanel>
+</sd:ModalWindow>

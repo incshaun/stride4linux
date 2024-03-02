@@ -22,7 +22,7 @@ namespace Stride.Core.Assets.Editor.Settings.ViewModels
     /// <summary>
     /// This class is the global view model for editing settings.
     /// </summary>
-    internal class SettingsViewModel : PropertiesViewModel
+    public class SettingsViewModel : PropertiesViewModel
     {
         private SettingsCategoryViewModel selectedCategory;
         protected new AssetNodeContainer NodeContainer => (AssetNodeContainer)base.NodeContainer;
