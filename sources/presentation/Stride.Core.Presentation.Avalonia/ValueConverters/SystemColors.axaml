@@ -1,0 +1,14 @@
+<!--
+// Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net)
+// Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d">
+
+  <Color x:Key="ActiveCaptionColor">#FF00FFFF</Color>
+  <SolidColorBrush x:Key="ActiveCaptionTextBrushKey" Color="#F5F5F5" />
+  
+</ResourceDictionary>

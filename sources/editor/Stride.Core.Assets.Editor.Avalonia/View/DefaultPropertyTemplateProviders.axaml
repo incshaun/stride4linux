@@ -63,7 +63,7 @@
                      Foreground="{sd:MultiBinding {Binding}, {Binding DataContext.NodeValue, RelativeSource={RelativeSource AncestorType=ComboBox}},
                                  Converter={cvt:AbstractNodeEntryToBrush}, FallbackValue={StaticResource TextBrush}}"
                      FontWeight="{sd:MultiBinding {Binding}, {Binding DataContext.NodeValue, RelativeSource={RelativeSource AncestorType=ComboBox}},
-                                 Converter={cvt:AbstractNodeEntryToFontWeight}, FallbackValue={x:Static FontWeights.Normal}}"/>
+                                 Converter={cvt:AbstractNodeEntryToFontWeight}, FallbackValue={x:Static FontWeight.Normal}}"/>
         </DataTemplate>
       </Setter.Value>
     </Setter>
@@ -97,7 +97,7 @@
             <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False"  >
               <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" >
                 <Border x:Name="DropDownBorder" Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="3,3,3,3" />
-                <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" CanContentScroll="True" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}">
+                <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" CanContentScroll="True" Foreground="{StaticResource ActiveCaptionTextBrushKey}">
                   <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
                 </ScrollViewer>
               </Grid>

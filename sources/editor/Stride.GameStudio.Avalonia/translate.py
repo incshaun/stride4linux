@@ -105,6 +105,10 @@ def translateHeaders (contents):
     headers += "using System.Collections.Generic;\n"
   if re.findall ("TextTrimming", contents):
     headers += "using Avalonia.Media;\n"
+  if re.findall ("BindsTwoWayByDefault", contents):
+    headers += "using Avalonia.Data;\n"
+  if re.findall ("FindVisualChildrenOfType", contents):
+    headers += "using System.Linq;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -171,6 +175,7 @@ def translateNames (contents):
   contents = re.sub (": UIElement", ": Control", contents) # is this true in general?
 
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
+  contents = re.sub ("Keyboard.FocusedElement", "TopLevel.GetTopLevel(this).FocusManager.GetFocusedElement ()", contents)
 
   contents = re.sub ("Application.Current.TryFindResource\(value\)", "ResourceNodeExtensions.FindResource(Application.Current, value)", contents)
 
@@ -181,6 +186,8 @@ def translateNames (contents):
   contents = re.sub ("RenderOptions.SetBitmapScalingMode", r' RenderOptions.SetBitmapInterpolationMode', contents)
 
   contents = re.sub ("= (.*?)\.FindVisualChildOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1);', contents)
+  contents = re.sub ("= (.*?)\.FindVisualChildrenOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.GetVisualChildren(\1).Where (x => x is \2).Select (x => (\2) x);', contents)
+  contents = re.sub ("\?\? (.*?)\.FindVisualParentOfType\<(.*?)\>\(\);", r'?? Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<\2>((Visual) \1);', contents)
   contents = re.sub ("LogicalTreeHelper\.GetChildren", r'LogicalExtensions.GetLogicalChildren', contents)
   contents = re.sub ("LogicalTreeHelper\.GetParent", r'LogicalExtensions.GetLogicalParent', contents)
   contents = re.sub ("VisualTreeHelper\.GetParent", r'Avalonia.VisualTree.VisualExtensions.GetVisualParent', contents)
@@ -206,6 +213,14 @@ def translateNames (contents):
   contents = re.sub ("BooleanBoxes.TrueBox", "true", contents)
   contents = re.sub ("value.Box\(\)", "value", contents)
   contents = re.sub ("result.Box\(\)", "result", contents)
+  
+  # Containers
+  contents = re.sub ("protected override AvaloniaObject GetContainerForItemOverride\(\)", "protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)", contents)
+  contents = re.sub (re.compile ("protected override bool IsItemItsOwnContainerOverride\(object item\)(.*?){(\s*)return item is (.*?);(\s*)}", re.DOTALL), r"protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)\n\t\t{\n\t\t\treturn NeedsContainer<\3>(item, out recycleKey);\n\t\t}", contents)
+  contents = re.sub (re.compile ("protected override void PrepareContainerForItemOverride\(AvaloniaObject element, object item\)(\s*){(\s*)base.PrepareContainerForItemOverride\(element, item\);", re.DOTALL), "protected override void PrepareContainerForItemOverride(Control element, object? item, int index)\n\t\t{\n\t\t\tbase.PrepareContainerForItemOverride(element, item, index);", contents)
+  contents = re.sub ("protected override void ClearContainerForItemOverride\(AvaloniaObject element, object item\)", "protected override void ClearContainerForItemOverride(Control element)", contents)
+  contents = re.sub ("base.ClearContainerForItemOverride\(element, item\);", "base.ClearContainerForItemOverride(element);", contents)
+  contents = re.sub ("RaiseEvent\(new (.*?)\((.*?)ClearItemEvent, (.*?), item\)\);", r"RaiseEvent(new \1(\2ClearItemEvent, \3, null));", contents)
 
   contents = re.sub (": HeaderedItemsControl", ": Avalonia.Controls.TreeViewItem", contents)
   
@@ -218,6 +233,12 @@ def translateNames (contents):
   contents = re.sub ("object Convert\(\[NotNull\] object\[\] values, Type targetType, object parameter, CultureInfo culture\)", r"object? Convert([NotNull] IList<object?> values, Type targetType, object? parameter, CultureInfo culture)", contents)
 
   contents = re.sub ("Binding\.DoNothing", "BindingOperations.DoNothing", contents)
+
+  contents = re.sub ("FontWeights\.", "FontWeight.", contents)
+
+  contents = re.sub ("DefaultStyleKeyProperty.OverrideMetadata\(typeof\((.*?)\), new FrameworkPropertyMetadata\(typeof\((.*?)\)\)\);", "", contents)
+
+  contents = re.sub ("FrameworkPropertyMetadataOptions\.BindsTwoWayByDefault", "defaultBindingMode : BindingMode.TwoWay", contents)
 
   contents = re.sub ("var addChild = \(IAddChild\)this;", "", contents)
   contents = re.sub ("addChild\.AddChild", "Bindings.Add", contents)
@@ -245,6 +266,12 @@ def translateProperties (contents):
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
 
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?)\)\);", re.DOTALL)
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
+
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\((.*?), FrameworkPropertyMetadataOptions\.BindsTwoWayByDefault\)\);", re.DOTALL)
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7, defaultBindingMode : BindingMode.TwoWay);", contents)
+
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
   classname = ""
   for match in re.findall (pat, contents):
@@ -252,6 +279,41 @@ def translateProperties (contents):
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
+  
+  
+  # Direct properties
+  
+  pat = re.compile ("public static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(nameof\((.*?)\), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);", re.DOTALL)
+  # set up backing variables.
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      vpat = "public " + match[4] + " " + match[3] + " { get { return \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\); } private set { SetValue\(" + match[0] + ", value\); } }"
+      vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } private set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      #print (match, vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+    contents = re.sub (pat, r"public static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4);", contents)
+  
+
+  pat = re.compile ("public static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\((.*?)\)\);", re.DOTALL)
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      # one form of variable definion.
+      vpat = "public " + match[4] + " " + match[3] + " => \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\);"
+      vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } private set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      #print (match, vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+      
+      # second form.
+      vpat = "public " + match[4] + " " + match[3] + " { get { return \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\); } private set { SetValue\(" + match[0] + ", value\); } }"
+      vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } private set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      #print (match, vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+      
+    contents = re.sub (pat, r'public static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>("\4", o => o.\4);', contents)
+  
+  
+  # handle keyboard focus handlers.
+  # GotFocusEvent.AddClassHandler<PropertyView>((x, e) => x.OnIsKeyboardFocusWithinChanged(e)); (add to static constructor)
   
   # patch in commands to an existing static constructor.
   if len (commands) > 0:
@@ -305,6 +367,16 @@ def translateProperties (contents):
   contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
   pat = re.compile ("base.OnMouseDown\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
+  pat = re.compile ("protected override void OnMouseLeftButtonDown\(MouseButtonEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
+  pat = re.compile ("base.OnMouseLeftButtonDown\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
+  pat = re.compile ("\(object sender, MouseEventArgs e\)") # just the call to base.
+  contents = re.sub (pat, r"(object sender, PointerEventArgs e)", contents)
+  pat = re.compile ("protected override void OnMouseLeave\(MouseEventArgs e\)") # just the call to base.
+  contents = re.sub (pat, r"protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)", contents)
+  pat = re.compile ("base.OnMouseLeave\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnPointerCaptureLost(e);", contents)
   
   # OnApplyTemplate
   pat = re.compile ("public override void OnApplyTemplate\(\)(\s*){(\s*)base.OnApplyTemplate\(\);")
@@ -502,6 +574,8 @@ def translateTags (contents):
   # Dropshadowbitmap
   contents = re.sub ("<DropShadowBitmapEffect (.*?)/>", r'<DropShadowEffect \1/>', contents) # one line style
 
+  # SystemColors
+  contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ActiveCaptionTextBrushKey\}\}", r'{StaticResource ActiveCaptionTextBrushKey}', contents) # one line style  
   
   # Styles become various forms of Theme.
   contents = re.sub ("\<Style TargetType=\"(.*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1">\2</ControlTheme>', contents) # one line style
@@ -524,6 +598,9 @@ def translateTags (contents):
   
   # Fix nested comments.
   contents = removeNestedComments (contents)
+
+  # Fontweight
+  contents = re.sub ("FontWeights\.", "FontWeight.", contents)
   
   # FIXME
   # Squash a few functions that are not available yet - but will be.
@@ -693,6 +770,11 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VectorEditingMode.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/SystemColorExtensions.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TrimmingSource.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AbstractNodeEntryToDisplayName.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AbstractNodeEntryMatchesNodeValue.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyView.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyViewItemEventArgs.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyViewItem.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
