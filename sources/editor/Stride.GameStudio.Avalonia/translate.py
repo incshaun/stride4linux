@@ -169,12 +169,15 @@ def translateNames (contents):
   contents = re.sub ("as DependencyObject", "as AvaloniaObject", contents)
   contents = re.sub ("DependencyProperty.UnsetValue", "AvaloniaProperty.UnsetValue", contents)
   contents = re.sub ("\.ProvideValue\(.*\)", "", contents) # is this true in general?
-  contents = re.sub ("\(FrameworkElement ", "(Control ", contents) # is this true in general?
-  contents = re.sub (" FrameworkElement;", " Control;", contents) # is this true in general?
-  contents = re.sub ("<FrameworkElement", "<Control", contents) # is this true in general?
-  contents = re.sub (": FrameworkElement", ": Control", contents) # is this true in general?
-  contents = re.sub ("UIElement\.", "Control.", contents) # is this true in general?
-  contents = re.sub (": UIElement", ": Control", contents) # is this true in general?
+  contents = re.sub ("\(FrameworkElement ", "(Control ", contents)
+  contents = re.sub (" FrameworkElement;", " Control;", contents)
+  contents = re.sub ("<FrameworkElement", "<Control", contents) 
+  contents = re.sub (": FrameworkElement", ": Control", contents)
+  contents = re.sub ("UIElement\.", "Control.", contents) 
+  contents = re.sub (": UIElement", ": Control", contents)
+  contents = re.sub ("as UIElement", "as Control", contents)
+  contents = re.sub ("\(UIElement\)", "(Control)", contents)
+  contents = re.sub ("EventManager.GetRoutedEvents\(\)", "RoutedEventRegistry.Instance.GetAllRegistered ()", contents)
 
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
   contents = re.sub ("Keyboard.FocusedElement", "TopLevel.GetTopLevel(this).FocusManager.GetFocusedElement ()", contents)
@@ -313,6 +316,17 @@ def translateProperties (contents):
       
     contents = re.sub (pat, r'public static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>("\4", o => o.\4);', contents)
   
+  # Attached Properties
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new UIPropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
+  if (re.findall (pat, contents)):
+    classname = ""
+    for match in re.findall (pat, contents):
+      #print (match)
+      commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
+      classname = match[5];
+    contents = re.sub (pat, r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4, \7);", contents)
+
+  
   
   # handle keyboard focus handlers.
   # GotFocusEvent.AddClassHandler<PropertyView>((x, e) => x.OnIsKeyboardFocusWithinChanged(e)); (add to static constructor)
@@ -335,9 +349,13 @@ def translateProperties (contents):
           pat = re.compile ("public abstract class (.*?) (.*?){", re.DOTALL) # add to classheader.
           if re.findall (pat, contents): # already a static class.
             contents = re.sub (pat, r"public abstract class \1 \2{\n\t\tstatic \1 ()\n\t\t{\n" + commands + "\t\t}\n", contents)
-          else:
-            print ("Could not find a spot to add the property classhandlers")
-            exit (0)
+          else:                                                                                         
+            pat = re.compile ("public static class (.*?)(\s)*{", re.DOTALL) # add to classheader.
+            if re.findall (pat, contents): # already a static class.
+              contents = re.sub (pat, r"public static class \1{\n\t\tstatic \1 ()\n\t\t{\n" + commands + "\t\t}\n", contents)
+            else:
+              print ("Could not find a spot to add the property classhandlers")
+              exit (0)
       
   #print (commands)
     
@@ -601,6 +619,7 @@ def translateTags (contents):
   # Triggers. These will probably have to be managed by hand. Just comment them out.
   contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<DataTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<i:Interaction\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<Style\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1\.Triggers> -->", contents)
   
   # Fix nested comments.
@@ -786,6 +805,13 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragDropBehavior.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/IDragDropBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Trimming.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/OnComboBoxClosedWithSelectionBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventCommandBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/AnonymousEventHandler.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/TypeToResource.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/FocusManager.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CharInputBehavior.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -798,7 +824,7 @@ def translateXAML (sourceFile):
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding

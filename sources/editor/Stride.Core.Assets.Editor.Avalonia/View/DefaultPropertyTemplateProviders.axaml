@@ -712,12 +712,12 @@
                         <!-- After selecting an option add it to the dictionary -->
                         <behaviors:OnComboBoxClosedWithSelectionBehavior Command="{Binding AddPrimitiveKey}" CommandParameter="{Binding SelectedItem, ElementName=EnumKeySelectionComboBox}"/>
                       </i:Interaction.Behaviors>
-                      <i:Interaction.Triggers>
-                        <!-- After closing the drop down close the Popup -->
+                      <!-- <DataTemplate.Triggers>
+                        --><!-- After closing the drop down close the Popup --><!--
                         <i:EventTrigger EventName="DropDownClosed">
                           <i:ChangePropertyAction TargetName="ToggleButton" PropertyName="IsChecked" Value="False" />
                         </i:EventTrigger>
-                      </i:Interaction.Triggers>
+                      </i:Interaction.Triggers> -->
                     </ComboBox>
                   </DockPanel>
                 </Popup>
