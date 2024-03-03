@@ -24,8 +24,9 @@
   
 
   <ControlTheme x:Key="AddNewItemButtonStyle" BasedOn="{StaticResource ImageButtonStyle}" TargetType="Button">
-    <Setter Value="{Binding AddNewItem}"/>
-    <Setter Property="ToolTip" Value="{sd:Localize Add..., Context=ToolTip}"/>
+    
+    <Setter Property="Command" Value="{Binding AddNewItem}"/>
+    <Setter Property="ToolTip.Tip" Value="{sd:Localize Add..., Context=ToolTip}"/>
     <Setter Property="ContentTemplate">
       <Setter.Value>
         <DataTemplate>
@@ -50,9 +51,10 @@
 
   <ControlTheme x:Key="AbstractTypeSelectionComboBox" BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
     <Setter Property="IsEditable" Value="False"/>
-    <Setter Property="ToolTip" Value="{sd:Localize Replace..., Context=ToolTip}"/>
+    <Setter Property="ToolTip.Tip" Value="{sd:Localize Replace..., Context=ToolTip}"/>
     <!-- Visible if: we have the command to create a new instance, we're not read-only, we not a collection -->
-    <Setter Value="{StaticResource NormalBorderBrush}"/>
+    
+    <Setter Property="BorderBrush" Value="{StaticResource NormalBorderBrush}"/>
     <Setter Property="BorderThickness" Value="0"/>
     <Setter Property="Tag" Value="{StaticResource ImageDropDown}"/>
     <Setter Property="ItemTemplate">
@@ -97,8 +99,8 @@
             <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False"  >
               <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" >
                 <Border x:Name="DropDownBorder" Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="3,3,3,3" />
-                <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" CanContentScroll="True" Foreground="{StaticResource ActiveCaptionTextBrushKey}">
-                  <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Foreground="{StaticResource ActiveCaptionTextBrushKey}">
+                  <StackPanel IsItemsHost="True"  />
                 </ScrollViewer>
               </Grid>
             </Popup>
@@ -113,13 +115,15 @@
     <Setter Property="Height" Value="16"/>
     <Setter Property="BorderBrush" Value="Transparent"/>
     <Setter Property="VerticalAlignment" Value="Center"/>
-    <Setter Value="{sd:Localize Add..., Context=ToolTip}" />
+    
+    <Setter Property="ToolTip.Tip" Value="{sd:Localize Add..., Context=ToolTip}" />
     <Setter Property="Tag" Value="{StaticResource ImageAdd}"/>
   </ControlTheme>
 
   <ControlTheme x:Key="RemoveItemButtonStyle" BasedOn="{StaticResource ImageButtonStyle}" TargetType="Button">
-    <Setter Value="{Binding RemoveItem}"/>
-    <Setter Property="ToolTip" Value="{sd:Localize Delete, Context=ToolTip}"/>
+    
+    <Setter Property="Command" Value="{Binding RemoveItem}"/>
+    <Setter Property="ToolTip.Tip" Value="{sd:Localize Delete, Context=ToolTip}"/>
     <Setter Property="ContentTemplate">
       <Setter.Value>
         <DataTemplate>
@@ -171,7 +175,7 @@
           <behaviors:PropertyViewItemDragDropBehavior CanDrop="False" CanInsert="False" DragVisualTemplate="{StaticResource DragVisualTemplate}"/>
         </i:Interaction.Behaviors>
       </Border>
-      <Border x:Name="PART_Name" Grid.Column="1" MinHeight="23" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Stretch" ToolTip="{Binding Documentation}">
+      <Border x:Name="PART_Name" Grid.Column="1" MinHeight="23" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Stretch" ToolTip.Tip="{Binding Documentation}">
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="{Binding Offset, RelativeSource={RelativeSource AncestorType=sd:PropertyViewItem}, Mode=OneWay}"/>
@@ -218,7 +222,7 @@
                         Focusable="False" VerticalAlignment="Center" />
       </Border>
     </Grid>
-    <DataTemplate.Triggers>
+    <!-- <DataTemplate.Triggers>
       <DataTrigger Binding="{sd:MultiBinding {Binding IsOverridden},
                                                {Binding Enabled.IsOverridden},
                                                {Binding InlinedProperty.IsOverridden},
@@ -234,7 +238,7 @@
         <Setter TargetName="PropertyNameBlock" Property="Opacity" Value="0.5"/>
         <Setter TargetName="PropertyNameBox" Property="Opacity" Value="0.5"/>
       </DataTrigger>
-    </DataTemplate.Triggers>
+    </DataTemplate.Triggers> -->
   </DataTemplate>
 
   <DataTemplate x:Key="HeaderReadOnlyProperty" DataType="qvm:NodeViewModel">
@@ -242,7 +246,7 @@
               Margin="{Binding Offset, Converter={sd:NumericToThickness}, ConverterParameter={sd:Thickness 1,0,0,0},
                                RelativeSource={RelativeSource AncestorType=sd:PropertyViewItem}, Mode=OneWay}" x:Name="Grid">
       <Border x:Name="PART_Name" MinHeight="20" Margin="6" Background="{StaticResource EmphasisColorBrush}"
-                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTip="{Binding Documentation}"/>
+                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTip.Tip="{Binding Documentation}"/>
       <DockPanel Margin="10,8" x:Name="HeaderDockPanel">
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
           <Button Theme="{StaticResource RemoveItemButtonStyle}"/>
@@ -272,7 +276,7 @@
         <behaviors:PropertyViewItemDragDropBehavior CanDrop="False" CanInsert="False" DragVisualTemplate="{StaticResource DragVisualTemplate}"/>
       </i:Interaction.Behaviors>
     </Grid>
-    <DataTemplate.Triggers>
+    <!-- <DataTemplate.Triggers>
       <DataTrigger Binding="{sd:MultiBinding {Binding IsOverridden},
                                                {Binding Enabled.IsOverridden},
                                                {Binding InlinedProperty.IsOverridden},
@@ -299,7 +303,7 @@
         <Setter TargetName="HeaderDockPanel" Property="Margin" Value="10,4"/>
         <Setter TargetName="Grid" Property="Margin" Value="15,0,0,0"/>
       </DataTrigger>
-    </DataTemplate.Triggers>
+    </DataTemplate.Triggers> -->
   </DataTemplate>
 
   <!-- Base provider for property footer: nothing inside! -->
@@ -333,11 +337,11 @@
         </ComboBox>
         <ContentControl x:Name="ContentControl" Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
       </DockPanel>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue, Converter={sd:ObjectToBool}}" Value="False">
           <Setter Property="Opacity" Value="0.5" TargetName="ContentControl"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </pvdr:AbstractTypeTemplateProvider>
 
@@ -552,7 +556,7 @@
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding AddPrimitiveKey}"
                
-                    ToolTip="{sd:Localize Add a new entry to the dictionary, Context=ToolTip}">
+                    ToolTip.Tip="{sd:Localize Add a new entry to the dictionary, Context=ToolTip}">
           <Image Source="{StaticResource ImageAdd}" Width="16" Height="16" Margin="-1"/>
         </Button>
         <TextBlock Margin="2">
@@ -577,7 +581,7 @@
               <Grid x:Name="grid">
                 <ToggleButton x:Name="ToggleButton" Width="16" Height="16" Background="Transparent"
                               Focusable="false" ClickMode="Press"
-                              ToolTip="{sd:Localize Add a new entry to the dictionary, Context=ToolTip}" 
+                              ToolTip.Tip="{sd:Localize Add a new entry to the dictionary, Context=ToolTip}" 
                               IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                   <Image Source="{StaticResource ImageAdd}" Width="16" Height="16" Margin="-1"/>
                 </ToggleButton>
@@ -634,7 +638,7 @@
               <Grid x:Name="grid">
                 <ToggleButton x:Name="ToggleButton" Width="16" Height="16" Background="Transparent"
                               Focusable="false" ClickMode="Press"
-                              ToolTip="{sd:Localize Add a new entry to the dictionary, Context=ToolTip}" 
+                              ToolTip.Tip="{sd:Localize Add a new entry to the dictionary, Context=ToolTip}" 
                               IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                   <Image Source="{StaticResource ImageAdd}" Width="16" Height="16" Margin="-1"/>
                 </ToggleButton>
@@ -691,7 +695,7 @@
               <Grid x:Name="grid">
                 <ToggleButton x:Name="ToggleButton" Width="16" Height="16" Background="Transparent"
                               Focusable="false" ClickMode="Press"
-                              ToolTip="{sd:Localize Add a new entry to the dictionary, Context=ToolTip}" 
+                              ToolTip.Tip="{sd:Localize Add a new entry to the dictionary, Context=ToolTip}" 
                               IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                   <Image Source="{StaticResource ImageAdd}" Width="16" Height="16" Margin="-1"/>
                 </ToggleButton>
@@ -754,14 +758,14 @@
         </Grid.ColumnDefinitions>
         <TextBox Grid.Column="0" Margin="2" Width="40" TextAlignment="Center"
                  Text="{Binding NodeValue, Converter={sd:CharToString}}"
-                 ToolTip="{sd:Localize Character, Context=ToolTIp}">
+                 ToolTip.Tip="{sd:Localize Character, Context=ToolTIp}">
           <i:Interaction.Behaviors>
             <sd:CharInputBehavior/>
           </i:Interaction.Behaviors>
         </TextBox>
         <sd:NumericTextBox x:Name="TextBox" TextAlignment="Center" Grid.Column="1" Margin="2" SelectAllOnFocus="True"
                              Value="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:CharToUnicode}}}"
-                             SmallChange="1" LargeChange="10" DecimalPlaces="0" Minimum="0" ToolTip="{sd:Localize Unicode value, Context=ToolTip}"
+                             SmallChange="1" LargeChange="10" DecimalPlaces="0" Minimum="0" ToolTip.Tip="{sd:Localize Unicode value, Context=ToolTip}"
                              WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}"
                              DisplayUpDownButtons="False">
           <i:Interaction.Behaviors>
@@ -770,11 +774,11 @@
           </i:Interaction.Behaviors>
         </sd:NumericTextBox>
       </Grid>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -828,11 +832,11 @@
         </Grid>
       </Popup>
     </Grid>
-    <DataTemplate.Triggers>
+    <!-- <DataTemplate.Triggers>
       <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
         <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
       </DataTrigger>
-    </DataTemplate.Triggers>
+    </DataTemplate.Triggers> -->
   </DataTemplate>
   <view:TypeMatchTemplateProvider x:Key="ColorPropertyTemplateProvider" Type="{x:Type math:Color}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource ColorEditorTemplate}"/>
   <view:TypeMatchTemplateProvider x:Key="Color3PropertyTemplateProvider" Type="{x:Type math:Color3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource ColorEditorTemplate}"/>
@@ -873,11 +877,11 @@
           </i:Interaction.Behaviors>
         </sd:NumericTextBox>
       </Grid>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </pvdr:RangedValueTemplateProvider>
 
@@ -897,11 +901,11 @@
         <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
       </i:Interaction.Behaviors>
     </sd:NumericTextBox>
-    <DataTemplate.Triggers>
+    <!-- <DataTemplate.Triggers>
       <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
         <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
       </DataTrigger>
-    </DataTemplate.Triggers>
+    </DataTemplate.Triggers> -->
   </DataTemplate>
   <view:TypeMatchTemplateProvider x:Key="FloatPropertyTemplateProvider" Type="{x:Type s:Single}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource FloatEditorTemplate}"/>
   <view:TypeMatchTemplateProvider x:Key="DoublePropertyTemplateProvider" Type="{x:Type s:Double}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource FloatEditorTemplate}"/>
@@ -922,11 +926,11 @@
         <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
       </i:Interaction.Behaviors>
     </sd:NumericTextBox>
-    <DataTemplate.Triggers>
+    <!-- <DataTemplate.Triggers>
       <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
         <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
       </DataTrigger>
-    </DataTemplate.Triggers>
+    </DataTemplate.Triggers> -->
   </DataTemplate>
 
   <view:TypeMatchTemplateProvider x:Key="Int8PropertyTemplateProvider" Type="{x:Type s:SByte}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
@@ -945,12 +949,12 @@
                          Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
       </sd:TimeSpanEditor>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TimeSpanEditor" Property="WatermarkContent" Value="×"/>
           <Setter TargetName="TimeSpanEditor" Property="IsEnabled" Value="False"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -961,12 +965,12 @@
                          Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
       </sd:DateTimeEditor>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="DateTimeEditor" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
           <Setter TargetName="DateTimeEditor" Property="IsEnabled" Value="False"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
   
@@ -976,11 +980,11 @@
       <sd:TextBox x:Name="TextBox" Margin="2" SelectAllOnFocus="True"
                     Text="{Binding NodeValue, Converter={cvt:DifferentValuesToString}}"
                     WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}"/>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -994,11 +998,11 @@
           <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
         </i:Interaction.Behaviors>
       </sd:Vector2Editor>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1013,11 +1017,11 @@
           <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
         </i:Interaction.Behaviors>
       </sd:Vector3Editor>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1033,11 +1037,11 @@
           <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
         </i:Interaction.Behaviors>
       </sd:Vector4Editor>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1051,11 +1055,11 @@
           <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
         </i:Interaction.Behaviors>
       </sd:Int2Editor>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1070,11 +1074,11 @@
           <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
         </i:Interaction.Behaviors>
       </sd:Int3Editor>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1090,11 +1094,11 @@
           <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
         </i:Interaction.Behaviors>
       </sd:Int4Editor>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1106,11 +1110,11 @@
                              RectWidth="{Binding Width.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                              RectHeight="{Binding Height.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                              WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor"/>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1122,11 +1126,11 @@
                             RectWidth="{Binding Width.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                             RectHeight="{Binding Height.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                             WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" x:Name="VectorEditor"/>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1135,11 +1139,11 @@
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:RotationEditor Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                            WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor"/>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1163,11 +1167,11 @@
                          M43="{Binding M43.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          M44="{Binding M44.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor"/>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1176,7 +1180,7 @@
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:NumericTextBox x:Name="TextBox" DecimalPlaces="3"
                            Value="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:AngleSingleToDegrees}}}"
-                           ToolTip="{sd:Localize Angle in degrees, Context=ToolTip}"
+                           ToolTip.Tip="{sd:Localize Angle in degrees, Context=ToolTip}"
                            WatermarkContent="≠" WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}"
                            DisplayUpDownButtons="False">
         <i:Interaction.Behaviors>
@@ -1184,11 +1188,11 @@
           <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
         </i:Interaction.Behaviors>
       </sd:NumericTextBox>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1198,7 +1202,7 @@
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding BrowseDirectory}"
                 IsVisible="{Binding HasCommand_BrowseDirectory}"
-                ToolTip="{sd:Localize Browse directory, Context=ToolTip}">
+                ToolTip.Tip="{sd:Localize Browse directory, Context=ToolTip}">
           <Image Source="{StaticResource ImageBrowse}" Width="16" Height="16" Margin="-1"/>
         </Button>
         <sd:TextBox x:Name="TextBox" Margin="2" SelectAllOnFocus="True"
@@ -1210,11 +1214,11 @@
           </i:Interaction.Behaviors>
         </sd:TextBox>
       </DockPanel>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1224,7 +1228,7 @@
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding BrowseFile}"
                 IsVisible="{Binding HasCommand_BrowseFile}"
-                ToolTip="{sd:Localize Browse file, Context=ToolTip}">
+                ToolTip.Tip="{sd:Localize Browse file, Context=ToolTip}">
           <Image Source="{StaticResource ImageBrowse}" Width="16" Height="16" Margin="-1"/>
         </Button>
         <sd:TextBox x:Name="TextBox" Margin="2" SelectAllOnFocus="True"
@@ -1237,11 +1241,11 @@
           </i:Interaction.Behaviors>
         </sd:TextBox>
       </DockPanel>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 
@@ -1252,11 +1256,11 @@
         <ComboBox Theme="{StaticResource EnumComboBox}" Text=""/>
         <TextBlock x:Name="TextBlock" VerticalAlignment="Center" Margin="9,0,30,0" HorizontalAlignment="Left" IsHitTestVisible="False"/>
       </Grid>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBlock" Property="Text" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </pvdr:EnumTemplateProvider>
 
@@ -1276,11 +1280,11 @@
           <Grid Background="{StaticResource BackgroundBrush}" MinWidth="200" MaxWidth="400" MaxHeight="200">
             <DockPanel>
               <UniformGrid DockPanel.Dock="Bottom" Columns="3">
-                <Button Content="{sd:Localize All, Context=Button}" ToolTip="{sd:Localize Select all values, Context=ToolTip}"
+                <Button Content="{sd:Localize All, Context=Button}" ToolTip.Tip="{sd:Localize Select all values, Context=ToolTip}"
                         Command="{Binding FlagEnumSelectAll}" Margin="1"/>
-                <Button Content="{sd:Localize None, Context=Button}" ToolTip="{sd:Localize Clear selection, Context=ToolTip}"
+                <Button Content="{sd:Localize None, Context=Button}" ToolTip.Tip="{sd:Localize Clear selection, Context=ToolTip}"
                         Command="{Binding FlagEnumSelectNone}" Margin="1"/>
-                <Button Content="{sd:Localize Invert, Context=Button}" ToolTip="{sd:Localize Invert selection, Context=ToolTip}"
+                <Button Content="{sd:Localize Invert, Context=Button}" ToolTip.Tip="{sd:Localize Invert selection, Context=ToolTip}"
                         Command="{Binding FlagEnumSelectInvert}" Margin="1"/>
               </UniformGrid>
               <ListBox Margin="0" Padding="2" Background="Transparent" BorderThickness="0" SelectionMode="Multiple"
@@ -1317,11 +1321,11 @@
           </Grid>
         </Popup>
       </Grid>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="ToggleButton" Property="Content" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </pvdr:EnumTemplateProvider>
 
@@ -1337,7 +1341,7 @@
                SelectedItem="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <Border Width="20" Height="20" Margin="0,0,1,0" ToolTip="{Binding}">
+            <Border Width="20" Height="20" Margin="0,0,1,0" ToolTip.Tip="{Binding}">
               <Image HorizontalAlignment="Left" VerticalAlignment="Center" Width="16" Height="16" Margin="-1"
                      Source="{Binding Converter={cvt:EnumToResource}}"/>
             </Border>
@@ -1371,7 +1375,7 @@
                ItemsSource="{Binding Type, Converter={sd:EnumValues}, Mode=OneWay}">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <Border Width="20" Height="20" Margin="0,0,1,0" ToolTip="{Binding}">
+            <Border Width="20" Height="20" Margin="0,0,1,0" ToolTip.Tip="{Binding}">
               <Image HorizontalAlignment="Left" VerticalAlignment="Center" Width="16" Height="16" Margin="-1"
                                 Source="{Binding Converter={cvt:EnumToResource}}" />
             </Border>
@@ -1417,15 +1421,15 @@
     <DockPanel>
       <UniformGrid Rows="1" DockPanel.Dock="Right">
         <Button Theme="{StaticResource ImageButtonStyle}" Command="{Binding PickupAsset}" CommandParameter="{Binding Type}"
-                ToolTip="{sd:Localize Select an asset, Context=ToolTip}">
+                ToolTip.Tip="{sd:Localize Select an asset, Context=ToolTip}">
           <Image Source="{StaticResource ImagePickup}" Width="16" Height="16" Margin="-1"/>
         </Button>
         <Button Theme="{StaticResource ImageButtonStyle}" Command="{Binding CreateNewInstance}" CommandParameter="{x:Static assetCommands:AbstractNodeValue.Null}"
-                ToolTip="{sd:Localize Clear the reference, Context=ToolTip}">
+                ToolTip.Tip="{sd:Localize Clear the reference, Context=ToolTip}">
           <Image Source="{StaticResource ImageClear}" Width="16" Height="16" Margin="-1"/>
         </Button>
         <Button Theme="{StaticResource ImageButtonStyle}" Command="{Binding FetchAsset}"
-                ToolTip="{sd:Localize Select the referenced asset, Context=ToolTip}">
+                ToolTip.Tip="{sd:Localize Select the referenced asset, Context=ToolTip}">
           <Image Source="{StaticResource ImageFetchAsset}" Width="16" Height="16" Margin="-1"/>
         </Button>
       </UniformGrid>
@@ -1449,7 +1453,7 @@
         <Border BorderThickness="1" BorderBrush="Black" Background="Transparent" DockPanel.Dock="Right"
                 Cursor="Hand" Margin="0,1" ContextMenu="{StaticResource ReferenceContextMenu}">
           <Grid>
-            <Border Width="64" Height="64" Background="Transparent" ToolTip="{sd:Localize Select the referenced asset, Context=ToolTip}"
+            <Border Width="64" Height="64" Background="Transparent" ToolTip.Tip="{sd:Localize Select the referenced asset, Context=ToolTip}"
                    >
               <Image x:Name="ThumbnailImage" DataContext="{Binding NodeValue, Converter={cvt:ContentReferenceToAsset}}" Width="64" Height="64"
                      Source="{Binding ThumbnailData.Presenter, Mode=OneWay}"/>
@@ -1459,7 +1463,7 @@
             </Border>
             <ProgressBar DataContext="{Binding NodeValue, Converter={cvt:ContentReferenceToAsset}}" Width="16" Height="4" IsIndeterminate="True"
                         />
-            <Border Width="64" Height="64" Background="Transparent" ToolTip="{sd:Localize Select an asset, Context=ToolTip}"
+            <Border Width="64" Height="64" Background="Transparent" ToolTip.Tip="{sd:Localize Select an asset, Context=ToolTip}"
                    >
               <Image x:Name="PickupImage" Source="{StaticResource ImagePickup}" Width="16" Height="16"
                      DataContext="{Binding NodeValue, Converter={cvt:ContentReferenceToAsset}}"
@@ -1483,12 +1487,12 @@
           </sd:TextBox>
           <UniformGrid Rows="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6,0">
             <Button Theme="{StaticResource ImageButtonStyle}" Command="{Binding PickupAsset}" CommandParameter="{Binding Type}"
-                    ToolTip="{sd:Localize Select an asset, Context=ToolTip}" IsVisible="{Binding HasCommand_PickupAsset}">
+                    ToolTip.Tip="{sd:Localize Select an asset, Context=ToolTip}" IsVisible="{Binding HasCommand_PickupAsset}">
               <Image Source="{StaticResource ImagePickup}" Width="16" Height="16" Margin="-1"/>
             </Button>
             <Button Theme="{StaticResource ImageButtonStyle}" Command="{Binding CreateNewInstance}"
                     CommandParameter="{x:Static assetCommands:AbstractNodeValue.Null}"
-                    ToolTip="{sd:Localize Clear the reference, Context=ToolTip}" IsVisible="{Binding HasCommand_CreateNewInstance}">
+                    ToolTip.Tip="{sd:Localize Clear the reference, Context=ToolTip}" IsVisible="{Binding HasCommand_CreateNewInstance}">
               <Image Source="{StaticResource ImageClear}" Width="16" Height="16" Margin="-1"/>
             </Button>
           </UniformGrid>
@@ -1501,12 +1505,12 @@
     <DataTemplate>
       <DockPanel>
         <StackPanel DockPanel.Dock="Right" IsVisible="{Binding HasCommand_CreateNewInstance}" Orientation="Horizontal">
-          <Button Theme="{StaticResource ImageButtonStyle}" ToolTip="{sd:Localize Create an instance of this structure, Context=ToolTip}"
+          <Button Theme="{StaticResource ImageButtonStyle}" ToolTip.Tip="{sd:Localize Create an instance of this structure, Context=ToolTip}"
                   Command="{Binding CreateNewInstance, Mode=OneWay}" CommandParameter="{Binding Type, Converter={sd:UnderlyingType}, Mode=OneWay}"
                  >
             <Image Source="{StaticResource ImageCreateInstance}" Width="16" Height="16" Margin="-1"/>
           </Button>
-          <Button Theme="{StaticResource ImageButtonStyle}" ToolTip="{sd:Localize Clear value (set to null), Context=ToolTip}"
+          <Button Theme="{StaticResource ImageButtonStyle}" ToolTip.Tip="{sd:Localize Clear value (set to null), Context=ToolTip}"
                   Command="{Binding CreateNewInstance, Mode=OneWay}" CommandParameter="{x:Static assetCommands:AbstractNodeValue.Null}"
                  
                   VerticalAlignment="Center">
@@ -1543,11 +1547,11 @@
     <DataTemplate DataType="qvm:NodeViewModel">
       <TextBlock Margin="2,0" VerticalAlignment="Center" x:Name="DefaultTextBlock"
                  Text="{Binding {Binding AttributeDisplayName, Mode=OneWay}, {Binding Type, Mode=OneWay, StringFormat={sd:Localize {}{0} (Not supported)}, Converter={sd:NotSupportedTypeToTypeName}}, {Binding NodeValue, Mode=OneWay, Converter={sd:ObjectToTypeName}}}"/>
-      <DataTemplate.Triggers>
+      <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="DefaultTextBlock" Property="Text" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
-      </DataTemplate.Triggers>
+      </DataTemplate.Triggers> -->
     </DataTemplate>
   </sd:DefaultTemplateProvider>
 

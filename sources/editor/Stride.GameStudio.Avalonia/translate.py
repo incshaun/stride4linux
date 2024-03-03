@@ -171,6 +171,8 @@ def translateNames (contents):
   contents = re.sub ("\.ProvideValue\(.*\)", "", contents) # is this true in general?
   contents = re.sub ("\(FrameworkElement ", "(Control ", contents) # is this true in general?
   contents = re.sub (" FrameworkElement;", " Control;", contents) # is this true in general?
+  contents = re.sub ("<FrameworkElement", "<Control", contents) # is this true in general?
+  contents = re.sub (": FrameworkElement", ": Control", contents) # is this true in general?
   contents = re.sub ("UIElement\.", "Control.", contents) # is this true in general?
   contents = re.sub (": UIElement", ": Control", contents) # is this true in general?
 
@@ -544,7 +546,8 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:InvertBool}}"', contents)
 
   # Tooltip
-  contents = re.sub ("Tooltip=\"(.*?)\"", r'Tooltip.Tip="\1"', contents)
+  contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
+  contents = re.sub ("Property=\"ToolTip\"", r'Property="ToolTip.Tip"', contents)
 
   # Case sensitive ok.
   contents = re.sub ("DialogResult=\"Ok\"", r'DialogResult="Ok"', contents)
@@ -554,6 +557,9 @@ def translateTags (contents):
 
   # SnapToDevicePixels, AllowsTransparency. Elements that don't seem to have an equivalent.
   contents = re.sub ("SnapsToDevicePixels=\"(.*?)\"", "", contents)
+  contents = re.sub ("CanContentScroll=\"(.*?)\"", "", contents)
+  contents = re.sub ("KeyboardNavigation.DirectionalNavigation=\"(.*?)\"", "", contents)
+  
   contents = re.sub ("<Setter Property=\"SnapsToDevicePixels\" Value=\"(.*?)\" />", "", contents)
   contents = re.sub ("<Setter Property=\"SnapsToDevicePixels\" Value=\"True\"/>", "", contents)
   contents = re.sub ("AllowsTransparency=\"(.*?)\"", "", contents)
@@ -594,6 +600,7 @@ def translateTags (contents):
   
   # Triggers. These will probably have to be managed by hand. Just comment them out.
   contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<DataTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<Style\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1\.Triggers> -->", contents)
   
   # Fix nested comments.
@@ -608,7 +615,7 @@ def translateTags (contents):
   contents = re.sub ("sd:PriorityBinding", "Binding", contents)
   contents = re.sub ("<Setter Property=\"IsCheckable\" Value=\"True\" />", "", contents)
   contents = re.sub (re.compile ("<Storyboard(.*?)</Storyboard>", re.DOTALL), "", contents)
-  contents = re.sub (re.compile ("Property=\"Visibility\" Value=\"(.*?)\"[ >]", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("<Setter Property=\"Visibility\" Value=\"(.*?)\"/>", re.DOTALL), "", contents)
   contents = re.sub (re.compile (" IsEnabled=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile (" Visibility=\"(.*?)\"", re.DOTALL), "", contents)
   
@@ -772,9 +779,13 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TrimmingSource.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AbstractNodeEntryToDisplayName.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AbstractNodeEntryMatchesNodeValue.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyView.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyView.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyViewItemEventArgs.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyViewItem.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyViewItem.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/PropertyViewItemDragDropBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragDropBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/IDragDropBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Trimming.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -787,7 +798,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PropertyViewIte
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding

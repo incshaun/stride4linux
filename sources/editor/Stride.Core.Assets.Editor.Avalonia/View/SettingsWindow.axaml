@@ -11,17 +11,16 @@
                   xmlns:viewModels="clr-namespace:Stride.Core.Assets.Editor.Settings.ViewModels"
                   xmlns:viewModels1="clr-namespace:Stride.Core.Presentation.Quantum.ViewModels;assembly=Stride.Core.Presentation.Quantum"
                   mc:Ignorable="d" 
-                  ShowInTaskbar="False"
-                  Title="{sd:Localize Settings}" Height="768" Width="1024" Theme="{DynamicResource WindowChromeStyle}"
+                  
         >
-  <Window.Resources>
+  <sd:ModalWindow.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <ResourceInclude Source="CommonResources.axaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
-  </Window.Resources>
-  <DockPanel>
+  </sd:ModalWindow.Resources>
+<!--  <DockPanel>
     <UniformGrid Rows="1" DockPanel.Dock="Bottom" Margin="20" HorizontalAlignment="Right">
       <Button Margin="10,0,0,0" Padding="20,4" Content="{sd:Localize Save and close, Context=Button}">
         <i:Interaction.Behaviors>
@@ -42,7 +41,7 @@
         <ColumnDefinition Width="2*"/>
       </Grid.ColumnDefinitions>
 
- <!--     <sd:TreeView Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" SelectionMode="Single">
+      <sd:TreeView Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" SelectionMode="Single">
         <sd:TreeView.ItemContainerStyle>
           <ControlTheme x:Key="{x:Type sd:TreeViewItem}" TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
             <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={valueConverters:SettingsCategoryToExpandedAtInitialization}}"/>
@@ -53,11 +52,11 @@
             <TextBlock Text="{Binding Name}"/>
           </HierarchicalDataTemplate>
         </sd:TreeView.ItemTemplate>
-      </sd:TreeView>-->
+      </sd:TreeView>
 
       <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
 
- <!--     <sd:PropertyView NameColumnSize="310" Grid.Column="2" ItemsSource="{Binding ViewModel.RootNode.Children}" BorderThickness="1" Background="{DynamicResource BackgroundBrush}" Padding="5">
+      <sd:PropertyView NameColumnSize="310" Grid.Column="2" ItemsSource="{Binding ViewModel.RootNode.Children}" BorderThickness="1" Background="{DynamicResource BackgroundBrush}" Padding="5">
         <sd:PropertyView.ItemContainerStyle>
           <ControlTheme BasedOn="{StaticResource {x:Type sd:PropertyViewItem}}" TargetType="sd:PropertyViewItem">
             <Setter Property="Background" Value="Transparent"/>
@@ -93,7 +92,7 @@
         <i:Interaction.Behaviors>
           <behaviors:PropertyViewAutoExpandNodesBehavior ViewModel="{Binding ViewModel, Mode=OneWay}"/>
         </i:Interaction.Behaviors>
-      </sd:PropertyView>-->
+      </sd:PropertyView>
     </Grid>
-  </DockPanel>
+  </DockPanel>-->
 </sd:ModalWindow>

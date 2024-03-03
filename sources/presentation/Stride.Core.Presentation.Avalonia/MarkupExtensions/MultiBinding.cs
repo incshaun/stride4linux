@@ -109,5 +109,11 @@ namespace Stride.Core.Presentation.MarkupExtensions
             if (binding7 != null) Bindings.Add(binding7);
             if (binding8 != null) Bindings.Add(binding8);
         }
+        
+        public object ProvideValue(System.IServiceProvider serviceProvider)
+        {
+            return this;
+        }
+        
     }
 }
