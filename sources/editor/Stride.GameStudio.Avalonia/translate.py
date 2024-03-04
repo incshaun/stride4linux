@@ -167,6 +167,10 @@ def translateNames (contents):
   contents = re.sub ("ExecutedRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
   contents = re.sub ("DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
+  contents = re.sub ("private void OnValueChanged\(object sender, RoutedPropertyChangedEventArgs<double> e\)", "private void OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)", contents)
+  contents = re.sub ("\(RoutedEventHandler\)", "(EventHandler)", contents)
+  
+  
   contents = re.sub ("System.Windows.Controls.TextBox", "Avalonia.Controls.TextBox", contents)
   contents = re.sub ("System.Windows.Data.MultiBinding", "Avalonia.Data.MultiBinding", contents)
   contents = re.sub ("System.Windows.Media", "Avalonia.Media", contents)
@@ -198,6 +202,8 @@ def translateNames (contents):
 
   contents = re.sub ("Application.Current.TryFindResource\(value\)", "ResourceNodeExtensions.FindResource(Application.Current, value)", contents)
 
+  contents = re.sub ("Cursors.SizeWE", "new Cursor(StandardCursorType.SizeWestEast)", contents)
+
   contents = re.sub (" ImageSource ", " IImage ", contents)
   contents = re.sub ("\(ImageSource ", "(IImage ", contents)
   contents = re.sub (" BitmapScalingMode ", r' BitmapInterpolationMode ', contents)
@@ -208,6 +214,7 @@ def translateNames (contents):
 
 
   contents = re.sub ("= (.*?)\.FindVisualChildOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1);', contents)
+  contents = re.sub ("!(.*?)\.FindVisualChildOfType\<(.*?)\>\(\)", r'!Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1)', contents)
   contents = re.sub ("= (.*?)\.FindVisualChildrenOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.GetVisualChildren(\1).Where (x => x is \2).Select (x => (\2) x);', contents)
   contents = re.sub ("\?\? (.*?)\.FindVisualParentOfType\<(.*?)\>\(\);", r'?? Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<\2>((Visual) \1);', contents)
   contents = re.sub ("LogicalTreeHelper\.GetChildren", r'LogicalExtensions.GetLogicalChildren', contents)
@@ -332,6 +339,14 @@ def translateProperties (contents):
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, (\7)\8, \9); // T9D", contents)
 
+  # Deal with case with frameworkpropertymetadata with 3 arguments
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?), ([^,\)]*?)\)\);")
+  for match in re.findall (pat, contents):
+    #print (match)
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[8] + ");\n"
+    classname = match[5];
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7, \8); // T9E", contents)
+
   # Deal with case with frameworkpropertymetadata with 4 arguments, any
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?)\)\);")
   for match in re.findall (pat, contents):
@@ -423,10 +438,14 @@ def translateProperties (contents):
           else:                                                                                         
             pat = re.compile ("public static class (.*?)(\s)*{", re.DOTALL) # add to classheader.
             if re.findall (pat, contents): # already a static class.
-              contents = re.sub (pat, r"public static class \1{\n\t\tstatic \1 ()\n\t\t{\n" + commands + "\t\t}\n", contents)
+              contents = re.sub (pat, r"public static class \1\n\t{\n\t\tstatic \1 ()\n\t\t{\n" + commands + "\t\t}\n", contents)
             else:
-              print ("Could not find a spot to add the property classhandlers")
-              exit (0)
+              pat = re.compile ("public sealed class (.*?) : (.*?)(\s)*{", re.DOTALL) # add to classheader.
+              if re.findall (pat, contents): # already a static class.
+                contents = re.sub (pat, r"public sealed class \1 : \2\n\t{\n\t\tstatic \1 ()\n\t\t{\n" + commands + "\t\t}\n", contents)
+              else:
+                print ("Could not find a spot to add the property classhandlers")
+                exit (0)
       
   #print (commands)
     
@@ -912,6 +931,9 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Adorners/HighlightBorderAdorner.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ToggleButtonPopupBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ColorPicker.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/ValidateTextBoxAfterSlidingBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ChangeCursorOnSliderThumbBehavior.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TimeSpanEditor.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -924,7 +946,7 @@ def translateXAML (sourceFile):
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding
