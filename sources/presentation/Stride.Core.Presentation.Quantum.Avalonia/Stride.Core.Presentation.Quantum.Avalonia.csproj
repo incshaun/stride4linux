@@ -1,0 +1,29 @@
+﻿<Project>
+
+  <Import Project="..\..\targets\Stride.Core.props" />
+ 
+  <PropertyGroup>
+    <StrideAssemblyProcessor>true</StrideAssemblyProcessor>
+    <StrideAssemblyProcessorOptions>--auto-module-initializer --serialization</StrideAssemblyProcessorOptions>
+    <TargetFramework>$(StrideEditorTargetFramework)</TargetFramework>
+    <UseWPF>false</UseWPF>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+  <PackageReference Include="Avalonia" />
+    <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Stride.Core.Quantum\Stride.Core.Quantum.csproj" />
+    <ProjectReference Include="..\Stride.Core.Presentation\Stride.Core.Presentation.csproj" />
+    <ProjectReference Include="..\Stride.Core.Presentation.Quantum\Stride.Core.Presentation.Quantum.csproj" />
+    <ProjectReference Include="..\Stride.Core.Presentation.Avalonia\Stride.Core.Presentation.Avalonia.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(StrideSdkTargets)" />
+
+</Project>

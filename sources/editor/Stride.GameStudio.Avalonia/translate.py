@@ -527,6 +527,7 @@ def translateCS (sourceFile):
 def translateConstants (contents):
   contents = re.sub ("xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"", "xmlns=\"https://github.com/avaloniaui\"", contents)
   contents = re.sub ("/Stride.Core.Presentation.Wpf;component/Themes/ThemeSelector.axaml", "avares://Stride.Core.Presentation/Themes/AThemeSelector.axaml", contents)
+  contents = re.sub ("xmlns:view=\"clr-namespace:Stride.Core.Presentation.Quantum.View;assembly=Stride.Core.Presentation.Quantum\"", "xmlns:view=\"clr-namespace:Stride.Core.Presentation.Quantum.View;assembly=Stride.Core.Presentation.Quantum.Avalonia\"", contents)
   return contents
 
 # flag any nested comments, and break up the --, which causes compliance issues.
@@ -843,7 +844,7 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/NumericTextBox.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToNull.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToString.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ValueConverterBase.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ValueConverterBase.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -856,7 +857,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ValueCon
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding

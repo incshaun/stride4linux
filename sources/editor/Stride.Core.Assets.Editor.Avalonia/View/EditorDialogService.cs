@@ -253,7 +253,7 @@ return null;
         public void RegisterDefaultTemplateProviders()
         {
             //var dictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Core.Assets.Editor;component/View/DefaultPropertyTemplateProviders.xaml", UriKind.RelativeOrAbsolute));
-           var uri = new Uri("avares://Stride.Core.Assets.Editor/View/DefaultPropertyTemplateProviders.axaml");
+           var uri = new Uri("avares://Stride.Core.Assets.Editor.Avalonia/View/DefaultPropertyTemplateProviders.axaml");
            var dictionary = new ResourceInclude (uri) { Source = uri }; 
            RegisterResourceDictionary((ResourceDictionary) dictionary.Loaded);
         }
