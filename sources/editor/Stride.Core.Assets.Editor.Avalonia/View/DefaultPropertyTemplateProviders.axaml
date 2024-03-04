@@ -12,7 +12,7 @@
                     xmlns:behaviors="clr-namespace:Stride.Core.Assets.Editor.View.Behaviors"
                     xmlns:io="clr-namespace:Stride.Core.IO;assembly=Stride.Core.Design"
                     xmlns:edvw="clr-namespace:Stride.Core.Assets.Editor.View"
-                    xmlns:viewModel="clr-namespace:Stride.Core.Assets.Editor.ViewModel"
+                    xmlns:viewModel="clr-namespace:Stride.Core.Assets.Editor.ViewModel;assembly=Stride.Core.Assets.Editor"
                     xmlns:adr="clr-namespace:Stride.Core.Presentation.Adorners;assembly=Stride.Core.Presentation.Wpf"
                     xmlns:qvm="clr-namespace:Stride.Core.Presentation.Quantum.ViewModels;assembly=Stride.Core.Presentation.Quantum"
                     xmlns:assetCommands="clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands"
