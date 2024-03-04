@@ -212,7 +212,6 @@
           </sd:TextBox>
           <CheckBox Grid.Column="3" Margin="2,0" VerticalAlignment="Center" HorizontalAlignment="Left"
                     IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
-                    IsChecked="{Binding Enabled.NodeValue, Converter={view:DifferentValueToParam}, ConverterParameter={x:Null}}"
                     IsVisible="{Binding HasChild_Enabled}"/>
         </Grid>
       </Border>
@@ -263,7 +262,6 @@
         <StackPanel Orientation="Horizontal" Margin="8,0,0,0">
           <CheckBox Margin="4,0" VerticalAlignment="Center"
                     IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
-                    IsChecked="{Binding Enabled.NodeValue, Converter={view:DifferentValueToParam}, ConverterParameter={x:Null}}"
                     IsVisible="{Binding HasChild_Enabled}"/>
           <Image Source="{Binding NodeValue, Converter={sd:Chained {sd:ObjectToType}, {cvt:TypeToResource}}}" MaxWidth="16" MaxHeight="16"
                             RenderOptions.BitmapInterpolationMode="LowQuality" Margin="0,0,4,0"/>
@@ -744,7 +742,7 @@
     <DataTemplate DataType="qvm:NodeViewModel">
       <CheckBox x:Name="CheckBox" Margin="2" HorizontalAlignment="Left"
                 IsThreeState="{Binding NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
-                IsChecked="{Binding NodeValue, Converter={view:DifferentValueToParam}, ConverterParameter={x:Null}}"/>
+/>
     </DataTemplate>
   </view:TypeMatchTemplateProvider>
 

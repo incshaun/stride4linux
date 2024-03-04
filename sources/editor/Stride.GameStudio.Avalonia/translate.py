@@ -153,6 +153,7 @@ def translateNames (contents):
   contents = re.sub ("\(DependencyProperty\)", "(AvaloniaProperty)", contents)
   
   contents = re.sub ("CancelRoutedEventHandler", "EventHandler<CancelRoutedEventArgs>", contents)
+  contents = re.sub ("RoutedPropertyChangedEventHandler<double>", "EventHandler<RoutedEventArgs>", contents)
   contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional
   contents = re.sub ("ExecutedRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
@@ -252,6 +253,8 @@ def translateNames (contents):
 # Translate the various forms of styled property.
 def translateProperties (contents):
 
+  commands = ""
+
   # Handle DependencyProperty.Register
   # Without initializing argument
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\(([^,\)]*?)\)\);")
@@ -260,10 +263,18 @@ def translateProperties (contents):
   # Without handler.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
-  
-  commands = ""
 
-  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
+  # 2 argument to PropertyMetadata, first is function call.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\(([^,\)]*?)\), ([^,\)]*?)\)\);")
+  classname = ""
+  for match in re.findall (pat, contents):
+    #print (match)
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[8] + ");\n"
+    classname = match[5];
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7(\8));", contents)
+  
+  # 2 arguments, anything.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
   classname = ""
   for match in re.findall (pat, contents):
     #print (match)
@@ -271,13 +282,16 @@ def translateProperties (contents):
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
 
+  # 1 argument to FrameworkPropertyMetadata
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?)\)\);", re.DOTALL)
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
 
-  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\((.*?), FrameworkPropertyMetadataOptions\.BindsTwoWayByDefault\)\);", re.DOTALL)
+  # 2 arguments to FrameworkPropertyMetadata, second being a bind TwoWay
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), FrameworkPropertyMetadataOptions\.BindsTwoWayByDefault\)\);", re.DOTALL)
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7, defaultBindingMode : BindingMode.TwoWay);", contents)
 
-  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
+  # 2 argument to FrameworkPropertyMetadata
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);")
   classname = ""
   for match in re.findall (pat, contents):
     #print (match)
@@ -285,6 +299,15 @@ def translateProperties (contents):
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
   
+  # Deal with case with frameworkpropertymetadata with 6 arguments.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
+  classname = ""
+  for match in re.findall (pat, contents):
+    print (match)
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[8] + ");\n"
+    classname = match[5];
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
+
   
   # Direct properties
   
@@ -299,7 +322,7 @@ def translateProperties (contents):
     contents = re.sub (pat, r"public static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4);", contents)
   
 
-  pat = re.compile ("public static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\((.*?)\)\);", re.DOTALL)
+  pat = re.compile ("public static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?)\)\);", re.DOTALL)
   if (re.findall (pat, contents)):
     for match in re.findall (pat, contents):
       # one form of variable definion.
@@ -317,7 +340,7 @@ def translateProperties (contents):
     contents = re.sub (pat, r'public static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>("\4", o => o.\4);', contents)
   
   # Attached Properties
-  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new UIPropertyMetadata\((.*?), (.*?)\)\);", re.DOTALL)
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new UIPropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
   if (re.findall (pat, contents)):
     classname = ""
     for match in re.findall (pat, contents):
@@ -333,6 +356,7 @@ def translateProperties (contents):
   
   # patch in commands to an existing static constructor.
   if len (commands) > 0:
+    #print (commands, classname)
     #print ("Match", "static " + classname + "(\s*)\(\)")
     pat = re.compile ("static " + classname + "(\s*)\(\)(\s*){", re.DOTALL)
     if re.findall (pat, contents): # already a static class.
@@ -381,6 +405,10 @@ def translateProperties (contents):
   contents = re.sub (pat, r"protected override void OnLostFocus(RoutedEventArgs e)", contents)
   pat = re.compile ("base.OnLostKeyboardFocus\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnLostFocus(e);", contents)
+
+  # OnInitialize
+  pat = re.compile ("protected override void OnInitialized\(EventArgs e\)(\s*){(\s*)base.OnInitialized\(e\);")
+  contents = re.sub (pat, r"protected override void OnInitialized()\n\t\t{\n\t\t\tbase.OnInitialized();", contents)
   
   # Mouse
   pat = re.compile ("protected override void OnMouseDown\(MouseButtonEventArgs e\)") # no call to base.
@@ -811,7 +839,11 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/AnonymousEventHandler.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/TypeToResource.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/FocusManager.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CharInputBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CharInputBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/NumericTextBox.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToNull.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToString.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ValueConverterBase.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")

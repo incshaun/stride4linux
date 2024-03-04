@@ -2,9 +2,11 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.Globalization;
+using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
 using Stride.Core.Annotations;
+using System.Collections.Generic;
 
 namespace Stride.Core.Presentation.ValueConverters
 {
@@ -12,7 +14,7 @@ namespace Stride.Core.Presentation.ValueConverters
     /// An abstract class for implementations of <see cref="IValueConverter"/> that supports markup extensions.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="IValueConverter"/> being implemented.</typeparam>
-    public abstract class ValueConverterBase<T> : MarkupExtension, IValueConverter where T : class, IValueConverter, new()
+    public abstract partial class ValueConverterBase<T> : MarkupExtension, IValueConverter where T : class, IValueConverter, new()
     {
         private static T valueConverterInstance;
 
