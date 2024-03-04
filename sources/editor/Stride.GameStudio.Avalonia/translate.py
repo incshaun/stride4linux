@@ -109,6 +109,8 @@ def translateHeaders (contents):
     headers += "using Avalonia.Data;\n"
   if re.findall ("FindVisualChildrenOfType", contents):
     headers += "using System.Linq;\n"
+  if re.findall ("Animation", contents):
+    headers += "using Avalonia.Animation;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -117,6 +119,7 @@ def translateHeaders (contents):
   contents = re.sub ("using System.Windows.Threading;", "using Avalonia.Threading;", contents)
   contents = re.sub ("using System.Windows.Input;", "using Avalonia.Input;", contents)
   contents = re.sub ("using System.Windows.Documents;", "using Avalonia.Controls.Documents;", contents)
+  contents = re.sub ("using System.Windows.Media.Animation;", "using Avalonia.Animation;", contents)
   contents = re.sub ("using System.Windows.Media.Imaging;", "using Avalonia.Media.Imaging;", contents)
   contents = re.sub ("using System.Windows.Media;", "using Avalonia.Media;", contents)
   contents = re.sub ("using Microsoft.Xaml.Behaviors;", "using Avalonia.Xaml.Interactivity;", contents)
@@ -175,6 +178,7 @@ def translateNames (contents):
   contents = re.sub ("<FrameworkElement", "<Control", contents) 
   contents = re.sub (": FrameworkElement", ": Control", contents)
   contents = re.sub ("UIElement\.", "Control.", contents) 
+  contents = re.sub (" UIElement ", " Control ", contents) 
   contents = re.sub (": UIElement", ": Control", contents)
   contents = re.sub ("as UIElement", "as Control", contents)
   contents = re.sub ("\(UIElement\)", "(Control)", contents)
@@ -254,6 +258,7 @@ def translateNames (contents):
 def translateProperties (contents):
 
   commands = ""
+  classname = ""
 
   # Handle DependencyProperty.Register
   # Without initializing argument
@@ -266,7 +271,6 @@ def translateProperties (contents):
 
   # 2 argument to PropertyMetadata, first is function call.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\(([^,\)]*?)\), ([^,\)]*?)\)\);")
-  classname = ""
   for match in re.findall (pat, contents):
     #print (match)
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[8] + ");\n"
@@ -275,9 +279,8 @@ def translateProperties (contents):
   
   # 2 arguments, anything.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
-  classname = ""
   for match in re.findall (pat, contents):
-    #print (match)
+    #print (match, match[5])
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7);", contents)
@@ -292,7 +295,6 @@ def translateProperties (contents):
 
   # 2 argument to FrameworkPropertyMetadata
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);")
-  classname = ""
   for match in re.findall (pat, contents):
     #print (match)
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
@@ -301,7 +303,6 @@ def translateProperties (contents):
   
   # Deal with case with frameworkpropertymetadata with 6 arguments.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
-  classname = ""
   for match in re.findall (pat, contents):
     print (match)
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[8] + ");\n"
@@ -342,7 +343,6 @@ def translateProperties (contents):
   # Attached Properties
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new UIPropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
   if (re.findall (pat, contents)):
-    classname = ""
     for match in re.findall (pat, contents):
       #print (match)
       commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
@@ -368,7 +368,7 @@ def translateProperties (contents):
       else:
         pat = re.compile ("public class " + classname + "(.*?){", re.DOTALL) # add to classheader.
         if re.findall (pat, contents): # already a static class.
-          contents = re.sub (pat, r"public class " + classname + "\1{\n\t\tstatic " + classname + "()\n\t\t{\n" + commands + "\t\t}\n", contents)
+          contents = re.sub (pat, r"public class " + classname + r"\1{\n\t\tstatic " + classname + "()\n\t\t{\n" + commands + "\t\t}\n", contents)
         else:
           pat = re.compile ("public abstract class (.*?) (.*?){", re.DOTALL) # add to classheader.
           if re.findall (pat, contents): # already a static class.
@@ -845,6 +845,9 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToNull.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToString.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ValueConverterBase.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/TextBoxPropertyValueValidationBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Adorners/HighlightAdornerState.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Adorners/HighlightBorderAdorner.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -857,7 +860,7 @@ def translateXAML (sourceFile):
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding
