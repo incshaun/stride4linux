@@ -49,7 +49,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="AbstractTypeSelectionComboBox" BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
-    <Setter Property="IsEditable" Value="False"/>
+    
     <Setter Property="ToolTip.Tip" Value="{sd:Localize Replace..., Context=ToolTip}"/>
     <!-- Visible if: we have the command to create a new instance, we're not read-only, we not a collection -->
     
@@ -96,7 +96,7 @@
               </ToggleButton.Template>
             </ToggleButton>
             <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False"  >
-              <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{TemplateBinding ActualWidth}" x:Name="DropDown" >
+              <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}"  x:Name="DropDown" >
                 <Border x:Name="DropDownBorder" Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="3,3,3,3" />
                 <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Foreground="{StaticResource ActiveCaptionTextBrushKey}">
                   <StackPanel IsItemsHost="True"  />
@@ -148,7 +148,7 @@
       <Border Width="8" Margin="4,4,0,4" Background="Transparent">
         <Rectangle Focusable="False" Cursor="SizeAll">
           <Rectangle.Fill>
-            <DrawingBrush Viewport="0,0,8,4" TileMode="Tile" ViewportUnits="Absolute">
+            <DrawingBrush TileMode="Tile" >
               <DrawingBrush.Drawing>
                 <DrawingGroup>
                   <GeometryDrawing Brush="Transparent">
@@ -193,8 +193,8 @@
                         ValidateCommandParameter="{Binding Text, RelativeSource={RelativeSource Self}}"
                         IsVisible="{Binding HasCommand_RenameStringKey}"
                         ContextMenu="{Binding ContextMenu, RelativeSource={RelativeSource AncestorType={x:Type sd:PropertyViewItem}}}">
-            <sd:TextBox.Style>
-              <ControlTheme x:Key="{x:Type sd:TextBox}" TargetType="{x:Type sd:TextBox}" BasedOn="{StaticResource {x:Type sd:TextBox}}">
+            <sd:TextBox.Theme>
+              <ControlTheme TargetType="{x:Type sd:TextBox}" BasedOn="{StaticResource {x:Type sd:TextBox}}">
                 <!-- <ControlTheme.Triggers>
                   <Trigger Property="IsKeyboardFocused" Value="False">
                     <Setter Property="Background" Value="Transparent" />
@@ -206,7 +206,7 @@
                   </Trigger>
                 </Style\.Triggers> -->
               </ControlTheme>
-            </sd:TextBox.Style>
+            </sd:TextBox.Theme>
           </sd:TextBox>
           <CheckBox Grid.Column="3" Margin="2,0" VerticalAlignment="Center" HorizontalAlignment="Left"
                     IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
@@ -216,7 +216,7 @@
       </Border>
       <GridSplitter Grid.Column="2" Width="2" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource TextBoxBackgroundBrush}"/>
       <Border x:Name="PART_Editor" Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,5,0">
-        <ContentControl x:Name="PART_ValueContainer" Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.EditorProviders}"
+        <ContentControl x:Name="PART_ValueContainer" Content="{Binding}" ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"
                         Focusable="False" VerticalAlignment="Center" />
       </Border>
     </Grid>
@@ -306,8 +306,10 @@
 
   <!-- Base provider for property footer: nothing inside! -->
   <sd:DefaultTemplateProvider x:Key="DefaultPropertyFooterTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyFooter" OverrideRule="None">
-    <DataTemplate/>
-  </sd:DefaultTemplateProvider>
+	<sd:DefaultTemplateProvider.Template>
+		<DataTemplate/>
+	</sd:DefaultTemplateProvider.Template>
+</sd:DefaultTemplateProvider>
 
   <!-- Base provider for properties: ToggleButton for expander, TextBlock for property name (respecting alignment), and a ContentControl for the actual property editor -->
   <sd:DefaultTemplateProvider x:Key="DefaultPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyHeader" OverrideRule="None"
@@ -319,21 +321,24 @@
 
   <!-- Provider for abstract types: ComboBox that allows to select a type and create an instance of the selected type, visible if the current value is null -->
   <pvdr:AbstractTypeTemplateProvider x:Key="InlinedAbstractTypePropertyTemplateProvider" OverrideRule="Most" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <pvdr:AbstractTypeTemplateProvider.OverriddenProviderNames>
+	<pvdr:AbstractTypeTemplateProvider.OverriddenProviderNames>
       <s:String>InlinedProperty</s:String>
-    </pvdr:AbstractTypeTemplateProvider.OverriddenProviderNames>
-    <DataTemplate DataType="qvm:NodeViewModel">
+    
+	</pvdr:AbstractTypeTemplateProvider.OverriddenProviderNames>
+<pvdr:AbstractTypeTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <ComboBox x:Name="InstanceTypeSelectionComboBox" DockPanel.Dock="Right" Theme="{StaticResource AbstractTypeSelectionComboBox}"
                   ItemsSource="{Binding AbstractNodeMatchingEntries}"
-                  DisplayMemberPath="DisplayValue"
+                  
                  >
           <i:Interaction.Behaviors>
             <behaviors:OnComboBoxClosedWithSelectionBehavior Command="{Binding CreateNewInstance}"
                                                              CommandParameter="{Binding SelectedItem, ElementName=InstanceTypeSelectionComboBox}"/>
           </i:Interaction.Behaviors>
         </ComboBox>
-        <ContentControl x:Name="ContentControl" Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
+        <ContentControl x:Name="ContentControl" Content="{Binding}" ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
       </DockPanel>
       <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue, Converter={sd:ObjectToBool}}" Value="False">
@@ -341,49 +346,64 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </pvdr:AbstractTypeTemplateProvider>
+</pvdr:AbstractTypeTemplateProvider.Template>
+</pvdr:AbstractTypeTemplateProvider>
 
   <!-- Hide header of inlined properties but allow to display its children -->
   <pvdr:InlinedPropertyValueTemplateProvider x:Key="InlinedPropertyHeaderTemplateProvider" OverrideRule="Some" edvw:PropertyViewHelper.TemplateCategory="PropertyHeader">
-    <DataTemplate>
+	<pvdr:InlinedPropertyValueTemplateProvider.Template>
+		<DataTemplate>
+	
       <Border edvw:PropertyViewHelper.Increment="0" edvw:PropertyViewHelper.IsExpanded="True"/>
     </DataTemplate>
-  </pvdr:InlinedPropertyValueTemplateProvider>
+</pvdr:InlinedPropertyValueTemplateProvider.Template>
+</pvdr:InlinedPropertyValueTemplateProvider>
 
   <!-- Hide footer of inlined properties but allow to display its children -->
   <pvdr:InlinedPropertyValueTemplateProvider x:Key="InlinedPropertyFooterTemplateProvider" OverrideRule="Some" edvw:PropertyViewHelper.TemplateCategory="PropertyFooter">
-    <DataTemplate>
+	<pvdr:InlinedPropertyValueTemplateProvider.Template>
+		<DataTemplate>
+	
       <Border/>
     </DataTemplate>
-  </pvdr:InlinedPropertyValueTemplateProvider>
+</pvdr:InlinedPropertyValueTemplateProvider.Template>
+</pvdr:InlinedPropertyValueTemplateProvider>
 
   <pvdr:InlinedPropertyTemplateProvider x:Key="InlinedPropertyTemplateProvider" OverrideRule="Some" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate>
+	<pvdr:InlinedPropertyTemplateProvider.Template>
+		<DataTemplate>
+	
       <Grid>
         <!-- Fallback when the node has multiple values to display -->
         <TextBlock Margin="2,0" VerticalAlignment="Center" Text="{sd:Localize (Different values)}"
                   />
         <!-- Fallback when the value does not have an inline property -->
         <ContentControl x:Name="ContentControl" Content="{Binding {Binding InlinedProperty}, {Binding}}"
-                        ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.EditorProviders}"
+                        ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"
                        />
       </Grid>
     </DataTemplate>
-  </pvdr:InlinedPropertyTemplateProvider>
+</pvdr:InlinedPropertyTemplateProvider.Template>
+</pvdr:InlinedPropertyTemplateProvider>
 
   <!-- Provider for collection items: Button to remove an entry, then a ContentControl for the item itself -->
   <pvdr:ListItemTemplateProvider x:Key="CollectionItemPropertyTemplateProvider" OverrideRule="Most" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate>
+	<pvdr:ListItemTemplateProvider.Template>
+		<DataTemplate>
+	
       <DockPanel>
         <Button Theme="{StaticResource RemoveItemButtonStyle}" DockPanel.Dock="Right"/>
-        <ContentControl Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
+        <ContentControl Content="{Binding}" ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
       </DockPanel>
     </DataTemplate>
-  </pvdr:ListItemTemplateProvider>
+</pvdr:ListItemTemplateProvider.Template>
+</pvdr:ListItemTemplateProvider>
 
   <!-- Provider for list: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:ListTemplateProvider x:Key="ListPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:ListTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
           <Button Theme="{StaticResource AddNewItemButtonStyle}"/>
@@ -399,11 +419,14 @@
         </TextBlock>
       </DockPanel>
     </DataTemplate>
-  </pvdr:ListTemplateProvider>
+</pvdr:ListTemplateProvider.Template>
+</pvdr:ListTemplateProvider>
 
   <!-- Provider for list: Button to add an entry, in the footer -->
   <pvdr:ListTemplateProvider x:Key="ListPropertyFooterTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyFooter">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:ListTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
         <Grid.ColumnDefinitions>
@@ -434,7 +457,7 @@
                     <behaviors:OnComboBoxClosedWithSelectionBehavior Command="{Binding AddNewItem}" CommandParameter="{Binding SelectedItem, ElementName=InstanceTypeSelectionComboBox}"/>
                   </i:Interaction.Behaviors>
                 </ComboBox>
-                <TextBlock Text="{Binding DisplayName, StringFormat={sd:Localize Add to {0}}}" TextTrimming="CharacterEllipsis" FontTheme="Italic"/>
+                <TextBlock Text="{Binding DisplayName, StringFormat={sd:Localize Add to {0}}}" TextTrimming="CharacterEllipsis" FontStyle="Italic"/>
               </DockPanel>
             </Grid>
           </Grid>
@@ -442,20 +465,26 @@
         <GridSplitter Grid.Column="2" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
       </Grid>
     </DataTemplate>
-  </pvdr:ListTemplateProvider>
+</pvdr:ListTemplateProvider.Template>
+</pvdr:ListTemplateProvider>
 
   <!-- Provider for array items: a ContentControl for the item itself -->
   <pvdr:ArrayItemTemplateProvider x:Key="ArrayItemPropertyTemplateProvider" OverrideRule="Most" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate>
+	<pvdr:ArrayItemTemplateProvider.Template>
+		<DataTemplate>
+	
       <DockPanel>
-        <ContentControl Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
+        <ContentControl Content="{Binding}" ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
       </DockPanel>
     </DataTemplate>
-  </pvdr:ArrayItemTemplateProvider>
+</pvdr:ArrayItemTemplateProvider.Template>
+</pvdr:ArrayItemTemplateProvider>
 
   <!-- Provider for array: Button to add an entry, TextBlock to describe the array -->
   <pvdr:ArrayTemplateProvider x:Key="ArrayPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:ArrayTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <TextBlock Margin="2">
           <Run Text="{sd:Localize Array}"/> -
@@ -463,11 +492,14 @@
         </TextBlock>
       </DockPanel>
     </DataTemplate>
-  </pvdr:ArrayTemplateProvider>
+</pvdr:ArrayTemplateProvider.Template>
+</pvdr:ArrayTemplateProvider>
 
   <!-- Provider for array -->
   <pvdr:ArrayTemplateProvider x:Key="ArrayPropertyFooterTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyFooter">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:ArrayTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
         <Grid.ColumnDefinitions>
@@ -480,11 +512,14 @@
         <GridSplitter Grid.Column="2" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
       </Grid>
     </DataTemplate>
-  </pvdr:ArrayTemplateProvider>
+</pvdr:ArrayTemplateProvider.Template>
+</pvdr:ArrayTemplateProvider>
   
   <!-- Provider for set: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:SetTemplateProvider x:Key="SetPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:SetTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
           <Button Theme="{StaticResource AddNewItemButtonStyle}"/>
@@ -500,11 +535,14 @@
         </TextBlock>
       </DockPanel>
     </DataTemplate>
-  </pvdr:SetTemplateProvider>
+</pvdr:SetTemplateProvider.Template>
+</pvdr:SetTemplateProvider>
 
   <!-- Provider for set: Button to add an entry, in the footer -->
   <pvdr:SetTemplateProvider x:Key="SetPropertyFooterTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyFooter">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:SetTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
         <Grid.ColumnDefinitions>
@@ -535,7 +573,7 @@
                     <behaviors:OnComboBoxClosedWithSelectionBehavior Command="{Binding AddNewItem}" CommandParameter="{Binding SelectedItem, ElementName=InstanceTypeSelectionComboBox}"/>
                   </i:Interaction.Behaviors>
                 </ComboBox>
-                <TextBlock Text="{Binding DisplayName, StringFormat={sd:Localize Add to {0}}}" TextTrimming="CharacterEllipsis" FontTheme="Italic"/>
+                <TextBlock Text="{Binding DisplayName, StringFormat={sd:Localize Add to {0}}}" TextTrimming="CharacterEllipsis" FontStyle="Italic"/>
               </DockPanel>
             </Grid>
           </Grid>
@@ -543,11 +581,14 @@
         <GridSplitter Grid.Column="2" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
       </Grid>
     </DataTemplate>
-  </pvdr:SetTemplateProvider>
+</pvdr:SetTemplateProvider.Template>
+</pvdr:SetTemplateProvider>
 
   <!-- Provider for dictionary: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:DictionaryTemplateProvider x:Key="DictionaryTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:DictionaryTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding AddPrimitiveKey}"
                
@@ -560,14 +601,18 @@
         </TextBlock>
       </DockPanel>
     </DataTemplate>
-  </pvdr:DictionaryTemplateProvider>
+</pvdr:DictionaryTemplateProvider.Template>
+</pvdr:DictionaryTemplateProvider>
 
   <!-- Provider for dictionary with a number key: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:DictionaryNumberKeyTemplateProvider x:Key="DictionaryNumberKeyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <pvdr:DictionaryNumberKeyTemplateProvider.OverriddenProviderNames>
+	<pvdr:DictionaryNumberKeyTemplateProvider.OverriddenProviderNames>
       <s:String>Dictionary</s:String>
-    </pvdr:DictionaryNumberKeyTemplateProvider.OverriddenProviderNames>
-    <DataTemplate DataType="qvm:NodeViewModel">
+    
+	</pvdr:DictionaryNumberKeyTemplateProvider.OverriddenProviderNames>
+<pvdr:DictionaryNumberKeyTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <ComboBox DockPanel.Dock="Right" Margin="2,0"
                  >
@@ -617,14 +662,18 @@
         </TextBlock>
       </DockPanel>
     </DataTemplate>
-  </pvdr:DictionaryNumberKeyTemplateProvider>
+</pvdr:DictionaryNumberKeyTemplateProvider.Template>
+</pvdr:DictionaryNumberKeyTemplateProvider>
 
   <!-- Provider for dictionary with a string key: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:DictionaryStringKeyTemplateProvider x:Key="DictionaryStringKeyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <pvdr:DictionaryStringKeyTemplateProvider.OverriddenProviderNames>
+	<pvdr:DictionaryStringKeyTemplateProvider.OverriddenProviderNames>
       <s:String>Dictionary</s:String>
-    </pvdr:DictionaryStringKeyTemplateProvider.OverriddenProviderNames>
-    <DataTemplate DataType="qvm:NodeViewModel">
+    
+	</pvdr:DictionaryStringKeyTemplateProvider.OverriddenProviderNames>
+<pvdr:DictionaryStringKeyTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <ComboBox DockPanel.Dock="Right" Margin="2,0"
                  >
@@ -674,14 +723,18 @@
         </TextBlock>
       </DockPanel>
     </DataTemplate>
-  </pvdr:DictionaryStringKeyTemplateProvider>
+</pvdr:DictionaryStringKeyTemplateProvider.Template>
+</pvdr:DictionaryStringKeyTemplateProvider>
 
   <!-- Provider for dictionary with an Enum key: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:DictionaryEnumKeyTemplateProvider x:Key="DictionaryEnumKeyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <pvdr:DictionaryEnumKeyTemplateProvider.OverriddenProviderNames>
+	<pvdr:DictionaryEnumKeyTemplateProvider.OverriddenProviderNames>
       <s:String>Dictionary</s:String>
-    </pvdr:DictionaryEnumKeyTemplateProvider.OverriddenProviderNames>
-    <DataTemplate DataType="qvm:NodeViewModel">
+    
+	</pvdr:DictionaryEnumKeyTemplateProvider.OverriddenProviderNames>
+<pvdr:DictionaryEnumKeyTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <ComboBox DockPanel.Dock="Right" Margin="2,0"
                  >
@@ -732,20 +785,26 @@
         </TextBlock>
       </DockPanel>
     </DataTemplate>
-  </pvdr:DictionaryEnumKeyTemplateProvider>
+</pvdr:DictionaryEnumKeyTemplateProvider.Template>
+</pvdr:DictionaryEnumKeyTemplateProvider>
 
   <!-- Provider for boolean editor -->
   <edvw:TypeMatchTemplateProvider x:Key="BoolPropertyTemplateProvider" Type="{x:Type s:Boolean}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <CheckBox x:Name="CheckBox" Margin="2" HorizontalAlignment="Left"
                 IsThreeState="{Binding NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
                 IsChecked="{Binding NodeValue, Converter={cvt:DifferentValueToParam}, ConverterParameter={x:Null}}"/>
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for char editor -->
   <edvw:TypeMatchTemplateProvider x:Key="CharPropertyTemplateProvider" Type="{x:Type s:Char}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Grid>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto"/>
@@ -765,7 +824,7 @@
                              DisplayUpDownButtons="False">
           <i:Interaction.Behaviors>
             <!--<sd:NumericTextBoxTransactionalRepeatButtonsBehavior UndoRedoService="{Binding Session.UndoRedoService}"/>-->
-            <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+            <behaviors:TextBoxPropertyValueValidationBehavior />
           </i:Interaction.Behaviors>
         </sd:NumericTextBox>
       </Grid>
@@ -775,7 +834,8 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Providers for color editors -->
   <DataTemplate x:Key="ColorEditorTemplate" DataType="qvm:NodeViewModel">
@@ -799,10 +859,10 @@
                     Text="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:ColorConverter}}}"
                     WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
         <i:Interaction.Behaviors>
-          <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+          <behaviors:TextBoxPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:TextBox>
-      <Popup Grid.Column="0" IsOpen="{Binding ElementName=PickerToggleButton, Path=IsChecked}" StaysOpen="False">
+      <Popup Grid.Column="0" IsOpen="{Binding ElementName=PickerToggleButton, Path=IsChecked}" >
         <Grid Background="{StaticResource BackgroundBrush}" MinWidth="200" MinHeight="200" MaxWidth="400" MaxHeight="400">
           <TabControl>
             <TabItem Header="Color picker">
@@ -810,7 +870,7 @@
                                 ShowAlpha="{Binding Type, Mode=OneWay, Converter={sd:Chained {sd:IsEqualToParam}, {sd:InvertBool}, Parameter1={x:Type math:Color3}}}"/>
             </TabItem>
             <TabItem Header="Palette">
-              <ListBox ItemsSource="{x:Static viewModel:ColorPaletteViewModel.Colors}" SelectedValuePath="Value"
+              <ListBox ItemsSource="{x:Static viewModel:ColorPaletteViewModel.Colors}" 
                        SelectedValue="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:ColorConverter}}}">
                 <ListBox.ItemTemplate>
                   <DataTemplate>
@@ -839,7 +899,9 @@
 
   <!-- Providers for number with a range editors -->
   <pvdr:RangedValueTemplateProvider x:Key="RangedValueTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="Most">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:RangedValueTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Grid>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="3*"/>
@@ -868,7 +930,7 @@
                              DisplayUpDownButtons="False">
           <i:Interaction.Behaviors>
             <!--<sd:NumericTextBoxTransactionalRepeatButtonsBehavior UndoRedoService="{Binding Session.UndoRedoService}"/>-->
-            <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+            <behaviors:TextBoxPropertyValueValidationBehavior />
           </i:Interaction.Behaviors>
         </sd:NumericTextBox>
       </Grid>
@@ -878,7 +940,8 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </pvdr:RangedValueTemplateProvider>
+</pvdr:RangedValueTemplateProvider.Template>
+</pvdr:RangedValueTemplateProvider>
 
   <!-- Providers for floating-point number editors -->
   <DataTemplate x:Key="FloatEditorTemplate" DataType="qvm:NodeViewModel">
@@ -893,7 +956,7 @@
                          DisplayUpDownButtons="False">
       <i:Interaction.Behaviors>
         <!--<sd:NumericTextBoxTransactionalRepeatButtonsBehavior UndoRedoService="{Binding Session.UndoRedoService}"/>-->
-        <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+        <behaviors:TextBoxPropertyValueValidationBehavior />
       </i:Interaction.Behaviors>
     </sd:NumericTextBox>
     <!-- <DataTemplate.Triggers>
@@ -918,7 +981,7 @@
                          DisplayUpDownButtons="False">
       <i:Interaction.Behaviors>
         <!--<sd:NumericTextBoxTransactionalRepeatButtonsBehavior UndoRedoService="{Binding Session.UndoRedoService}"/>-->
-        <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+        <behaviors:TextBoxPropertyValueValidationBehavior />
       </i:Interaction.Behaviors>
     </sd:NumericTextBox>
     <!-- <DataTemplate.Triggers>
@@ -939,7 +1002,9 @@
 
   <!-- Provider for time span editor -->
   <edvw:TypeMatchTemplateProvider x:Key="TimeSpanPropertyTemplateProvider" Type="{x:Type s:TimeSpan}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:TimeSpanEditor x:Name="TimeSpanEditor" Margin="2"
                          Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
@@ -951,11 +1016,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for date time editor -->
   <edvw:TypeMatchTemplateProvider x:Key="DateTimePropertyTemplateProvider" Type="{x:Type s:DateTime}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:DateTimeEditor x:Name="DateTimeEditor" Margin="2"
                          Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
@@ -967,11 +1035,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
   
   <!-- Provider for string editor -->
   <edvw:TypeMatchTemplateProvider x:Key="StringPropertyTemplateProvider" Type="{x:Type s:String}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:TextBox x:Name="TextBox" Margin="2" SelectAllOnFocus="True"
                     Text="{Binding NodeValue, Converter={cvt:DifferentValuesToString}}"
                     WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}"/>
@@ -981,16 +1052,19 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for vector2 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Vector2PropertyTemplateProvider" Type="{x:Type math:Vector2}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:Vector2Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor">
         <i:Interaction.Behaviors>
-          <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+          <behaviors:TextBoxVectorPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:Vector2Editor>
       <!-- <DataTemplate.Triggers>
@@ -999,17 +1073,20 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for vector3 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Vector3PropertyTemplateProvider" Type="{x:Type math:Vector3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:Vector3Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Z="{Binding Z.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor">
         <i:Interaction.Behaviors>
-          <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+          <behaviors:TextBoxVectorPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:Vector3Editor>
       <!-- <DataTemplate.Triggers>
@@ -1018,18 +1095,21 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for vector4 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Vector4PropertyTemplateProvider" Type="{x:Type math:Vector4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:Vector4Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Z="{Binding Z.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           W="{Binding W.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor">
         <i:Interaction.Behaviors>
-          <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+          <behaviors:TextBoxVectorPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:Vector4Editor>
       <!-- <DataTemplate.Triggers>
@@ -1038,16 +1118,19 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for int2 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Int2PropertyTemplateProvider" Type="{x:Type math:Int2}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:Int2Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" x:Name="VectorEditor">
         <i:Interaction.Behaviors>
-          <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+          <behaviors:TextBoxVectorPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:Int2Editor>
       <!-- <DataTemplate.Triggers>
@@ -1056,17 +1139,20 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for int3 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Int3PropertyTemplateProvider" Type="{x:Type math:Int3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:Int3Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Z="{Binding Z.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" x:Name="VectorEditor">
         <i:Interaction.Behaviors>
-          <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+          <behaviors:TextBoxVectorPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:Int3Editor>
       <!-- <DataTemplate.Triggers>
@@ -1075,18 +1161,21 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for int4 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Int4PropertyTemplateProvider" Type="{x:Type math:Int4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:Int4Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Z="{Binding Z.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        W="{Binding W.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" x:Name="VectorEditor">
         <i:Interaction.Behaviors>
-          <behaviors:TextBoxVectorPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+          <behaviors:TextBoxVectorPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:Int4Editor>
       <!-- <DataTemplate.Triggers>
@@ -1095,11 +1184,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for rectangleF editor -->
   <edvw:TypeMatchTemplateProvider x:Key="RectangleFPropertyTemplateProvider" Type="{x:Type math:RectangleF}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:RectangleFEditor RectX="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                              RectY="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                              RectWidth="{Binding Width.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1111,11 +1203,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for rectangle editor -->
   <edvw:TypeMatchTemplateProvider x:Key="RectanglePropertyTemplateProvider" Type="{x:Type math:Rectangle}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:RectangleEditor RectX="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                             RectY="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                             RectWidth="{Binding Width.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1127,11 +1222,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for rotation editor -->
   <edvw:TypeMatchTemplateProvider x:Key="RotationPropertyTemplateProvider" Type="{x:Type math:Quaternion}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:RotationEditor Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                            WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor"/>
       <!-- <DataTemplate.Triggers>
@@ -1140,11 +1238,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for matrix editor -->
   <edvw:TypeMatchTemplateProvider x:Key="MatrixPropertyTemplateProvider" Type="{x:Type math:Matrix}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:MatrixEditor M11="{Binding M11.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          M12="{Binding M12.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          M13="{Binding M13.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1168,11 +1269,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for angleSingle editor -->
   <edvw:TypeMatchTemplateProvider x:Key="AnglePropertyTemplateProvider" Type="{x:Type math:AngleSingle}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <sd:NumericTextBox x:Name="TextBox" DecimalPlaces="3"
                            Value="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:AngleSingleToDegrees}}}"
                            ToolTip.Tip="{sd:Localize Angle in degrees, Context=ToolTip}"
@@ -1180,7 +1284,7 @@
                            DisplayUpDownButtons="False">
         <i:Interaction.Behaviors>
           <!--<sd:NumericTextBoxTransactionalRepeatButtonsBehavior UndoRedoService="{Binding Session.UndoRedoService}"/>-->
-          <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+          <behaviors:TextBoxPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:NumericTextBox>
       <!-- <DataTemplate.Triggers>
@@ -1189,11 +1293,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for UDirectory editor -->
   <edvw:TypeMatchTemplateProvider x:Key="UDirectoryPropertyTemplateProvider" Type="{x:Type io:UDirectory}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding BrowseDirectory}"
                 IsVisible="{Binding HasCommand_BrowseDirectory}"
@@ -1205,7 +1312,7 @@
                       Text="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:UDirectoryToString}}}"
                       WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
           <i:Interaction.Behaviors>
-            <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" DisplayDropAdorner="ExternalOnly"/>
+            <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" />
           </i:Interaction.Behaviors>
         </sd:TextBox>
       </DockPanel>
@@ -1215,11 +1322,14 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for UFile editor -->
   <edvw:TypeMatchTemplateProvider x:Key="UFilePropertyTemplateProvider" Type="{x:Type io:UFile}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:TypeMatchTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding BrowseFile}"
                 IsVisible="{Binding HasCommand_BrowseFile}"
@@ -1231,8 +1341,8 @@
                       Text="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:UFileToString}}}"
                       WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
           <i:Interaction.Behaviors>
-            <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" DisplayDropAdorner="ExternalOnly"/>
-            <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+            <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" />
+            <behaviors:TextBoxPropertyValueValidationBehavior />
           </i:Interaction.Behaviors>
         </sd:TextBox>
       </DockPanel>
@@ -1242,13 +1352,16 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </edvw:TypeMatchTemplateProvider>
+</edvw:TypeMatchTemplateProvider.Template>
+</edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for simple enum editor: A ComboBox to select a single value -->
   <pvdr:EnumTemplateProvider x:Key="EnumPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:EnumTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Grid>
-        <ComboBox Theme="{StaticResource EnumComboBox}" Text=""/>
+        <ComboBox Theme="{StaticResource EnumComboBox}" PlaceholderText=""/>
         <TextBlock x:Name="TextBlock" VerticalAlignment="Center" Margin="9,0,30,0" HorizontalAlignment="Left" IsHitTestVisible="False"/>
       </Grid>
       <!-- <DataTemplate.Triggers>
@@ -1257,21 +1370,25 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </pvdr:EnumTemplateProvider>
+</pvdr:EnumTemplateProvider.Template>
+</pvdr:EnumTemplateProvider>
 
   <!-- Provider for flag enum editor: A ListBox to select a multiple value -->
   <pvdr:EnumTemplateProvider x:Key="FlagEnumPropertyTemplateProvider" FlagEnum="True" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <pvdr:EnumTemplateProvider.OverriddenProviderNames>
+	<pvdr:EnumTemplateProvider.OverriddenProviderNames>
       <s:String>Enum</s:String>
-    </pvdr:EnumTemplateProvider.OverriddenProviderNames>
-    <DataTemplate DataType="qvm:NodeViewModel">
+    
+	</pvdr:EnumTemplateProvider.OverriddenProviderNames>
+<pvdr:EnumTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Grid>
         <ToggleButton x:Name="ToggleButton" VerticalAlignment="Center" Margin="2" Content="{sd:Localize Change values..., Context=Button}">
           <i:Interaction.Behaviors>
             <sd:ToggleButtonPopupBehavior/>
           </i:Interaction.Behaviors>
         </ToggleButton>
-        <Popup Grid.Column="0" IsOpen="{Binding ElementName=ToggleButton, Path=IsChecked}" StaysOpen="False">
+        <Popup Grid.Column="0" IsOpen="{Binding ElementName=ToggleButton, Path=IsChecked}" >
           <Grid Background="{StaticResource BackgroundBrush}" MinWidth="200" MaxWidth="400" MaxHeight="200">
             <DockPanel>
               <UniformGrid DockPanel.Dock="Bottom" Columns="3">
@@ -1288,7 +1405,7 @@
                 <i:Interaction.Behaviors>
                   <sd:ListBoxBindableSelectedItemsBehavior SelectedItems="{sd:MultiBinding {Binding}, {Binding NodeValue, Converter={cvt:DifferentValuesToNull}}, Converter={cvt:FlagEnumToObservableList}}"/>
                 </i:Interaction.Behaviors>
-                <ListBox.ItemContainerStyle>
+                <ListBox.ItemContainerTheme>
                   <ControlTheme BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="ListBoxItem">
                     <Setter Property="Template">
                       <Setter.Value>
@@ -1296,7 +1413,7 @@
                           <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}}">
                             <ContentPresenter Content="{TemplateBinding ContentControl.Content}"
                                               ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
-                                              ContentStringFormat="{TemplateBinding ContentControl.ContentStringFormat}"
+                                              
                                               HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
                                               VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
                                                />
@@ -1305,7 +1422,7 @@
                       </Setter.Value>
                     </Setter>
                   </ControlTheme>
-                </ListBox.ItemContainerStyle>
+                </ListBox.ItemContainerTheme>
                 <ListBox.ItemTemplate>
                   <DataTemplate>
                     <TextBlock Text="{Binding Converter={sd:EnumToDisplayName}}"/>
@@ -1322,14 +1439,18 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </pvdr:EnumTemplateProvider>
+</pvdr:EnumTemplateProvider.Template>
+</pvdr:EnumTemplateProvider>
 
   <!-- Provider for editor for enum that have an associated image set: A ListBox to select a single value -->
   <pvdr:EnumTemplateProvider x:Key="ImageEnumPropertyTemplateProvider" ImageEnum="True" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <pvdr:EnumTemplateProvider.OverriddenProviderNames>
+	<pvdr:EnumTemplateProvider.OverriddenProviderNames>
       <s:String>Enum</s:String>
-    </pvdr:EnumTemplateProvider.OverriddenProviderNames>
-    <DataTemplate DataType="qvm:NodeViewModel">
+    
+	</pvdr:EnumTemplateProvider.OverriddenProviderNames>
+<pvdr:EnumTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <ListBox Margin="0" Padding="2" Background="Transparent" BorderThickness="0" sd:BehaviorProperties.HandlesMouseWheelScrolling="False"
                ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Focusable="False"
                ItemsSource="{Binding Type, Converter={sd:EnumValues}, Mode=OneWay}"
@@ -1342,11 +1463,11 @@
             </Border>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
-        <ItemsControl.ItemContainerStyle>
-          <ControlTheme x:Key="ListBoxItem" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <ItemsControl.ItemContainerTheme>
+          <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
             <Setter Property="Width" Value="24"/>
           </ControlTheme>
-        </ItemsControl.ItemContainerStyle>
+        </ItemsControl.ItemContainerTheme>
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <WrapPanel Orientation="Horizontal"/>
@@ -1354,16 +1475,20 @@
         </ItemsControl.ItemsPanel>
       </ListBox>
     </DataTemplate>
-  </pvdr:EnumTemplateProvider>
+</pvdr:EnumTemplateProvider.Template>
+</pvdr:EnumTemplateProvider>
 
   <!-- Provider for editor for flag enum that have an associated image set: A ListBox to select a single value -->
   <pvdr:EnumTemplateProvider x:Key="ImageFlagEnumPropertyTemplateProvider" FlagEnum="True" ImageEnum="True" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <pvdr:EnumTemplateProvider.OverriddenProviderNames>
+	<pvdr:EnumTemplateProvider.OverriddenProviderNames>
       <s:String>Enum</s:String>
       <s:String>FlagEnum</s:String>
       <s:String>ImageEnum</s:String>
-    </pvdr:EnumTemplateProvider.OverriddenProviderNames>
-    <DataTemplate>
+    
+	</pvdr:EnumTemplateProvider.OverriddenProviderNames>
+<pvdr:EnumTemplateProvider.Template>
+		<DataTemplate>
+	
       <ListBox Margin="0" Padding="2" Background="Transparent" BorderThickness="0" SelectionMode="Multiple"
                sd:BehaviorProperties.HandlesMouseWheelScrolling="False" Focusable="False"
                ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -1376,11 +1501,11 @@
             </Border>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
-        <ItemsControl.ItemContainerStyle>
-          <ControlTheme x:Key="ListBoxItem" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <ItemsControl.ItemContainerTheme>
+          <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
             <Setter Property="Width" Value="24"/>
           </ControlTheme>
-        </ItemsControl.ItemContainerStyle>
+        </ItemsControl.ItemContainerTheme>
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <WrapPanel Orientation="Horizontal"/>
@@ -1392,7 +1517,8 @@
         </i:Interaction.Behaviors>
       </ListBox>
     </DataTemplate>
-  </pvdr:EnumTemplateProvider>
+</pvdr:EnumTemplateProvider.Template>
+</pvdr:EnumTemplateProvider>
 
   <ContextMenu x:Key="ReferenceContextMenu">
     <MenuItem Icon="{sd:Image {StaticResource ImageFetchAsset}}"
@@ -1431,7 +1557,7 @@
       <sd:TextBox SelectAllOnFocus="True" Text="{Binding NodeValue, Converter={cvt:ContentReferenceToUrl}}" Margin="5"
                     ContextMenu="{StaticResource ReferenceContextMenu}" IsReadOnly="{Binding IsReadOnly}">
         <i:Interaction.Behaviors>
-          <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" DisplayDropAdorner="InternalOnly"/>
+          <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" />
         </i:Interaction.Behaviors>
       </sd:TextBox>
     </DockPanel>
@@ -1443,7 +1569,9 @@
   </pvdr:ContentReferenceTemplateProvider>
 
   <pvdr:ContentReferenceTemplateProvider x:Key="ThumbnailContentReferencePropertyTemplateProvider" DynamicThumbnail="True" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="Some">
-    <DataTemplate>
+	<pvdr:ContentReferenceTemplateProvider.Template>
+		<DataTemplate>
+	
       <DockPanel>
         <Border BorderThickness="1" BorderBrush="Black" Background="Transparent" DockPanel.Dock="Right"
                 Cursor="Hand" Margin="0,1" ContextMenu="{StaticResource ReferenceContextMenu}">
@@ -1469,15 +1597,15 @@
             </Border>
           </Grid>
           <i:Interaction.Behaviors>
-            <behaviors:ReferenceHostDragDropBehavior DisplayDropAdorner="InternalOnly"/>
+            <behaviors:ReferenceHostDragDropBehavior />
           </i:Interaction.Behaviors>
         </Border>
         <DockPanel>
           <sd:TextBox DockPanel.Dock="Top" SelectAllOnFocus="True" Text="{Binding NodeValue, Converter={cvt:ContentReferenceToUrl}}"
                                   Margin="2,0,5,5" ContextMenu="{StaticResource ReferenceContextMenu}" IsReadOnly="{Binding IsReadOnly}">
             <i:Interaction.Behaviors>
-              <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" DisplayDropAdorner="InternalOnly"/>
-              <behaviors:TextBoxPropertyValueValidationBehavior AdornerStoryboard="{StaticResource HighlightBorderAdornerValidationErrorStoryboard}"/>
+              <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" />
+              <behaviors:TextBoxPropertyValueValidationBehavior />
             </i:Interaction.Behaviors>
           </sd:TextBox>
           <UniformGrid Rows="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6,0">
@@ -1494,10 +1622,13 @@
         </DockPanel>
       </DockPanel>
     </DataTemplate>
-  </pvdr:ContentReferenceTemplateProvider>
+</pvdr:ContentReferenceTemplateProvider.Template>
+</pvdr:ContentReferenceTemplateProvider>
 
   <pvdr:NullableTemplateProvider x:Key="NullableStructPropertyTemplateProvider" Struct="True" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
-    <DataTemplate>
+	<pvdr:NullableTemplateProvider.Template>
+		<DataTemplate>
+	
       <DockPanel>
         <StackPanel DockPanel.Dock="Right" IsVisible="{Binding HasCommand_CreateNewInstance}" Orientation="Horizontal">
           <Button Theme="{StaticResource ImageButtonStyle}" ToolTip.Tip="{sd:Localize Create an instance of this structure, Context=ToolTip}"
@@ -1514,32 +1645,41 @@
         </StackPanel>
         <TextBlock Text="{sd:Localize (null)}" />
         <ContentControl  Content="{Binding}"
-                        ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
+                        ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"/>
       </DockPanel>
     </DataTemplate>
-  </pvdr:NullableTemplateProvider>
+</pvdr:NullableTemplateProvider.Template>
+</pvdr:NullableTemplateProvider>
 
   <edvw:SettingsCommandTemplateProvider x:Key="SettingsCommandTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="All">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:SettingsCommandTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Border>
         <Button MinWidth="80" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2" Content="{Binding NodeValue.ActionName}" Command="{Binding NodeValue.Command}"/>
       </Border>
     </DataTemplate>
-  </edvw:SettingsCommandTemplateProvider>
+</edvw:SettingsCommandTemplateProvider.Template>
+</edvw:SettingsCommandTemplateProvider>
 
   <edvw:SettingsStringFromAcceptableValuesTemplateProvider x:Key="StringFromAcceptableValuesEditorTemplate" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="All">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<edvw:SettingsStringFromAcceptableValuesTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <Border>
-        <ComboBox IsEditable="False" ItemsSource="{Binding Parent.AcceptableValues}"
+        <ComboBox  ItemsSource="{Binding Parent.AcceptableValues}"
                           SelectedItem="{Binding NodeValue}" Margin="2">
         </ComboBox>
       </Border>
     </DataTemplate>
-  </edvw:SettingsStringFromAcceptableValuesTemplateProvider>
+</edvw:SettingsStringFromAcceptableValuesTemplateProvider.Template>
+</edvw:SettingsStringFromAcceptableValuesTemplateProvider>
 
   <!-- Fallback terminal provider -->
   <sd:DefaultTemplateProvider x:Key="ObjectPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="None">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<sd:DefaultTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <TextBlock Margin="2,0" VerticalAlignment="Center" x:Name="DefaultTextBlock"
                  Text="{Binding {Binding AttributeDisplayName, Mode=OneWay}, {Binding Type, Mode=OneWay, StringFormat={sd:Localize {}{0} (Not supported)}, Converter={sd:NotSupportedTypeToTypeName}}, {Binding NodeValue, Mode=OneWay, Converter={sd:ObjectToTypeName}}}"/>
       <!-- <DataTemplate.Triggers>
@@ -1548,10 +1688,13 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </sd:DefaultTemplateProvider>
+</sd:DefaultTemplateProvider.Template>
+</sd:DefaultTemplateProvider>
 
   <pvdr:UnloadableObjectTemplateProvider x:Key="YamlProxyTemplateProvider" OverrideRule="All" edvw:PropertyViewHelper.TemplateCategory="PropertyHeader">
-    <DataTemplate DataType="qvm:NodeViewModel">
+	<pvdr:UnloadableObjectTemplateProvider.Template>
+		<DataTemplate DataType="qvm:NodeViewModel">
+	
       <DockPanel>
         <Border DockPanel.Dock="Top" BorderBrush="Black" Margin="4,8" BorderThickness="1" Background="{StaticResource NormalBrush}">
           <StackPanel Orientation="Vertical">
@@ -1568,6 +1711,7 @@
         </Border>
       </DockPanel>
     </DataTemplate>
-  </pvdr:UnloadableObjectTemplateProvider>
+</pvdr:UnloadableObjectTemplateProvider.Template>
+</pvdr:UnloadableObjectTemplateProvider>
 
 </ResourceDictionary>

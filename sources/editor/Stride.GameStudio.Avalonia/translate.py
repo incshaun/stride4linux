@@ -708,6 +708,7 @@ def translateTags (contents):
 
   # ContentSource  
   contents = re.sub ("ContentSource=\"(.*?)\"", r'ContentTemplate="\1"', contents)
+  contents = re.sub ("ContentTemplateSelector=\"(.*?)\"", r'ContentTemplate="\1"', contents)
 
   # SnapToDevicePixels, AllowsTransparency. Elements that don't seem to have an equivalent.
   contents = re.sub ("SnapsToDevicePixels=\"(.*?)\"", "", contents)
@@ -739,6 +740,9 @@ def translateTags (contents):
   
   # Styles become various forms of Theme.
   contents = re.sub ("\<Style TargetType=\"(.*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1">\2</ControlTheme>', contents) # one line style
+  contents = re.sub ("sd:TextBox.Style", r'sd:TextBox.Theme', contents) # one line style
+  contents = re.sub ("ListBox.ItemContainerStyle", r'ListBox.ItemContainerTheme', contents) # one line style
+  contents = re.sub ("ItemsControl.ItemContainerStyle", r'ItemsControl.ItemContainerTheme', contents) # one line style
 
   # FIXME: require TargetType.
   pat = regex.compile ("<Style(\s[^>]*)*>(((?R)|.)*?)<\/Style>", regex.DOTALL)
@@ -763,7 +767,41 @@ def translateTags (contents):
 
   # Fontweight
   contents = re.sub ("FontWeights\.", "FontWeight.", contents)
+  contents = re.sub ("FontTheme=\"(.*?)\"", r'FontStyle="\1"', contents)
   
+  # Drawing brush
+  contents = re.sub ("<DrawingBrush Viewport=\"(.*?)\"", "<DrawingBrush", contents)
+  contents = re.sub ("ViewportUnits=\"(.*?)\"", "", contents)
+  
+  # Grid
+  contents = re.sub ("MinWidth=\"{TemplateBinding ActualWidth}\"", "", contents)
+  
+  # Combobox
+  contents = re.sub ("<ComboBox Theme=\"(.*?)\" Text=\"(.*?)\"", r'<ComboBox Theme="\1" PlaceholderText="\2"', contents)
+  
+  # Templates.
+  # Tricky rule - templates need to have a template tag added around them, if they don't already have.
+  pat = re.compile ("<([^>]*?) ([^>]*?)>[ \n]*?<DataTemplate/>[ \n]*?</(.*?)>", re.DOTALL)
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      #print (match)
+      contents = re.sub (pat, r"<\1 \2>\n\t<\1.Template>\n\t\t<DataTemplate/>\n\t</\1.Template>\n</\3>", contents)    
+
+  # Template tag, with more complex structure.
+  pat = re.compile ("<([^>-]*?) ([^>]*?)>[ \n]*?<DataTemplate([^>]*?)>(.*?)</DataTemplate>[ \n]*?</(.*?)>", re.DOTALL)
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      #print (match)
+      pass
+    contents = re.sub (pat, r"<\1 \2>\n\t<\1.Template>\n\t\t<DataTemplate\3>\n\t\4</DataTemplate>\n</\1.Template>\n</\5>", contents)    
+
+  # Template tag, with more complex structure, particularly with OverriddenProviderNames.
+  pat = re.compile ("<([^>-]*?) ([^>]*?)>[ \n]*?<([^>-]*?).OverriddenProviderNames>(.*?)</([^>-]*?).OverriddenProviderNames>[ \n]*?<DataTemplate([^>]*?)>(.*?)</DataTemplate>[ \n]*</(?:\\1)>", re.DOTALL)
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      print (match[0])
+    contents = re.sub (pat, r"<\1 \2>\n\t<\3.OverriddenProviderNames>\4\n\t</\5.OverriddenProviderNames>\n<\1.Template>\n\t\t<DataTemplate\6>\n\t\7</DataTemplate>\n</\1.Template>\n</\1>", contents)    
+    
   # FIXME
   # Squash a few functions that are not available yet - but will be.
   contents = re.sub (re.compile ("\<view:TreeViewTemplateSelector(.*)?</view:TreeViewTemplateSelector(.*?)>", re.DOTALL), "", contents)
@@ -773,6 +811,14 @@ def translateTags (contents):
   contents = re.sub (re.compile ("<Setter Property=\"Visibility\" Value=\"(.*?)\"/>", re.DOTALL), "", contents)
   contents = re.sub (re.compile (" IsEnabled=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile (" Visibility=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("DisplayMemberPath=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("AdornerStoryboard=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("DisplayDropAdorner=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("StaysOpen=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("SelectedValuePath=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("ContentStringFormat=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("IsEditable=\"(.*?)\"", re.DOTALL), "", contents) # might need to look for the FluentAvalonia editable combobox if this is true?
+  contents = re.sub (re.compile ("<Setter Property=\"IsEditable\" Value=\"(.*?)\"/>", re.DOTALL), "", contents) 
   
   return contents
 
@@ -984,7 +1030,7 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/EnumToResource.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToUrl.cs")
 #translateCS ("presentation/Stride.Core.Translation.Presentation.Wpf/ValueConverters/LocalizableConverter.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToAsset.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToAsset.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -997,7 +1043,7 @@ translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentR
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding
