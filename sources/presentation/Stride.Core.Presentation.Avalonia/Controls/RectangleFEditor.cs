@@ -1,0 +1,96 @@
+// Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
+// Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
+using System;
+using Avalonia;
+using Avalonia.Controls;
+
+
+using Stride.Core.Mathematics;
+using Avalonia.Data;
+
+namespace Stride.Core.Presentation.Controls
+{
+    public class RectangleFEditor : VectorEditorBase<RectangleF?>
+    {
+		static RectangleFEditor()
+		{
+			RectXProperty.Changed.AddClassHandler<RectangleFEditor>(OnComponentPropertyChanged);
+			RectYProperty.Changed.AddClassHandler<RectangleFEditor>(OnComponentPropertyChanged);
+			RectWidthProperty.Changed.AddClassHandler<RectangleFEditor>(OnComponentPropertyChanged);
+			RectHeightProperty.Changed.AddClassHandler<RectangleFEditor>(OnComponentPropertyChanged);
+		}
+
+        /// <summary>
+        /// Identifies the <see cref="RectX"/> dependency property.
+        /// </summary>
+        public static readonly StyledProperty<float> RectXProperty = StyledProperty<float>.Register<RectangleFEditor, float>("RectX", 0.0f, defaultBindingMode : BindingMode.TwoWay, coerce: CoerceComponentValue); // T9C
+
+        /// <summary>
+        /// Identifies the <see cref="RectY"/> dependency property.
+        /// </summary>
+        public static readonly StyledProperty<float> RectYProperty = StyledProperty<float>.Register<RectangleFEditor, float>("RectY", 0.0f, defaultBindingMode : BindingMode.TwoWay, coerce: CoerceComponentValue); // T9C
+
+        /// <summary>
+        /// Identifies the <see cref="RectWidth"/> dependency property.
+        /// </summary>
+        public static readonly StyledProperty<float> RectWidthProperty = StyledProperty<float>.Register<RectangleFEditor, float>("RectWidth", 0.0f, defaultBindingMode : BindingMode.TwoWay, coerce: CoerceComponentValue); // T9C
+
+        /// <summary>
+        /// Identifies the <see cref="RectHeight"/> dependency property.
+        /// </summary>
+        public static readonly StyledProperty<float> RectHeightProperty = StyledProperty<float>.Register<RectangleFEditor, float>("RectHeight", 0.0f, defaultBindingMode : BindingMode.TwoWay, coerce: CoerceComponentValue); // T9C
+
+        /// <summary>
+        /// Gets or sets the X component of the <see cref="RectangleF"/> associated to this control.
+        /// </summary>
+        public float? RectX { get { return (float?)GetValue(RectXProperty); } set { SetValue(RectXProperty, value); } }
+
+        /// <summary>
+        /// Gets or sets the Y component of the <see cref="RectangleF"/> associated to this control.
+        /// </summary>
+        public float? RectY { get { return (float?)GetValue(RectYProperty); } set { SetValue(RectYProperty, value); } }
+
+        /// <summary>
+        /// Gets or sets the width of the <see cref="RectangleF"/> associated to this control.
+        /// </summary>
+        public float? RectWidth { get { return (float?)GetValue(RectWidthProperty); } set { SetValue(RectWidthProperty, value); } }
+
+        /// <summary>
+        /// Gets or sets the height of the <see cref="RectangleF"/> associated to this control.
+        /// </summary>
+        public float? RectHeight { get { return (float?)GetValue(RectHeightProperty); } set { SetValue(RectHeightProperty, value); } }
+
+        /// <inheritdoc/>
+        protected override void UpdateComponentsFromValue(RectangleF? value)
+        {
+            if (value != null)
+            {
+                SetCurrentValue(RectXProperty, value.Value.X);
+                SetCurrentValue(RectYProperty, value.Value.Y);
+                SetCurrentValue(RectWidthProperty, value.Value.Width);
+                SetCurrentValue(RectHeightProperty, value.Value.Height);
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override RectangleF? UpdateValueFromComponent(AvaloniaProperty property)
+        {
+            if (property == RectXProperty)
+                return RectX.HasValue && Value.HasValue ? (RectangleF?)new RectangleF(RectX.Value, Value.Value.Y, Value.Value.Width, Value.Value.Height) : null;
+            if (property == RectYProperty)
+                return RectY.HasValue && Value.HasValue ? (RectangleF?)new RectangleF(Value.Value.X, RectY.Value, Value.Value.Width, Value.Value.Height) : null;
+            if (property == RectWidthProperty)
+                return RectWidth.HasValue && Value.HasValue ? (RectangleF?)new RectangleF(Value.Value.X, Value.Value.Y, RectWidth.Value, Value.Value.Height) : null;
+            if (property == RectHeightProperty)
+                return RectHeight.HasValue && Value.HasValue ? (RectangleF?)new RectangleF(Value.Value.X, Value.Value.Y, Value.Value.Width, RectHeight.Value) : null;
+
+            throw new ArgumentException("Property unsupported by method UpdateValueFromComponent.");
+        }
+
+        /// <inheritdoc/>
+        protected override RectangleF? UpateValueFromFloat(float value)
+        {
+            return new RectangleF(0.0f, 0.0f, value, value);
+        }
+    }
+}

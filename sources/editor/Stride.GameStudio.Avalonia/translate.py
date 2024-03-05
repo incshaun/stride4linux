@@ -163,6 +163,7 @@ def translateNames (contents):
   contents = re.sub ("static DependencyProperty", "static AvaloniaProperty", contents) # provisional.
   contents = re.sub ("DependencyProperty property", "AvaloniaProperty property", contents) # provisional.
   contents = re.sub ("\(DependencyProperty\)", "(AvaloniaProperty)", contents)
+  contents = re.sub ("<DependencyProperty>", "<AvaloniaProperty>", contents)
   contents = re.sub (" DependencyProperty ", " AvaloniaProperty ", contents)
   contents = re.sub ("\(DependencyProperty dependencyProperty\)", "(AvaloniaProperty dependencyProperty)", contents)
   
@@ -956,6 +957,16 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/NodeViewModelTemplateProvider.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/TypeMatchTemplateProvider.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValueToParam.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/TextBoxVectorPropertyValueValidationBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Vector3Editor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Vector4Editor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Int2Editor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Int3Editor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Int4Editor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/RectangleEditor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/RectangleFEditor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/RotationEditor.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/MatrixEditor.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -968,7 +979,7 @@ def translateXAML (sourceFile):
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding

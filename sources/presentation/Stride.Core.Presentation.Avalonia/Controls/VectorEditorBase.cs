@@ -219,6 +219,16 @@ namespace Stride.Core.Presentation.Controls
             return decimalPlaces < 0 ? basevalue : MathF.Round((float)basevalue, decimalPlaces);
         }
 
+        protected static int CoerceComponentValueInt(AvaloniaObject sender, int basevalue)
+        {
+//             if (basevalue == null)
+//                 return null;
+
+            var editor = (VectorEditorBase<T>)sender;
+            var decimalPlaces = editor.DecimalPlaces;
+            return decimalPlaces < 0 ? basevalue : (int) MathF.Round((float)basevalue, decimalPlaces);
+        }
+
         /// <summary>
         /// Raised by <see cref="ValueProperty"/> when the <see cref="Value"/> dependency property is modified.
         /// </summary>
