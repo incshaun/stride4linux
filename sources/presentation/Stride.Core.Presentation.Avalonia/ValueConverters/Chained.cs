@@ -34,7 +34,7 @@ namespace Stride.Core.Presentation.ValueConverters
         /// Initializes a new instance of the <see cref="Chained"/> class with the given instances of <see cref="IValueConverter"/>.
         /// </summary>
         /// <param name="converter">The first value converter.</param>
-        public Chained(IValueConverter converter)
+        public Chained(object converter)
             : this(converter, null, null, null, null, null, null, null)
         {
         }
@@ -44,7 +44,7 @@ namespace Stride.Core.Presentation.ValueConverters
         /// </summary>
         /// <param name="converter1">The first value converter.</param>
         /// <param name="converter2">The second value converter.</param>
-        public Chained(IValueConverter converter1, IValueConverter converter2)
+        public Chained(object converter1, object converter2)
             : this(converter1, converter2, null, null, null, null, null, null)
         {
         }
@@ -55,7 +55,7 @@ namespace Stride.Core.Presentation.ValueConverters
         /// <param name="converter1">The first value converter.</param>
         /// <param name="converter2">The second value converter.</param>
         /// <param name="converter3">The third value converter.</param>
-        public Chained(IValueConverter converter1, IValueConverter converter2, IValueConverter converter3)
+        public Chained(object converter1, object converter2, object converter3)
             : this(converter1, converter2, converter3, null, null, null, null, null)
         {
         }
@@ -67,7 +67,7 @@ namespace Stride.Core.Presentation.ValueConverters
         /// <param name="converter2">The second value converter.</param>
         /// <param name="converter3">The third value converter.</param>
         /// <param name="converter4">The fourth value converter.</param>
-        public Chained(IValueConverter converter1, IValueConverter converter2, IValueConverter converter3, IValueConverter converter4)
+        public Chained(object converter1, object converter2, object converter3, object converter4)
             : this(converter1, converter2, converter3, converter4, null, null, null, null)
         {
         }
@@ -80,7 +80,7 @@ namespace Stride.Core.Presentation.ValueConverters
         /// <param name="converter3">The third value converter.</param>
         /// <param name="converter4">The fourth value converter.</param>
         /// <param name="converter5">The fifth value converter.</param>
-        public Chained(IValueConverter converter1, IValueConverter converter2, IValueConverter converter3, IValueConverter converter4, IValueConverter converter5)
+        public Chained(object converter1, object converter2, object converter3, object converter4, object converter5)
             : this(converter1, converter2, converter3, converter4, converter5, null, null, null)
         {
         }
@@ -94,7 +94,7 @@ namespace Stride.Core.Presentation.ValueConverters
         /// <param name="converter4">The fourth value converter.</param>
         /// <param name="converter5">The fifth value converter.</param>
         /// <param name="converter6">The sixth value converter.</param>
-        public Chained(IValueConverter converter1, IValueConverter converter2, IValueConverter converter3, IValueConverter converter4, IValueConverter converter5, IValueConverter converter6)
+        public Chained(object converter1, object converter2, object converter3, object converter4, object converter5, object converter6)
             : this(converter1, converter2, converter3, converter4, converter5, converter6, null, null)
         {
         }
@@ -109,7 +109,7 @@ namespace Stride.Core.Presentation.ValueConverters
         /// <param name="converter5">The fifth value converter.</param>
         /// <param name="converter6">The sixth value converter.</param>
         /// <param name="converter7">The seventh value converter.</param>
-        public Chained(IValueConverter converter1, IValueConverter converter2, IValueConverter converter3, IValueConverter converter4, IValueConverter converter5, IValueConverter converter6, IValueConverter converter7)
+        public Chained(object converter1, object converter2, object converter3, object converter4, object converter5, object converter6, object converter7)
             : this(converter1, converter2, converter3, converter4, converter5, converter6, converter7, null)
         {
         }
@@ -125,16 +125,16 @@ namespace Stride.Core.Presentation.ValueConverters
         /// <param name="converter6">The sixth value converter.</param>
         /// <param name="converter7">The seventh value converter.</param>
         /// <param name="converter8">The eighth value converter.</param>
-        public Chained(IValueConverter converter1, IValueConverter converter2, IValueConverter converter3, IValueConverter converter4, IValueConverter converter5, IValueConverter converter6, IValueConverter converter7, IValueConverter converter8)
+        public Chained(object converter1, object converter2, object converter3, object converter4, object converter5, object converter6, object converter7, object converter8)
         {
-            Converter1 = converter1;
-            Converter2 = converter2;
-            Converter3 = converter3;
-            Converter4 = converter4;
-            Converter5 = converter5;
-            Converter6 = converter6;
-            Converter7 = converter7;
-            Converter8 = converter8;
+            Converter1 = (IValueConverter)converter1;
+            Converter2 = (IValueConverter)converter2;
+            Converter3 = (IValueConverter)converter3;
+            Converter4 = (IValueConverter)converter4;
+            Converter5 = (IValueConverter)converter5;
+            Converter6 = (IValueConverter)converter6;
+            Converter7 = (IValueConverter)converter7;
+            Converter8 = (IValueConverter)converter8;
         }
 
         /// <summary>

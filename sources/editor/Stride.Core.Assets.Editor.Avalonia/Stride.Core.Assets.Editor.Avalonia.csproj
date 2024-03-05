@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
-<!--       <Link>Properties\SharedAssemblyInfo.cs</Link> -->
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
   </ItemGroup>
 
@@ -23,6 +23,10 @@
     <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="../../assets/Stride.Core.Assets/Stride.Core.Assets.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Presentation/Stride.Core.Presentation.csproj" />

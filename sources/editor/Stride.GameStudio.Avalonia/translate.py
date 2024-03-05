@@ -776,6 +776,10 @@ def translateTags (contents):
   # Grid
   contents = re.sub ("MinWidth=\"{TemplateBinding ActualWidth}\"", "", contents)
   
+  # Control
+  contents = re.sub ("Control.HorizontalContentAlignment}", "ContentControl.HorizontalContentAlignment}", contents)
+  contents = re.sub ("Control.VerticalContentAlignment}", "ContentControl.VerticalContentAlignment}", contents)
+  
   # Combobox
   contents = re.sub ("<ComboBox Theme=\"(.*?)\" Text=\"(.*?)\"", r'<ComboBox Theme="\1" PlaceholderText="\2"', contents)
   

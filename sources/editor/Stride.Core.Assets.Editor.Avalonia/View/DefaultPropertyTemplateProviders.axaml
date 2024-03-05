@@ -378,9 +378,9 @@
         <TextBlock Margin="2,0" VerticalAlignment="Center" Text="{sd:Localize (Different values)}"
                   />
         <!-- Fallback when the value does not have an inline property -->
-        <ContentControl x:Name="ContentControl" Content="{Binding {Binding InlinedProperty}, {Binding}}"
+<!--        <ContentControl x:Name="ContentControl" Content="{Binding {Binding InlinedProperty}, {Binding}}"
                         ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"
-                       />
+                       />-->
       </Grid>
     </DataTemplate>
 </pvdr:InlinedPropertyTemplateProvider.Template>
@@ -1414,8 +1414,8 @@
                             <ContentPresenter Content="{TemplateBinding ContentControl.Content}"
                                               ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
                                               
-                                              HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
-                                              VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
+                                              HorizontalAlignment="{TemplateBinding ContentControl.HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding ContentControl.VerticalContentAlignment}"
                                                />
                           </CheckBox>
                         </ControlTemplate>
@@ -1680,8 +1680,10 @@
 	<sd:DefaultTemplateProvider.Template>
 		<DataTemplate DataType="qvm:NodeViewModel">
 	
+<!--      <TextBlock Margin="2,0" VerticalAlignment="Center" x:Name="DefaultTextBlock"
+                 Text="{Binding {Binding AttributeDisplayName, Mode=OneWay}, {Binding Type, Mode=OneWay, StringFormat={sd:Localize {}{0} (Not supported)}, Converter={sd:NotSupportedTypeToTypeName}}, {Binding NodeValue, Mode=OneWay, Converter={sd:ObjectToTypeName}}}"/>-->
       <TextBlock Margin="2,0" VerticalAlignment="Center" x:Name="DefaultTextBlock"
-                 Text="{Binding {Binding AttributeDisplayName, Mode=OneWay}, {Binding Type, Mode=OneWay, StringFormat={sd:Localize {}{0} (Not supported)}, Converter={sd:NotSupportedTypeToTypeName}}, {Binding NodeValue, Mode=OneWay, Converter={sd:ObjectToTypeName}}}"/>
+                 Text="{Binding AttributeDisplayName, Mode=OneWay}"/>
       <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="DefaultTextBlock" Property="Text" Value="{sd:Localize (Different values)}"/>
