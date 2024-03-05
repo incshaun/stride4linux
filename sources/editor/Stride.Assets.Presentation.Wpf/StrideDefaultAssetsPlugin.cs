@@ -27,17 +27,19 @@ using Stride.Editor;
 using Stride.Engine;
 using Stride.Core.Assets.Templates;
 using Stride.Core.Packages;
+using Stride.Editor.Annotations;
+using Stride.Editor.Preview.View;
 
 namespace Stride.Assets.Presentation
 {
-    public sealed class StrideDefaultAssetsPlugin : StrideAssetsPlugin
+    public sealed partial class StrideDefaultAssetsPlugin
     {
         /// <summary>
         /// Comparer for component types.
         /// </summary>
         private class ComponentTypeComparer : EqualityComparer<Type>
         {
-            public new static readonly ComponentTypeComparer Default = new ComponentTypeComparer();
+            public static new readonly ComponentTypeComparer Default = new ComponentTypeComparer();
 
             /// <summary>
             /// Compares two component types and returns <c>true</c> if the types match, i.e.:
@@ -180,36 +182,36 @@ namespace Stride.Assets.Presentation
             session.ServiceProvider.RegisterService(new StrideDialogService());
             var assetsViewModel = new StrideAssetsViewModel(session);
 
-//             session.AssetViewProperties.RegisterNodePresenterCommand(new FetchEntityCommand());
-//             session.AssetViewProperties.RegisterNodePresenterCommand(new SetEntityReferenceCommand());
-//             session.AssetViewProperties.RegisterNodePresenterCommand(new SetComponentReferenceCommand());
-//             session.AssetViewProperties.RegisterNodePresenterCommand(new SetSymbolReferenceCommand());
-//             session.AssetViewProperties.RegisterNodePresenterCommand(new PickupEntityCommand(session));
-//             session.AssetViewProperties.RegisterNodePresenterCommand(new PickupEntityComponentCommand(session));
-//             session.AssetViewProperties.RegisterNodePresenterCommand(new EditCurveCommand(session));
-//             session.AssetViewProperties.RegisterNodePresenterCommand(new SkeletonNodePreserveAllCommand());
-//             //TODO: Add back once properly implemented.
-//             //session.AssetViewProperties.RegisterNodePresenterCommand(new AddNewScriptComponentCommand());
-// 
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new AnimationAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new CameraSlotNodeUpdater(session));
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new EntityHierarchyAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new EntityHierarchyEditorNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new GameSettingsAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new GraphicsCompositorAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new FXAAEffectNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new MaterialAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new ModelAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new ModelNodeLinkNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new SkeletonAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new SpriteFontAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new SpriteSheetAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new UIAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new TextureAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new VideoAssetNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new UnloadableObjectPropertyNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new VisualScriptNodeUpdater());
-//             session.AssetViewProperties.RegisterNodePresenterUpdater(new NavigationNodeUpdater(session));
+            session.AssetViewProperties.RegisterNodePresenterCommand(new FetchEntityCommand());
+            session.AssetViewProperties.RegisterNodePresenterCommand(new SetEntityReferenceCommand());
+            session.AssetViewProperties.RegisterNodePresenterCommand(new SetComponentReferenceCommand());
+            session.AssetViewProperties.RegisterNodePresenterCommand(new SetSymbolReferenceCommand());
+            session.AssetViewProperties.RegisterNodePresenterCommand(new PickupEntityCommand());
+            session.AssetViewProperties.RegisterNodePresenterCommand(new PickupEntityComponentCommand());
+            session.AssetViewProperties.RegisterNodePresenterCommand(new EditCurveCommand(session));
+            session.AssetViewProperties.RegisterNodePresenterCommand(new SkeletonNodePreserveAllCommand());
+            //TODO: Add back once properly implemented.
+            //session.AssetViewProperties.RegisterNodePresenterCommand(new AddNewScriptComponentCommand());
+
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new AnimationAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new CameraSlotNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new EntityHierarchyAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new EntityHierarchyEditorNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new GameSettingsAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new GraphicsCompositorAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new FXAAEffectNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new MaterialAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new ModelAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new ModelNodeLinkNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new SkeletonAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new SpriteFontAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new SpriteSheetAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new UIAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new TextureAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new VideoAssetNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new UnloadableObjectPropertyNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new VisualScriptNodeUpdater());
+            session.AssetViewProperties.RegisterNodePresenterUpdater(new NavigationNodeUpdater(session));
 
             // Connects to effect compiler (to import new effect permutations discovered by running the game)
             if (Stride.Core.Assets.Editor.Settings.EditorSettings.UseEffectCompilerServer.GetValue())
@@ -232,6 +234,24 @@ namespace Stride.Assets.Presentation
         public override void RegisterPrimitiveTypes(ICollection<Type> primitiveTypes)
         {
             primitiveTypes.Add(typeof(AssetReference));
+        }
+
+        /// <inheritdoc />
+        public override void RegisterAssetPreviewViewTypes(IDictionary<Type, Type> assetPreviewViewTypes)
+        {
+            var pluginAssembly = GetType().Assembly;
+            foreach (var type in pluginAssembly.GetTypes())
+            {
+                if (!typeof(IPreviewView).IsAssignableFrom(type))
+                {
+                    continue;
+                }
+
+                foreach (var attribute in type.GetCustomAttributes<AssetPreviewViewAttribute>())
+                {
+                    assetPreviewViewTypes.Add(attribute.AssetPreviewType, type);
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -266,19 +286,19 @@ namespace Stride.Assets.Presentation
         }
 
         /// <inheritdoc />
-//         protected override void RegisterResourceDictionary(ResourceDictionary dictionary)
-//         {
-//             base.RegisterResourceDictionary(dictionary);
-// 
-//             foreach (object entry in dictionary.Keys)
-//             {
-//                 var type = entry as Type;
-//                 if (type != null)
-//                 {
-//                     TypeImages[type] = dictionary[entry];
-//                 }
-//             }
-//         }
+        protected override void RegisterResourceDictionary(ResourceDictionary dictionary)
+        {
+            base.RegisterResourceDictionary(dictionary);
+
+            foreach (object entry in dictionary.Keys)
+            {
+                var type = entry as Type;
+                if (type != null)
+                {
+                    TypeImages[type] = dictionary[entry];
+                }
+            }
+        }
 
         /// <summary>
         /// Get the component type which has the highest order (according to <see cref="ComponentOrderAttribute"/>)

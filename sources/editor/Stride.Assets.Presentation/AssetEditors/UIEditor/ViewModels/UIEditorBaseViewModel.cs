@@ -712,7 +712,7 @@ return null;
             var libraries = new HashSet<UILibraryViewModel>(SelectedItems.Select(x => x.SourceLibrary).NotNull());
             foreach (var library in libraries)
             {
-                ServiceProvider.Get<IEditorDialogService>().AssetEditorsManager.OpenAssetEditorWindow(library);
+                ServiceProvider.Get<IAssetEditorsManager>().OpenAssetEditorWindow(library);
             }
         }
 

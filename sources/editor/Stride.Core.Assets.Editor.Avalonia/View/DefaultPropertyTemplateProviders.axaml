@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
-                    xmlns:view="clr-namespace:Stride.Core.Presentation.Quantum.View;assembly=Stride.Core.Presentation.Quantum.Avalonia"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:s="clr-namespace:System;assembly=mscorlib"
                     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
@@ -140,12 +139,11 @@
   <DataTemplate x:Key="DefaultPropertyHeaderTemplate" DataType="qvm:NodeViewModel">
     <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsVisible="{Binding IsVisible}">
       <Grid.ColumnDefinitions>
-        <!-- Parameters of the SumNum converters used here must be the total width of fixed columns + MinWidths of sizable columns: 8+5+64=77 -->
         <ColumnDefinition Width="8"/>
         <ColumnDefinition Width="{Binding NameColumnSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sd:PropertyView}}, Mode=TwoWay}"
-                          MaxWidth="{Binding ActualWidth, ElementName=Grid, Converter={sd:SumNum}, ConverterParameter={sd:Double -77}}" MinWidth="64"/>
+                          MinWidth="64"/>
         <ColumnDefinition Width="5"/>
-        <ColumnDefinition Width="*" MaxWidth="{Binding ActualWidth, ElementName=Grid, Converter={sd:SumNum}, ConverterParameter={sd:Double -77}}" MinWidth="64"/>
+        <ColumnDefinition Width="*" MinWidth="64"/>
       </Grid.ColumnDefinitions>
       <Border Width="8" Margin="4,4,0,4" Background="Transparent">
         <Rectangle Focusable="False" Cursor="SizeAll">
@@ -212,7 +210,7 @@
           </sd:TextBox>
           <CheckBox Grid.Column="3" Margin="2,0" VerticalAlignment="Center" HorizontalAlignment="Left"
                     IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
-                    IsChecked="{Binding Enabled.NodeValue, Converter={view:DifferentValueToParam}, ConverterParameter={x:Null}}"
+                    IsChecked="{Binding Enabled.NodeValue, Converter={cvt:DifferentValueToParam}, ConverterParameter={x:Null}}"
                     IsVisible="{Binding HasChild_Enabled}"/>
         </Grid>
       </Border>
@@ -263,7 +261,7 @@
         <StackPanel Orientation="Horizontal" Margin="8,0,0,0">
           <CheckBox Margin="4,0" VerticalAlignment="Center"
                     IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
-                    IsChecked="{Binding Enabled.NodeValue, Converter={view:DifferentValueToParam}, ConverterParameter={x:Null}}"
+                    IsChecked="{Binding Enabled.NodeValue, Converter={cvt:DifferentValueToParam}, ConverterParameter={x:Null}}"
                     IsVisible="{Binding HasChild_Enabled}"/>
           <Image Source="{Binding NodeValue, Converter={sd:Chained {sd:ObjectToType}, {cvt:TypeToResource}}}" MaxWidth="16" MaxHeight="16"
                             RenderOptions.BitmapInterpolationMode="LowQuality" Margin="0,0,4,0"/>
@@ -409,12 +407,11 @@
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
         <Grid.ColumnDefinitions>
-          <!-- Parameters of the SumNum converters used here must be the total width of fixed columns + MinWidths of sizable columns: 8+5+64=77 -->
           <ColumnDefinition Width="8"/>
           <ColumnDefinition Width="{Binding NameColumnSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sd:PropertyView}}, Mode=TwoWay}"
-                            MaxWidth="{Binding ActualWidth, ElementName=Grid, Converter={sd:SumNum}, ConverterParameter={sd:Double -77}}" MinWidth="64"/>
+                            MinWidth="64"/>
           <ColumnDefinition Width="5"/>
-          <ColumnDefinition Width="*" MaxWidth="{Binding ActualWidth, ElementName=Grid, Converter={sd:SumNum}, ConverterParameter={sd:Double -77}}" MinWidth="64"/>
+          <ColumnDefinition Width="*" MinWidth="64"/>
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="1" MinHeight="23" Margin="2">
@@ -474,12 +471,11 @@
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
         <Grid.ColumnDefinitions>
-          <!-- Parameters of the SumNum converters used here must be the total width of fixed columns + MinWidths of sizable columns: 8+5+64=77 -->
           <ColumnDefinition Width="8"/>
           <ColumnDefinition Width="{Binding NameColumnSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sd:PropertyView}}, Mode=TwoWay}"
-                            MaxWidth="{Binding ActualWidth, ElementName=Grid, Converter={sd:SumNum}, ConverterParameter={sd:Double -77}}" MinWidth="64"/>
+                            MinWidth="64"/>
           <ColumnDefinition Width="5"/>
-          <ColumnDefinition Width="*" MaxWidth="{Binding ActualWidth, ElementName=Grid, Converter={sd:SumNum}, ConverterParameter={sd:Double -77}}" MinWidth="64"/>
+          <ColumnDefinition Width="*" MinWidth="64"/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="2" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
       </Grid>
@@ -512,12 +508,11 @@
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
         <Grid.ColumnDefinitions>
-          <!-- Parameters of the SumNum converters used here must be the total width of fixed columns + MinWidths of sizable columns: 8+5+64=77 -->
           <ColumnDefinition Width="8"/>
           <ColumnDefinition Width="{Binding NameColumnSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sd:PropertyView}}, Mode=TwoWay}"
-                            MaxWidth="{Binding ActualWidth, ElementName=Grid, Converter={sd:SumNum}, ConverterParameter={sd:Double -77}}" MinWidth="64"/>
+                            MinWidth="64"/>
           <ColumnDefinition Width="5"/>
-          <ColumnDefinition Width="*" MaxWidth="{Binding ActualWidth, ElementName=Grid, Converter={sd:SumNum}, ConverterParameter={sd:Double -77}}" MinWidth="64"/>
+          <ColumnDefinition Width="*" MinWidth="64"/>
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="1" MinHeight="23" Margin="2">
@@ -740,16 +735,16 @@
   </pvdr:DictionaryEnumKeyTemplateProvider>
 
   <!-- Provider for boolean editor -->
-  <view:TypeMatchTemplateProvider x:Key="BoolPropertyTemplateProvider" Type="{x:Type s:Boolean}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="BoolPropertyTemplateProvider" Type="{x:Type s:Boolean}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <CheckBox x:Name="CheckBox" Margin="2" HorizontalAlignment="Left"
                 IsThreeState="{Binding NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
-                IsChecked="{Binding NodeValue, Converter={view:DifferentValueToParam}, ConverterParameter={x:Null}}"/>
+                IsChecked="{Binding NodeValue, Converter={cvt:DifferentValueToParam}, ConverterParameter={x:Null}}"/>
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for char editor -->
-  <view:TypeMatchTemplateProvider x:Key="CharPropertyTemplateProvider" Type="{x:Type s:Char}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="CharPropertyTemplateProvider" Type="{x:Type s:Char}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <Grid>
         <Grid.ColumnDefinitions>
@@ -780,7 +775,7 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Providers for color editors -->
   <DataTemplate x:Key="ColorEditorTemplate" DataType="qvm:NodeViewModel">
@@ -838,9 +833,9 @@
       </DataTrigger>
     </DataTemplate.Triggers> -->
   </DataTemplate>
-  <view:TypeMatchTemplateProvider x:Key="ColorPropertyTemplateProvider" Type="{x:Type math:Color}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource ColorEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="Color3PropertyTemplateProvider" Type="{x:Type math:Color3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource ColorEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="Color4PropertyTemplateProvider" Type="{x:Type math:Color4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource ColorEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="ColorPropertyTemplateProvider" Type="{x:Type math:Color}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource ColorEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="Color3PropertyTemplateProvider" Type="{x:Type math:Color3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource ColorEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="Color4PropertyTemplateProvider" Type="{x:Type math:Color4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource ColorEditorTemplate}"/>
 
   <!-- Providers for number with a range editors -->
   <pvdr:RangedValueTemplateProvider x:Key="RangedValueTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="Most">
@@ -907,8 +902,8 @@
       </DataTrigger>
     </DataTemplate.Triggers> -->
   </DataTemplate>
-  <view:TypeMatchTemplateProvider x:Key="FloatPropertyTemplateProvider" Type="{x:Type s:Single}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource FloatEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="DoublePropertyTemplateProvider" Type="{x:Type s:Double}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource FloatEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="FloatPropertyTemplateProvider" Type="{x:Type s:Single}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource FloatEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="DoublePropertyTemplateProvider" Type="{x:Type s:Double}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource FloatEditorTemplate}"/>
 
   <!-- Providers for fixed-point number editors -->
   <DataTemplate x:Key="IntEditorTemplate" DataType="qvm:NodeViewModel">
@@ -933,17 +928,17 @@
     </DataTemplate.Triggers> -->
   </DataTemplate>
 
-  <view:TypeMatchTemplateProvider x:Key="Int8PropertyTemplateProvider" Type="{x:Type s:SByte}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="UInt8PropertyTemplateProvider" Type="{x:Type s:Byte}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="Int16PropertyTemplateProvider" Type="{x:Type s:Int16}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="UInt16PropertyTemplateProvider" Type="{x:Type s:UInt16}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="Int32PropertyTemplateProvider" Type="{x:Type s:Int32}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="UInt32PropertyTemplateProvider" Type="{x:Type s:UInt32}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="Int64PropertyTemplateProvider" Type="{x:Type s:Int64}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
-  <view:TypeMatchTemplateProvider x:Key="UInt64PropertyTemplateProvider" Type="{x:Type s:UInt64}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="Int8PropertyTemplateProvider" Type="{x:Type s:SByte}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="UInt8PropertyTemplateProvider" Type="{x:Type s:Byte}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="Int16PropertyTemplateProvider" Type="{x:Type s:Int16}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="UInt16PropertyTemplateProvider" Type="{x:Type s:UInt16}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="Int32PropertyTemplateProvider" Type="{x:Type s:Int32}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="UInt32PropertyTemplateProvider" Type="{x:Type s:UInt32}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="Int64PropertyTemplateProvider" Type="{x:Type s:Int64}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
+  <edvw:TypeMatchTemplateProvider x:Key="UInt64PropertyTemplateProvider" Type="{x:Type s:UInt64}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource IntEditorTemplate}"/>
 
   <!-- Provider for time span editor -->
-  <view:TypeMatchTemplateProvider x:Key="TimeSpanPropertyTemplateProvider" Type="{x:Type s:TimeSpan}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="TimeSpanPropertyTemplateProvider" Type="{x:Type s:TimeSpan}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:TimeSpanEditor x:Name="TimeSpanEditor" Margin="2"
                          Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -956,10 +951,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for date time editor -->
-  <view:TypeMatchTemplateProvider x:Key="DateTimePropertyTemplateProvider" Type="{x:Type s:DateTime}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="DateTimePropertyTemplateProvider" Type="{x:Type s:DateTime}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:DateTimeEditor x:Name="DateTimeEditor" Margin="2"
                          Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -972,10 +967,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
   
   <!-- Provider for string editor -->
-  <view:TypeMatchTemplateProvider x:Key="StringPropertyTemplateProvider" Type="{x:Type s:String}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="StringPropertyTemplateProvider" Type="{x:Type s:String}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:TextBox x:Name="TextBox" Margin="2" SelectAllOnFocus="True"
                     Text="{Binding NodeValue, Converter={cvt:DifferentValuesToString}}"
@@ -986,10 +981,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for vector2 editor -->
-  <view:TypeMatchTemplateProvider x:Key="Vector2PropertyTemplateProvider" Type="{x:Type math:Vector2}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="Vector2PropertyTemplateProvider" Type="{x:Type math:Vector2}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:Vector2Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1004,10 +999,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for vector3 editor -->
-  <view:TypeMatchTemplateProvider x:Key="Vector3PropertyTemplateProvider" Type="{x:Type math:Vector3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="Vector3PropertyTemplateProvider" Type="{x:Type math:Vector3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:Vector3Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1023,10 +1018,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for vector4 editor -->
-  <view:TypeMatchTemplateProvider x:Key="Vector4PropertyTemplateProvider" Type="{x:Type math:Vector4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="Vector4PropertyTemplateProvider" Type="{x:Type math:Vector4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:Vector4Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1043,10 +1038,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for int2 editor -->
-  <view:TypeMatchTemplateProvider x:Key="Int2PropertyTemplateProvider" Type="{x:Type math:Int2}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="Int2PropertyTemplateProvider" Type="{x:Type math:Int2}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:Int2Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1061,10 +1056,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for int3 editor -->
-  <view:TypeMatchTemplateProvider x:Key="Int3PropertyTemplateProvider" Type="{x:Type math:Int3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="Int3PropertyTemplateProvider" Type="{x:Type math:Int3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:Int3Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1080,10 +1075,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for int4 editor -->
-  <view:TypeMatchTemplateProvider x:Key="Int4PropertyTemplateProvider" Type="{x:Type math:Int4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="Int4PropertyTemplateProvider" Type="{x:Type math:Int4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:Int4Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1100,10 +1095,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for rectangleF editor -->
-  <view:TypeMatchTemplateProvider x:Key="RectangleFPropertyTemplateProvider" Type="{x:Type math:RectangleF}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="RectangleFPropertyTemplateProvider" Type="{x:Type math:RectangleF}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:RectangleFEditor RectX="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                              RectY="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1116,10 +1111,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for rectangle editor -->
-  <view:TypeMatchTemplateProvider x:Key="RectanglePropertyTemplateProvider" Type="{x:Type math:Rectangle}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="RectanglePropertyTemplateProvider" Type="{x:Type math:Rectangle}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:RectangleEditor RectX="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                             RectY="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1132,10 +1127,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for rotation editor -->
-  <view:TypeMatchTemplateProvider x:Key="RotationPropertyTemplateProvider" Type="{x:Type math:Quaternion}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="RotationPropertyTemplateProvider" Type="{x:Type math:Quaternion}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:RotationEditor Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                            WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor"/>
@@ -1145,10 +1140,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for matrix editor -->
-  <view:TypeMatchTemplateProvider x:Key="MatrixPropertyTemplateProvider" Type="{x:Type math:Matrix}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="MatrixPropertyTemplateProvider" Type="{x:Type math:Matrix}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:MatrixEditor M11="{Binding M11.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          M12="{Binding M12.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1173,10 +1168,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for angleSingle editor -->
-  <view:TypeMatchTemplateProvider x:Key="AnglePropertyTemplateProvider" Type="{x:Type math:AngleSingle}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="AnglePropertyTemplateProvider" Type="{x:Type math:AngleSingle}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <sd:NumericTextBox x:Name="TextBox" DecimalPlaces="3"
                            Value="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:AngleSingleToDegrees}}}"
@@ -1194,10 +1189,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for UDirectory editor -->
-  <view:TypeMatchTemplateProvider x:Key="UDirectoryPropertyTemplateProvider" Type="{x:Type io:UDirectory}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="UDirectoryPropertyTemplateProvider" Type="{x:Type io:UDirectory}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding BrowseDirectory}"
@@ -1220,10 +1215,10 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for UFile editor -->
-  <view:TypeMatchTemplateProvider x:Key="UFilePropertyTemplateProvider" Type="{x:Type io:UFile}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
+  <edvw:TypeMatchTemplateProvider x:Key="UFilePropertyTemplateProvider" Type="{x:Type io:UFile}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
     <DataTemplate DataType="qvm:NodeViewModel">
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding BrowseFile}"
@@ -1247,7 +1242,7 @@
         </DataTrigger>
       </DataTemplate.Triggers> -->
     </DataTemplate>
-  </view:TypeMatchTemplateProvider>
+  </edvw:TypeMatchTemplateProvider>
 
   <!-- Provider for simple enum editor: A ComboBox to select a single value -->
   <pvdr:EnumTemplateProvider x:Key="EnumPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">

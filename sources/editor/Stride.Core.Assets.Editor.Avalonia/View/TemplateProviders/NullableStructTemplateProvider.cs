@@ -4,7 +4,6 @@ using System;
 
 using Stride.Core.Reflection;
 using Stride.Core.Presentation.Quantum;
-using Stride.Core.Presentation.Quantum.View;
 using Stride.Core.Presentation.Quantum.ViewModels;
 
 namespace Stride.Core.Assets.Editor.View.TemplateProviders

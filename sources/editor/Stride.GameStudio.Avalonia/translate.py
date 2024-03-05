@@ -950,9 +950,12 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ChangeCursorOnSliderThumbBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TimeSpanEditor.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/DateTimeEditor.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Vector2Editor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Vector2Editor.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VectorEditor.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VectorEditorBase.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VectorEditorBase.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/NodeViewModelTemplateProvider.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/TypeMatchTemplateProvider.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValueToParam.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -965,7 +968,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VectorEditorBas
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding

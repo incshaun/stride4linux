@@ -2,7 +2,6 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using Stride.Core.Reflection;
 using Stride.Core.Presentation.Quantum;
-using Stride.Core.Presentation.Quantum.View;
 using Stride.Core.Presentation.Quantum.ViewModels;
 
 namespace Stride.Core.Assets.Editor.View.TemplateProviders

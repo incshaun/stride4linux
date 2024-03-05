@@ -8,12 +8,8 @@ using Stride.Assets.Presentation.ViewModel;
 
 namespace Stride.Assets.Presentation.AssetEditors.SceneEditor.Views
 {
+    [AssetEditorView<SceneEditorViewModel>]
     public class SceneEditorView : EntityHierarchyEditorView
     {
-        /// <inheritdoc />
-        protected override EntityHierarchyEditorViewModel CreateEditorViewModel(AssetViewModel asset)
-        {
-            return SceneEditorViewModel.Create((SceneViewModel)asset);
-        }
     }
 }

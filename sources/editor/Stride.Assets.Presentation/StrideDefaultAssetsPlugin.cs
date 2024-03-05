@@ -27,6 +27,8 @@ using Stride.Editor;
 using Stride.Engine;
 using Stride.Core.Assets.Templates;
 using Stride.Core.Packages;
+using Stride.Editor.Annotations;
+using Stride.Editor.Preview.View;
 
 namespace Stride.Assets.Presentation
 {
@@ -38,6 +40,5 @@ public static IReadOnlyDictionary<Type, Type> AssetHighlighterTypesDictionary =>
 private static readonly Dictionary<Type, Type> AssetHighlighterTypes = new Dictionary<Type, Type>();   
 private static readonly Dictionary<Type, Type> GizmoTypes = new Dictionary<Type, Type>();
 public static IReadOnlyDictionary<Type, Type> GizmoTypeDictionary => GizmoTypes;
-
     }
 }
