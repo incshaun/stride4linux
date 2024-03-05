@@ -129,6 +129,7 @@ def translateHeaders (contents):
   contents = re.sub ("using System.Windows.Media.Imaging;", "using Avalonia.Media.Imaging;", contents)
   contents = re.sub ("using System.Windows.Media;", "using Avalonia.Media;", contents)
   contents = re.sub ("using Microsoft.Xaml.Behaviors;", "using Avalonia.Xaml.Interactivity;", contents)
+  contents = re.sub ("using System.Windows.Interop;", "", contents)
   contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;\n", contents)
   contents = re.sub ("using System.Xaml;", "", contents)
   if len (headers) > 0:
@@ -421,6 +422,14 @@ def translateProperties (contents):
       classname = match[5];
     contents = re.sub (pat, r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4, \7); // T12", contents)
 
+  pat = re.compile ("public static DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);")
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      #print (match)
+      commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
+      classname = match[5];
+    contents = re.sub (pat, r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4, \7); // T12A", contents)
+
   
   
   # handle keyboard focus handlers.
@@ -625,6 +634,7 @@ def translateConstants (contents):
   contents = re.sub ("/Stride.Core.Presentation.Wpf;component/Themes/ThemeSelector.axaml", "avares://Stride.Core.Presentation/Themes/AThemeSelector.axaml", contents)
   contents = re.sub ("xmlns:view=\"clr-namespace:Stride.Core.Presentation.Quantum.View;assembly=Stride.Core.Presentation.Quantum\"", "xmlns:view=\"clr-namespace:Stride.Core.Presentation.Quantum.View;assembly=Stride.Core.Presentation.Quantum.Avalonia\"", contents)
   contents = re.sub ("xmlns:viewModel=\"clr-namespace:Stride.Core.Assets.Editor.ViewModel\"", "xmlns:viewModel=\"clr-namespace:Stride.Core.Assets.Editor.ViewModel;assembly=Stride.Core.Assets.Editor\"", contents)
+  contents = re.sub ("xmlns:assetCommands=\"clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands\"", "xmlns:assetCommands=\"clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands;assembly=Stride.Core.Assets.Editor\"", contents)
   return contents
 
 # flag any nested comments, and break up the --, which causes compliance issues.
@@ -966,7 +976,15 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/RectangleEditor.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/RectangleFEditor.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/RotationEditor.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/MatrixEditor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/MatrixEditor.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/ReferenceHostDragDropBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ListBoxBindableSelectedItemsBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/FlagEnumToObservableList.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/BehaviorProperties.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/EnumToResource.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToUrl.cs")
+#translateCS ("presentation/Stride.Core.Translation.Presentation.Wpf/ValueConverters/LocalizableConverter.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToAsset.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
