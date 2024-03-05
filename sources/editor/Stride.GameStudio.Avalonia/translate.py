@@ -113,6 +113,10 @@ def translateHeaders (contents):
     headers += "using Avalonia.Animation;\n"
   if re.findall ("BitmapSource", contents):
     headers += "using System.Runtime.InteropServices;\nusing Avalonia.Platform;\n"
+  if re.findall ("OnIsKeyboardFocusWithinChanged", contents):
+    headers += "using Avalonia.Input;\n"
+  if re.findall ("TemplatePart", contents):
+    headers += "using Avalonia.Controls.Metadata;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -159,6 +163,7 @@ def translateNames (contents):
   contents = re.sub ("static DependencyProperty", "static AvaloniaProperty", contents) # provisional.
   contents = re.sub ("DependencyProperty property", "AvaloniaProperty property", contents) # provisional.
   contents = re.sub ("\(DependencyProperty\)", "(AvaloniaProperty)", contents)
+  contents = re.sub (" DependencyProperty ", " AvaloniaProperty ", contents)
   contents = re.sub ("\(DependencyProperty dependencyProperty\)", "(AvaloniaProperty dependencyProperty)", contents)
   
   contents = re.sub ("CancelRoutedEventHandler", "EventHandler<CancelRoutedEventArgs>", contents)
@@ -287,6 +292,10 @@ def translateProperties (contents):
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T1", contents)
   
+  # PropertyMetadata, one argument, function call.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\(([^,\)]*?)\)\)\);")
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7(\8)); // T2A", contents)
+
   # Without handler.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T2", contents)
@@ -415,6 +424,12 @@ def translateProperties (contents):
   
   # handle keyboard focus handlers.
   # GotFocusEvent.AddClassHandler<PropertyView>((x, e) => x.OnIsKeyboardFocusWithinChanged(e)); (add to static constructor)
+  pat = re.compile ("protected override void OnIsKeyboardFocusWithinChanged\(DependencyPropertyChangedEventArgs e\)(\s)*{(\s)*base.OnIsKeyboardFocusWithinChanged\(e\);", re.DOTALL)
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      #print (match)
+      commands += "\t\t\t" + "GotFocusEvent.AddClassHandler<" + classname + ">((x, e) => x.OnIsKeyboardFocusWithinChanged(e));\n"
+    contents = re.sub (pat, r"protected void OnIsKeyboardFocusWithinChanged(GotFocusEventArgs e)\n\t\t{", contents)    
   
   # patch in commands to an existing static constructor.
   if len (commands) > 0:
@@ -933,7 +948,11 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ColorPicker.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/ValidateTextBoxAfterSlidingBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ChangeCursorOnSliderThumbBehavior.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TimeSpanEditor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TimeSpanEditor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/DateTimeEditor.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Vector2Editor.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VectorEditor.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VectorEditorBase.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
