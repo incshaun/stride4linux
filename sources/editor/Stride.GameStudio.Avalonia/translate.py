@@ -117,6 +117,8 @@ def translateHeaders (contents):
     headers += "using Avalonia.Input;\n"
   if re.findall ("TemplatePart", contents):
     headers += "using Avalonia.Controls.Metadata;\n"
+  if re.findall ("DataTemplateSelector", contents):
+    headers += "using Avalonia.Controls.Templates;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -172,6 +174,7 @@ def translateNames (contents):
   contents = re.sub ("RoutedPropertyChangedEventHandler<double>", "EventHandler<RoutedEventArgs>", contents)
   contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional
   contents = re.sub ("ExecutedRoutedEventArgs", "RoutedEventArgs", contents)
+  contents = re.sub ("CanExecuteRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
   contents = re.sub ("DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
   contents = re.sub ("private void OnValueChanged\(object sender, RoutedPropertyChangedEventArgs<double> e\)", "private void OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)", contents)
@@ -281,6 +284,13 @@ def translateNames (contents):
 
   contents = re.sub ("var addChild = \(IAddChild\)this;", "", contents)
   contents = re.sub ("addChild\.AddChild", "Bindings.Add", contents)
+
+  contents = re.sub ("DataTemplateSelector", "IDataTemplate", contents)
+  contents = re.sub ("e\.VerticalChange", "e.ExtentDelta.Y", contents)
+  contents = re.sub ("e\.HorizontalChange", "e.ExtentDelta.X", contents)
+  
+  contents = re.sub ("DataGridEx", "DataGrid", contents)
+  
   return contents
 
 # Translate the various forms of styled property.
@@ -506,19 +516,35 @@ def translateProperties (contents):
   contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
   pat = re.compile ("base.OnMouseDown\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
+
   pat = re.compile ("protected override void OnMouseLeftButtonDown\(MouseButtonEventArgs e\)") # no call to base.
   contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
   pat = re.compile ("base.OnMouseLeftButtonDown\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
+
+  pat = re.compile ("protected override void OnMouseLeftButtonUp\(MouseButtonEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected virtual void OnPointerReleased(PointerReleasedEventArgs e)", contents)
+  pat = re.compile ("base.OnMouseLeftButtonUp\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnPointerReleased(e);", contents)
+
   pat = re.compile ("\(object sender, MouseEventArgs e\)") # just the call to base.
   contents = re.sub (pat, r"(object sender, PointerEventArgs e)", contents)
   pat = re.compile ("protected override void OnMouseLeave\(MouseEventArgs e\)") # just the call to base.
   contents = re.sub (pat, r"protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)", contents)
   pat = re.compile ("base.OnMouseLeave\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerCaptureLost(e);", contents)
+  pat = re.compile ("protected override void OnPreviewMouseWheel\(MouseWheelEventArgs e\)") # just the call to base.
+  contents = re.sub (pat, r"protected override void OnPointerWheelChanged(PointerWheelEventArgs e)", contents)
+  pat = re.compile ("protected override void OnPreviewMouseDown\(MouseButtonEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
+  pat = re.compile ("base.OnPreviewMouseWheel\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnPointerWheelChanged(e);", contents)
+  pat = re.compile ("base.OnPreviewMouseDown\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
   
   contents = re.sub ("MouseButtonEventArgs e", "PointerEventArgs e", contents)
   contents = re.sub ("MouseEventArgs e", "PointerEventArgs e", contents)
+  contents = re.sub ("MouseWheelEventArgs e", "PointerWheelEventArgs e", contents)
 
   contents = re.sub ("e.LeftButton == MouseButtonState.Pressed", "e.GetCurrentPoint((Control)sender).Properties.IsLeftButtonPressed", contents)
   contents = re.sub ("e.LeftButton == MouseButtonState.Released", "!e.GetCurrentPoint((Control)sender).Properties.IsLeftButtonPressed", contents)
@@ -687,6 +713,18 @@ def translateTags (contents):
   
   # Currently don't have a way to deal with PopupAnimation.
   contents = re.sub ("PopupAnimation=\".*\"", "", contents)
+  
+  # Toolbar
+  contents = re.sub ("<ToolBarTray ([^>]*?)>", r'<StackPanel Orientation="Horizontal" \1>', contents)
+  contents = re.sub ("</ToolBarTray>", r'</StackPanel>', contents)
+  contents = re.sub ("<ToolBarTray.Resources>", r'<StackPanel.Resources>', contents)
+  contents = re.sub ("</ToolBarTray.Resources>", r'</StackPanel.Resources>', contents)
+  contents = re.sub ("<ToolBar ([^>]*?)>", r'<ItemsControl \1>', contents)
+  contents = re.sub ("<ToolBar>", r'<ItemsControl>', contents)
+  contents = re.sub ("</ToolBar>", r'</ItemsControl>', contents)
+  contents = re.sub (" ToolBar\.", r' ItemsControl.', contents)
+  contents = re.sub ("<ToolBar.ItemTemplate>", r'<ItemsControl.ItemTemplate>', contents)
+  contents = re.sub ("</ToolBar.ItemTemplace>", r'</ItemsControl.ItemTemplate>', contents)
   
   # Bitmap image
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"pack://application:,,,/Stride.Core.Presentation.Wpf;component/Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
@@ -1035,7 +1073,12 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToUrl.cs")
 #translateCS ("presentation/Stride.Core.Translation.Presentation.Wpf/ValueConverters/LocalizableConverter.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToAsset.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Controls/EditableContentListBox.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventSetPropertyBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/ToolTipExtension.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/SetContentTemplateCommand.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/NameBreakingLine.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1050,7 +1093,7 @@ translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xam
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

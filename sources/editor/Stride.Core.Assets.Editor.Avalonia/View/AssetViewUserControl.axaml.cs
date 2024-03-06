@@ -9,7 +9,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Input;
-// using Stride.Core.Assets.Editor.View.Controls;
+using Stride.Core.Assets.Editor.View.Controls;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Presentation.Collections;
 using Stride.Core.Presentation.Extensions;
@@ -216,62 +216,62 @@ namespace Stride.Core.Assets.Editor.View
             if (selectedAsset == null)
                 return;
 
-//             var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
-//             listBox?.BeginEdit();
-// 
-//             var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGridEx>(AssetViewPresenter);
-//             gridView?.BeginEdit();
+            var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
+            listBox?.BeginEdit();
+
+            var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(AssetViewPresenter);
+            gridView?.BeginEdit();
         }
 
         private void ZoomIn()
         {
-//             var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
-//             if (listBox != null)
-//             {
-//                 TileThumbnailSize += ThumbnailZoomIncrement;
-//                 if (TileThumbnailSize >= ThumbnailMaximumSize)
-//                 {
-//                     TileThumbnailSize = ThumbnailMaximumSize;
-//                 }
-//             }
-// 
-//             var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGridEx>(AssetViewPresenter);
-//             if (gridView != null)
-//             {
-//                 GridThumbnailSize += ThumbnailZoomIncrement;
-//                 if (GridThumbnailSize >= ThumbnailMaximumSize)
-//                 {
-//                     GridThumbnailSize = ThumbnailMaximumSize;
-//                 }
-//             }
+            var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
+            if (listBox != null)
+            {
+                TileThumbnailSize += ThumbnailZoomIncrement;
+                if (TileThumbnailSize >= ThumbnailMaximumSize)
+                {
+                    TileThumbnailSize = ThumbnailMaximumSize;
+                }
+            }
+
+            var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(AssetViewPresenter);
+            if (gridView != null)
+            {
+                GridThumbnailSize += ThumbnailZoomIncrement;
+                if (GridThumbnailSize >= ThumbnailMaximumSize)
+                {
+                    GridThumbnailSize = ThumbnailMaximumSize;
+                }
+            }
         }
 
         private void ZoomOut()
         {
-//             var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
-//             if (listBox != null)
-//             {
-//                 TileThumbnailSize -= ThumbnailZoomIncrement;
-//                 if (TileThumbnailSize <= ThumbnailMinimumSize)
-//                 {
-//                     TileThumbnailSize = ThumbnailMinimumSize;
-//                 }
-//             }
-// 
-//             var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGridEx>(AssetViewPresenter);
-//             if (gridView != null)
-//             {
-//                 GridThumbnailSize -= ThumbnailZoomIncrement;
-//                 if (GridThumbnailSize <= ThumbnailMinimumSize)
-//                 {
-//                     GridThumbnailSize = ThumbnailMinimumSize;
-//                 }
-//             }
+            var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
+            if (listBox != null)
+            {
+                TileThumbnailSize -= ThumbnailZoomIncrement;
+                if (TileThumbnailSize <= ThumbnailMinimumSize)
+                {
+                    TileThumbnailSize = ThumbnailMinimumSize;
+                }
+            }
+
+            var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(AssetViewPresenter);
+            if (gridView != null)
+            {
+                GridThumbnailSize -= ThumbnailZoomIncrement;
+                if (GridThumbnailSize <= ThumbnailMinimumSize)
+                {
+                    GridThumbnailSize = ThumbnailMinimumSize;
+                }
+            }
         }
 
-//         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
-//         {
-//             base.OnPreviewMouseWheel(e);
+        protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
+        {
+            base.OnPointerWheelChanged(e);
 //             if (Keyboard.Modifiers == ModifierKeys.Control)
 //             {
 //                 if (e.Delta > 0)
@@ -285,14 +285,14 @@ namespace Stride.Core.Assets.Editor.View
 //                     e.Handled = true;
 //                 }
 //             }
-//         }
+        }
 
-//         protected override void OnPreviewMouseDown(PointerEventArgs e)
-//         {
-//             base.OnPreviewMouseDown(e);
-//             if (!IsFocused && !IsKeyboardFocusWithin)
-//                 Focus();
-//         }
+        protected virtual void OnPointerPressed(PointerPressedEventArgs e)
+        {
+            base.OnPointerPressed(e);
+            if (!IsFocused && !IsKeyboardFocusWithin)
+                Focus();
+        }
 
         private bool CanBeginEdit()
         {
@@ -311,11 +311,11 @@ namespace Stride.Core.Assets.Editor.View
             return !asset?.IsLocked ?? true;
         }
 
-//         private static void CanBeginEditCommand(object sender, CanExecuteRoutedEventArgs e)
-//         {
-//             var control = (AssetViewUserControl)sender;
+        private static void CanBeginEditCommand(object sender, RoutedEventArgs e)
+        {
+            var control = (AssetViewUserControl)sender;
 //             e.CanExecute = control.CanBeginEdit();
-//         }
+        }
 
         private static void BeginEdit(object sender, RoutedEventArgs e)
         {
@@ -355,7 +355,7 @@ namespace Stride.Core.Assets.Editor.View
         {
             if (e.NewValue != null)
             {
-//                 NameScope.SetNameScope((DependencyObject)e.NewValue, NameScope.GetNameScope(d));
+                NameScope.SetNameScope((StyledElement)e.NewValue, NameScope.GetNameScope((StyledElement)d));
             }
         }
     }
