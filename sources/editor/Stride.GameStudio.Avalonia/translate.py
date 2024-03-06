@@ -792,7 +792,7 @@ def translateTags (contents):
       contents = re.sub (pat, r"<\1 \2>\n\t<\1.Template>\n\t\t<DataTemplate/>\n\t</\1.Template>\n</\3>", contents)    
 
   # Template tag, with more complex structure.
-  pat = re.compile ("<([^>-]*?) ([^>]*?)>[ \n]*?<DataTemplate([^>]*?)>(.*?)</DataTemplate>[ \n]*?</(.*?)>", re.DOTALL)
+  pat = re.compile ("<([^>-]*?) ([^>]*?)>[ \n]*?<DataTemplate([^>\.]*?)>(.*?)</DataTemplate>[ \n]*?</(.*?)>", re.DOTALL)
   if (re.findall (pat, contents)):
     for match in re.findall (pat, contents):
       #print (match)
@@ -1035,6 +1035,7 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToUrl.cs")
 #translateCS ("presentation/Stride.Core.Translation.Presentation.Wpf/ValueConverters/LocalizableConverter.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/ContentReferenceToAsset.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1049,6 +1050,7 @@ def translateXAML (sourceFile):
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

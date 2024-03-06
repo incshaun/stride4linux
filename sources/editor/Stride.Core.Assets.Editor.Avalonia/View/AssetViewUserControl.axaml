@@ -1,0 +1,125 @@
+<UserControl x:Class="Stride.Core.Assets.Editor.View.AssetViewUserControl"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModel="clr-namespace:Stride.Core.Assets.Editor.ViewModel;assembly=Stride.Core.Assets.Editor"
+             xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:view="clr-namespace:Stride.Core.Assets.Editor.View"
+             xmlns:controls="clr-namespace:Stride.Core.Assets.Editor.View.Controls"
+             xmlns:behaviors="clr-namespace:Stride.Core.Assets.Editor.View.Behaviors"
+             xmlns:cvt="clr-namespace:Stride.Core.Assets.Editor.View.ValueConverters"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:status="clr-namespace:Stride.Core.Assets.Editor.Components.Status.Views"
+             xmlns:strings="clr-namespace:Stride.Core.Assets.Editor.Resources.Strings"
+             xmlns:templateViews="clr-namespace:Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views"
+             xmlns:services="clr-namespace:Stride.Core.Assets.Editor.Services"
+             mc:Ignorable="d"  Focusable="True"
+             d:DesignHeight="300" d:DesignWidth="300" x:Name="AssetView" BorderThickness="1" BorderBrush="{DynamicResource MenuBorderBrush}">
+  <DockPanel x:Name="RootContainer">
+    <DockPanel.Resources>
+      <ResourceDictionary>
+        <!-- MERGED DICTIONARIES: IMAGE DICTIONARY, PROPERTY GRID VIEWS -->
+        <ResourceDictionary.MergedDictionaries>
+          <ResourceInclude Source="CommonResources.axaml" />
+        </ResourceDictionary.MergedDictionaries>
+
+<!--         <ControlTheme TargetType="controls:EditableContentListBoxItem"> BasedOn="{StaticResource {x:Type ListBoxItem}}"</ControlTheme> -->
+
+<!--         <ControlTheme TargetType="controls:EditableContentListBox"> BasedOn="{StaticResource {x:Type ListBox}}"</ControlTheme> -->
+
+<!--         <DataTemplate x:Key="AssetTileView"> -->
+<!--           <DataTemplate.Resources> -->
+            <DataTemplate x:Key="ItemTemplate" DataType="{x:Type viewModel:ISessionObjectViewModel}">
+              <HeaderedContentControl  >
+                <i:Interaction.Behaviors>
+<!--                  <sd:OnEventCommandBehavior EventName="MouseDoubleClick" Command="{Binding AssetDoubleClick, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"
+                                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=controls:EditableContentListBox}}"/>-->
+                </i:Interaction.Behaviors>
+                <HeaderedContentControl.Header>
+                  <Grid Background="Transparent">
+                    <Border BorderBrush="{StaticResource NormalBorderBrush}" BorderThickness="2" CornerRadius="3" Margin="0,3,0,0">
+                      <Image Source="{Binding ThumbnailData.Presenter, Mode=OneWay}" 
+                             Width="{Binding TileThumbnailSize, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"
+                             Height="{Binding TileThumbnailSize, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"/>
+                    </Border>
+                    <ProgressBar Width="32" Height="8"
+                               IsIndeterminate="{Binding ThumbnailData, Mode=OneWay, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"
+                              />
+                    <Border BorderBrush="{StaticResource NormalBorderBrush}" BorderThickness="2" CornerRadius="3" Background="{StaticResource NormalBrush}"
+                          HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,0,0">
+                      <Button Theme="{StaticResource ImageButtonStyle}" Command="{Binding Sources.UpdateFromSourceCommand}" Margin="0">
+                        <Image Source="{StaticResource UpdateSelectedAssetsFromSource}" Width="12" Height="12" Margin="5"/>
+                      </Button>
+                    </Border>
+                    <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,3" Command="{Binding Dependencies.ToggleIsRootOnSelectedAssetCommand, FallbackValue={x:Null}}">
+                      <Button.Theme>
+                        <ControlTheme TargetType="Button">
+                          <Setter Property="Template">
+                            <Setter.Value>
+                              <ControlTemplate TargetType="Button">
+<!--                                 <ContentPresenter ContentTemplate="Content"/> -->
+                              </ControlTemplate>
+                            </Setter.Value>
+                          </Setter>
+                        </ControlTheme>
+                      </Button.Theme>
+                      <Grid Background="Transparent">
+                        <Image Source="{StaticResource ImageAssetIsRoot}" Width="12" Height="12" Margin ="5"/>
+                        <Image Source="{StaticResource ImageAssetIsIndirectlyIncluded}" Width="12" Height="12" Margin ="5"/>
+                        <Image Source="{StaticResource ImageAssetIsExcluded}" Width="12" Height="12" Margin ="5"/>
+                      </Grid>
+                    </Button>
+                  </Grid>
+                </HeaderedContentControl.Header>
+                <StackPanel Background="Transparent" Width="{Binding TileThumbnailSize, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}" Height="48">
+                  <DockPanel HorizontalAlignment="Center" LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding IsDirty, Converter={sd:BoolToParam}, ConverterParameter=*}" HorizontalAlignment="Center"
+                               VerticalAlignment="Bottom" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding Name}" TextAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxHeight="32"/>
+                  </DockPanel>
+                  <TextBlock Text="{Binding TypeDisplayName}" HorizontalAlignment="Center" TextAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="10" Opacity="0.5" />
+                </StackPanel>
+              </HeaderedContentControl>
+            </DataTemplate>
+
+            <DataTemplate  x:Key="EditItemTemplate" DataType="{x:Type viewModel:ISessionObjectViewModel}">
+              <HeaderedContentControl>
+                <HeaderedContentControl.Header>
+                  <Grid>
+                    <Border BorderBrush="{StaticResource NormalBorderBrush}" BorderThickness="2" CornerRadius="3" Margin="0,3,0,0">
+                      <Image Source="{Binding ThumbnailData.Presenter, Mode=OneWay}" 
+                             Width="{Binding TileThumbnailSize, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"
+                             Height="{Binding TileThumbnailSize, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"/>
+                    </Border>
+                    <ProgressBar Width="32" Height="8" IsIndeterminate="{Binding ThumbnailData, Mode=OneWay, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"
+                                />
+                  </Grid>
+                </HeaderedContentControl.Header>
+                <sd:TextBox Text="{Binding Name}" Width="{Binding TileThumbnailSize, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"
+                              Margin="0,5,0,0" GetFocusOnLoad="True" SelectAllOnFocus="True"/>
+              </HeaderedContentControl>
+            </DataTemplate>
+<!--           </DataTemplate.Resources> -->
+<!--         </DataTemplate> -->
+<!--         <CollectionViewSource x:Key="FilteredContentView" Source="{Binding FilteredAssets}" /> -->
+      </ResourceDictionary>
+    </DockPanel.Resources>
+    <Grid ContextMenu="{Binding AssetContextMenu, ElementName=AssetView}" Background="Transparent">
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False"
+                 >
+        <TextBlock Text="{sd:Localize No asset to display in this folder or no folder selected. Check your active filters.}"
+                   HorizontalAlignment="Center" IsHitTestVisible="False"
+                   IsVisible="{Binding CanRecursivelyDisplayAssets, ElementName=AssetView}"/>
+        <TextBlock Text="{sd:Localize You can also drop files here to import assets.}" HorizontalAlignment="Center" IsHitTestVisible="False"
+                   IsVisible="{Binding CanRecursivelyDisplayAssets, ElementName=AssetView}"/>
+      </StackPanel>
+      <ContentPresenter x:Name="AssetViewPresenter" Content="{Binding}" ContentTemplate="{StaticResource AssetTileView}"
+                       >
+      </ContentPresenter>
+      <i:Interaction.Behaviors>
+      </i:Interaction.Behaviors>
+    </Grid>
+  </DockPanel>
+</UserControl>

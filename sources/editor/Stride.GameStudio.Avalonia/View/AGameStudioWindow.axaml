@@ -696,7 +696,19 @@
 														 gh:AvalonDockHelper.IsVisible="{Binding Panels.AssetViewPanelVisible, Mode=TwoWay,
                                            Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={sd:True}}">-->
 
-
+											<sd:AssetViewUserControl AssetCollection="{Binding Session.ActiveAssetView, Source={x:Static vm:GameStudioViewModel.GameStudio}}" AssetContextMenu="{StaticResource AssetContextMenu}"
+																							   AssetDoubleClick="{Binding Session.EditSelectedContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}">
+											<i:Interaction.Behaviors>
+											<!--<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Cut" Command="{Binding Session.ActiveAssetView.CutContentCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
+											<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" Command="{Binding Session.ActiveAssetView.CopyContentCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
+											<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding Session.ActiveAssetView.PasteCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
+											<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding Session.ActiveAssetView.DeleteContentCommand}"/>-->
+											<gl:ActivateParentPaneOnGotFocusBehavior/>
+										</i:Interaction.Behaviors>
+											</sd:AssetViewUserControl>
+											<i:Interaction.Behaviors>
+										<gl:LayoutAnchorableActivateOnLocationChangedBehavior Collection="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}" />
+									</i:Interaction.Behaviors>
 
 
 											<!--</xcad:LayoutAnchorable>
