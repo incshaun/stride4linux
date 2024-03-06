@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Stride.Core.Assets.Editor.View.ValueConverters
 {
-    public class DifferentValuesToNull : ValueConverterBase<DifferentValuesToNull>
+    public class DifferentValuesToNull : ValueConverterBase2<DifferentValuesToNull>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

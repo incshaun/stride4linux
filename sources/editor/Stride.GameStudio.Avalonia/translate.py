@@ -1047,7 +1047,7 @@ def translateXAML (sourceFile):
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 
 #PriorityBinding

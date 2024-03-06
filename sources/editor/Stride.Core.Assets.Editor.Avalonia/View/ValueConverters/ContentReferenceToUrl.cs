@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 namespace Stride.Core.Assets.Editor.View.ValueConverters
 {
-    public class ContentReferenceToUrl : LocalizableConverter<ContentReferenceToUrl>
+    public class ContentReferenceToUrl : LocalizableConverter2<ContentReferenceToUrl>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

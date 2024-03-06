@@ -10,7 +10,7 @@ using Stride.Core.Annotations;
 
 namespace Stride.Core.Translation.Presentation.MarkupExtensions
 {
-    internal static class MarkupExtensionHelper
+    public static class MarkupExtensionHelper
     {
         /// <summary>
         /// Retrieves the local assembly corresponding to the context where the <see cref="MarkupExtension"/> is used.
