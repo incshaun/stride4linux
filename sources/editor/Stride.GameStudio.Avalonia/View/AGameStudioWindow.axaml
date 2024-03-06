@@ -639,7 +639,7 @@
 											</i:Interaction.Behaviors>
 													<sd:ATreeView.ItemContainerTheme>
 <!-- 														<ControlTheme TargetType="{x:Type sd:ATreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}"> -->
-														<ControlTheme TargetType="{x:Type sd:ATreeViewItem}" >
+														<ControlTheme TargetType="{x:Type sd:ATreeViewItem}" BasedOn="{StaticResource {x:Type sd:ATreeViewItem}}">
 															<!--<Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={sd:AAssetToExpandedAtInitialization}}"/>-->
 															<!--<Setter Property="IsEditable" Value="{Binding IsEditable, Mode=OneTime}" d:DataContext="{d:DesignInstance sd:IIsEditableViewModel}"/>
 													<Setter Property="IsEditing" Value="{Binding IsEditing, Mode=TwoWay}" d:DataContext="{d:DesignInstance sd:IIsEditableViewModel}"/>-->

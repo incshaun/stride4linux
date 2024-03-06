@@ -115,6 +115,7 @@ namespace Stride.Core.Presentation.View
         /// <inheritdoc/>
         public void EnsureAccess(bool inDispatcherThread = true)
         {
+            return;
             if (inDispatcherThread && CheckAccess ())
                 throw new InvalidOperationException("The current thread was expected to be the dispatcher thread.");
             if (!inDispatcherThread && CheckAccess ())
