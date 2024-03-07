@@ -119,6 +119,10 @@ def translateHeaders (contents):
     headers += "using Avalonia.Controls.Metadata;\n"
   if re.findall ("DataTemplateSelector", contents):
     headers += "using Avalonia.Controls.Templates;\n"
+  if re.findall ("Orientation", contents):
+    headers += "using Avalonia.Layout;\n"
+  if re.findall ("OnItemsChanged", contents):
+    headers += "using System.Collections.Generic;\nusing System.Collections.Specialized;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -291,6 +295,8 @@ def translateNames (contents):
   
   contents = re.sub ("DataGridEx", "DataGrid", contents)
   
+  contents = re.sub ("Dispatcher.CurrentDispatcher.BeginInvoke", "Dispatcher.UIThread.InvokeAsync", contents)
+  
   return contents
 
 # Translate the various forms of styled property.
@@ -298,6 +304,7 @@ def translateProperties (contents):
 
   commands = ""
   classname = ""
+  affectsmeasure = ""
 
   # Handle DependencyProperty.Register
   # Without initializing argument
@@ -344,6 +351,16 @@ def translateProperties (contents):
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), FrameworkPropertyMetadataOptions\.BindsTwoWayByDefault\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7, defaultBindingMode : BindingMode.TwoWay); // T7", contents)
 
+  # 2 argument to FrameworkPropertyMetadata, one is affects measure.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), FrameworkPropertyMetadataOptions.AffectsMeasure\)\);")
+  for match in re.findall (pat, contents):
+    print (match)
+    classname = match[5];
+    if len (affectsmeasure) > 0:
+      affectsmeasure += ", "
+    affectsmeasure += match[0]
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T8C", contents)
+
   # 2 argument to FrameworkPropertyMetadata
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);")
   for match in re.findall (pat, contents):
@@ -351,6 +368,26 @@ def translateProperties (contents):
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T8", contents)
+
+  # 2 argument to FrameworkPropertyMetadata, one is affects measure.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), FrameworkPropertyMetadataOptions.AffectsMeasure\), ([^,\)]*?)\);")
+  for match in re.findall (pat, contents):
+    print (match)
+    classname = match[5];
+    if len (affectsmeasure) > 0:
+      affectsmeasure += ", "
+    affectsmeasure += match[0]
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7, validate: \8); // T8A", contents)
+
+  # 2 argument to FrameworkPropertyMetadata, first is new call, one is affects measure.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(new ([^,\)]*?)\(([^\)]*?)\), FrameworkPropertyMetadataOptions.AffectsMeasure\), ([^,\)]*?)\);")
+  for match in re.findall (pat, contents):
+    print (match)
+    classname = match[5];
+    if len (affectsmeasure) > 0:
+      affectsmeasure += ", "
+    affectsmeasure += match[0]
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, new \7(\8), validate: \9); // T8B", contents)
 
   # Deal with case with frameworkpropertymetadata with 3 arguments, first is a typecast.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(\(([^,\)]*?)\)([^,\)]*?), ([^,\)]*?), ([^,\)]*?)\)\);")
@@ -451,6 +488,9 @@ def translateProperties (contents):
       commands += "\t\t\t" + "GotFocusEvent.AddClassHandler<" + classname + ">((x, e) => x.OnIsKeyboardFocusWithinChanged(e));\n"
     contents = re.sub (pat, r"protected void OnIsKeyboardFocusWithinChanged(GotFocusEventArgs e)\n\t\t{", contents)    
   
+  if len (affectsmeasure) > 0:
+    commands += "\t\t\tAffectsMeasure<" + classname + ">(" + affectsmeasure + ");\n"
+  
   # patch in commands to an existing static constructor.
   if len (commands) > 0:
     #print (commands, classname)
@@ -497,6 +537,12 @@ def translateProperties (contents):
   # Routed events.
   pat = re.compile ("public static readonly RoutedEvent (.*?)(\s*)\=(\s*)EventManager.RegisterRoutedEvent\((.*?), RoutingStrategy\.(.*?), typeof\(([^,\)]*?)\), typeof\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly RoutedEvent \1 = RoutedEvent.Register<\7, RoutedEventArgs>(\4, RoutingStrategies.\5);", contents)
+
+  contents = re.sub ("protected override void OnItemsChanged\(object sender, ItemsChangedEventArgs args\)", "protected override void OnItemsChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)", contents)
+  
+  # Scrolling.
+  contents = re.sub ("IScrollInfo", "ILogicalScrollable", contents)
+  contents = re.sub ("protected override void BringIndexIntoView\(int index\)", "protected override bool BringIntoView(Control target, Rect targetRect)", contents)
   
   
   # Focus
@@ -1078,7 +1124,10 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventSetPropertyBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/ToolTipExtension.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/SetContentTemplateCommand.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/NameBreakingLine.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/NameBreakingLine.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VirtualizingTilePanel.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/SizeExtension.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/TilePanelNavigationBehavior.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")

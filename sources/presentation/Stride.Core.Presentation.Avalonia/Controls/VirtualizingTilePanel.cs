@@ -1,12 +1,19 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media;
-using System.Windows.Threading;
+using Avalonia;
+using Avalonia.Controls;
+
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Media;
+using Avalonia.Threading;
 using Stride.Core.Annotations;
+using Avalonia.Layout;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace Stride.Core.Presentation.Controls
 {
@@ -14,29 +21,34 @@ namespace Stride.Core.Presentation.Controls
     /// This class describes a Panel similar to a <see cref="WrapPanel"/> except that items have a reserved space that is equal to the size of the largest items. Every item
     /// is aligned vertically and horizontally such as if they were in a grid.
     /// </summary>
-    public class VirtualizingTilePanel : VirtualizingPanel, IScrollInfo
+    public class VirtualizingTilePanel : Panel
     {
+		static VirtualizingTilePanel()
+		{
+			AffectsMeasure<VirtualizingTilePanel>(OrientationProperty, MinimumItemSpacingProperty, MaximumItemSpacingProperty, ItemSlotSizeProperty);
+		}
+
         private int lineCount = -1;
 
         /// <summary>
         /// Identifies the <see cref="Orientation"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register( "Orientation", typeof(Orientation), typeof(VirtualizingTilePanel), new FrameworkPropertyMetadata(Orientation.Vertical, FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly StyledProperty<Orientation> OrientationProperty = StyledProperty<Orientation>.Register<VirtualizingTilePanel, Orientation>( "Orientation", Orientation.Vertical); // T8C
 
         /// <summary>
         /// Identifies the <see cref="MinimumItemSpacing"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MinimumItemSpacingProperty = DependencyProperty.Register( "MinimumItemSpacing", typeof(double), typeof(VirtualizingTilePanel), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsMeasure), ValidateMinMaxItemSpacing);
+        public static readonly StyledProperty<double> MinimumItemSpacingProperty = StyledProperty<double>.Register<VirtualizingTilePanel, double>( "MinimumItemSpacing", 0.0, validate: ValidateMinMaxItemSpacing); // T8A
 
         /// <summary>
         /// Identifies the <see cref="MaximumItemSpacing"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty MaximumItemSpacingProperty = DependencyProperty.Register( "MaximumItemSpacing", typeof(double), typeof(VirtualizingTilePanel), new FrameworkPropertyMetadata(double.MaxValue, FrameworkPropertyMetadataOptions.AffectsMeasure), ValidateMinMaxItemSpacing);
+        public static readonly StyledProperty<double> MaximumItemSpacingProperty = StyledProperty<double>.Register<VirtualizingTilePanel, double>( "MaximumItemSpacing", double.MaxValue, validate: ValidateMinMaxItemSpacing); // T8A
 
         /// <summary>
         /// Identifies the <see cref="ItemSlotSize"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ItemSlotSizeProperty = DependencyProperty.Register( "ItemSlotSize", typeof(Size), typeof(VirtualizingTilePanel), new FrameworkPropertyMetadata(new Size(64.0, 64.0), FrameworkPropertyMetadataOptions.AffectsMeasure), ValidateSize);
+        public static readonly StyledProperty<Size> ItemSlotSizeProperty = StyledProperty<Size>.Register<VirtualizingTilePanel, Size>( "ItemSlotSize", new Size(64.0, 64.0), validate: ValidateSize); // T8B
 
         /// <summary>
         /// Gets or sets the orientation of the Tile Panel.
@@ -62,7 +74,7 @@ namespace Stride.Core.Presentation.Controls
 
         public int ItemCount { get; private set; } = -1;
 
-        private static bool ValidateMinMaxItemSpacing(object value)
+        private static bool ValidateMinMaxItemSpacing(double value)
         {
             if ((value is double) == false)
                 return false;
@@ -72,7 +84,7 @@ namespace Stride.Core.Presentation.Controls
             return v >= 0.0 && double.IsInfinity(v) == false;
         }
 
-        private static bool ValidateSize(object value)
+        private static bool ValidateSize(Size value)
         {
             if ((value is Size) == false)
                 return false;
@@ -121,15 +133,16 @@ namespace Stride.Core.Presentation.Controls
 
             ItemCount = -1;
 
-            var generator = ItemContainerGenerator;
-            if (generator == null)
-                return base.MeasureOverride(availableSize);
+//             var generator = ItemContainerGenerator;
+//             if (generator == null)
+//                 return base.MeasureOverride(availableSize);
 
-            var parentItemsControl = ItemsControl.GetItemsOwner(this);
-            if (parentItemsControl == null)
-                return base.MeasureOverride(availableSize);
+//             var parentItemsControl = ItemsControl.GetItemsOwner(this);
+//             if (parentItemsControl == null)
+//                 return base.MeasureOverride(availableSize);
 
-            ItemCount = parentItemsControl.Items.Count;
+//             ItemCount = parentItemsControl.Items.Count;
+            ItemCount = Children.Count;
             ItemsPerLine = ItemCount;
             lineCount = ItemsPerLine;
 
@@ -160,38 +173,51 @@ namespace Stride.Core.Presentation.Controls
             int firstVisibleItemIndex, lastVisibleItemIndex;
             GetVisibilityRange(availableSize, out firstVisibleItemIndex, out lastVisibleItemIndex);
 
-            // Get the generator position of the first visible data item
-            var startPos = generator.GeneratorPositionFromIndex(firstVisibleItemIndex);
+//             // Get the generator position of the first visible data item
+//             var startPos = generator.GeneratorPositionFromIndex(firstVisibleItemIndex);
+// 
+//             var childIndex = (startPos.Offset == 0) ? startPos.Index : startPos.Index + 1;
+// 
+//             using (generator.StartAt(startPos, GeneratorDirection.Forward, true))
+//             {
+//                 for (var itemIndex = firstVisibleItemIndex; itemIndex <= lastVisibleItemIndex; itemIndex++, childIndex++)
+//                 {
+//                     bool newlyRealized;
+// 
+//                     // Get or create the child
+//                     var child = generator.GenerateNext(out newlyRealized) as Control;
+//                     if (child == null)
+//                         continue;
+// 
+//                     if (newlyRealized)
+//                     {
+//                         // Figure out if we need to insert the child at the end or somewhere in the middle
+//                         if (childIndex >= ItemCount)
+//                             AddInternalChild(child);
+//                         else
+//                             InsertInternalChild(childIndex, child);
+// 
+//                         generator.PrepareItemContainer(child);
+//                     }
+// 
+//                     child.Measure(ItemSlotSize);
+//                 }
+//             }
+//             CleanUpItems(firstVisibleItemIndex, lastVisibleItemIndex);
+            
+            var childIndex = 0;
 
-            var childIndex = (startPos.Offset == 0) ? startPos.Index : startPos.Index + 1;
-
-            using (generator.StartAt(startPos, GeneratorDirection.Forward, true))
+            for (var itemIndex = 0; itemIndex < Children.Count; itemIndex++, childIndex++)
             {
-                for (var itemIndex = firstVisibleItemIndex; itemIndex <= lastVisibleItemIndex; itemIndex++, childIndex++)
-                {
-                    bool newlyRealized;
+                bool newlyRealized;
 
-                    // Get or create the child
-                    var child = generator.GenerateNext(out newlyRealized) as UIElement;
-                    if (child == null)
-                        continue;
+                // Get or create the child
+                var child = Children[itemIndex] as Control;
+                if (child == null)
+                    continue;
 
-                    if (newlyRealized)
-                    {
-                        // Figure out if we need to insert the child at the end or somewhere in the middle
-                        if (childIndex >= ItemCount)
-                            AddInternalChild(child);
-                        else
-                            InsertInternalChild(childIndex, child);
-
-                        generator.PrepareItemContainer(child);
-                    }
-
-                    child.Measure(ItemSlotSize);
-                }
+                child.Measure(ItemSlotSize);
             }
-
-            CleanUpItems(firstVisibleItemIndex, lastVisibleItemIndex);
 
             return desiredSize;
         }
@@ -205,13 +231,13 @@ namespace Stride.Core.Presentation.Controls
             // ReSharper disable once UnusedVariable
             var doNotRemove = Children;
 
-            var generator = ItemContainerGenerator;
-            if (generator == null)
-                return base.ArrangeOverride(finalSize);
-
-            var parentItemsControl = ItemsControl.GetItemsOwner(this);
-            if (parentItemsControl == null)
-                return base.ArrangeOverride(finalSize);
+//             var generator = ItemContainerGenerator;
+//             if (generator == null)
+//                 return base.ArrangeOverride(finalSize);
+// 
+//             var parentItemsControl = ItemsControl.GetItemsOwner(this);
+//             if (parentItemsControl == null)
+//                 return base.ArrangeOverride(finalSize);
 
             var space = ComputeItemSpacing(finalSize);
 
@@ -220,8 +246,9 @@ namespace Stride.Core.Presentation.Controls
                 var child = Children[i];
 
                 // Map the child offset to an item offset
-                var itemIndex = generator.IndexFromGeneratorPosition(new GeneratorPosition(i, 0));
-
+//                 var itemIndex = generator.IndexFromGeneratorPosition(new GeneratorPosition(i, 0));
+                var itemIndex = i;
+                
                 if (Orientation == Orientation.Vertical)
                 {
                     var row = itemIndex / ItemsPerLine;
@@ -259,19 +286,19 @@ namespace Stride.Core.Presentation.Controls
 
         private void CleanUpItems(int minDesiredGenerated, int maxDesiredGenerated)
         {
-            var children = InternalChildren;
-            var generator = ItemContainerGenerator;
-
-            for (var i = children.Count - 1; i >= 0; i--)
-            {
-                var childGeneratorPos = new GeneratorPosition(i, 0);
-                var itemIndex = generator.IndexFromGeneratorPosition(childGeneratorPos);
-                if (itemIndex >= 0 && (itemIndex < minDesiredGenerated || itemIndex > maxDesiredGenerated))
-                {
-                    generator.Remove(childGeneratorPos, 1);
-                    RemoveInternalChildRange(i, 1);
-                }
-            }
+//             var children = InternalChildren;
+//             var generator = ItemContainerGenerator;
+// 
+//             for (var i = children.Count - 1; i >= 0; i--)
+//             {
+//                 var childGeneratorPos = new GeneratorPosition(i, 0);
+//                 var itemIndex = generator.IndexFromGeneratorPosition(childGeneratorPos);
+//                 if (itemIndex >= 0 && (itemIndex < minDesiredGenerated || itemIndex > maxDesiredGenerated))
+//                 {
+//                     generator.Remove(childGeneratorPos, 1);
+//                     RemoveInternalChildRange(i, 1);
+//                 }
+//             }
         }
 
         private double ComputeItemSpacing(Size finalSize)
@@ -317,9 +344,9 @@ namespace Stride.Core.Presentation.Controls
             if (localExtent != extent)
             {
                 extent = localExtent;
-                ScrollOwner?.InvalidateScrollInfo();
+//                 ScrollOwner?.InvalidateScrollInfo();
 
-                Dispatcher.CurrentDispatcher.BeginInvoke((Action)InvalidateMeasure);
+                Dispatcher.UIThread.InvokeAsync((Action)InvalidateMeasure);
 
                 SetHorizontalOffset(offset.X);
                 SetVerticalOffset(offset.Y);
@@ -330,7 +357,7 @@ namespace Stride.Core.Presentation.Controls
             {
                 viewport = availableSize;
 
-                ScrollOwner?.InvalidateScrollInfo();
+//                 ScrollOwner?.InvalidateScrollInfo();
 
                 SetHorizontalOffset(offset.X);
                 SetVerticalOffset(offset.Y);
@@ -382,65 +409,65 @@ namespace Stride.Core.Presentation.Controls
 
         public void ScrollToIndexedItem(int index)
         {
-            BringIndexIntoView(index);
+//             BringIndexIntoView(index);
         }
 
-        protected override void BringIndexIntoView(int index)
-        {
-            base.BringIndexIntoView(index);
+//         protected override bool BringIntoView(Control target, Rect targetRect)
+//         {
+//             base.BringIndexIntoView(index);
+// 
+//             var n = index / ItemsPerLine;
+// 
+//             var space = ComputeItemSpacing(RenderSize);
+// 
+//             if (Orientation == Orientation.Vertical)
+//             {
+//                 var newTop = n * (ItemSlotSize.Height + space);
+// 
+//                 if (newTop < offset.Y)
+//                     SetVerticalOffset(newTop);
+//                 else if (newTop + ItemSlotSize.Height + space > offset.Y + viewport.Height)
+//                     SetVerticalOffset(newTop + ItemSlotSize.Height + space - viewport.Height);
+//             }
+//             else
+//             {
+//                 var newLeft = n * (ItemSlotSize.Width + space);
+// 
+//                 if (newLeft < offset.X)
+//                     SetHorizontalOffset(newLeft);
+//                 else if (newLeft + ItemSlotSize.Width + space > offset.X + viewport.Width)
+//                     SetHorizontalOffset(newLeft + ItemSlotSize.Width + space - viewport.Width);
+//             }
+// 
+//             InvalidateMeasure();
+//         }
 
-            var n = index / ItemsPerLine;
-
-            var space = ComputeItemSpacing(RenderSize);
-
-            if (Orientation == Orientation.Vertical)
-            {
-                var newTop = n * (ItemSlotSize.Height + space);
-
-                if (newTop < offset.Y)
-                    SetVerticalOffset(newTop);
-                else if (newTop + ItemSlotSize.Height + space > offset.Y + viewport.Height)
-                    SetVerticalOffset(newTop + ItemSlotSize.Height + space - viewport.Height);
-            }
-            else
-            {
-                var newLeft = n * (ItemSlotSize.Width + space);
-
-                if (newLeft < offset.X)
-                    SetHorizontalOffset(newLeft);
-                else if (newLeft + ItemSlotSize.Width + space > offset.X + viewport.Width)
-                    SetHorizontalOffset(newLeft + ItemSlotSize.Width + space - viewport.Width);
-            }
-
-            InvalidateMeasure();
-        }
-
-        public Rect MakeVisible(Visual visual, Rect rectangle)
-        {
-            if (visual == null)
-                return new Rect();
-
-            var parentItemsControl = ItemsControl.GetItemsOwner(this);
-            if (parentItemsControl == null)
-                return new Rect();
-
-            var generator = ItemContainerGenerator;
-
-            for (var i = 0; i < InternalChildren.Count; i++)
-            {
-                if (Equals(InternalChildren[i], visual))
-                {
-                    var itemIndex = generator.IndexFromGeneratorPosition(new GeneratorPosition(i, 0));
-
-                    var row = itemIndex / ItemsPerLine;
-                    var column = itemIndex % ItemsPerLine;
-
-                    return new Rect(new Point(column * ItemSlotSize.Width, row * ItemSlotSize.Height), ItemSlotSize);
-                }
-            }
-
-            return new Rect();
-        }
+//         public Rect MakeVisible(Visual visual, Rect rectangle)
+//         {
+//             if (visual == null)
+//                 return new Rect();
+// 
+//             var parentItemsControl = ItemsControl.GetItemsOwner(this);
+//             if (parentItemsControl == null)
+//                 return new Rect();
+// 
+//             var generator = ItemContainerGenerator;
+// 
+//             for (var i = 0; i < InternalChildren.Count; i++)
+//             {
+//                 if (Equals(InternalChildren[i], visual))
+//                 {
+//                     var itemIndex = generator.IndexFromGeneratorPosition(new GeneratorPosition(i, 0));
+// 
+//                     var row = itemIndex / ItemsPerLine;
+//                     var column = itemIndex % ItemsPerLine;
+// 
+//                     return new Rect(new Point(column * ItemSlotSize.Width, row * ItemSlotSize.Height), ItemSlotSize);
+//                 }
+//             }
+// 
+//             return new Rect();
+//         }
 
         public void MouseWheelUp()
         {
@@ -500,9 +527,9 @@ namespace Stride.Core.Presentation.Controls
                     horizontalOffset = extent.Width - viewport.Width;
             }
 
-            offset.X = horizontalOffset;
+            offset = new Point (horizontalOffset, offset.Y);
 
-            ScrollOwner?.InvalidateScrollInfo();
+//             ScrollOwner?.InvalidateScrollInfo();
 
             InvalidateMeasure();
         }
@@ -517,9 +544,9 @@ namespace Stride.Core.Presentation.Controls
                     verticalOffset = extent.Height - viewport.Height;
             }
 
-            offset.Y = verticalOffset;
+            offset = new Point (offset.X, verticalOffset);
 
-            ScrollOwner?.InvalidateScrollInfo();
+//             ScrollOwner?.InvalidateScrollInfo();
 
             InvalidateMeasure();
         }
@@ -534,21 +561,21 @@ namespace Stride.Core.Presentation.Controls
 
         public double ViewportWidth => viewport.Width;
 
-        protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
-        {
-            if (args.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
-            {
-                var index = args.Position.Index;
-                if (args.Position.Offset > 0)
-                {
-                    index++;
-                }
-                if (index < InternalChildren.Count && args.ItemUICount > 0)
-                {
-                    RemoveInternalChildRange(index, args.ItemUICount);
-                }
-            }
-            base.OnItemsChanged(sender, args);
-        }
+//         protected override void OnItemsChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)
+//         {
+//             if (args.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+//             {
+//                 var index = args.Position.Index;
+//                 if (args.Position.Offset > 0)
+//                 {
+//                     index++;
+//                 }
+//                 if (index < InternalChildren.Count && args.ItemUICount > 0)
+//                 {
+//                     RemoveInternalChildRange(index, args.ItemUICount);
+//                 }
+//             }
+//             base.OnItemsChanged(sender, args);
+//         }
     }
 }
