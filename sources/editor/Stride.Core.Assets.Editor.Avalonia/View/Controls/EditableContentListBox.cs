@@ -124,7 +124,7 @@ namespace Stride.Core.Assets.Editor.View.Controls
 
     public class EditableContentListBoxItem : ListBoxItem
     {
-        private static readonly MethodInfo NotifyListItemClickedMethod;
+//         private static readonly MethodInfo NotifyListItemClickedMethod;
 
         private readonly DataTemplate regularContentTemplate;
         private readonly IDataTemplate regularContentTemplateSelector;
@@ -142,9 +142,9 @@ namespace Stride.Core.Assets.Editor.View.Controls
 		{
 			IsEditingProperty.Changed.AddClassHandler<EditableContentListBoxItem>(IsEditingPropertyChanged);
 
-            NotifyListItemClickedMethod = typeof(ListBox).GetMethod("NotifyListItemClicked", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (NotifyListItemClickedMethod == null)
-                throw new InvalidOperationException("Unable to reach the NotifyListItemClicked internal method from ListBox class.");
+//             NotifyListItemClickedMethod = typeof(ListBox).GetMethod("NotifyListItemClicked", BindingFlags.Instance | BindingFlags.NonPublic);
+//             if (NotifyListItemClickedMethod == null)
+//                 throw new InvalidOperationException("Unable to reach the NotifyListItemClicked internal method from ListBox class.");
         }
 
         internal EditableContentListBoxItem(
@@ -207,7 +207,7 @@ namespace Stride.Core.Assets.Editor.View.Controls
                 if (listBox != null && Focus())
                 {
                     // Hackish way to reproduce what ListBoxItem does on MouseDown by invoking an internal method.
-                    NotifyListItemClickedMethod.Invoke(listBox, new object[] { this, MouseButton.Left });
+//                     NotifyListItemClickedMethod.Invoke(listBox, new object[] { this, MouseButton.Left });
                 }
             }
             mouseDown = false;

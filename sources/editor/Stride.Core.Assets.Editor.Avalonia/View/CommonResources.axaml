@@ -34,14 +34,19 @@
               </Grid.ColumnDefinitions>
               <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource ToolBarToggleButtonHoverBackground}" Opacity="0" x:Name="HoverBorder"/>
               <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}"
+    
+    
+                                x:Name="Icon" VerticalAlignment="Center"  />
+<!--              <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}"
                                 Width="{Binding Path=Content.(Image.Source).(BitmapSource.PixelWidth), RelativeSource={RelativeSource Self}, FallbackValue=Auto}"
                                 Height="{Binding Path=Content.(Image.Source).(BitmapSource.PixelHeight), RelativeSource={RelativeSource Self}, FallbackValue=Auto}"
-                                x:Name="Icon" VerticalAlignment="Center"  />
+                                x:Name="Icon" VerticalAlignment="Center"  />-->
               <ContentPresenter Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" Margin="2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
               <Popup Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="SubMenuPopup" Focusable="false"  >
                 <Grid x:Name="SubMenu">
                   <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1"/>
-                  <StackPanel IsItemsHost="True"  />
+                  <StackPanel />
+<!--                   <StackPanel IsItemsHost="True"  /> -->
                 </Grid>
               </Popup>
             </Grid>
@@ -86,7 +91,8 @@
               <Popup IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="SubMenuPopup" Focusable="false"  >
                 <Grid x:Name="SubMenu">
                   <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1"/>
-                  <StackPanel IsItemsHost="True"  />
+                  <StackPanel />
+<!--                   <StackPanel IsItemsHost="True"  /> -->
                 </Grid>
               </Popup>
             </Grid>
@@ -171,7 +177,8 @@
             <Grid Background="{StaticResource BackgroundBrush}" MinHeight="20">
               <ContentPresenter Margin="8,2" VerticalAlignment="Center"/>
             </Grid>
-            <StackPanel IsItemsHost="True" />
+            <StackPanel />
+<!--             <StackPanel IsItemsHost="True" /> -->
           </StackPanel>
         </ControlTemplate>
       </Setter.Value>

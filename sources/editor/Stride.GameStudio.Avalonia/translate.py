@@ -123,6 +123,10 @@ def translateHeaders (contents):
     headers += "using Avalonia.Layout;\n"
   if re.findall ("OnItemsChanged", contents):
     headers += "using System.Collections.Generic;\nusing System.Collections.Specialized;\n"
+  if re.findall ("OnItemsSourceChanged", contents):
+    headers += "using System.Collections.Generic;\nusing System.Collections.Specialized;\n"
+  if re.findall ("ItemsPresenter", contents):
+    headers += "using Avalonia.Controls.Presenters;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -177,6 +181,7 @@ def translateNames (contents):
   contents = re.sub ("CancelRoutedEventHandler", "EventHandler<CancelRoutedEventArgs>", contents)
   contents = re.sub ("RoutedPropertyChangedEventHandler<double>", "EventHandler<RoutedEventArgs>", contents)
   contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional
+  contents = re.sub ("ValidationRoutedEventArgs<string> e", "RoutedEventArgs e", contents) # provisional
   contents = re.sub ("ExecutedRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub ("CanExecuteRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
@@ -220,9 +225,11 @@ def translateNames (contents):
 
   contents = re.sub (" ImageSource ", " IImage ", contents)
   contents = re.sub ("\(ImageSource ", "(IImage ", contents)
+  contents = re.sub ("RenderOptions\.BitmapScalingMode=\"Linear\"", r'RenderOptions.BitmapInterpolationMode="MediumQuality"', contents)
   contents = re.sub (" BitmapScalingMode ", r' BitmapInterpolationMode ', contents)
   contents = re.sub ("BitmapScalingMode.Unspecified", r' BitmapInterpolationMode.Unspecified', contents)
   contents = re.sub ("RenderOptions.SetBitmapScalingMode", r' RenderOptions.SetBitmapInterpolationMode', contents)
+  contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\" />", r'<Setter Property="RenderOptions.BitmapInterpolationMode" Value="LowQuality" />', contents)
 
   contents = re.sub ("colorPickerRenderSurface\.Fill = new DrawingBrush\(new ImageDrawing\(BitmapSource.Create\(width, height, 96, 96, pf, null, rawImage, rawStride\), new Rect\(0.0f, 0.0f, width, height\)\)\);", r'int size = Marshal.SizeOf(rawImage[0]) * rawImage.Length;\n\t\t\t\t\tIntPtr pnt = Marshal.AllocHGlobal(size);\n\t\t\t\t\tMarshal.Copy(rawImage, 0, pnt, rawImage.Length);\n\t\t\t\t\tcolorPickerRenderSurface.Fill = new ImageBrush(new Avalonia.Media.Imaging.Bitmap(pf, AlphaFormat.Premul, pnt, new PixelSize (width, height), new Vector (96, 96), rawStride));\n\t\t\t\t\tMarshal.FreeHGlobal(pnt);', contents)
 
@@ -294,6 +301,8 @@ def translateNames (contents):
   contents = re.sub ("e\.HorizontalChange", "e.ExtentDelta.X", contents)
   
   contents = re.sub ("DataGridEx", "DataGrid", contents)
+
+  contents = re.sub (": Selector", ": SelectingItemsControl", contents)
   
   contents = re.sub ("Dispatcher.CurrentDispatcher.BeginInvoke", "Dispatcher.UIThread.InvokeAsync", contents)
   
@@ -307,6 +316,11 @@ def translateProperties (contents):
   affectsmeasure = ""
 
   # Handle DependencyProperty.Register
+  # Without initializing argument,private.
+  pat = re.compile ("private static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\(([^,\)]*?)\)\);")
+  contents = re.sub (pat, r"private static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T1A", contents)
+  
+  
   # Without initializing argument
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T1", contents)
@@ -335,6 +349,10 @@ def translateProperties (contents):
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T5", contents)
 
+  # FrameworkPropertyMetadata with initializer.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata(\s*){([^})]*?)}\);")
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T6E", contents)
+
   # 1 argument to FrameworkPropertyMetadata, function call
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?)\(([^,\)]*?)\)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7(\8)); // T6A", contents)
@@ -342,6 +360,22 @@ def translateProperties (contents):
   # 1 argument to FrameworkPropertyMetadata, typecast.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(\(([^,\)]*?)\)([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, (\7)\8); // T6B", contents)
+
+  # 1 argument to FrameworkPropertyMetadata, seems to be callback.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(On([^,\)]*?)\)\);")
+  for match in re.findall (pat, contents):
+    #print (mat ch, match[5])
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(On" + match[6] + ");\n"
+    classname = match[5];
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T6F", contents)
+
+  # 1 argument to FrameworkPropertyMetadata, seems to be callback, not readonly
+  pat = re.compile ("public static DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(On([^,\)]*?)\)\);")
+  for match in re.findall (pat, contents):
+    #print (match, match[5])
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(On" + match[6] + ");\n"
+    classname = match[5];
+  contents = re.sub (pat, r"public static StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T6G", contents)
 
   # 1 argument to FrameworkPropertyMetadata
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?)\)\);")
@@ -354,7 +388,7 @@ def translateProperties (contents):
   # 2 argument to FrameworkPropertyMetadata, one is affects measure.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), FrameworkPropertyMetadataOptions.AffectsMeasure\)\);")
   for match in re.findall (pat, contents):
-    print (match)
+    #print (match)
     classname = match[5];
     if len (affectsmeasure) > 0:
       affectsmeasure += ", "
@@ -539,6 +573,7 @@ def translateProperties (contents):
   contents = re.sub (pat, r"public static readonly RoutedEvent \1 = RoutedEvent.Register<\7, RoutedEventArgs>(\4, RoutingStrategies.\5);", contents)
 
   contents = re.sub ("protected override void OnItemsChanged\(object sender, ItemsChangedEventArgs args\)", "protected override void OnItemsChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)", contents)
+  contents = re.sub ("protected override void OnItemsSourceChanged\(IEnumerable oldValue, IEnumerable newValue\)", "protected override void OnItemsSourceChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)", contents)
   
   # Scrolling.
   contents = re.sub ("IScrollInfo", "ILogicalScrollable", contents)
@@ -770,12 +805,13 @@ def translateTags (contents):
   contents = re.sub ("</ToolBar>", r'</ItemsControl>', contents)
   contents = re.sub (" ToolBar\.", r' ItemsControl.', contents)
   contents = re.sub ("<ToolBar.ItemTemplate>", r'<ItemsControl.ItemTemplate>', contents)
-  contents = re.sub ("</ToolBar.ItemTemplace>", r'</ItemsControl.ItemTemplate>', contents)
+  contents = re.sub ("</ToolBar.ItemTemplate>", r'</ItemsControl.ItemTemplate>', contents)
   
   # Bitmap image
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"pack://application:,,,/Stride.Core.Presentation.Wpf;component/Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"\.\./Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
   contents = re.sub ("BitmapScalingMode=\"NearestNeighbor\"", r'BitmapInterpolationMode="LowQuality"', contents)
+  contents = re.sub ("<ImageBrush ImageSource=", r'<ImageBrush Source=', contents)
   
   # As many versions of the visibility property, given that we're translating 3 states, to boolean.
   contents = re.sub ("Visibility=\"\{Binding (.*), Converter=\{sd:VisibleOrCollapsed\}\}\"", r'IsVisible="{Binding \1}"', contents)
@@ -786,6 +822,8 @@ def translateTags (contents):
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
   contents = re.sub ("Property=\"ToolTip\"", r'Property="ToolTip.Tip"', contents)
+  contents = re.sub ("<ToolTipService\.ToolTip>", r'<ToolTip.Tip>', contents)
+  contents = re.sub ("ToolTipService.ShowOnDisabled=\"True\"", r'', contents)
 
   # Case sensitive ok.
   contents = re.sub ("DialogResult=\"Ok\"", r'DialogResult="Ok"', contents)
@@ -811,6 +849,8 @@ def translateTags (contents):
   # xmlsn:i
   contents = re.sub ("xmlns:i=\"http://schemas.microsoft.com/xaml/behaviors\"", "xmlns:i=\"clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity\"", contents)
   
+  contents = re.sub ("Value=\"{sd:False}\"", 'Value="false"', contents)
+  
   
   # ResourceDictionary with source.
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\" /\>", r'<ResourceInclude Source="\1.axaml" />', contents)
@@ -825,6 +865,8 @@ def translateTags (contents):
   # Styles become various forms of Theme.
   contents = re.sub ("\<Style TargetType=\"(.*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1">\2</ControlTheme>', contents) # one line style
   contents = re.sub ("sd:TextBox.Style", r'sd:TextBox.Theme', contents) # one line style
+  contents = re.sub ("Button.Style", r'Button.Theme', contents) # one line style
+  contents = re.sub ("sd:TagControl.Style", r'sd:TagControl.Theme', contents) # one line style
   contents = re.sub ("ListBox.ItemContainerStyle", r'ListBox.ItemContainerTheme', contents) # one line style
   contents = re.sub ("ItemsControl.ItemContainerStyle", r'ItemsControl.ItemContainerTheme', contents) # one line style
 
@@ -868,6 +910,9 @@ def translateTags (contents):
   contents = re.sub ("<ComboBox Theme=\"(.*?)\" Text=\"(.*?)\"", r'<ComboBox Theme="\1" PlaceholderText="\2"', contents)
   
   # Templates.
+  
+  # Sometimes replace .Resources with .DataTemplates
+  
   # Tricky rule - templates need to have a template tag added around them, if they don't already have.
   pat = re.compile ("<([^>]*?) ([^>]*?)>[ \n]*?<DataTemplate/>[ \n]*?</(.*?)>", re.DOTALL)
   if (re.findall (pat, contents)):
@@ -907,6 +952,8 @@ def translateTags (contents):
   contents = re.sub (re.compile ("ContentStringFormat=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("IsEditable=\"(.*?)\"", re.DOTALL), "", contents) # might need to look for the FluentAvalonia editable combobox if this is true?
   contents = re.sub (re.compile ("<Setter Property=\"IsEditable\" Value=\"(.*?)\"/>", re.DOTALL), "", contents) 
+  contents = re.sub (re.compile ("Theme=\"{StaticResource {x:Static ItemsControl.ToggleButtonStyleKey}}\"", re.DOTALL), "", contents) 
+  contents = re.sub (re.compile ("ToolTipService.InitialShowDelay=\"1\"", re.DOTALL), "", contents) 
   
   return contents
 
@@ -1127,7 +1174,19 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/NameBreakingLine.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VirtualizingTilePanel.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/SizeExtension.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/TilePanelNavigationBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/TilePanelNavigationBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/ListBoxDragDropBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/TilePanelThumbnailPrioritizationBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/BringSelectionToViewBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CommandBindingBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TagControl.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AssetFilterViewModelToFullDisplayName.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/FilteringComboBox.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/FilteringComboBoxSort.cs")
+#translateCS ("/tmp/a.Wpf/ActivateParentPaneOnGotFocusBehavior.cs")
+#translateCS ("/tmp/a.Wpf/LayoutAnchorableActivateOnLocationChangedBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/ActivateOnLocationChangedBehavior.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ActivateOnCollectionChangedBehavior.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
