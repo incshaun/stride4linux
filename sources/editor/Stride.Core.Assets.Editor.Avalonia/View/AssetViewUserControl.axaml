@@ -193,12 +193,18 @@
       <ItemsControl ItemsSource="{Binding PrimaryToolBarItems, ElementName=AssetView}" />
       <!--  SECONDARY TOOLBAR  -->
       <ItemsControl>
+        <ItemsControl.ItemsPanel>
+					  <ItemsPanelTemplate>
+						  <StackPanel Orientation="Horizontal">
+						  </StackPanel>
+					  </ItemsPanelTemplate>
+				  </ItemsControl.ItemsPanel>
         <!--  NEW ASSET  -->
         <ToggleButton x:Name="Toggle" 
                       ToolTip.Tip="{sd:Localize Add an asset to this location, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}"
                       IsVisible="{Binding CanAddAssets, ElementName=AssetView}">
           <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding Source={StaticResource ImageNewAsset}, Path=Source}" />
+            <Image Source="{Binding Source={StaticResource ImageNewAsset}, Path=Source}" Stretch="None"/>
             <TextBlock Text="{sd:Localize Add asset}" Margin="2,2,4,2" VerticalAlignment="Center"/>
           </StackPanel>
           <i:Interaction.Behaviors>
@@ -229,7 +235,7 @@
             <TextBlock DockPanel.Dock="Right" Margin="3,0"
                        Text="{Binding Session.SourceTracker.AssetsToUpdate.Count, StringFormat=({0})}" VerticalAlignment="Center" />
             <Grid>
-              <Image Source="{Binding Source={StaticResource UpdateAllAssetsWithModifiedSource}, Path=Source}"/>
+              <Image Source="{Binding Source={StaticResource UpdateAllAssetsWithModifiedSource}, Path=Source}" Stretch="None"/>
               <Rectangle Fill="{StaticResource NormalBrush}">
                 <Rectangle.OpacityMask>
                   <ImageBrush Source="{Binding Source={StaticResource UpdateAllAssetsWithModifiedSource}, Path=Source}"/>
@@ -253,7 +259,7 @@
             <TextBlock DockPanel.Dock="Right" Margin="3,0"
                        Text="{Binding Session.ImportEffectLogPendingCount, StringFormat=({0})}" VerticalAlignment="Center" />
             <Grid>
-              <Image Source="{Binding Source={StaticResource ImageReimportEffects}, Path=Source}"/>
+              <Image Source="{Binding Source={StaticResource ImageReimportEffects}, Path=Source}" Stretch="None"/>
               <Rectangle Fill="{StaticResource NormalBrush}">
                 <Rectangle.OpacityMask>
                   <ImageBrush Source="{Binding Source={StaticResource ImageReimportEffects}, Path=Source}"/>
@@ -275,7 +281,7 @@
                 ToolTip.Tip="{sd:Localize Open asset in dedicated editor, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
 <!--        <Button Command="{Binding Session.EditSelectedContentCommand}" IsVisible="{Binding CanEditAssets, ElementName=AssetView}"
                 ToolTip.Tip="{sd:ToolTip {sd:Localize Open asset in dedicated editor, Context=ToolTip}, {x:Static strings:KeyGestures.EditAsset}}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" >-->
-          <Image Source="{Binding Source={StaticResource ImageEditAsset}, Path=Source}" />
+          <Image Source="{Binding Source={StaticResource ImageEditAsset}, Path=Source}" Stretch="None"/>
         </Button>
         <Separator IsVisible="{Binding CanEditAssets, ElementName=AssetView}" />
         <!-- VIEW OPTIONS -->
@@ -283,7 +289,7 @@
           <MenuItem StaysOpenOnClick="True" Theme="{StaticResource ToolBarIconMenuItemStyle}">
             <MenuItem.Icon>
               <Image Source="{StaticResource ImageView}" MaxHeight="16" MaxWidth="16"
-                     ToolTip.Tip="{sd:Localize Asset view options, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" />
+                     ToolTip.Tip="{sd:Localize Asset view options, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" Stretch="None"/>
             </MenuItem.Icon>
             <MenuItem.Resources>
               <ControlTheme x:Key="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}" TargetType="{x:Type MenuItem}"> </ControlTheme>
@@ -322,7 +328,7 @@
 <!--                  <Button DockPanel.Dock="Right" Margin="4 0 0 0" Background="Transparent"
                           Command="view:AssetViewUserControl.ZoomInCommand"
                           ToolTip.Tip="{sd:Localize Zoom in, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" >-->
-                    <Image Source="{StaticResource ImageZoomIn}"/>
+                    <Image Source="{StaticResource ImageZoomIn}" Stretch="None"/>
                   </Button>
                   <Button DockPanel.Dock="Right" Background="Transparent"
 
@@ -330,7 +336,7 @@
 <!--                  <Button DockPanel.Dock="Right" Background="Transparent"
                           Command="view:AssetViewUserControl.ZoomOutCommand"
                           ToolTip.Tip="{sd:Localize Zoom out, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" >-->
-                    <Image Source="{StaticResource ImageZoomOut}"/>
+                    <Image Source="{StaticResource ImageZoomOut}" Stretch="None"/>
                   </Button>
                 </DockPanel>
               </MenuItem.Header>
@@ -339,7 +345,7 @@
 <!--                  <view:SetContentTemplateCommand Target="{x:Reference AssetViewPresenter}"/>-->
                 </MenuItem.Command>
                 <MenuItem.Icon>
-                  <Image Grid.Column="0" Source="{StaticResource ImageShowTiles}"/>
+                  <Image Grid.Column="0" Source="{StaticResource ImageShowTiles}" Stretch="None"/>
                 </MenuItem.Icon>
               </MenuItem>
             </MenuItem>
@@ -378,7 +384,7 @@
         </sd:SearchComboBox>-->
         <Button Command="{Binding ClearAssetFiltersCommand}"
                 ToolTip.Tip="{sd:Localize Clear filters, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
-          <Image Source="{StaticResource ImageClearFilters}"/>
+          <Image Source="{StaticResource ImageClearFilters}" Stretch="None"/>
         </Button>
       </ItemsControl>
       <!--  FILTER TAGS  -->
