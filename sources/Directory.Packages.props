@@ -139,6 +139,7 @@
     <PackageVersion Include="RoslynPad.Roslyn" Version="4.8.0" />
     <PackageVersion Include="RoslynPad.Roslyn.Windows" Version="4.8.0" />
     <PackageVersion Include="RoslynPad.Roslyn.Avalonia" Version="4.8.0" />
+    <PackageVersion Include="GraphX" Version="3.0.0" />
   </ItemGroup>
   <!-- Analyzers -->
   <ItemGroup>

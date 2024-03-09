@@ -1,7 +1,7 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using Stride.Core;
-using Stride.Assets.Presentation.AssetEditors.VisualScriptEditor;
+// using Stride.Assets.Presentation.AssetEditors.VisualScriptEditor;
 
 namespace Stride.Assets.Presentation.NodePresenters.Keys
 {
@@ -9,6 +9,6 @@ namespace Stride.Assets.Presentation.NodePresenters.Keys
     {
         public const string OwnerBlock = nameof(OwnerBlock);
 
-        public static readonly PropertyKey<VisualScriptBlockViewModel> OwnerBlockKey = new PropertyKey<VisualScriptBlockViewModel>(OwnerBlock, typeof(VisualScriptData));
+//         public static readonly PropertyKey<VisualScriptBlockViewModel> OwnerBlockKey = new PropertyKey<VisualScriptBlockViewModel>(OwnerBlock, typeof(VisualScriptData));
     }
 }

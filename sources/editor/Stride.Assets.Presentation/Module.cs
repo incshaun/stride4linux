@@ -6,7 +6,7 @@ using Stride.Core.Reflection;
 using Stride.Core.Translation;
 using Stride.Core.Translation.Providers;
 using Stride.Assets.Entities;
-// using Stride.Assets.Presentation.Templates;
+using Stride.Assets.Presentation.Templates;
 using Stride.Assets.SpriteFont;
 using Stride.Editor.Preview;
 using Stride.Editor.Preview.View;

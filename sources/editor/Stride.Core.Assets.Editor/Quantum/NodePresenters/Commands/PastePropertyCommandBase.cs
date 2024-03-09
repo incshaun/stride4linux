@@ -14,52 +14,52 @@ using Stride.Core.Presentation.Quantum.Presenters;
 
 namespace Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands
 {
-//     public abstract class PastePropertyCommandBase : SyncNodePresenterCommandBase
-//     {
-//         /// <inheritdoc />
-//         public override bool CanExecute(IReadOnlyCollection<INodePresenter> nodePresenters, object parameter)
-//         {
-//             return CanPaste(nodePresenters);
-//         }
-// 
-//         public override bool CanAttach(INodePresenter nodePresenter)
-//         {
-//             // Attach to any node
-//             return true;
-//         }
-// 
-//         protected virtual bool CanPaste([NotNull] IReadOnlyCollection<INodePresenter> nodePresenters)
-//         {
-//             if (nodePresenters == null) throw new ArgumentNullException(nameof(nodePresenters));
-//             foreach (var nodePresenter in nodePresenters)
-//             {
-//                 var assetNodePresenter = nodePresenter as IAssetNodePresenter;
-//                 var copyPasteService = assetNodePresenter?.Asset?.ServiceProvider.TryGet<ICopyPasteService>();
-//                 if (copyPasteService == null)
-//                     return false;
-// 
-//                 var asset = assetNodePresenter.Asset.Asset;
-// 
+    public abstract class PastePropertyCommandBase : SyncNodePresenterCommandBase
+    {
+        /// <inheritdoc />
+        public override bool CanExecute(IReadOnlyCollection<INodePresenter> nodePresenters, object parameter)
+        {
+            return CanPaste(nodePresenters);
+        }
+
+        public override bool CanAttach(INodePresenter nodePresenter)
+        {
+            // Attach to any node
+            return true;
+        }
+
+        protected virtual bool CanPaste([NotNull] IReadOnlyCollection<INodePresenter> nodePresenters)
+        {
+            if (nodePresenters == null) throw new ArgumentNullException(nameof(nodePresenters));
+            foreach (var nodePresenter in nodePresenters)
+            {
+                var assetNodePresenter = nodePresenter as IAssetNodePresenter;
+                var copyPasteService = assetNodePresenter?.Asset?.ServiceProvider.TryGet<ICopyPasteService>();
+                if (copyPasteService == null)
+                    return false;
+
+                var asset = assetNodePresenter.Asset.Asset;
+
 //                 if (!copyPasteService.CanPaste(SafeClipboard.GetText(), asset.GetType(), (nodePresenter as ItemNodePresenter)?.OwnerCollection.Type ?? nodePresenter.Type))
 //                     return false;
-// 
-//                 // Cannot paste into read-only collection
-//                 if (IsInReadOnlyCollection(nodePresenter) || IsInReadOnlyCollection((nodePresenter as ItemNodePresenter)?.OwnerCollection))
-//                     return false;
-// 
-//                 // Cannot paste into read-only property (non-collection)
-//                 if (!nodePresenter.IsEnumerable && nodePresenter.IsReadOnly)
-//                     return false;
-//             }
-//             return true;
-//         }
-// 
-//         protected async void DoPaste(INodePresenter nodePresenter, bool replace)
-//         {
+
+                // Cannot paste into read-only collection
+                if (IsInReadOnlyCollection(nodePresenter) || IsInReadOnlyCollection((nodePresenter as ItemNodePresenter)?.OwnerCollection))
+                    return false;
+
+                // Cannot paste into read-only property (non-collection)
+                if (!nodePresenter.IsEnumerable && nodePresenter.IsReadOnly)
+                    return false;
+            }
+            return true;
+        }
+
+        protected async void DoPaste(INodePresenter nodePresenter, bool replace)
+        {
 //             var text = SafeClipboard.GetText();
 //             if (string.IsNullOrEmpty(text))
 //                 return;
-// 
+
 //             var assetNodePresenter = (IAssetNodePresenter)nodePresenter;
 //             var asset = assetNodePresenter.Asset;
 //             var copyPasteService = asset.ServiceProvider.Get<ICopyPasteService>();
@@ -85,16 +85,16 @@ namespace Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands
 //                 await (item.Processor?.Paste(item, asset.PropertyGraph, ref nodeAccessor, ref propertyContainer) ?? Task.CompletedTask);
 //                 actionService.SetName(transaction, replace ? "Replace property": "Paste property");
 //             }
-//         }
-// 
-//         private static bool IsInReadOnlyCollection([CanBeNull] INodePresenter nodePresenter)
-//         {
-//             if (nodePresenter == null || !nodePresenter.IsEnumerable)
-//                 return false;
-// 
-//             var memberCollection = (nodePresenter as MemberNodePresenter)?.MemberAttributes.OfType<MemberCollectionAttribute>().FirstOrDefault()
-//                                    ?? nodePresenter.Descriptor.Attributes.OfType<MemberCollectionAttribute>().FirstOrDefault();
-//             return memberCollection != null && memberCollection.ReadOnly;
-//         }
-//     }
+        }
+
+        private static bool IsInReadOnlyCollection([CanBeNull] INodePresenter nodePresenter)
+        {
+            if (nodePresenter == null || !nodePresenter.IsEnumerable)
+                return false;
+
+            var memberCollection = (nodePresenter as MemberNodePresenter)?.MemberAttributes.OfType<MemberCollectionAttribute>().FirstOrDefault()
+                                   ?? nodePresenter.Descriptor.Attributes.OfType<MemberCollectionAttribute>().FirstOrDefault();
+            return memberCollection != null && memberCollection.ReadOnly;
+        }
+    }
 }

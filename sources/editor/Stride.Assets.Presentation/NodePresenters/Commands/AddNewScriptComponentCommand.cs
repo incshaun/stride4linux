@@ -57,42 +57,42 @@ namespace Stride.Assets.Presentation.NodePresenters.Commands
             if (scriptSourceCodeProvider == null)
                 return;
 
-            var template = ScriptTemplateGenerator.GetScriptTemplateAssetDescriptions(session.FindTemplates(TemplateScope.Asset)).FirstOrDefault();
-
-            if (template == null)
-                return;
-
-            var viewModel = new TemplateDescriptionViewModel(serviceProvider, template);
-            var customParameters = ScriptTemplateGenerator.GetAssetOverrideParameters(parameter as string, true);
-            var assetViewModel = (await session.ActiveAssetView.RunAssetTemplate(viewModel, null, customParameters)).FirstOrDefault();
-
-            if (assetViewModel == null)
-                return;
-
-            //TODO: Maybe situations where this asset/node are no longer valid.
-            if (assetViewModel.IsDeleted)
-            {
-                return;
-            }
-
-            IEnumerable<Type> componentTypes = scriptSourceCodeProvider.GetTypesFromSourceFile(assetViewModel.AssetItem.FullPath);
-            var componentType = componentTypes.FirstOrDefault();
-            if (componentType != null)
-            {
-                using (var transaction = session.UndoRedoService.CreateTransaction())
-                {
-                    object component = Activator.CreateInstance(componentType);
-                    var index = new NodeIndex(nodePresenter.Children.Count);
-                    nodePresenter.AddItem(component);
-                    session.UndoRedoService.PushOperation(
-                        new AnonymousDirtyingOperation(
-                            assetPresenter.Asset.Dirtiables,
-                            () => nodePresenter.RemoveItem(component, index),
-                            () => nodePresenter.AddItem(component)));
-
-                    session.UndoRedoService.SetName(transaction, "Add new script component.");
-                }
-            }
+//             var template = ScriptTemplateGenerator.GetScriptTemplateAssetDescriptions(session.FindTemplates(TemplateScope.Asset)).FirstOrDefault();
+// 
+//             if (template == null)
+//                 return;
+// 
+//             var viewModel = new TemplateDescriptionViewModel(serviceProvider, template);
+//             var customParameters = ScriptTemplateGenerator.GetAssetOverrideParameters(parameter as string, true);
+//             var assetViewModel = (await session.ActiveAssetView.RunAssetTemplate(viewModel, null, customParameters)).FirstOrDefault();
+// 
+//             if (assetViewModel == null)
+//                 return;
+// 
+//             //TODO: Maybe situations where this asset/node are no longer valid.
+//             if (assetViewModel.IsDeleted)
+//             {
+//                 return;
+//             }
+// 
+//             IEnumerable<Type> componentTypes = scriptSourceCodeProvider.GetTypesFromSourceFile(assetViewModel.AssetItem.FullPath);
+//             var componentType = componentTypes.FirstOrDefault();
+//             if (componentType != null)
+//             {
+//                 using (var transaction = session.UndoRedoService.CreateTransaction())
+//                 {
+//                     object component = Activator.CreateInstance(componentType);
+//                     var index = new NodeIndex(nodePresenter.Children.Count);
+//                     nodePresenter.AddItem(component);
+//                     session.UndoRedoService.PushOperation(
+//                         new AnonymousDirtyingOperation(
+//                             assetPresenter.Asset.Dirtiables,
+//                             () => nodePresenter.RemoveItem(component, index),
+//                             () => nodePresenter.AddItem(component)));
+// 
+//                     session.UndoRedoService.SetName(transaction, "Add new script component.");
+//                 }
+//             }
         }
     }
 }

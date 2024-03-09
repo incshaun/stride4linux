@@ -6,23 +6,23 @@ using Stride.Core.Presentation.Quantum.Presenters;
 
 namespace Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands
 {
-//     public class ReplacePropertyCommand : PastePropertyCommandBase
-//     {
-//         /// <summary>
-//         /// The name of this command.
-//         /// </summary>
-//         public const string CommandName = "ReplaceProperty";
-// 
-//         /// <inheritdoc />
-//         public override string Name => CommandName;
-// 
-//         /// <inheritdoc />
-//         public override CombineMode CombineMode => CombineMode.CombineOnlyForAll;
-// 
-//         /// <inheritdoc />
-//         protected override void ExecuteSync(INodePresenter nodePresenter, object parameter, object preExecuteResult)
-//         {
-//             DoPaste(nodePresenter, true);
-//         }
-//     }
+    public class ReplacePropertyCommand : PastePropertyCommandBase
+    {
+        /// <summary>
+        /// The name of this command.
+        /// </summary>
+        public const string CommandName = "ReplaceProperty";
+
+        /// <inheritdoc />
+        public override string Name => CommandName;
+
+        /// <inheritdoc />
+        public override CombineMode CombineMode => CombineMode.CombineOnlyForAll;
+
+        /// <inheritdoc />
+        protected override void ExecuteSync(INodePresenter nodePresenter, object parameter, object preExecuteResult)
+        {
+            DoPaste(nodePresenter, true);
+        }
+    }
 }

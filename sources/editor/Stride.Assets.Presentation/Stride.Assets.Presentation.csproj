@@ -23,9 +23,7 @@
     <PackageReference Include="RoslynPad.Editor.Avalonia" />
     <PackageReference Include="RoslynPad.Roslyn.Avalonia" />
     <PackageReference Include="RoslynPad.Roslyn" />
-    <!--<Compile Include="Module.cs">
-      <Link>Module.cs</Link>
-    </Compile>-->
+    <PackageReference Include="GraphX" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
@@ -71,15 +69,7 @@
     <ProjectReference Include="..\Stride.Editor\Stride.Editor.csproj" />
     <ProjectReference Include="..\Stride.Samples.Templates\Stride.Samples.Templates.csproj" />
     
-  <Compile Remove="AssetEditors\VisualScriptEditor\**" />
-<!--   <Compile Remove="AssetEditors\ScriptEditor\**" /> -->
-  <Compile Remove="NodePresenters\**" />
-  <Compile Remove="ViewModel\Preview\**" />
-  <Compile Remove="Preview\**" />
-<!--   <Compile Remove="ViewModel/CodeViewModel.cs" /> -->
-<!--   <Compile Remove="TemplateProviders/ScriptVariableReferenceTemplateProvider.cs" /> -->
-<!--   <Compile Remove="TemplateProviders/ModelNodeLinkNameTemplateProvider.cs" /> -->
-<!--   <Compile Remove="TemplateProviders/ModelComponentMaterialTemplateProvider.cs" /> -->
+  <Compile Remove="AssetEditors\VisualScriptEditor\**" />  <!--FIXME - tied to stride.presentation.graph which is view dependent.-->
   
   </ItemGroup>
   <ItemGroup>
