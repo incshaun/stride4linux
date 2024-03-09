@@ -1,0 +1,96 @@
+<!--***********************************************************************************
+
+   Extended WPF Toolkit
+
+   Copyright (C) 2007-2013 Xceed Software Inc.
+
+   This program is provided to you under the terms of the Microsoft Public
+   License (Ms-PL) as published at http://wpftoolkit.codeplex.com/license 
+
+   For more features, controls, and fast professional support,
+   pick up the Plus Edition at http://xceed.com/wpf_toolkit
+
+   Stay informed: follow @datagrid on Twitter or Like http://facebook.com/datagrids
+
+  **********************************************************************************-->
+
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="Resources/Common.Resources.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+
+<!--   <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" /> -->
+
+  <!-- TreeViewItem Style to avoid displaying Expander and avoid selection and click -->
+  <ControlTheme x:Key="hierarchicalGroupByControlTreeViewItemStyle"
+          TargetType="{x:Type TreeViewItem}">
+
+    <Setter Property="IsExpanded"
+              Value="True" />
+
+    <Setter Property="Focusable"
+              Value="False" />
+
+    <Setter Property="IsVisible">
+      <Setter.Value>
+          <Binding Path="Visible"
+                         />
+
+      </Setter.Value>
+    </Setter>
+
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type TreeViewItem}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+
+              <!--This ColumnDefinition is required for stair spacing-->
+              <ColumnDefinition Width="19" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Border BorderThickness="{TemplateBinding Border.BorderThickness}"
+    
+                          BorderBrush="{TemplateBinding Border.BorderBrush}"
+                          Background="{TemplateBinding Panel.Background}"
+                          Name="treeViewItemBorder"
+                          
+                          Grid.Column="1">
+<!--            <Border BorderThickness="{TemplateBinding Border.BorderThickness}"
+                          Padding="{TemplateBinding Control.Padding}"
+                          BorderBrush="{TemplateBinding Border.BorderBrush}"
+                          Background="{TemplateBinding Panel.Background}"
+                          Name="treeViewItemBorder"
+                          
+                          Grid.Column="1">-->
+
+              <!--Will contain DetailGroupByConrol-->
+
+              <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}"
+                                       ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
+                                       Name="PART_Header"
+                                       HorizontalAlignment="{TemplateBinding ContentControl.HorizontalContentAlignment}"
+                                        />
+            </Border>
+
+            <ItemsPresenter Name="ItemsHost"
+                                  Grid.Column="1"
+                                  Grid.Row="1"
+                                  Grid.ColumnSpan="2" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+  
+</ResourceDictionary>

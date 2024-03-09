@@ -800,6 +800,8 @@ def translateTags (contents):
   contents = re.sub ("</ToolBarTray>", r'</StackPanel>', contents)
   contents = re.sub ("<ToolBarTray.Resources>", r'<StackPanel.Resources>', contents)
   contents = re.sub ("</ToolBarTray.Resources>", r'</StackPanel.Resources>', contents)
+  
+  # May want HeaderedItemsControl if header field.
   contents = re.sub ("<ToolBar ([^>]*?)>", r'<ItemsControl \1>\n\t<ItemsControl.ItemsPanel>\n\t\t<ItemsPanelTemplate>\n\t\t\t<StackPanel Orientation="Horizontal">\n\t\t\t</StackPanel>\n\t\t</ItemsPanelTemplate>\n\t</ItemsControl.ItemsPanel>', contents)
   contents = re.sub ("<ToolBar>", r'<ItemsControl>\n\t<ItemsControl.ItemsPanel>\n\t\t<ItemsPanelTemplate>\n\t\t\t<StackPanel Orientation="Horizontal">\n\t\t\t</StackPanel>\n\t\t</ItemsPanelTemplate>\n\t</ItemsControl.ItemsPanel>', contents)
   contents = re.sub ("</ToolBar>", r'</ItemsControl>', contents)
@@ -819,10 +821,13 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"Collapsed\"", r'IsVisible="false"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:InvertBool}}"', contents)
 
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrHidden}}}\"", r'IsVisible="{Binding \1, Converter={sd:ObjectToBool}}"', contents)
+
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
   contents = re.sub ("Property=\"ToolTip\"", r'Property="ToolTip.Tip"', contents)
   contents = re.sub ("<ToolTipService\.ToolTip>", r'<ToolTip.Tip>', contents)
+  contents = re.sub ("</ToolTipService\.ToolTip>", r'</ToolTip.Tip>', contents)
   contents = re.sub ("ToolTipService.ShowOnDisabled=\"True\"", r'', contents)
 
   # Case sensitive ok.
@@ -866,6 +871,7 @@ def translateTags (contents):
   contents = re.sub ("\<Style TargetType=\"(.*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1">\2</ControlTheme>', contents) # one line style
   contents = re.sub ("sd:TextBox.Style", r'sd:TextBox.Theme', contents) # one line style
   contents = re.sub ("Button.Style", r'Button.Theme', contents) # one line style
+  contents = re.sub ("Path.Style", r'Path.Theme', contents) # one line style
   contents = re.sub ("sd:TagControl.Style", r'sd:TagControl.Theme', contents) # one line style
   contents = re.sub ("ListBox.ItemContainerStyle", r'ListBox.ItemContainerTheme', contents) # one line style
   contents = re.sub ("ItemsControl.ItemContainerStyle", r'ItemsControl.ItemContainerTheme', contents) # one line style
@@ -877,6 +883,9 @@ def translateTags (contents):
   
   # Replace access to styles.
   contents = re.sub ("Style=\"(.*?)\"", r'Theme="\1"', contents)
+
+  contents = re.sub ("ToolBarTray.IsLocked=\"True\"", r'', contents)
+
   
   # Ensure all controlthemes have x:Key
   pat = re.compile ("<ControlTheme TargetType=\"(.*?)\" (.*?)>")
@@ -901,7 +910,8 @@ def translateTags (contents):
   
   # Grid
   contents = re.sub ("MinWidth=\"{TemplateBinding ActualWidth}\"", "", contents)
-  
+  contents = re.sub ("view:DataGridEx", "DataGrid", contents)
+
   # Control
   contents = re.sub ("Control.HorizontalContentAlignment}", "ContentControl.HorizontalContentAlignment}", contents)
   contents = re.sub ("Control.VerticalContentAlignment}", "ContentControl.VerticalContentAlignment}", contents)
@@ -938,12 +948,12 @@ def translateTags (contents):
   # FIXME
   # Squash a few functions that are not available yet - but will be.
   contents = re.sub (re.compile ("\<view:TreeViewTemplateSelector(.*)?</view:TreeViewTemplateSelector(.*?)>", re.DOTALL), "", contents)
-  contents = re.sub ("sd:PriorityBinding", "Binding", contents)
+  #contents = re.sub ("sd:PriorityBinding", "Binding", contents)
   contents = re.sub ("<Setter Property=\"IsCheckable\" Value=\"True\" />", "", contents)
   contents = re.sub (re.compile ("<Storyboard(.*?)</Storyboard>", re.DOTALL), "", contents)
-  contents = re.sub (re.compile ("<Setter Property=\"Visibility\" Value=\"(.*?)\"/>", re.DOTALL), "", contents)
+  #contents = re.sub (re.compile ("<Setter Property=\"Visibility\" Value=\"(.*?)\"/>", re.DOTALL), "", contents)
   contents = re.sub (re.compile (" IsEnabled=\"(.*?)\"", re.DOTALL), "", contents)
-  contents = re.sub (re.compile (" Visibility=\"(.*?)\"", re.DOTALL), "", contents)
+  #contents = re.sub (re.compile (" Visibility=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("DisplayMemberPath=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("AdornerStoryboard=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("DisplayDropAdorner=\"(.*?)\"", re.DOTALL), "", contents)
@@ -1186,7 +1196,9 @@ def translateXAML (sourceFile):
 #translateCS ("/tmp/a.Wpf/ActivateParentPaneOnGotFocusBehavior.cs")
 #translateCS ("/tmp/a.Wpf/LayoutAnchorableActivateOnLocationChangedBehavior.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/ActivateOnLocationChangedBehavior.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ActivateOnCollectionChangedBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ActivateOnCollectionChangedBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Controls/GridLogViewer.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/PriorityBinding.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1202,6 +1214,13 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ActivateOnColl
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ThemeSelector.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.ExpressionDark.normalcolor.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.GridElementTemplates.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/Common.Resources.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/ExpressionDark.normalcolor.Resources.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/TableView.ExpressionDark.normalcolor.Graphics.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/generic.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

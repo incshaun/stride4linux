@@ -776,7 +776,7 @@
 												   gh:AvalonDockHelper.IsVisible="{Binding Panels.AssetLogPanelVisible, Mode=TwoWay,
                                        Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={sd:True}}">-->
 
-<!--										<sd:AGridLogViewer Theme="{StaticResource AGridLogViewer}" LogMessages="{Binding Session.AssetLog.FilteredMessages, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Session="{Binding Session, Source={x:Static vm:GameStudioViewModel.GameStudio}}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="False"/>-->
+										<sd:GridLogViewer Theme="{StaticResource GridLogViewer}" LogMessages="{Binding Session.AssetLog.FilteredMessages, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Session="{Binding Session, Source={x:Static vm:GameStudioViewModel.GameStudio}}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="False"/>
 
 
 							<!--</xcad:LayoutAnchorable>

@@ -1,0 +1,20 @@
+<!--
+// ExpressionDark is the default/fallback theme.
+// When adding a new theme, ensure all themes:ThemeResourceDictionary in every *.xaml files
+// are updated to ensure the theme is correctly applied.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:themes="clr-namespace:Stride.Core.Presentation.Themes;assembly=Stride.Core.Presentation.Avalonia"
+                    >
+  <ResourceDictionary.MergedDictionaries>
+
+    <ResourceInclude Source="generic.axaml" />
+    
+<themes:ThemeResourceDictionary 
+                                Source="ExpressionDark/TableflowView.ExpressionDark.normalcolor.axaml"
+                                ExpressionDarkSource="ExpressionDark/TableflowView.ExpressionDark.normalcolor.axaml"
+                                DarkSteelSource="ExpressionDark/TableflowView.ExpressionDark.normalcolor.axaml"
+                                LightSteelBlueSource="ExpressionDark/TableflowView.ExpressionDark.normalcolor.axaml">
+</themes:ThemeResourceDictionary>
+</ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

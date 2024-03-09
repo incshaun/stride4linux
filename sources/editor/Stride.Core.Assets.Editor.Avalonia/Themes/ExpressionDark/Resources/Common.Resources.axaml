@@ -1,0 +1,181 @@
+<!--***********************************************************************************
+
+   Extended WPF Toolkit
+
+   Copyright (C) 2007-2013 Xceed Software Inc.
+
+   This program is provided to you under the terms of the Microsoft Public
+   License (Ms-PL) as published at http://wpftoolkit.codeplex.com/license 
+
+   For more features, controls, and fast professional support,
+   pick up the Plus Edition at http://xceed.com/wpf_toolkit
+
+   Stay informed: follow @datagrid on Twitter or Like http://facebook.com/datagrids
+
+  **********************************************************************************-->
+
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Style applied to the Thumbs that are used to resize the columns and rows.
+        The Thumb's template is an empty Grid with a Transparent background to
+        make it hit-testable. -->
+  <ControlTheme x:Key="invisibleThumbStyle"
+          TargetType="Thumb">
+
+<!--    <Setter Property="MinWidth"
+              Value="{DynamicResource {x:Static SystemParameters.ResizeFrameVerticalBorderWidthKey}}" />
+
+    <Setter Property="MinHeight"
+              Value="{DynamicResource {x:Static SystemParameters.ResizeFrameHorizontalBorderHeightKey}}" />-->
+
+    <Setter Property="Template">
+      <Setter.Value>
+
+        <ControlTemplate TargetType="Thumb">
+          <Grid Background="Transparent" />
+        </ControlTemplate>
+
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+  
+      <SolidColorBrush Color="Black"
+                          x:Key="backgroundBrushAdoners" />
+
+
+  <DataTemplate x:Key="defaultGroupTemplate">
+    <StackPanel Orientation="Horizontal"
+                  VerticalAlignment="Center">
+
+      <ContentPresenter Content="{Binding Title}"
+                           ContentTemplate="{Binding RelativeSource={RelativeSource TemplatedParent},Path=DataContext.TitleTemplate}"
+                           VerticalAlignment="Center" />
+
+      <TextBlock Text=": "
+                    VerticalAlignment="Center" />
+      <ContentPresenter Content="{Binding Value}"
+                           ContentTemplate="{Binding RelativeSource={RelativeSource TemplatedParent},Path=DataContext.ValueTemplate}"
+                           VerticalAlignment="Center" />
+
+      <TextBlock Text=" ("
+                    VerticalAlignment="Center" />
+      <TextBlock Text="{Binding ItemCount}"
+                    VerticalAlignment="Center" />
+      <TextBlock Text=" "
+                    VerticalAlignment="Center" />
+      <TextBlock x:Name="suffixRun"
+                    Text="items"
+                    VerticalAlignment="Center" />
+      <TextBlock Text=")"
+                    VerticalAlignment="Center" />
+
+    </StackPanel>
+
+    <!-- <DataTemplate.Triggers>
+      <DataTrigger Binding="{Binding ItemCount}"
+                      Value="1">
+        <Setter TargetName="suffixRun"
+                    Property="Text"
+                    Value="item" />
+      </DataTrigger>
+    </DataTemplate.Triggers> -->
+  </DataTemplate>
+
+  
+
+     
+  
+
+  
+
+ 
+
+<!--  <controls:ThicknessEditor x:Key="cellPadding"
+              Left="2"
+              Top="2"
+              Right="2"
+              Bottom="2" />-->
+
+  <!--**************************
+   * Style: ListBoxItem Style (AutoFilter Options)
+   **************************-->
+
+  <DataTemplate x:Key="connectionStateLoadingGlyph">
+
+      
+
+    <Grid x:Name="rootLayout"
+            Background="Transparent">
+      <Canvas Width="27.466"
+                 Height="24.066">
+
+        <Canvas>
+          <Path x:Name="path"
+                     Fill="Black"
+                     Data="F1 M 17.067,3.300 C 17.067,5.123 15.589,6.600 13.767,6.600 C 11.944,6.600 10.467,5.123 10.467,3.300 C 10.467,1.478 11.944,0.000 13.767,0.000 C 15.589,0.000 17.067,1.478 17.067,3.300 Z"
+                     RenderTransformOrigin="0.5,0.5"
+                     Opacity="0.8">
+            <Path.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform />
+                <SkewTransform />
+                <RotateTransform />
+                <TranslateTransform />
+              </TransformGroup>
+            </Path.RenderTransform>
+          </Path>
+          <Path x:Name="path2"
+                     Fill="Black"
+                     Data="F1 M 6.600,20.767 C 6.600,22.590 5.123,24.066 3.300,24.066 C 1.478,24.066 0.000,22.590 0.000,20.767 C 0.000,18.944 1.478,17.467 3.300,17.467 C 5.123,17.467 6.600,18.944 6.600,20.767 Z"
+                     RenderTransformOrigin="0.5,0.5"
+                     Opacity="0.8">
+            <Path.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform />
+                <SkewTransform />
+                <RotateTransform />
+                <TranslateTransform />
+              </TransformGroup>
+            </Path.RenderTransform>
+          </Path>
+          <Path x:Name="path3"
+                     Fill="Black"
+                     Data="F1 M 27.466,20.767 C 27.466,22.590 25.989,24.066 24.167,24.066 C 22.344,24.066 20.867,22.590 20.867,20.767 C 20.867,18.944 22.344,17.467 24.167,17.467 C 25.989,17.467 27.466,18.944 27.466,20.767 Z"
+                     RenderTransformOrigin="0.5,0.5"
+                     Opacity="0.8">
+            <Path.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform />
+                <SkewTransform />
+                <RotateTransform />
+                <TranslateTransform />
+              </TransformGroup>
+            </Path.RenderTransform>
+          </Path>
+        </Canvas>
+      </Canvas>
+<!--      <Grid.ToolTip>
+        <ToolTip x:Name="errorToolTip"
+                     IsVisible="false">
+          <ContentPresenter />
+        </ToolTip>
+      </Grid.ToolTip>-->
+    </Grid>
+    <!-- <DataTemplate.Triggers>
+      <DataTrigger Binding="{Binding Path=Visibility, RelativeSource={RelativeSource Self}}"
+                      Value="Visible">
+        <DataTrigger.EnterActions>
+          <BeginStoryboard Storyboard="{StaticResource loadingStoryboard}"
+                                Name="storyboard" />
+        </DataTrigger.EnterActions>
+        <DataTrigger.ExitActions>
+          <StopStoryboard BeginStoryboardName="storyboard" />
+          <RemoveStoryboard BeginStoryboardName="storyboard" />
+        </DataTrigger.ExitActions>
+      </DataTrigger>
+    </DataTemplate.Triggers> -->
+  </DataTemplate>
+
+</ResourceDictionary>
