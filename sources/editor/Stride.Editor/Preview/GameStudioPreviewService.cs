@@ -72,7 +72,7 @@ namespace Stride.Editor.Preview
             previewCompileContext.CompilationContext = typeof(PreviewCompilationContext);
 
             previewGameThread = new Thread(SafeAction.Wrap(StrideUIThread)) { IsBackground = true, Name = "PreviewGame Thread" };
-            previewGameThread.SetApartmentState(ApartmentState.STA);
+//             previewGameThread.SetApartmentState(ApartmentState.STA);
             previewGameThread.Start();
 
             // Wait for the window handle to be generated on the proper thread

@@ -79,8 +79,8 @@ namespace Stride.GameStudio.Avalonia.Plugin
             previewService.RegisterAssetPreviewFactories(previewFactories);
             session.ServiceProvider.RegisterService(previewService);
 
-            var thumbnailService = new GameStudioThumbnailService(session, settingsProvider, builderService);
-            session.ServiceProvider.RegisterService(thumbnailService);
+//             var thumbnailService = new GameStudioThumbnailService(session, settingsProvider, builderService);
+//             session.ServiceProvider.RegisterService(thumbnailService);
 
 //             var strideDebugService = new StrideDebugService(session.ServiceProvider);
 //             session.ServiceProvider.RegisterService(strideDebugService);
