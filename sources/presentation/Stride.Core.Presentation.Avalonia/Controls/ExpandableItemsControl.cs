@@ -41,8 +41,8 @@ namespace Stride.Core.Presentation.Controls
         /// </summary>
         public bool IsExpanded { get { return (bool)GetValue(IsExpandedProperty); } set { SetValue(IsExpandedProperty, value); } }
 
-        public bool HasItems;
-        protected bool CanExpand => HasItems;
+        public bool HasItems => (ItemCount > 0);
+        protected bool CanExpand => (ItemCount > 0);
 
         /// <summary>
         /// Raised when this <see cref="ExpandableItemsControl"/> is expanded.

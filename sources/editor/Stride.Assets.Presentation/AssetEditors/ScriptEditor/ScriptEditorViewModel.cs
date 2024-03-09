@@ -23,7 +23,7 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
             : base(script)
         {
             Code = StrideAssetsViewModel.Instance.Code;
-            SourceTextContainer = script.TextContainer;
+//             SourceTextContainer = script.TextContainer;
         }
 
         /// <summary>

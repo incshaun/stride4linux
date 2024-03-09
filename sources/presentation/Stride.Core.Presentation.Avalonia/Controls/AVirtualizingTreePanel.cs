@@ -27,7 +27,7 @@ namespace Stride.Core.Presentation.Controls
 {
     public class AVirtualizingTreePanel : VirtualizingPanel, IScrollable
     {
-       protected override Type StyleKeyOverride { get { return typeof(Avalonia.Controls.TreeView); } }
+//       protected override Type StyleKeyOverride { get { return typeof(Avalonia.Controls.TreeView); } }
 
         internal class VerticalArea
         {

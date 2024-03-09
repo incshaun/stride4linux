@@ -20,6 +20,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
 <!--    <PackageReference Include="RoslynPad.Editor.Windows" />
     <PackageReference Include="RoslynPad.Roslyn.Windows" />-->
+    <PackageReference Include="RoslynPad.Editor.Avalonia" />
+    <PackageReference Include="RoslynPad.Roslyn.Avalonia" />
     <PackageReference Include="RoslynPad.Roslyn" />
     <!--<Compile Include="Module.cs">
       <Link>Module.cs</Link>
@@ -70,14 +72,14 @@
     <ProjectReference Include="..\Stride.Samples.Templates\Stride.Samples.Templates.csproj" />
     
   <Compile Remove="AssetEditors\VisualScriptEditor\**" />
-  <Compile Remove="AssetEditors\ScriptEditor\**" />
+<!--   <Compile Remove="AssetEditors\ScriptEditor\**" /> -->
   <Compile Remove="NodePresenters\**" />
   <Compile Remove="ViewModel\Preview\**" />
   <Compile Remove="Preview\**" />
-  <Compile Remove="ViewModel/CodeViewModel.cs" />
-  <Compile Remove="TemplateProviders/ScriptVariableReferenceTemplateProvider.cs" />
-  <Compile Remove="TemplateProviders/ModelNodeLinkNameTemplateProvider.cs" />
-  <Compile Remove="TemplateProviders/ModelComponentMaterialTemplateProvider.cs" />
+<!--   <Compile Remove="ViewModel/CodeViewModel.cs" /> -->
+<!--   <Compile Remove="TemplateProviders/ScriptVariableReferenceTemplateProvider.cs" /> -->
+<!--   <Compile Remove="TemplateProviders/ModelNodeLinkNameTemplateProvider.cs" /> -->
+<!--   <Compile Remove="TemplateProviders/ModelComponentMaterialTemplateProvider.cs" /> -->
   
   </ItemGroup>
   <ItemGroup>

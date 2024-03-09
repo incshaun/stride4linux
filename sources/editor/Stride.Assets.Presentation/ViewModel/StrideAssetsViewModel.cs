@@ -15,7 +15,7 @@ namespace Stride.Assets.Presentation.ViewModel
         {
             Session = session;
 
-//             Code = new CodeViewModel(this);
+            Code = new CodeViewModel(this);
 
             if (Instance != null)
                 throw new InvalidOperationException($"The {nameof(StrideAssetsViewModel)} class can be instanced only once.");
@@ -30,6 +30,6 @@ namespace Stride.Assets.Presentation.ViewModel
 
         public SessionViewModel Session { get; }
 
-//         public CodeViewModel Code { get; }
+        public CodeViewModel Code { get; }
     }
 }

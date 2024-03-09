@@ -17,7 +17,7 @@
                     xmlns:cvt="clr-namespace:Stride.Core.Presentation.ValueConverters"
                     xmlns:me="clr-namespace:Stride.Core.Presentation.MarkupExtensions"
                     xmlns:behaviors="clr-namespace:Stride.Core.Presentation.Behaviors"
-                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
                     xmlns:interactivity="clr-namespace:Stride.Core.Presentation.Interactivity"
                     xmlns:commands="clr-namespace:Stride.Core.Presentation.Controls.Commands"
                     xmlns:diag="clr-namespace:Stride.Core.Presentation.Windows;assembly=Stride.Core.Presentation"
