@@ -27,7 +27,7 @@ namespace Stride.GameStudio.Avalonia.ViewModels
 {
     public class GameStudioViewModel : EditorViewModel
     {
-//         private PreviewViewModel preview;
+        private PreviewViewModel preview;
 //         private DebuggingViewModel debugging;
         private string restartArguments;
         private readonly List<IDEInfo> availableIDEs;
@@ -35,7 +35,7 @@ namespace Stride.GameStudio.Avalonia.ViewModels
         public GameStudioViewModel([NotNull] IViewModelServiceProvider serviceProvider, MostRecentlyUsedFileCollection mru)
             : base(serviceProvider, mru, StrideGameStudio.EditorName, StrideGameStudio.EditorVersionMajor)
         {
-//            Panels = new EditionPanelViewModel(ServiceProvider);
+           Panels = new EditionPanelViewModel(ServiceProvider);
             availableIDEs = new List<IDEInfo> { VisualStudioVersions.DefaultIDE };
 //            availableIDEs.AddRange(VisualStudioVersions.AvailableVisualStudioInstances);
             NewSessionCommand = new AnonymousCommand(serviceProvider, RestartAndCreateNewSession);
@@ -47,7 +47,7 @@ namespace Stride.GameStudio.Avalonia.ViewModels
         public static GameStudioViewModel GameStudio => (GameStudioViewModel)Instance;
 
         [NotNull]
-//         public EditionPanelViewModel Panels { get; }
+        public EditionPanelViewModel Panels { get; }
 
         public StrideAssetsViewModel StrideAssets => StrideAssetsViewModel.Instance;
 

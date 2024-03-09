@@ -30,7 +30,7 @@ using Stride.GameStudio.Avalonia.ViewModels;
 using Stride.Core.MostRecentlyUsedFiles;
 using Stride.Assets.Presentation;
 using Stride.Core.Assets;
-// using Stride.GameStudio.Avalonia.Plugin;
+using Stride.GameStudio.Avalonia.Plugin;
 using Stride.Core.Translation;
 using Stride.Core.Translation.Providers;
 using Stride.Core.Assets.Editor;
@@ -300,9 +300,9 @@ public partial class AvaloniaApp : Application
             //var mru = new MostRecentlyUsedFileCollection(InternalSettings.LoadProfileCopy, InternalSettings.MostRecentlyUsedSessions, InternalSettings.WriteFile);
             //mru.LoadFromSettings();
             var editor = new GameStudioViewModel(serviceProvider, mru);
+//             AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
 //            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
-//            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
-//             AssetsPlugin.RegisterPlugin(typeof(StrideEditorPlugin));
+            AssetsPlugin.RegisterPlugin(typeof(StrideEditorPlugin));
 
             // Attempt to load the startup session, if available
  /*           if (!UPath.IsNullOrEmpty(initialSessionPath))
