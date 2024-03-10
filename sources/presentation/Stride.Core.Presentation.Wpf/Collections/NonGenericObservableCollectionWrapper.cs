@@ -21,7 +21,7 @@ namespace Stride.Core.Presentation.Collections
     /// <typeparam name="T">The type of item contained in the <see cref="ObservableList{T}"/>.</typeparam>
     public abstract class NonGenericObservableCollectionWrapper<T> : IList, IList<T>, INotifyPropertyChanged, INotifyCollectionChanged
     {
-        [NotNull] protected readonly IList<T> List;
+        [NotNull] protected /*readonly*/ IList<T> List;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NonGenericObservableListWrapper{T}"/> class.
