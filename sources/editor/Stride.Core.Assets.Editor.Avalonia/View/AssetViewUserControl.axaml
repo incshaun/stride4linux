@@ -25,9 +25,9 @@
           <ResourceInclude Source="CommonResources.axaml" />
         </ResourceDictionary.MergedDictionaries>
 
-        <ControlTheme x:Key="controls:EditableContentListBoxItem" TargetType="controls:EditableContentListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}"></ControlTheme>
+        <ControlTheme x:Key="{x:Type controls:EditableContentListBoxItem}" TargetType="controls:EditableContentListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}"></ControlTheme>
 
-        <ControlTheme x:Key="controls:EditableContentListBox" TargetType="controls:EditableContentListBox" BasedOn="{StaticResource {x:Type ListBox}}"></ControlTheme>
+        <ControlTheme x:Key="{x:Type controls:EditableContentListBox}" TargetType="controls:EditableContentListBox" BasedOn="{StaticResource {x:Type ListBox}}"></ControlTheme>
 
 <!--          <DataTemplate.Resources>-->
             <DataTemplate x:Key="ItemTemplate" DataType="{x:Type viewModel:ISessionObjectViewModel}">
@@ -49,7 +49,7 @@
                     <Border BorderBrush="{StaticResource NormalBorderBrush}" BorderThickness="2" CornerRadius="3" Background="{StaticResource NormalBrush}"
                           HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,0,0">
                       <Button Theme="{StaticResource ImageButtonStyle}" Command="{Binding Sources.UpdateFromSourceCommand}" Margin="0">
-                        <Image Source="{StaticResource UpdateSelectedAssetsFromSource}" Width="12" Height="12" Margin="5"/>
+                        <Image Source="{Binding Source={StaticResource UpdateSelectedAssetsFromSource}, Path=Source}" Width="12" Height="12" Margin="5"/>
                       </Button>
                     </Border>
                     <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,3" Command="{Binding Dependencies.ToggleIsRootOnSelectedAssetCommand, FallbackValue={x:Null}}">
@@ -144,7 +144,6 @@
 <!--           </DataTemplate.Resources> -->
         <DataTemplate x:Key="AssetTileView">
           <controls:EditableContentListBox ItemsSource="{Binding FilteredContent}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                           
                                            CanEdit="{Binding CanEditAssets, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"
                                            ItemTemplate="{StaticResource ItemTemplate}" EditItemTemplate="{StaticResource EditItemTemplate}">
             <controls:EditableContentListBox.ItemsPanel>
@@ -158,7 +157,7 @@
               </ItemsPanelTemplate>
             </controls:EditableContentListBox.ItemsPanel>
             <controls:EditableContentListBox.ItemContainerTheme>
-              <ControlTheme TargetType="controls:EditableContentListBoxItem"  >
+              <ControlTheme TargetType="{x:Type controls:EditableContentListBoxItem}" BasedOn="{StaticResource {x:Type controls:EditableContentListBoxItem}}" d:DataContext="{d:DesignInstance viewModel:AssetViewModel}">
 <!--               <ControlTheme TargetType="controls:EditableContentListBoxItem" BasedOn="{x:Type controls:EditableContentListBoxItem}}" > -->
                 <Setter Property="CanEdit" Value="{Binding IsLocked, Converter={sd:InvertBool}}"/>
                 <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
