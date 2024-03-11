@@ -275,17 +275,17 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 //             }
 //         }
 
-//         [CanBeNull]
-//         protected virtual TContainer GetContainer(object source)
-//         {
-//             var frameworkElement = source as Control;
-//             var contentElement = source as FrameworkContentElement;
-//             if (contentElement != null)
-//             {
-//                 frameworkElement = contentElement.Parent as Control;
-//             }
-//             return frameworkElement as TContainer ?? Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<TContainer>((Visual) frameworkElement);
-//         }
+        [CanBeNull]
+        protected virtual TContainer GetContainer(object source)
+        {
+            var frameworkElement = source as Control;
+            var contentElement = source as Control;
+            if (contentElement != null)
+            {
+                frameworkElement = contentElement.Parent as Control;
+            }
+            return frameworkElement as TContainer ?? global::Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<TContainer>((Visual) frameworkElement);
+        }
 
         [CanBeNull]
         protected virtual IAddChildViewModel GetDropTargetItem(TContainer container)

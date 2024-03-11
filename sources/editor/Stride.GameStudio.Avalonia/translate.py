@@ -175,6 +175,7 @@ def translateNames (contents):
   #contents = re.sub ("\.CanExecute\(", ".Command.CanExecute(", contents) # provisional.
   #contents = re.sub ("\.Execute\(", ".Command.Execute(", contents) # provisional.
   
+  
   contents = re.sub ("static DependencyProperty", "static AvaloniaProperty", contents) # provisional.
   contents = re.sub ("DependencyProperty property", "AvaloniaProperty property", contents) # provisional.
   contents = re.sub ("\(DependencyProperty\)", "(AvaloniaProperty)", contents)
@@ -210,6 +211,8 @@ def translateNames (contents):
   contents = re.sub ("\(FrameworkElement ", "(Control ", contents)
   contents = re.sub (" FrameworkElement;", " Control;", contents)
   contents = re.sub ("<FrameworkElement", "<Control", contents) 
+  contents = re.sub (", FrameworkElement>", ", Control>", contents) 
+  contents = re.sub (" FrameworkElement ", " Control ", contents) 
   contents = re.sub (": FrameworkElement", ": Control", contents)
   contents = re.sub ("typeof\(FrameworkElement\)", "typeof(Control)", contents)
   contents = re.sub ("private FrameworkElement", "private Control", contents)
@@ -264,6 +267,7 @@ def translateNames (contents):
   contents = re.sub ("TextBox\.Document", r"TextBox.Text", contents)
 
   contents = re.sub ("GetTemplateChild\(\"(.*?)\"\) as (.*?);", r'e.NameScope.Find<\2>("\1");', contents)
+  contents = re.sub ("GetTemplateChild\((.*?)\) as (.*?);", r'e.NameScope.Find<\2>(\1);', contents)
   contents = re.sub ("CheckTemplatePart<(.*?)>\(GetTemplateChild\(\"(.*?)\"\)\)", r'CheckTemplatePart<\1>(e.NameScope.Find<\1>("\2"))', contents)
   
   contents = re.sub ("BooleanBoxes.FalseBox", "false", contents)
@@ -293,8 +297,6 @@ def translateNames (contents):
 
   contents = re.sub ("FontWeights\.", "FontWeight.", contents)
 
-  contents = re.sub ("DefaultStyleKeyProperty.OverrideMetadata\(typeof\((.*?)\), new FrameworkPropertyMetadata\(typeof\((.*?)\)\)\);", "", contents)
-
   contents = re.sub ("FrameworkPropertyMetadataOptions\.BindsTwoWayByDefault", "defaultBindingMode : BindingMode.TwoWay", contents)
 
   contents = re.sub ("var addChild = \(IAddChild\)this;", "", contents)
@@ -309,6 +311,11 @@ def translateNames (contents):
   contents = re.sub (": Selector", ": SelectingItemsControl", contents)
   
   contents = re.sub ("Dispatcher.CurrentDispatcher.BeginInvoke", "Dispatcher.UIThread.InvokeAsync", contents)
+
+  contents = re.sub ("ModifierKeys\.Windows", "KeyModifiers.Meta", contents)
+  contents = re.sub ("ModifierKeys", "KeyModifiers", contents)
+  contents = re.sub ("\.PreviewKeyDown \+=", ".KeyDown +=", contents)
+  contents = re.sub ("\.PreviewKeyUp \+=", ".KeyUp +=", contents)
   
   return contents
 
@@ -582,9 +589,17 @@ def translateProperties (contents):
     
     
     
-    
+  # Overridemetadata
   
+  # Triggers not yet translated.  
+  pat = re.compile ("([^\.\(\s]*?)\.OverrideMetadata\(typeof\(([^\),]*?)\), new FrameworkPropertyMetadata { DefaultUpdateSourceTrigger = UpdateSourceTrigger.Explicit }\);")
+  contents = re.sub (pat, r" // T30", contents)
   
+  # Where relevant, set the correct types, and move outside static constructor.
+  #contents = re.sub ("DefaultStyleKeyProperty.OverrideMetadata\(typeof\((.*?)\), new FrameworkPropertyMetadata\(typeof\((.*?)\)\)\);", r"protected override Type StyleKeyOverride { get { return typeof(\2 \1); } }", contents)
+  contents = re.sub ("DefaultStyleKeyProperty.OverrideMetadata\(typeof\((.*?)\), new FrameworkPropertyMetadata\(typeof\((.*?)\)\)\);", r"// FIXME  T31", contents)
+
+
   
   # Routed events.
   pat = re.compile ("public static readonly RoutedEvent (.*?)(\s*)\=(\s*)EventManager.RegisterRoutedEvent\((.*?), RoutingStrategy\.(.*?), typeof\(([^,\)]*?)\), typeof\(([^,\)]*?)\)\);")
@@ -835,6 +850,7 @@ def translateTags (contents):
   contents = re.sub ("BitmapScalingMode=\"NearestNeighbor\"", r'BitmapInterpolationMode="LowQuality"', contents)
   contents = re.sub ("<ImageBrush ImageSource=", r'<ImageBrush Source=', contents)
   contents = re.sub ("RenderOptions\.BitmapScalingMode=\"Linear\"", r'RenderOptions.BitmapInterpolationMode="MediumQuality"', contents)
+  contents = re.sub ("RenderOptions\.BitmapScalingMode=\"HighQuality\"", r'RenderOptions.BitmapInterpolationMode="HighQuality"', contents)
   #contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\" />", r'<Setter Property="RenderOptions.BitmapInterpolationMode" Value="LowQuality" />', contents)
   contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\" />", r'', contents) # not accessible at the moment.
   
@@ -924,6 +940,7 @@ def translateTags (contents):
   contents = re.sub ("ListBox\.Style", r'ListBox.Theme', contents) # one line style
   contents = re.sub ("Button\.Style", r'Button.Theme', contents) # one line style
   contents = re.sub ("Path\.Style", r'Path.Theme', contents) # one line style
+  contents = re.sub ("Image\.Style", r'Image.Theme', contents) 
   contents = re.sub ("sd:TagControl\.Style", r'sd:TagControl.Theme', contents) # one line style
   contents = re.sub ("ListBox\.ItemContainerStyle", r'ListBox.ItemContainerTheme', contents) # one line style
   contents = re.sub ("ItemsControl\.ItemContainerStyle", r'ItemsControl.ItemContainerTheme', contents) # one line style
@@ -973,6 +990,9 @@ def translateTags (contents):
   
   # Combobox
   contents = re.sub ("<ComboBox Theme=\"(.*?)\" Text=\"(.*?)\"", r'<ComboBox Theme="\1" PlaceholderText="\2"', contents)
+  
+  # Remove routed commands using application commands.
+  contents = re.sub ("<sd:CommandBindingBehavior RoutedCommand=\"ApplicationCommands\.Delete\" (.*?)/>", r'<!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" \1/> -->', contents)
   
   # Templates.
   
@@ -1261,7 +1281,9 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Controls/GridLogViewer.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/PriorityBinding.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemUserControl.xaml.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Interactivity/Interaction.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Interactivity/Interaction.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/SearchComboBox.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/FrameworkElementDragDropBehavior.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1276,7 +1298,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Interactivity/Interactio
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
-#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.ExpressionDark.normalcolor.xaml")
