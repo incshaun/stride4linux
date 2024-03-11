@@ -162,14 +162,14 @@
               <ControlTheme TargetType="controls:EditableContentListBoxItem" BasedOn="{StaticResource {x:Type controls:EditableContentListBoxItem}}" d:DataContext="{d:DesignInstance viewModel:AssetViewModel}">
                 <Setter Property="CanEdit" Value="{Binding IsLocked, Converter={sd:InvertBool}}"/>
                 <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
-<!--                <Setter Property="sd:Interaction.Behaviors">
+                <Setter Property="sd:Interaction.Behaviors">
                   <Setter.Value>
                     <sd:BehaviorCollection>
                       <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="sd:TextBox" Property="controls:EditableContentListBoxItem.IsEditing" Value="False"/>
                       <sd:OnEventSetPropertyBehavior EventName="Cancelled" EventOwnerType="sd:TextBox" Property="controls:EditableContentListBoxItem.IsEditing" Value="False"/>
                     </sd:BehaviorCollection>
                   </Setter.Value>
-                </Setter>-->
+                </Setter>
               </ControlTheme>
             </controls:EditableContentListBox.ItemContainerTheme>
             <i:Interaction.Behaviors>
@@ -177,7 +177,6 @@
               <behaviors:ListBoxDragDropBehavior DragVisualTemplate="{StaticResource DragVisualTemplate}"/>
               <behaviors:TilePanelThumbnailPrioritizationBehavior/>
               <behaviors:BringSelectionToViewBehavior/>
-<!--               <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding DeleteContentCommand}"/> -->
             </i:Interaction.Behaviors>
           </controls:EditableContentListBox>
         </DataTemplate>
@@ -211,7 +210,7 @@
                       ToolTip.Tip="{sd:Localize Add an asset to this location, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}"
                       IsVisible="{Binding CanAddAssets, ElementName=AssetView}">
           <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding Source={StaticResource ImageNewAsset}, Path=Source}" Stretch="None"/>
+            <Image Source="{Binding Source={StaticResource ImageNewAsset}, Path=Source}" Stretch="None" />
             <TextBlock Text="{sd:Localize Add asset}" Margin="2,2,4,2" VerticalAlignment="Center"/>
           </StackPanel>
           <i:Interaction.Behaviors>
@@ -224,6 +223,8 @@
             <Border.Effect>
               <DropShadowEffect BlurRadius="5" Opacity="0.4"/>
             </Border.Effect>
+            <templateViews:AddItemUserControl TemplateCollection="{Binding AddAssetTemplateCollection}" AddItemCommand="{Binding RunAssetTemplateCommand}"
+                                              SelectFilesToCreateItemCommand="{Binding SelectFilesToCreateAssetCommand}"/>
           </Border>
           <i:Interaction.Behaviors>
             <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="sd:FilteringComboBox" Property="{x:Static Popup.IsOpenProperty}" Value="false"/>
@@ -240,7 +241,7 @@
               <Image Source="{Binding Source={StaticResource UpdateAllAssetsWithModifiedSource}, Path=Source}" Stretch="None"/>
               <Rectangle Fill="{StaticResource NormalBrush}" IsVisible="{Binding Session.SourceTracker.AssetsToUpdate.Count, Converter={sd:NumericToBool}}">
                 <Rectangle.OpacityMask>
-                  <ImageBrush Source="{Binding Source={StaticResource UpdateAllAssetsWithModifiedSource}, Path=Source}"/>
+                  <ImageBrush Source="{Binding Source={StaticResource UpdateAllAssetsWithModifiedSource}, Path=Source}" Stretch="None"/>
                 </Rectangle.OpacityMask>
                 <!-- <Rectangle.Triggers>
                   <EventTrigger RoutedEvent="Window.Loaded">
@@ -264,7 +265,7 @@
               <Image Source="{Binding Source={StaticResource ImageReimportEffects}, Path=Source}" Stretch="None"/>
               <Rectangle Fill="{StaticResource NormalBrush}" IsVisible="{Binding Session.ImportEffectLogPendingCount, Converter={sd:IsGreater},  ConverterParameter={sd:Double 0}}">
                 <Rectangle.OpacityMask>
-                  <ImageBrush Source="{Binding Source={StaticResource ImageReimportEffects}, Path=Source}"/>
+                  <ImageBrush Source="{Binding Source={StaticResource ImageReimportEffects}, Path=Source}" Stretch="None"/>
                 </Rectangle.OpacityMask>
                 <!-- <Rectangle.Triggers>
                   <EventTrigger RoutedEvent="Window.Loaded">
@@ -323,12 +324,10 @@
                 <DockPanel LastChildFill="False">
                   <TextBlock DockPanel.Dock="Left" Text="View" FontWeight="Bold" />
                   <Button DockPanel.Dock="Right" Margin="4 0 0 0" Background="Transparent"
-                          Command="{Binding view:AssetViewUserControl.ZoomInCommand}"
                           ToolTip.Tip="{sd:Localize Zoom in, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
                     <Image Source="{StaticResource ImageZoomIn}"/>
                   </Button>
                   <Button DockPanel.Dock="Right" Background="Transparent"
-                          Command="{Binding view:AssetViewUserControl.ZoomOutCommand}"
                           ToolTip.Tip="{sd:Localize Zoom out, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
                     <Image Source="{StaticResource ImageZoomOut}"/>
                   </Button>
@@ -336,7 +335,7 @@
               </MenuItem.Header>
               <MenuItem Header="{sd:Localize Tiles, Context=Menu}" CommandParameter="{StaticResource AssetTileView}">
                 <MenuItem.Command>
-                  <view:SetContentTemplateCommand Target="{StaticResource AssetViewPresenter}"/>
+                  <view:SetContentTemplateCommand Target="{Binding ElementName=AssetViewPresenter}"/>
                 </MenuItem.Command>
                 <MenuItem.Icon>
                   <Image Grid.Column="0" Source="{StaticResource ImageShowTiles}"/>

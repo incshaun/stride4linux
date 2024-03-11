@@ -14,10 +14,15 @@ using System.Windows.Input;
 
 namespace Stride.Core.Assets.Editor.View
 {
-    public class SetContentTemplateCommand : ICommand
+    public class SetContentTemplateCommand : Control, ICommand
     {
-        public ContentPresenter Target { get; set; }
+        public static readonly StyledProperty<ContentPresenter> TargetProperty = AvaloniaProperty.Register<SetContentTemplateCommand, ContentPresenter>(nameof(Target));
 
+        public ContentPresenter? Target
+        {
+            get => GetValue(TargetProperty);
+            set => SetValue(TargetProperty, value);
+        }
         public bool CanExecute(object parameter)
         {
             return true;

@@ -127,6 +127,8 @@ def translateHeaders (contents):
     headers += "using System.Collections.Generic;\nusing System.Collections.Specialized;\n"
   if re.findall ("ItemsPresenter", contents):
     headers += "using Avalonia.Controls.Presenters;\n"
+  if re.findall ("ICommand", contents):
+    headers += "using System.Windows.Input;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -238,7 +240,7 @@ def translateNames (contents):
 
   contents = re.sub ("= (.*?)\.FindVisualChildOfType\<(.*?)\>\(\);", r'= global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1);', contents)
   contents = re.sub ("!(.*?)\.FindVisualChildOfType\<(.*?)\>\(\)", r'!global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1)', contents)
-  contents = re.sub ("= (.*?)\.FindVisualChildrenOfType\<(.*?)\>\(\);", r'= global::Avalonia.VisualTree.VisualExtensions.GetVisualChildren(\1).Where (x => x is \2).Select (x => (\2) x);', contents)
+  contents = re.sub ("= (.*?)\.FindVisualChildrenOfType\<(.*?)\>\(\)", r'= global::Avalonia.VisualTree.VisualExtensions.GetVisualChildren(\1).Where (x => x is \2).Select (x => (\2) x)', contents)
   contents = re.sub ("\?\? (.*?)\.FindVisualParentOfType\<(.*?)\>\(\);", r'?? global::Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<\2>((Visual) \1);', contents)
   contents = re.sub ("LogicalTreeHelper\.GetChildren", r'LogicalExtensions.GetLogicalChildren', contents)
   contents = re.sub ("LogicalTreeHelper\.GetParent", r'LogicalExtensions.GetLogicalParent', contents)
@@ -526,6 +528,24 @@ def translateProperties (contents):
   
   if len (affectsmeasure) > 0:
     commands += "\t\t\tAffectsMeasure<" + classname + ">(" + affectsmeasure + ");\n"
+
+
+  # handle RegisterAttached.
+ 
+  # Two args. 
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,]*?), ([^,\)]*?)\)\);", re.DOTALL)
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      print (match)
+      commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
+      classname = match[5];
+    contents = re.sub (pat, r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4, \7); // T20A", contents)
+  
+  
+  contents = re.sub (re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\((.*?)\)\);", re.DOTALL), r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4, \7); // T20", contents)
+  
+  
+
   
   # patch in commands to an existing static constructor.
   if len (commands) > 0:
@@ -563,16 +583,12 @@ def translateProperties (contents):
     
     
     
-  # handle RegisterAttached.
-  contents = re.sub (re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\((.*?)\)\);", re.DOTALL), r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4, \7);", contents)
-  
-  
   
   
   
   # Routed events.
   pat = re.compile ("public static readonly RoutedEvent (.*?)(\s*)\=(\s*)EventManager.RegisterRoutedEvent\((.*?), RoutingStrategy\.(.*?), typeof\(([^,\)]*?)\), typeof\(([^,\)]*?)\)\);")
-  contents = re.sub (pat, r"public static readonly RoutedEvent \1 = RoutedEvent.Register<\7, RoutedEventArgs>(\4, RoutingStrategies.\5);", contents)
+  contents = re.sub (pat, r"public static readonly RoutedEvent \1 = RoutedEvent.Register<\7, RoutedEventArgs>(\4, RoutingStrategies.\5); // T21", contents)
 
   contents = re.sub ("protected override void OnItemsChanged\(object sender, ItemsChangedEventArgs args\)", "protected override void OnItemsChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)", contents)
   contents = re.sub ("protected override void OnItemsSourceChanged\(IEnumerable oldValue, IEnumerable newValue\)", "protected override void OnItemsSourceChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)", contents)
@@ -744,6 +760,7 @@ def translateConstants (contents):
   contents = re.sub ("xmlns:view=\"clr-namespace:Stride.Core.Presentation.Quantum.View;assembly=Stride.Core.Presentation.Quantum\"", "xmlns:view=\"clr-namespace:Stride.Core.Presentation.Quantum.View;assembly=Stride.Core.Presentation.Quantum.Avalonia\"", contents)
   contents = re.sub ("xmlns:viewModel=\"clr-namespace:Stride.Core.Assets.Editor.ViewModel\"", "xmlns:viewModel=\"clr-namespace:Stride.Core.Assets.Editor.ViewModel;assembly=Stride.Core.Assets.Editor\"", contents)
   contents = re.sub ("xmlns:assetCommands=\"clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands\"", "xmlns:assetCommands=\"clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands;assembly=Stride.Core.Assets.Editor\"", contents)
+  contents = re.sub ("xmlns:strings=\"clr-namespace:Stride.Core.Assets.Editor.Resources.Strings\"", "xmlns:strings=\"clr-namespace:Stride.Core.Assets.Editor.Avalonia.Resources.Strings\"", contents)
   return contents
 
 # flag any nested comments, and break up the --, which causes compliance issues.
@@ -821,6 +838,17 @@ def translateTags (contents):
   #contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\" />", r'<Setter Property="RenderOptions.BitmapInterpolationMode" Value="LowQuality" />', contents)
   contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\" />", r'', contents) # not accessible at the moment.
   
+  # remap bitmap images.
+  contents = re.sub ("Source=\"{StaticResource UpdateSelectedAssetsFromSource}\"", r'Source="{Binding Source={StaticResource UpdateSelectedAssetsFromSource}, Path=Source}" Stretch="None"', contents) 
+  contents = re.sub ("Source=\"{StaticResource ImageNewAsset}\"", r'Source="{Binding Source={StaticResource ImageNewAsset}, Path=Source}" Stretch="None"', contents) 
+  contents = re.sub ("Source=\"{StaticResource UpdateAllAssetsWithModifiedSource}\"", r'Source="{Binding Source={StaticResource UpdateAllAssetsWithModifiedSource}, Path=Source}" Stretch="None"', contents) 
+  contents = re.sub ("Source=\"{Binding Source={StaticResource ImageNewAsset}, Path=Source}\"", r'Source="{Binding Source={StaticResource ImageNewAsset}, Path=Source}" Stretch="None"', contents) 
+  contents = re.sub ("Source=\"{StaticResource ImageReimportEffects}\"", r'Source="{Binding Source={StaticResource ImageReimportEffects}, Path=Source}" Stretch="None"', contents) 
+  contents = re.sub ("Source=\"{StaticResource ImageReimportEffects}\"", r'Source="{Binding Source={StaticResource ImageReimportEffects}, Path=Source}"', contents) 
+  contents = re.sub ("Source=\"{StaticResource ImageEditAsset}\"", r'Source="{Binding Source={StaticResource ImageEditAsset}, Path=Source}" Stretch="None"', contents) 
+  contents = re.sub ("Stretch=\"None\" Stretch", r'Stretch', contents) 
+  contents = re.sub ("Stretch=\"None\" Width", r'Width', contents) 
+  
   # As many versions of the visibility property, given that we're translating 3 states, to boolean.
   contents = re.sub ("Visibility=\"\{Binding (.*), Converter=\{sd:VisibleOrCollapsed\}\}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"Hidden\"", r'IsVisible="false"', contents)
@@ -837,6 +865,7 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:CountEnumerable}, {sd:NumericToBool}, {sd:VisibleOrCollapsed}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:CountEnumerable}, {sd:NumericToBool}}, FallbackValue=false}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:VisibleOrCollapsed}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:ObjectToBool}}"', contents)
 
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -846,7 +875,7 @@ def translateTags (contents):
   contents = re.sub ("ToolTipService.ShowOnDisabled=\"True\"", r'', contents)
 
   # x:Reference. Better solution pending.
-  contents = re.sub ("x:Reference", r'StaticResource', contents)
+  contents = re.sub ("{x:Reference (.*?)}", r'{Binding ElementName=\1}', contents)
 
   # Case sensitive ok.
   contents = re.sub ("DialogResult=\"Ok\"", r'DialogResult="Ok"', contents)
@@ -892,6 +921,7 @@ def translateTags (contents):
   # Styles become various forms of Theme.
   contents = re.sub ("\<Style TargetType=\"([^\"].*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1"\2></ControlTheme>', contents) # one line style
   contents = re.sub ("sd:TextBox\.Style", r'sd:TextBox.Theme', contents) # one line style
+  contents = re.sub ("ListBox\.Style", r'ListBox.Theme', contents) # one line style
   contents = re.sub ("Button\.Style", r'Button.Theme', contents) # one line style
   contents = re.sub ("Path\.Style", r'Path.Theme', contents) # one line style
   contents = re.sub ("sd:TagControl\.Style", r'sd:TagControl.Theme', contents) # one line style
@@ -1230,6 +1260,8 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ActivateOnCollectionChangedBehavior.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Controls/GridLogViewer.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/PriorityBinding.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemUserControl.xaml.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Interactivity/Interaction.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1244,7 +1276,8 @@ def translateXAML (sourceFile):
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
+
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.ExpressionDark.normalcolor.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.GridElementTemplates.xaml")
@@ -1252,6 +1285,7 @@ translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.x
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/ExpressionDark.normalcolor.Resources.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/TableView.ExpressionDark.normalcolor.Graphics.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/generic.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemUserControl.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

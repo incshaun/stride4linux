@@ -1,0 +1,52 @@
+// Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
+// Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
+using Avalonia;
+using Avalonia.Controls;
+
+using Stride.Core.Annotations;
+
+namespace Stride.Core.Presentation.Interactivity
+{
+    /// <summary>
+    /// A container for an attached dependency property that contains a collection of behavior.
+    /// The purpose of this class is to be used in place of Microsoft.Xaml.Behaviors.Interaction.
+    /// This class allows to set behaviors in styles because <see cref="BehaviorCollection"/>
+    /// has a public parameterless constructor and the Behaviors attached property has a public setter.
+    /// When the collection is modified or set, it automatically synchronize the attached property
+    /// Microsoft.Xaml.Behaviors.Interaction.Behaviors.
+    /// </summary>
+    public class Interaction : Control
+	{
+		static Interaction ()
+		{
+			BehaviorsProperty.Changed.AddClassHandler<Interaction>(OnBehaviorCollectionChanged);
+		}
+
+        public static readonly AttachedProperty<BehaviorCollection> BehaviorsProperty = AvaloniaProperty<BehaviorCollection>.RegisterAttached<Interaction, Control, BehaviorCollection>("Behaviors", new BehaviorCollection()); // T20A
+
+        public static BehaviorCollection GetBehaviors([NotNull] AvaloniaObject obj)
+        {
+            return (BehaviorCollection)obj.GetValue(BehaviorsProperty);
+        }
+
+        public static void SetBehaviors([NotNull] AvaloniaObject obj, BehaviorCollection value)
+        {
+            obj.SetValue(BehaviorsProperty, value);
+        }
+
+        private static void OnBehaviorCollectionChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
+        {
+            var oldValue = (BehaviorCollection)e.OldValue;
+            oldValue?.Detach();
+
+            var newValue = (BehaviorCollection)e.NewValue;
+            if (newValue != null)
+            {
+//                 if (newValue.AssociatedObject != null)
+//                     newValue = newValue.Clone();
+
+                newValue.Attach(d);
+            }
+        }
+    }
+}
