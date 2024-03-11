@@ -85,10 +85,10 @@
                 <ToolTip.Tip>
                   <ContentControl Content="{Binding}">
                     <Control.DataTemplates>
-                      <!-- default template (fallback) -->
-                      <DataTemplate DataType="{x:Type viewModel:SessionObjectViewModel}">
+                      <!-- folder -->
+                      <DataTemplate DataType="{x:Type viewModel:DirectoryViewModel}">
                         <StackPanel>
-                          <TextBlock Text="{Binding Name, StringFormat={sd:Localize Name: {0}}}" FontWeight="Bold"/>
+                          <TextBlock Text="{Binding Path, StringFormat={sd:Localize URL: {0}}}" FontWeight="Bold"/>
                           <TextBlock Text="{Binding TypeDisplayName, StringFormat={sd:Localize Type: {0}}}"/>
                         </StackPanel>
                       </DataTemplate>
@@ -112,10 +112,10 @@
                           </StackPanel>
                         </StackPanel>
                       </DataTemplate>
-                      <!-- folder -->
-                      <DataTemplate DataType="{x:Type viewModel:DirectoryViewModel}">
+                      <!-- default template (fallback) -->
+                      <DataTemplate DataType="{x:Type viewModel:SessionObjectViewModel}">
                         <StackPanel>
-                          <TextBlock Text="{Binding Path, StringFormat={sd:Localize URL: {0}}}" FontWeight="Bold"/>
+                          <TextBlock Text="{Binding Name, StringFormat={sd:Localize Name: {0}}}" FontWeight="Bold"/>
                           <TextBlock Text="{Binding TypeDisplayName, StringFormat={sd:Localize Type: {0}}}"/>
                         </StackPanel>
                       </DataTemplate>

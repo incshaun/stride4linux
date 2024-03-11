@@ -146,9 +146,9 @@ namespace Stride.Editor.Thumbnails
             gameSystems.LoadContent();
 
             // create the default fonts
-            var fontItem = OfflineRasterizedSpriteFontFactory.Create();
-            fontItem.FontType.Size = 22;
-            DefaultFont = OfflineRasterizedFontCompiler.Compile(fontSystem.FontSystem, fontItem, true);
+//             var fontItem = OfflineRasterizedSpriteFontFactory.Create();
+//             fontItem.FontType.Size = 22;
+//             DefaultFont = OfflineRasterizedFontCompiler.Compile(fontSystem.FontSystem, fontItem, true);
 
             // create utility members
             nullGameTime = new GameTime();

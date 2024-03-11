@@ -658,7 +658,8 @@ namespace Stride.Graphics
 #endif
 
 #if STRIDE_UI_SDL
-            gameWindow = (Stride.Graphics.SDL.Window)windowHandle.NativeWindow;
+//            gameWindow = (Stride.Graphics.SDL.Window)windowHandle.NativeWindow;
+            gameWindow = new Stride.Graphics.SDL.Window ("SDL Window", IntPtr.Zero);
 
             var SDL = Graphics.SDL.Window.SDL;
 

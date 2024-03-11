@@ -236,7 +236,7 @@ namespace Stride.Editor.Thumbnails
             {
                 var stream = new MemoryStream();
                 e.ThumbnailStream.CopyTo(stream);
-//                thumbnailData = new BitmapThumbnailData(e.ThumbnailId, stream);
+                thumbnailData = new BitmapThumbnailData(e.ThumbnailId, stream);
             }
 
             if (e.Result != ThumbnailBuildResult.Cancelled)
