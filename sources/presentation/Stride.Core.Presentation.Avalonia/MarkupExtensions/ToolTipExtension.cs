@@ -18,9 +18,9 @@ namespace Stride.Core.Presentation.MarkupExtensions
         /// </summary>
         /// <param name="text">A string representing the tooltip text</param>
         /// <param name="gesture">A string representing the gesture.</param>
-        public ToolTipExtension(string text, string gesture)
+        public ToolTipExtension(object text, string gesture)
         {
-            content = !string.IsNullOrEmpty(gesture) ? $"{text} ({gesture})" : text;
+            content = !string.IsNullOrEmpty(gesture) ? $"{text} ({gesture})" : (string)text;
         }
 
         /// <inheritdoc/>

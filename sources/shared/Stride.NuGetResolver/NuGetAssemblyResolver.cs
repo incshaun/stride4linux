@@ -56,6 +56,7 @@ namespace Stride.Core.Assets
                 folder = Path.GetDirectoryName(folder);
             }
 
+            return;
             // Note: we perform nuget restore inside the assembly resolver rather than top level module ctor (otherwise it freezes)
             AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
             {

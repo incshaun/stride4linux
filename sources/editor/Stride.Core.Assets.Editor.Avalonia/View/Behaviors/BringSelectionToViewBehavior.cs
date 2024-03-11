@@ -28,7 +28,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
         {
             if (AssociatedObject.SelectedIndex >= 0)
             {
-                var panel = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<VirtualizingTilePanel>(AssociatedObject);
+                var panel = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<VirtualizingTilePanel>(AssociatedObject);
                 if (panel != null)
                 {
                     panel.ScrollToIndexedItem(AssociatedObject.SelectedIndex);

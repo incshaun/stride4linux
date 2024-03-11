@@ -127,7 +127,7 @@ namespace Stride.Core.Assets.Editor.Components.Status.Views
 
                 // TODO: should we aggregate all textblocks?
                 //txt = element.FindVisualChildOfType<TextBlock>(); 
-                txt = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<TextBlock>(element); 
+                txt = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<TextBlock>(element); 
             }
 
             if (txt == null)

@@ -55,12 +55,12 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 
         private static VirtualizingTilePanel GetItemsPanel(AvaloniaObject itemsControl)
         {
-            var itemsPresenter = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<ItemsPresenter>((Visual)itemsControl);
+            var itemsPresenter = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<ItemsPresenter>((Visual)itemsControl);
 
             if (itemsPresenter == null)
                 throw new InvalidOperationException("Unable to reach the ItemsPresenter of the associated ItemsControl.");
 
-            var itemsPanel = (VirtualizingTilePanel)Avalonia.VisualTree.VisualExtensions.GetVisualChildren(itemsPresenter).First ();
+            var itemsPanel = (VirtualizingTilePanel)global::Avalonia.VisualTree.VisualExtensions.GetVisualChildren(itemsPresenter).First ();
 
             if (itemsPanel == null)
                 throw new InvalidOperationException("Unable to reach the VirtualizingTilePanel of the associated ItemsControl.");

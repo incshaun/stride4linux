@@ -160,16 +160,18 @@ def translateAnnotations (contents):
 
 def translateNames (contents):
   #contents = re.sub ("DependencyProperty", "AvaloniaProperty", contents)
-  contents = re.sub ("ICommand ", "ICommandSource ", contents)
-  contents = re.sub ("<ICommand>", "<ICommandSource>", contents)
-  contents = re.sub (", ICommand>", ", ICommandSource>", contents)
-  contents = re.sub ("\(ICommand\)", "(ICommandSource)", contents)
-  contents = re.sub ("as ICommand;", " as ICommandSource;", contents)
-  contents = re.sub ("RoutedCommand", "ICommandSource", contents) # provisional.
-  contents = re.sub ("Command\.CanExecuteChanged \-\=", "Command.Command.CanExecuteChanged -=", contents) # provisional.
-  contents = re.sub ("Command\.CanExecuteChanged \+\=", "Command.Command.CanExecuteChanged +=", contents) # provisional.
-  contents = re.sub ("\.CanExecute\(", ".Command.CanExecute(", contents) # provisional.
-  contents = re.sub ("\.Execute\(", ".Command.Execute(", contents) # provisional.
+  
+  # Suspended, have added RoutedCommand.
+  #contents = re.sub ("ICommand ", "ICommandSource ", contents)
+  #contents = re.sub ("<ICommand>", "<ICommandSource>", contents)
+  #contents = re.sub (", ICommand>", ", ICommandSource>", contents)
+  #contents = re.sub ("\(ICommand\)", "(ICommandSource)", contents)
+  #contents = re.sub ("as ICommand;", " as ICommandSource;", contents)
+  #contents = re.sub ("RoutedCommand", "ICommandSource", contents) # provisional.
+  #contents = re.sub ("Command\.CanExecuteChanged \-\=", "Command.Command.CanExecuteChanged -=", contents) # provisional.
+  #contents = re.sub ("Command\.CanExecuteChanged \+\=", "Command.Command.CanExecuteChanged +=", contents) # provisional.
+  #contents = re.sub ("\.CanExecute\(", ".Command.CanExecute(", contents) # provisional.
+  #contents = re.sub ("\.Execute\(", ".Command.Execute(", contents) # provisional.
   
   contents = re.sub ("static DependencyProperty", "static AvaloniaProperty", contents) # provisional.
   contents = re.sub ("DependencyProperty property", "AvaloniaProperty property", contents) # provisional.
@@ -234,13 +236,13 @@ def translateNames (contents):
   contents = re.sub ("colorPickerRenderSurface\.Fill = new DrawingBrush\(new ImageDrawing\(BitmapSource.Create\(width, height, 96, 96, pf, null, rawImage, rawStride\), new Rect\(0.0f, 0.0f, width, height\)\)\);", r'int size = Marshal.SizeOf(rawImage[0]) * rawImage.Length;\n\t\t\t\t\tIntPtr pnt = Marshal.AllocHGlobal(size);\n\t\t\t\t\tMarshal.Copy(rawImage, 0, pnt, rawImage.Length);\n\t\t\t\t\tcolorPickerRenderSurface.Fill = new ImageBrush(new Avalonia.Media.Imaging.Bitmap(pf, AlphaFormat.Premul, pnt, new PixelSize (width, height), new Vector (96, 96), rawStride));\n\t\t\t\t\tMarshal.FreeHGlobal(pnt);', contents)
 
 
-  contents = re.sub ("= (.*?)\.FindVisualChildOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1);', contents)
-  contents = re.sub ("!(.*?)\.FindVisualChildOfType\<(.*?)\>\(\)", r'!Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1)', contents)
-  contents = re.sub ("= (.*?)\.FindVisualChildrenOfType\<(.*?)\>\(\);", r'= Avalonia.VisualTree.VisualExtensions.GetVisualChildren(\1).Where (x => x is \2).Select (x => (\2) x);', contents)
-  contents = re.sub ("\?\? (.*?)\.FindVisualParentOfType\<(.*?)\>\(\);", r'?? Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<\2>((Visual) \1);', contents)
+  contents = re.sub ("= (.*?)\.FindVisualChildOfType\<(.*?)\>\(\);", r'= global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1);', contents)
+  contents = re.sub ("!(.*?)\.FindVisualChildOfType\<(.*?)\>\(\)", r'!global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1)', contents)
+  contents = re.sub ("= (.*?)\.FindVisualChildrenOfType\<(.*?)\>\(\);", r'= global::Avalonia.VisualTree.VisualExtensions.GetVisualChildren(\1).Where (x => x is \2).Select (x => (\2) x);', contents)
+  contents = re.sub ("\?\? (.*?)\.FindVisualParentOfType\<(.*?)\>\(\);", r'?? global::Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<\2>((Visual) \1);', contents)
   contents = re.sub ("LogicalTreeHelper\.GetChildren", r'LogicalExtensions.GetLogicalChildren', contents)
   contents = re.sub ("LogicalTreeHelper\.GetParent", r'LogicalExtensions.GetLogicalParent', contents)
-  contents = re.sub ("VisualTreeHelper\.GetParent", r'Avalonia.VisualTree.VisualExtensions.GetVisualParent', contents)
+  contents = re.sub ("VisualTreeHelper\.GetParent", r'global::Avalonia.VisualTree.VisualExtensions.GetVisualParent', contents)
 
   contents = re.sub ("<ButtonBase>", "<Button>", contents)
   contents = re.sub ("\(ButtonBase\)", "(Button)", contents)
@@ -802,7 +804,8 @@ def translateTags (contents):
   contents = re.sub ("</ToolBarTray.Resources>", r'</StackPanel.Resources>', contents)
   
   # May want HeaderedItemsControl if header field.
-  contents = re.sub ("<ToolBar ([^>]*?)>", r'<ItemsControl \1>\n\t<ItemsControl.ItemsPanel>\n\t\t<ItemsPanelTemplate>\n\t\t\t<StackPanel Orientation="Horizontal">\n\t\t\t</StackPanel>\n\t\t</ItemsPanelTemplate>\n\t</ItemsControl.ItemsPanel>', contents)
+  contents = re.sub ("<ToolBar ([^/>]*?)>", r'<ItemsControl \1>\n\t<ItemsControl.ItemsPanel>\n\t\t<ItemsPanelTemplate>\n\t\t\t<StackPanel Orientation="Horizontal">\n\t\t\t</StackPanel>\n\t\t</ItemsPanelTemplate>\n\t</ItemsControl.ItemsPanel>', contents)
+  contents = re.sub ("<ToolBar ([^/>]*?)/>", r'<ItemsControl \1>\n\t<ItemsControl.ItemsPanel>\n\t\t<ItemsPanelTemplate>\n\t\t\t<StackPanel Orientation="Horizontal">\n\t\t\t</StackPanel>\n\t\t</ItemsPanelTemplate>\n\t</ItemsControl.ItemsPanel>\n\t</ItemsControl>', contents)
   contents = re.sub ("<ToolBar>", r'<ItemsControl>\n\t<ItemsControl.ItemsPanel>\n\t\t<ItemsPanelTemplate>\n\t\t\t<StackPanel Orientation="Horizontal">\n\t\t\t</StackPanel>\n\t\t</ItemsPanelTemplate>\n\t</ItemsControl.ItemsPanel>', contents)
   contents = re.sub ("</ToolBar>", r'</ItemsControl>', contents)
   contents = re.sub (" ToolBar\.", r' ItemsControl.', contents)
@@ -814,6 +817,9 @@ def translateTags (contents):
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"\.\./Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
   contents = re.sub ("BitmapScalingMode=\"NearestNeighbor\"", r'BitmapInterpolationMode="LowQuality"', contents)
   contents = re.sub ("<ImageBrush ImageSource=", r'<ImageBrush Source=', contents)
+  contents = re.sub ("RenderOptions\.BitmapScalingMode=\"Linear\"", r'RenderOptions.BitmapInterpolationMode="MediumQuality"', contents)
+  #contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\" />", r'<Setter Property="RenderOptions.BitmapInterpolationMode" Value="LowQuality" />', contents)
+  contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\" />", r'', contents) # not accessible at the moment.
   
   # As many versions of the visibility property, given that we're translating 3 states, to boolean.
   contents = re.sub ("Visibility=\"\{Binding (.*), Converter=\{sd:VisibleOrCollapsed\}\}\"", r'IsVisible="{Binding \1}"', contents)
@@ -822,6 +828,15 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:InvertBool}}"', contents)
 
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrHidden}}}\"", r'IsVisible="{Binding \1, Converter={sd:ObjectToBool}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:NumericToBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:NumericToBool}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:IsGreater}, {sd:VisibleOrCollapsed},  Parameter1={sd:Double 0}}}\"", r'IsVisible="{Binding \1, Converter={sd:IsGreater},  ConverterParameter={sd:Double 0}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:NumericToBool}, {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:NumericToBool}, {sd:InvertBool}}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrCollapsed}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}, FallbackValue=false}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:VisibleOrHidden}, FallbackValue={sd:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:CountEnumerable}, {sd:NumericToBool}, {sd:VisibleOrCollapsed}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:CountEnumerable}, {sd:NumericToBool}}, FallbackValue=false}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:CountEnumerable}, {sd:NumericToBool}, {sd:VisibleOrCollapsed}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:CountEnumerable}, {sd:NumericToBool}}, FallbackValue=false}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:VisibleOrCollapsed}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"', contents)
 
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -830,12 +845,17 @@ def translateTags (contents):
   contents = re.sub ("</ToolTipService\.ToolTip>", r'</ToolTip.Tip>', contents)
   contents = re.sub ("ToolTipService.ShowOnDisabled=\"True\"", r'', contents)
 
+  # x:Reference. Better solution pending.
+  contents = re.sub ("x:Reference", r'StaticResource', contents)
+
   # Case sensitive ok.
   contents = re.sub ("DialogResult=\"Ok\"", r'DialogResult="Ok"', contents)
 
   # ContentSource  
+  contents = re.sub ("<ContentPresenter ContentSource=\"Content\"/>", r'<ContentPresenter ContentTemplate="{Binding Content}"/>', contents)
   contents = re.sub ("ContentSource=\"(.*?)\"", r'ContentTemplate="\1"', contents)
   contents = re.sub ("ContentTemplateSelector=\"(.*?)\"", r'ContentTemplate="\1"', contents)
+  
 
   # SnapToDevicePixels, AllowsTransparency. Elements that don't seem to have an equivalent.
   contents = re.sub ("SnapsToDevicePixels=\"(.*?)\"", "", contents)
@@ -849,13 +869,15 @@ def translateTags (contents):
   contents = re.sub (re.compile ("<Setter Property=\"WindowChrome.WindowChrome\">(.*?)</Setter>", re.DOTALL), "", contents)  
   contents = re.sub ("WindowChrome.IsHitTestVisibleInChrome=\"(.*?)\"", "", contents)
   contents = re.sub ("DashCap=\"Flat\"", "", contents)
-  contents = re.sub ("d:DataContext=\"{d:DesignInstance (.*?)}\"", "", contents)
+  #contents = re.sub ("d:DataContext=\"{d:DesignInstance (.*?)}\"", "", contents) # possibly bad. Version in header needs to be handled differently.
+  contents = re.sub ("mc:Ignorable=\"d\" d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r'mc:Ignorable="d"\2>\n\t<Design.DataContext>\n\t\t<\1 />\n\t</Design.DataContext>', contents)
 
   # xmlsn:i
   contents = re.sub ("xmlns:i=\"http://schemas.microsoft.com/xaml/behaviors\"", "xmlns:i=\"clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity\"", contents)
   
   contents = re.sub ("Value=\"{sd:False}\"", 'Value="false"', contents)
   
+  contents = re.sub ("TextSearch\.TextPath", 'TextSearch.Text', contents)
   
   # ResourceDictionary with source.
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\" /\>", r'<ResourceInclude Source="\1.axaml" />', contents)
@@ -868,13 +890,15 @@ def translateTags (contents):
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ActiveCaptionTextBrushKey\}\}", r'{StaticResource ActiveCaptionTextBrushKey}', contents) # one line style  
   
   # Styles become various forms of Theme.
-  contents = re.sub ("\<Style TargetType=\"(.*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1">\2</ControlTheme>', contents) # one line style
-  contents = re.sub ("sd:TextBox.Style", r'sd:TextBox.Theme', contents) # one line style
-  contents = re.sub ("Button.Style", r'Button.Theme', contents) # one line style
-  contents = re.sub ("Path.Style", r'Path.Theme', contents) # one line style
-  contents = re.sub ("sd:TagControl.Style", r'sd:TagControl.Theme', contents) # one line style
-  contents = re.sub ("ListBox.ItemContainerStyle", r'ListBox.ItemContainerTheme', contents) # one line style
-  contents = re.sub ("ItemsControl.ItemContainerStyle", r'ItemsControl.ItemContainerTheme', contents) # one line style
+  contents = re.sub ("\<Style TargetType=\"([^\"].*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1"\2></ControlTheme>', contents) # one line style
+  contents = re.sub ("sd:TextBox\.Style", r'sd:TextBox.Theme', contents) # one line style
+  contents = re.sub ("Button\.Style", r'Button.Theme', contents) # one line style
+  contents = re.sub ("Path\.Style", r'Path.Theme', contents) # one line style
+  contents = re.sub ("sd:TagControl\.Style", r'sd:TagControl.Theme', contents) # one line style
+  contents = re.sub ("ListBox\.ItemContainerStyle", r'ListBox.ItemContainerTheme', contents) # one line style
+  contents = re.sub ("ItemsControl\.ItemContainerStyle", r'ItemsControl.ItemContainerTheme', contents) # one line style
+
+  contents = re.sub ("FrameworkElement\.Resources", r'Control.Resources', contents) # one line style
 
   # FIXME: require TargetType.
   pat = regex.compile ("<Style(\s[^>]*)*>(((?R)|.)*?)<\/Style>", regex.DOTALL)
@@ -896,6 +920,7 @@ def translateTags (contents):
   contents = re.sub (re.compile ("\<DataTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<i:Interaction\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<Style\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1\.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<Rectangle\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <Rectangle.Triggers>\1\.Triggers> -->", contents)
   
   # Fix nested comments.
   contents = removeNestedComments (contents)
@@ -963,7 +988,13 @@ def translateTags (contents):
   contents = re.sub (re.compile ("IsEditable=\"(.*?)\"", re.DOTALL), "", contents) # might need to look for the FluentAvalonia editable combobox if this is true?
   contents = re.sub (re.compile ("<Setter Property=\"IsEditable\" Value=\"(.*?)\"/>", re.DOTALL), "", contents) 
   contents = re.sub (re.compile ("Theme=\"{StaticResource {x:Static ItemsControl.ToggleButtonStyleKey}}\"", re.DOTALL), "", contents) 
-  contents = re.sub (re.compile ("ToolTipService.InitialShowDelay=\"1\"", re.DOTALL), "", contents) 
+  contents = re.sub (re.compile ("ToolTipService\.InitialShowDelay=\"1\"", re.DOTALL), "", contents) 
+  contents = re.sub (re.compile ("<CollectionViewSource ([^/]*?)/>", re.DOTALL), "", contents) 
+  contents = re.sub (re.compile ("VirtualizingPanel\.IsVirtualizing=\"True\"", re.DOTALL), "", contents) 
+  contents = re.sub (re.compile ("VirtualizingPanel\.VirtualizationMode=\"Recycling\"", re.DOTALL), "", contents) 
+  contents = re.sub (re.compile ("IsChecked=\"(.*?)\"", re.DOTALL), "", contents)  # hopefully in new avalonia
+  contents = re.sub (re.compile ("IsCheckable=\"False\"", re.DOTALL), "", contents)  # hopefully in new avalonia
+  contents = re.sub (re.compile ("SelectionMode=\"Extended\"", re.DOTALL), "", contents)  # hopefully in new avalonia
   
   return contents
 
@@ -1213,14 +1244,14 @@ def translateXAML (sourceFile):
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
-#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
+translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.ExpressionDark.normalcolor.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.GridElementTemplates.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/Common.Resources.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/ExpressionDark.normalcolor.Resources.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/TableView.ExpressionDark.normalcolor.Graphics.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/generic.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/generic.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

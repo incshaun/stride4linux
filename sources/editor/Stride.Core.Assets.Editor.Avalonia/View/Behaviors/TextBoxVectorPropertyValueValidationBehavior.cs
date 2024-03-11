@@ -75,7 +75,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 
         private void OnAssociatedObjectLoaded(object sender, RoutedEventArgs e)
         {
-            var textBoxes = Avalonia.VisualTree.VisualExtensions.GetVisualChildren(AssociatedObject).Where (x => x is TextBoxBase).Select (x => (TextBoxBase) x);
+            var textBoxes = global::Avalonia.VisualTree.VisualExtensions.GetVisualChildren(AssociatedObject).Where (x => x is TextBoxBase).Select (x => (TextBoxBase) x);
             textBoxes.ForEach(x =>
             {
                 x.Validating += OnValidating;
@@ -106,7 +106,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
             base.OnDetaching();
 
             AssociatedObject.Loaded -= OnAssociatedObjectLoaded;
-            var textBoxes = Avalonia.VisualTree.VisualExtensions.GetVisualChildren(AssociatedObject).Where (x => x is TextBoxBase).Select (x => (TextBoxBase) x);
+            var textBoxes = global::Avalonia.VisualTree.VisualExtensions.GetVisualChildren(AssociatedObject).Where (x => x is TextBoxBase).Select (x => (TextBoxBase) x);
             textBoxes.ForEach(x =>
             {
                 x.Validating -= OnValidating;

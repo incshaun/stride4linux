@@ -16,6 +16,8 @@ using Stride.Core.Presentation.Extensions;
 
 using Avalonia.Interactivity;
 
+using System.Windows.Input;
+
 namespace Stride.Core.Assets.Editor.View
 {
     /// <summary>
@@ -96,12 +98,12 @@ namespace Stride.Core.Assets.Editor.View
         /// <summary>
         /// Gets the command that will increase the size of thumbnails.
         /// </summary>
-        public static ICommandSource ZoomInCommand { get; }
+        public static ICommand ZoomInCommand { get; }
 
         /// <summary>
         /// Gets the command that will decrease the size of thumbnails.
         /// </summary>
-        public static ICommandSource ZoomOutCommand { get; }
+        public static ICommand ZoomOutCommand { get; }
 
         static AssetViewUserControl()
 		{
@@ -112,12 +114,15 @@ namespace Stride.Core.Assets.Editor.View
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), new CommandBinding(BeginEditCommand, BeginEdit, CanBeginEditCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(AssetViewUserControl), new InputBinding(BeginEditCommand, new KeyGesture(Key.F2)));
 // 
-//             ZoomInCommand = new ICommandSource(nameof(ZoomInCommand), typeof(AssetViewUserControl));
+            ZoomInCommand = new RoutedCommand<AssetViewUserControl>(ZoomIn);
+
+            //             ZoomInCommand = new RoutedCommand(nameof(ZoomInCommand), typeof(AssetViewUserControl));
 //             var zoomInCommandBinding = new CommandBinding(ZoomInCommand, ZoomIn);
 //             zoomInCommandBinding.PreviewCanExecute += (s, e) => e.CanExecute = true;
 //             zoomInCommandBinding.PreviewExecuted += ZoomIn;
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), zoomInCommandBinding);
 // 
+             ZoomOutCommand = new RoutedCommand<AssetViewUserControl>(ZoomOut);
 //             ZoomOutCommand = new ICommandSource(nameof(ZoomOutCommand), typeof(AssetViewUserControl));
 //             var zoomOutCommandBinding = new CommandBinding(ZoomOutCommand, ZoomOut);
 //             zoomOutCommandBinding.PreviewCanExecute += (s, e) => e.CanExecute = true;
@@ -216,55 +221,55 @@ namespace Stride.Core.Assets.Editor.View
             if (selectedAsset == null)
                 return;
 
-            var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
+            var listBox = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
             listBox?.BeginEdit();
 
-            var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(AssetViewPresenter);
+            var gridView = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(AssetViewPresenter);
             gridView?.BeginEdit();
         }
 
-        private void ZoomIn()
+        private static void ZoomIn(AssetViewUserControl d)
         {
-            var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
+            var listBox = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(d.AssetViewPresenter);
             if (listBox != null)
             {
-                TileThumbnailSize += ThumbnailZoomIncrement;
-                if (TileThumbnailSize >= ThumbnailMaximumSize)
+                d.TileThumbnailSize += d.ThumbnailZoomIncrement;
+                if (d.TileThumbnailSize >= d.ThumbnailMaximumSize)
                 {
-                    TileThumbnailSize = ThumbnailMaximumSize;
+                    d.TileThumbnailSize = d.ThumbnailMaximumSize;
                 }
             }
 
-            var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(AssetViewPresenter);
+            var gridView = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(d.AssetViewPresenter);
             if (gridView != null)
             {
-                GridThumbnailSize += ThumbnailZoomIncrement;
-                if (GridThumbnailSize >= ThumbnailMaximumSize)
+                d.GridThumbnailSize += d.ThumbnailZoomIncrement;
+                if (d.GridThumbnailSize >= d.ThumbnailMaximumSize)
                 {
-                    GridThumbnailSize = ThumbnailMaximumSize;
+                    d.GridThumbnailSize = d.ThumbnailMaximumSize;
                 }
             }
         }
 
-        private void ZoomOut()
+        private static void ZoomOut(AssetViewUserControl d)
         {
-            var listBox = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(AssetViewPresenter);
+            var listBox = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<EditableContentListBox>(d.AssetViewPresenter);
             if (listBox != null)
             {
-                TileThumbnailSize -= ThumbnailZoomIncrement;
-                if (TileThumbnailSize <= ThumbnailMinimumSize)
+                d.TileThumbnailSize -= d.ThumbnailZoomIncrement;
+                if (d.TileThumbnailSize <= d.ThumbnailMinimumSize)
                 {
-                    TileThumbnailSize = ThumbnailMinimumSize;
+                    d.TileThumbnailSize = d.ThumbnailMinimumSize;
                 }
             }
 
-            var gridView = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(AssetViewPresenter);
+            var gridView = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<DataGrid>(d.AssetViewPresenter);
             if (gridView != null)
             {
-                GridThumbnailSize -= ThumbnailZoomIncrement;
-                if (GridThumbnailSize <= ThumbnailMinimumSize)
+                d.GridThumbnailSize -= d.ThumbnailZoomIncrement;
+                if (d.GridThumbnailSize <= d.ThumbnailMinimumSize)
                 {
-                    GridThumbnailSize = ThumbnailMinimumSize;
+                    d.GridThumbnailSize = d.ThumbnailMinimumSize;
                 }
             }
         }
@@ -326,13 +331,13 @@ namespace Stride.Core.Assets.Editor.View
         private static void ZoomIn(object sender, RoutedEventArgs e)
         {
             var assetView = (AssetViewUserControl)sender;
-            assetView.ZoomIn();
+            AssetViewUserControl.ZoomIn(assetView);
         }
 
         private static void ZoomOut(object sender, RoutedEventArgs e)
         {
             var assetView = (AssetViewUserControl)sender;
-            assetView.ZoomOut();
+            AssetViewUserControl.ZoomOut(assetView);
         }
 
         /// <summary>

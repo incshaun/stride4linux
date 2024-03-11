@@ -72,7 +72,7 @@ namespace Stride.Core.Assets.Editor.View.Controls
 
         private void OnEditableListBoxLoaded(object sender, RoutedEventArgs e)
         {
-            scrollViewer = Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<ScrollViewer>(this);
+            scrollViewer = global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<ScrollViewer>(this);
 
             if (scrollViewer != null)
                 scrollViewer.ScrollChanged += ScrollViewerScrollChanged;
