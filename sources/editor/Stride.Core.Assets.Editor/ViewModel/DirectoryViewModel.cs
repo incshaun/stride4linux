@@ -18,7 +18,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
     {
         private string name;
         private DirectoryBaseViewModel parent;
-        private static ThumbnailData FolderThumbnail;
+        private static IThumbnailData FolderThumbnail;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectoryViewModel"/> class with a parent directory.
@@ -78,7 +78,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
         public string RootContainerName => Package.Name;
 
         /// <inheritdoc/>
-        public ThumbnailData ThumbnailData => FolderThumbnail ?? (FolderThumbnail = GetFolderThumbnail(Dispatcher));
+        public IThumbnailData ThumbnailData => FolderThumbnail ?? (FolderThumbnail = GetFolderThumbnail(Dispatcher));
 
         /// <inheritdoc/>
         public override string TypeDisplayName => "Folder";
@@ -89,13 +89,16 @@ namespace Stride.Core.Assets.Editor.ViewModel
         [NotNull]
         public ICommandBase RenameCommand { get; }
 
-        private static ThumbnailData GetFolderThumbnail(IDispatcherService dispatcher)
+        private static IThumbnailData GetFolderThumbnail(IDispatcherService dispatcher)
         {
-            const string assetKey = "FolderIconAlfredo";
-            var objectId = ObjectId.FromObject(assetKey);
-            var data = new ResourceThumbnailData(objectId, assetKey);
-            data.PrepareForPresentation(dispatcher).Forget();
-            return data;
+//             const string assetKey = "FolderIconAlfredo";
+//             var objectId = ObjectId.FromObject(assetKey);
+//             var data = new ResourceThumbnailData(objectId, assetKey);
+//             data.PrepareForPresentation(dispatcher).Forget();
+//             return data;
+            
+            Console.WriteLine ("ResourceThumb");
+            return null;
         }
 
         public override bool CanDelete(out string error)

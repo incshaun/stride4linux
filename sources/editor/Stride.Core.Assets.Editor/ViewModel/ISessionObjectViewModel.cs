@@ -15,7 +15,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
 
         SessionViewModel Session { get; }
 
-        ThumbnailData ThumbnailData { get; }
+        IThumbnailData ThumbnailData { get; }
 
         string TypeDisplayName { get; }
     }

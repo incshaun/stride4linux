@@ -6,7 +6,7 @@ namespace Stride.Core.Assets.Editor.Services
 {
     public class ThumbnailCompletedArgs : EventArgs
     {
-        public ThumbnailCompletedArgs(AssetId assetId, ThumbnailData data)
+        public ThumbnailCompletedArgs(AssetId assetId, IThumbnailData data)
         {
             AssetId = assetId;
             Data = data;
@@ -14,6 +14,6 @@ namespace Stride.Core.Assets.Editor.Services
 
         public AssetId AssetId { get; private set; }
 
-        public ThumbnailData Data { get; private set; }
+        public IThumbnailData Data { get; private set; }
     }
 }

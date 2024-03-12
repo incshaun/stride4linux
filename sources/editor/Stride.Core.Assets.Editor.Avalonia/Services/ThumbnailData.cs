@@ -14,7 +14,7 @@ using Stride.Core.Presentation.ViewModels;
 
 namespace Stride.Core.Assets.Editor.Services
 {
-    public abstract class ThumbnailData : ViewModelBase
+    public abstract class ThumbnailData : ViewModelBase, IThumbnailData
     {
         protected readonly ObjectId thumbnailId;
         private static readonly Dictionary<ObjectId, Task<IImage>> ComputingThumbnails = new Dictionary<ObjectId, Task<IImage>>();

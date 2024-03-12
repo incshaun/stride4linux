@@ -54,7 +54,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
         /// <summary>
         /// Gets the <see cref="ThumbnailData"/> associated to this <see cref="SessionObjectViewModel"/>.
         /// </summary>
-        ThumbnailData ISessionObjectViewModel.ThumbnailData { get; } = null;
+        IThumbnailData ISessionObjectViewModel.ThumbnailData { get; } = null;
 
         /// <summary>
         /// Marks this view model as undeleted.
