@@ -91,14 +91,14 @@ namespace Stride.Core.Assets.Editor.ViewModel
 
         private static IThumbnailData GetFolderThumbnail(IDispatcherService dispatcher)
         {
-//             const string assetKey = "FolderIconAlfredo";
-//             var objectId = ObjectId.FromObject(assetKey);
+            const string assetKey = "FolderIconAlfredo";
+            var objectId = ObjectId.FromObject(assetKey);
 //             var data = new ResourceThumbnailData(objectId, assetKey);
-//             data.PrepareForPresentation(dispatcher).Forget();
-//             return data;
-            
-            Console.WriteLine ("ResourceThumb");
-            return null;
+            Console.WriteLine ("ResourceThumb A " + objectId + " " + assetKey);
+            var data = ThumbnailDataBase.createThumb ("ResourceThumbnailData", objectId, assetKey);
+            Console.WriteLine ("ResourceThumb " + data);
+            data.PrepareForPresentation(dispatcher).Forget();
+            return data;
         }
 
         public override bool CanDelete(out string error)

@@ -14,11 +14,34 @@ namespace Stride.Core.Assets.Editor.Services
     {
         public abstract Task PrepareForPresentation(IDispatcherService dispatcher);
         
+        public virtual IThumbnailData Build (ObjectId thumbnailId, object param) 
+        {
+            Console.WriteLine ("Calling base");
+            return null;
+        }
 // 
 //         
 //                 
     }
 
+    public class ThumbnailDataBase
+    {
+        private static Dictionary <string, object> thumbSource = new Dictionary <string, object> ();
+        
+        public static void addSource (string name, object value)
+        {
+//             thumbSource.Add (name, value);
+            thumbSource[name] = value;
+        }
+        
+        public static IThumbnailData createThumb (string name, ObjectId thumbnailId, object param)
+        {
+            Console.WriteLine ("Creating thumb: " + name);
+            Console.WriteLine ("Creating thumb: " + name + " " + thumbSource[name]);
+            return ((IThumbnailData) (thumbSource[name])).Build (thumbnailId, param);
+        }
+    }
+    
 //     public partial class ThumbnailData : ViewModelBase, IThumbnailData
 //     {
 //         protected readonly ObjectId thumbnailId;

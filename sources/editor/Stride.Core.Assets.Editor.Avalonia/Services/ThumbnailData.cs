@@ -25,6 +25,11 @@ namespace Stride.Core.Assets.Editor.Services
             this.thumbnailId = thumbnailId;
         }
 
+        public virtual IThumbnailData Build (ObjectId thumbnailId, object param)
+        {
+            return null;
+        }
+        
         public object Presenter { get { return presenter; } set { SetValue(ref presenter, value); } }
 
         public async Task PrepareForPresentation(IDispatcherService dispatcher)
@@ -67,6 +72,24 @@ namespace Stride.Core.Assets.Editor.Services
     public sealed class ResourceThumbnailData : ThumbnailData
     {
         object resourceKey;
+       
+        [ModuleInitializer]
+        public static void Initialize ()
+        {
+            Console.WriteLine ("Init A");
+            ThumbnailDataBase.addSource ("ResourceThumbnailData", new ResourceThumbnailData (ObjectId.Empty, null));
+        }
+        
+        static ResourceThumbnailData ()
+        {
+            Console.WriteLine ("Init B");
+            ThumbnailDataBase.addSource ("ResourceThumbnailData", new ResourceThumbnailData (ObjectId.Empty, null));
+        }
+        
+        public override IThumbnailData Build (ObjectId thumbnailId, object param) 
+        {
+            return new ResourceThumbnailData (thumbnailId, param);
+        }
         
         /// <param name="resourceKey">The key used to fetch the resource, most likely a string.</param>
         public ResourceThumbnailData(ObjectId thumbnailId, object resourceKey) : base(thumbnailId)
@@ -104,6 +127,24 @@ namespace Stride.Core.Assets.Editor.Services
         private static readonly ObjectCache<ObjectId, IImage> Cache = new ObjectCache<ObjectId, IImage>(512);
         private Stream thumbnailBitmapStream;
 
+        [ModuleInitializer]
+        public static void Initialize ()
+        {
+            Console.WriteLine ("Init AA");
+            ThumbnailDataBase.addSource ("BitmapThumbnailData", new BitmapThumbnailData (ObjectId.Empty, null));
+        }
+
+        static BitmapThumbnailData ()
+        {
+            Console.WriteLine ("Init BB");
+            ThumbnailDataBase.addSource ("BitmapThumbnailData", new BitmapThumbnailData (ObjectId.Empty, null));
+        }
+        
+        public override IThumbnailData Build (ObjectId thumbnailId, object param) 
+        {
+            return new BitmapThumbnailData (thumbnailId, (Stream) param);
+        }
+        
         public BitmapThumbnailData(ObjectId thumbnailId, Stream thumbnailBitmapStream) : base(thumbnailId)
         {
             this.thumbnailBitmapStream = thumbnailBitmapStream;
