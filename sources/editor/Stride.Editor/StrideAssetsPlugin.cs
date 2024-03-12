@@ -28,25 +28,25 @@ namespace Stride.Editor
         private readonly Dictionary<object, object> enumImagesDictionary = [];
         private readonly List<ITemplateProvider> templateProviderList = [];
 
-//         protected virtual void RegisterResourceDictionary(ResourceDictionary dictionary)
-//         {
-//             foreach (object entry in dictionary.Keys)
-//             {
-//                 if (entry is Enum)
-//                 {
-//                     enumImagesDictionary.Add(entry, dictionary[entry]);
-//                 }
-//             }
-// 
-//             foreach (object value in dictionary.Values)
-//             {
-//                 var provider = value as ITemplateProvider;
-//                 if (provider != null)
-//                 {
-//                     templateProviderList.Add(provider);
-//                 }
-//             }
-//         }
+        protected virtual void RegisterResourceDictionary(IDictionary<object, object?> dictionary)
+        {
+            foreach (object entry in dictionary.Keys)
+            {
+                if (entry is Enum)
+                {
+                    enumImagesDictionary.Add(entry, dictionary[entry]);
+                }
+            }
+
+            foreach (object value in dictionary.Values)
+            {
+                var provider = value as ITemplateProvider;
+                if (provider != null)
+                {
+                    templateProviderList.Add(provider);
+                }
+            }
+        }
 
         protected abstract void Initialize(ILogger logger);
 

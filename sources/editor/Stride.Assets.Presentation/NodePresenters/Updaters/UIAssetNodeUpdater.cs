@@ -19,7 +19,7 @@ namespace Stride.Assets.Presentation.NodePresenters.Updaters
     /// <summary>
     /// Updater for properties of UIElement in the property grid.
     /// </summary>
-    internal sealed class UIAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class UIAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         private const int AttachedPropertyOrder = 10000;
 

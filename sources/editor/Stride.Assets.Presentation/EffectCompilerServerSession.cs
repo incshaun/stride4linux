@@ -28,7 +28,7 @@ namespace Stride.Assets.Presentation
     /// Handle connection to EffectCompilerServer for a given <see cref="SessionViewModel"/>.
     /// It will let user knows that some new effects were compiled and might need to be imported in your assets.
     /// </summary>
-    class EffectCompilerServerSession : IDisposable
+    public class EffectCompilerServerSession : IDisposable
     {
         class TrackedPackage : IDisposable
         {

@@ -1284,6 +1284,7 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Interactivity/Interaction.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/SearchComboBox.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/FrameworkElementDragDropBehavior.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/StrideDefaultAssetsPlugin.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1298,7 +1299,7 @@ def translateXAML (sourceFile):
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
-translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.ExpressionDark.normalcolor.xaml")
@@ -1308,6 +1309,7 @@ translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.x
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/TableView.ExpressionDark.normalcolor.Graphics.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/generic.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemUserControl.xaml")
+translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/ImageDictionary.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

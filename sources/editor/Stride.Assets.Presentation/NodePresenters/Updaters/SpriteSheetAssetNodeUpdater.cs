@@ -9,7 +9,7 @@ using Stride.Assets.Sprite;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class SpriteSheetAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class SpriteSheetAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

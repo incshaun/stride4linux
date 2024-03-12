@@ -5,7 +5,7 @@ using Stride.Assets.Media;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class VideoAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class VideoAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         private const string AbsoluteWidth = nameof(AbsoluteWidth);
         private const string AbsoluteHeight = nameof(AbsoluteHeight);

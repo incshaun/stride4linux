@@ -10,7 +10,7 @@ using Stride.Core.Assets.Editor.ViewModel;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class EntityHierarchyEditorNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class EntityHierarchyEditorNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

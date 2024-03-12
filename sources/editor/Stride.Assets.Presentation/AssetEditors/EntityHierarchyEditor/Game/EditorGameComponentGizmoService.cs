@@ -246,8 +246,8 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
                 if (attribute == null || !attribute.IsMainGizmo)
                     continue;
 
-                var compIndex = StrideDefaultAssetsPlugin.ComponentOrders.IndexOf(t => t.type == component.GetType());
-                var order = compIndex >= 0 ? StrideDefaultAssetsPlugin.ComponentOrders[compIndex].order : default(int);
+                var compIndex = IStrideDefaultAssetsPlugin.ComponentOrders.IndexOf(t => t.type == component.GetType());
+                var order = compIndex >= 0 ? IStrideDefaultAssetsPlugin.ComponentOrders[compIndex].order : default(int);
                 if (order > mainComponentOrder)
                 {
                     mainComponentOrder = order;
@@ -341,7 +341,7 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
         {
             if (componentType == null) throw new ArgumentNullException(nameof(componentType));
             Type gizmoType;
-            while (!StrideDefaultAssetsPlugin.GizmoTypeDictionary.TryGetValue(componentType, out gizmoType))
+            while (!IStrideDefaultAssetsPlugin.GizmoTypeDictionary.TryGetValue(componentType, out gizmoType))
             {
                 componentType = componentType.BaseType;
                 if (componentType == null) throw new ArgumentException(@"The given type is not an EntityComponent type", nameof(componentType));

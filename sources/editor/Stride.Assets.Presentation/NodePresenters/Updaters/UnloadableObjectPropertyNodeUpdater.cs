@@ -7,7 +7,7 @@ using Stride.Core.Yaml;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class UnloadableObjectPropertyNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class UnloadableObjectPropertyNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

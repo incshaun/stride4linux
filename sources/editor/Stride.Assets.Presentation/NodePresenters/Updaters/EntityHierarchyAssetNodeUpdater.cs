@@ -18,7 +18,7 @@ using Stride.Core.Presentation.Core;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class EntityHierarchyAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class EntityHierarchyAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

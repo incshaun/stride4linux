@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-//using System.Windows;
+//using Avalonia;
+using Avalonia.Controls;
+
 using Avalonia.Controls;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Assets;
@@ -18,8 +20,8 @@ using Stride.Core.Annotations;
 using Stride.Assets.Presentation.AssetEditors.AssetHighlighters;
 using Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.EntityFactories;
 using Stride.Assets.Presentation.AssetEditors.Gizmos;
-// using Stride.Assets.Presentation.NodePresenters.Commands;
-// using Stride.Assets.Presentation.NodePresenters.Updaters;
+using Stride.Assets.Presentation.NodePresenters.Commands;
+using Stride.Assets.Presentation.NodePresenters.Updaters;
 using Stride.Assets.Presentation.SceneEditor.Services;
 using Stride.Assets.Presentation.ViewModel;
 using Stride.Assets.Presentation.ViewModel.CopyPasteProcessors;
@@ -29,10 +31,13 @@ using Stride.Core.Assets.Templates;
 using Stride.Core.Packages;
 using Stride.Editor.Annotations;
 using Stride.Editor.Preview.View;
+using System.Collections.Generic;
+using Avalonia.Animation;
+using Avalonia.Markup.Xaml.Styling;
 
 namespace Stride.Assets.Presentation
 {
-    public sealed partial class StrideDefaultAssetsPlugin : StrideAssetsPlugin
+    public sealed partial class StrideDefaultAssetsPlugin : StrideAssetsPlugin, IStrideDefaultAssetsPlugin
     {
         /// <summary>
         /// Comparer for component types.
@@ -87,47 +92,56 @@ namespace Stride.Assets.Presentation
             ProfileSettings.Add(new PackageSettingsEntry(GameUserSettings.Effect.EffectCompilation, TargetPackage.Executable));
             ProfileSettings.Add(new PackageSettingsEntry(GameUserSettings.Effect.RecordUsedEffects, TargetPackage.Executable));
 
-            LoadDefaultTemplates();
+//             LoadDefaultTemplates();
         }
 
         public static void LoadDefaultTemplates()
         {
             // Load templates
             // Currently hardcoded, this will need to change with plugin system
-            foreach (var packageInfo in new[] { new { Name = "Stride.Assets.Presentation", Version = StrideVersion.NuGetVersion }, new { Name = "Stride.SpriteStudio.Offline", Version = StrideVersion.NuGetVersion }, new { Name = "Stride.Samples.Templates", Version = Stride.Samples.Templates.ThisPackageVersion.Current } })
-            {
-                var logger = new LoggerResult();
-                var packageFile = PackageStore.Instance.GetPackageFileName(packageInfo.Name, new PackageVersionRange(new PackageVersion(packageInfo.Version)));
-                if (packageFile is null)
-                    throw new InvalidOperationException($"Could not find package {packageInfo.Name} {packageInfo.Version}. Ensure packages have been resolved.");
-                var package = Package.Load(logger, packageFile.ToWindowsPath());
-                if (logger.HasErrors)
-                    throw new InvalidOperationException($"Could not load package {packageInfo.Name}:{Environment.NewLine}{logger.ToText()}");
-
-                TemplateManager.RegisterPackage(package);
-            }
+//             foreach (var packageInfo in new[] { new { Name = "Stride.Assets.Presentation", Version = StrideVersion.NuGetVersion }, new { Name = "Stride.SpriteStudio.Offline", Version = StrideVersion.NuGetVersion }, new { Name = "Stride.Samples.Templates", Version = Stride.Samples.Templates.ThisPackageVersion.Current } })
+//             {
+//                 var logger = new LoggerResult();
+//                 var packageFile = PackageStore.Instance.GetPackageFileName(packageInfo.Name, new PackageVersionRange(new PackageVersion(packageInfo.Version)));
+//                 if (packageFile is null)
+//                     throw new InvalidOperationException($"Could not find package {packageInfo.Name} {packageInfo.Version}. Ensure packages have been resolved.");
+//                 var package = Package.Load(logger, packageFile.ToWindowsPath());
+//                 if (logger.HasErrors)
+//                     throw new InvalidOperationException($"Could not load package {packageInfo.Name}:{Environment.NewLine}{logger.ToText()}");
+// 
+//                 TemplateManager.RegisterPackage(package);
+//             }
         }
 
         /// <inheritdoc />
         protected override void Initialize(ILogger logger)
         {
-            imageDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/ImageDictionary.xaml", UriKind.RelativeOrAbsolute));
-            animationPropertyTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/AnimationPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-            entityPropertyTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/EntityPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-            materialPropertyTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/MaterialPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-            skeletonTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/SkeletonPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-            spriteFontTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/SpriteFontPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-            uiTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/UIPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-            graphicsCompositorTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/GraphicsCompositorTemplates.xaml", UriKind.RelativeOrAbsolute));
-            visualScriptingTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/VisualScriptingTemplates.xaml", UriKind.RelativeOrAbsolute));
-            visualScriptingGraphTemplatesDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/VisualScriptEditor/Views/GraphTemplates.xaml", UriKind.RelativeOrAbsolute));
+            Uri uri;
+            
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/ImageDictionary.axaml", UriKind.RelativeOrAbsolute);
+            imageDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+            return;
+            
+            uri = new Uri("avares://Stride.Assets.Presentation/View/AnimationPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
+            animationPropertyTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+
+            uri = new Uri("avares://Stride.Assets.Presentation/View/EntityPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
+            entityPropertyTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+            
+//             materialPropertyTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/MaterialPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
+//             skeletonTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/SkeletonPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
+//             spriteFontTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/SpriteFontPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
+//             uiTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/UIPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
+//             graphicsCompositorTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/GraphicsCompositorTemplates.xaml", UriKind.RelativeOrAbsolute));
+//             visualScriptingTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/VisualScriptingTemplates.xaml", UriKind.RelativeOrAbsolute));
+//             visualScriptingGraphTemplatesDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/VisualScriptEditor/Views/GraphTemplates.xaml", UriKind.RelativeOrAbsolute));
 
             // Make Visual Script colors available to StaticResourceConverter
-            Application.Current.Resources.MergedDictionaries.Add(imageDictionary);
+//             Application.Current.Resources.MergedDictionaries.Add(imageDictionary);
 
             // Make script editor styles and icons available to StaticResourceConverter
-            Application.Current.Resources.MergedDictionaries.Add((ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/ScriptEditor/Resources/Icons.xaml", UriKind.RelativeOrAbsolute)));
-            Application.Current.Resources.MergedDictionaries.Add((ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.xaml", UriKind.RelativeOrAbsolute)));
+//             Application.Current.Resources.MergedDictionaries.Add((ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/ScriptEditor/Resources/Icons.xaml", UriKind.RelativeOrAbsolute)));
+//             Application.Current.Resources.MergedDictionaries.Add((ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.xaml", UriKind.RelativeOrAbsolute)));
 
             var entityFactories = new Core.Collections.SortedList<EntityFactoryCategory, EntityFactoryCategory>();
             foreach (var factoryType in Assembly.GetExecutingAssembly().GetTypes().Where(x => typeof(IEntityFactory).IsAssignableFrom(x) && x.GetConstructor(Type.EmptyTypes) != null))
@@ -179,7 +193,7 @@ namespace Stride.Assets.Presentation
         /// <inheritdoc />
         public override void InitializeSession(SessionViewModel session)
         {
-            session.ServiceProvider.RegisterService(new StrideDialogService());
+//             session.ServiceProvider.RegisterService(new StrideDialogService());
             var assetsViewModel = new StrideAssetsViewModel(session);
 
             session.AssetViewProperties.RegisterNodePresenterCommand(new FetchEntityCommand());
@@ -204,7 +218,7 @@ namespace Stride.Assets.Presentation
             session.AssetViewProperties.RegisterNodePresenterUpdater(new ModelAssetNodeUpdater());
             session.AssetViewProperties.RegisterNodePresenterUpdater(new ModelNodeLinkNodeUpdater());
             session.AssetViewProperties.RegisterNodePresenterUpdater(new SkeletonAssetNodeUpdater());
-            session.AssetViewProperties.RegisterNodePresenterUpdater(new SpriteFontAssetNodeUpdater());
+//             session.AssetViewProperties.RegisterNodePresenterUpdater(new SpriteFontAssetNodeUpdater());
             session.AssetViewProperties.RegisterNodePresenterUpdater(new SpriteSheetAssetNodeUpdater());
             session.AssetViewProperties.RegisterNodePresenterUpdater(new UIAssetNodeUpdater());
             session.AssetViewProperties.RegisterNodePresenterUpdater(new TextureAssetNodeUpdater());
@@ -226,7 +240,7 @@ namespace Stride.Assets.Presentation
             session.SuggestedPackages.Add(new PackageName(typeof(Stride.Navigation.NavigationComponent).Assembly.GetName().Name, new PackageVersion(StrideVersion.NuGetVersion)));
             session.SuggestedPackages.Add(new PackageName(typeof(Stride.Physics.StaticColliderComponent).Assembly.GetName().Name, new PackageVersion(StrideVersion.NuGetVersion)));
             session.SuggestedPackages.Add(new PackageName(typeof(Stride.Video.VideoComponent).Assembly.GetName().Name, new PackageVersion(StrideVersion.NuGetVersion)));
-            session.SuggestedPackages.Add(new PackageName(typeof(Stride.Voxels.Module).Assembly.GetName().Name, new PackageVersion(StrideVersion.NuGetVersion)));
+//             session.SuggestedPackages.Add(new PackageName(typeof(Stride.Voxels.Module).Assembly.GetName().Name, new PackageVersion(StrideVersion.NuGetVersion)));
             session.SuggestedPackages.Add(new PackageName(typeof(Stride.SpriteStudio.Runtime.SpriteStudioNodeLinkComponent).Assembly.GetName().Name, new PackageVersion(StrideVersion.NuGetVersion)));
         }
 
@@ -271,7 +285,7 @@ namespace Stride.Assets.Presentation
         /// <inheritdoc />
         public override void RegisterPostPasteProcessors(ICollection<IAssetPostPasteProcessor> postPasteProcessors, SessionViewModel session)
         {
-            postPasteProcessors.Add(new ScenePostPasteProcessor());
+//             postPasteProcessors.Add(new ScenePostPasteProcessor());
         }
 
         /// <inheritdoc />
@@ -286,7 +300,7 @@ namespace Stride.Assets.Presentation
         }
 
         /// <inheritdoc />
-        protected override void RegisterResourceDictionary(ResourceDictionary dictionary)
+        protected override void RegisterResourceDictionary(IDictionary<object, object?> dictionary)
         {
             base.RegisterResourceDictionary(dictionary);
 

@@ -7,7 +7,7 @@ using Stride.Assets.Presentation.ViewModel;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class AnimationAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class AnimationAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

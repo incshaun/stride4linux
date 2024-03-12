@@ -15,7 +15,7 @@ using Stride.Rendering.Compositing;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class GraphicsCompositorAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class GraphicsCompositorAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

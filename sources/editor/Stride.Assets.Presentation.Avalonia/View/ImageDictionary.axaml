@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:components="clr-namespace:Stride.Particles.Components;assembly=Stride.Particles"
                     xmlns:data="clr-namespace:Stride.Data;assembly=Stride"
@@ -197,13 +197,13 @@
     </DrawingImage.Drawing>
   </DrawingImage>
 
-  <BitmapImage x:Key="ImageFitCurve" UriSource="../Resources/Icons/curve_fit-32.png" />
-  <BitmapImage x:Key="ImageFitCurveHeight" UriSource="../Resources/Icons/curve_fit_height-32.png" />
-  <BitmapImage x:Key="ImageFitCurveWidth" UriSource="../Resources/Icons/curve_fit_width-32.png" />
-  <BitmapImage x:Key="ImageFirstPoint" UriSource="../Resources/Icons/skip_to_start-32.png" />
-  <BitmapImage x:Key="ImageLastPoint" UriSource="../Resources/Icons/end-32.png" />
-  <BitmapImage x:Key="ImageNextPoint" UriSource="../Resources/Icons/play-32.png" />
-  <BitmapImage x:Key="ImagePreviousPoint" Rotation="Rotate180" UriSource="../Resources/Icons/play-32.png" />
+  <ImageBrush x:Key="ImageFitCurve" Source="/Resources/Icons/curve_fit-32.png" />
+  <ImageBrush x:Key="ImageFitCurveHeight" Source="/Resources/Icons/curve_fit_height-32.png" />
+  <ImageBrush x:Key="ImageFitCurveWidth" Source="/Resources/Icons/curve_fit_width-32.png" />
+  <ImageBrush x:Key="ImageFirstPoint" Source="/Resources/Icons/skip_to_start-32.png" />
+  <ImageBrush x:Key="ImageLastPoint" Source="/Resources/Icons/end-32.png" />
+  <ImageBrush x:Key="ImageNextPoint" Source="/Resources/Icons/play-32.png" />
+  <ImageBrush x:Key="ImagePreviousPoint"  Source="/Resources/Icons/play-32.png" />
 
   <!--  Arrows  -->
   <DrawingImage x:Key="ImageThicknessLeft" >
@@ -353,16 +353,16 @@
     </DrawingImage.Drawing>
   </DrawingImage>
 
-  <BitmapImage x:Key="{x:Static preview:MaterialPreviewPrimitive.Sphere}" UriSource="../Resources/Icons/sphere.png" />
-  <BitmapImage x:Key="{x:Static preview:MaterialPreviewPrimitive.Cube}" UriSource="../Resources/Icons/cube.png" />
-  <BitmapImage x:Key="{x:Static preview:MaterialPreviewPrimitive.Cylinder}" UriSource="../Resources/Icons/cylinder.png" />
-  <BitmapImage x:Key="{x:Static preview:MaterialPreviewPrimitive.Torus}" UriSource="../Resources/Icons/torus.png" />
-  <BitmapImage x:Key="{x:Static preview:MaterialPreviewPrimitive.Plane}" UriSource="../Resources/Icons/plane.png" />
-  <BitmapImage x:Key="{x:Static preview:MaterialPreviewPrimitive.Teapot}" UriSource="../Resources/Icons/teapot.png" />
-  <BitmapImage x:Key="{x:Static preview:MaterialPreviewPrimitive.Cone}" UriSource="../Resources/Icons/cone.png" />
-  <BitmapImage x:Key="{x:Static preview:MaterialPreviewPrimitive.Capsule}" UriSource="../Resources/Icons/capsule.png" />
+<!--  <ImageBrush x:Key="{x:Static preview:MaterialPreviewPrimitive.Sphere}" Source="/Resources/Icons/sphere.png" />
+  <ImageBrush x:Key="{x:Static preview:MaterialPreviewPrimitive.Cube}" Source="/Resources/Icons/cube.png" />
+  <ImageBrush x:Key="{x:Static preview:MaterialPreviewPrimitive.Cylinder}" Source="/Resources/Icons/cylinder.png" />
+  <ImageBrush x:Key="{x:Static preview:MaterialPreviewPrimitive.Torus}" Source="/Resources/Icons/torus.png" />
+  <ImageBrush x:Key="{x:Static preview:MaterialPreviewPrimitive.Plane}" Source="/Resources/Icons/plane.png" />
+  <ImageBrush x:Key="{x:Static preview:MaterialPreviewPrimitive.Teapot}" Source="/Resources/Icons/teapot.png" />
+  <ImageBrush x:Key="{x:Static preview:MaterialPreviewPrimitive.Cone}" Source="/Resources/Icons/cone.png" />
+  <ImageBrush x:Key="{x:Static preview:MaterialPreviewPrimitive.Capsule}" Source="/Resources/Icons/capsule.png" />-->
 
-  <DrawingImage x:Key="{x:Static gameEditor:Transformation.Translation}" >
+<!--  <DrawingImage x:Key="{x:Static gameEditor:Transformation.Translation}" >
     <DrawingImage.Drawing>
       <DrawingGroup>
         <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M7.2738,-0.000199999999999534L4.7688,2.5058 4.7688,3.7268 3.5478,3.7268 -0.000200000000000422,7.2738 -0.000200000000000422,7.6008 3.5478,11.1478 4.7688,11.1478 4.7688,12.3698 8.3988,15.9998 8.5608,15.9998 12.1908,12.3698 12.1908,11.1478 13.4118,11.1478 15.9998,8.5608 15.9998,6.3138 13.4118,3.7268 12.1908,3.7268 12.1908,2.5058 9.6858,-0.000199999999999534z" />
@@ -395,7 +395,7 @@
         <GeometryDrawing Brush="#FF424242" Geometry="F1M11,8L11,14 2,14 2,5 7,5 8.9,5 9.9,4 1,4 1,15 12,15 12,6.143 11,7.142z M15,1L15,5.741 14,5.741 13.994,2.734 10,6.728 10,7 10,8 10,13 3,13 3,6 7,6 9,6 9.314,6 13.3,2.014 10.268,2.009 10.268,1.009z" />
       </DrawingGroup>
     </DrawingImage.Drawing>
-  </DrawingImage>
+  </DrawingImage>-->
 
   <DrawingImage x:Key="{x:Static data:ConfigPlatforms.Android}">
     <DrawingImage.Drawing>
@@ -799,7 +799,7 @@
     </DrawingImage.Drawing>
   </DrawingImage>
 
-  <DrawingImage x:Key="{x:Static gameEditor:TransformationSpace.WorldSpace}" >
+<!--  <DrawingImage x:Key="{x:Static gameEditor:TransformationSpace.WorldSpace}" >
     <DrawingImage.Drawing>
       <DrawingGroup>
         <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
@@ -828,7 +828,7 @@
         <GeometryDrawing Brush="#FF424242" Geometry="F1M10,8C10,6.897 9.103,6 8,6 6.897,6 6,6.897 6,8 6,9.103 6.897,10 8,10 9.103,10 10,9.103 10,8 M11,8C11,9.654 9.654,11 8,11 6.346,11 5,9.654 5,8 5,6.346 6.346,5 8,5 9.654,5 11,6.346 11,8 M15,9L14,9C14,5.691 11.309,3 8,3 4.691,3 2,5.691 2,9L1,9C1,5.14 4.14,2 8,2 11.859,2 15,5.14 15,9" />
       </DrawingGroup>
     </DrawingImage.Drawing>
-  </DrawingImage>
+  </DrawingImage>-->
 
   <!--  Default fallback for entity component without icons  -->
   <DrawingImage x:Key="{x:Type engine:EntityComponent}" >
@@ -838,7 +838,7 @@
         <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M6.6357,1.5235L-0.000300000000000189,6.4995 -0.000300000000000189,7.2945 4.9307,14.9645 13.6827,15.5485 16.0007,9.1765 16.0007,8.9285 14.8577,0.9355z" />
         <GeometryDrawing Geometry="F1M2.5,7L7.5,3.333 13,3 10,7z">
           <GeometryDrawing.Brush>
-            <RadialGradientBrush Center="5.0410156,0.5834961" GradientOrigin="5.0410156,0.5834961" MappingMode="Absolute" RadiusX="10.5010653" RadiusY="8.3708401">
+            <RadialGradientBrush Center="5.0410156,0.5834961" GradientOrigin="5.0410156,0.5834961"  Radius="10.5010653">
               <RadialGradientBrush.GradientStops>
                 <GradientStop Offset="0" Color="#FF424242" />
                 <GradientStop Offset="0.31749001145362854" Color="#FF424242" />
@@ -856,7 +856,7 @@
         </GeometryDrawing>
         <GeometryDrawing Geometry="F1M3,8L6,13 12.042,13.292 10,8z">
           <GeometryDrawing.Brush>
-            <RadialGradientBrush Center="4.2290039,16.5214844" GradientOrigin="4.2290039,16.5214844" MappingMode="Absolute" RadiusX="12.608866700000002" RadiusY="12.6088667">
+            <RadialGradientBrush Center="4.2290039,16.5214844" GradientOrigin="4.2290039,16.5214844"  Radius="12.608866700000002">
               <RadialGradientBrush.GradientStops>
                 <GradientStop Offset="0" Color="#FF424242" />
                 <GradientStop Offset="0.296970009803772" Color="#FF424242" />
@@ -868,7 +868,7 @@
         </GeometryDrawing>
         <GeometryDrawing Geometry="F1M11,7.5L13.5,4 14.333,8.75 12.875,12.625z">
           <GeometryDrawing.Brush>
-            <RadialGradientBrush Center="20.7910156,9.3535156" GradientOrigin="20.7910156,9.3535156" MappingMode="Absolute" RadiusX="10.0091438" RadiusY="10.009143799999999">
+            <RadialGradientBrush Center="20.7910156,9.3535156" GradientOrigin="20.7910156,9.3535156"  Radius="10.0091438">
               <RadialGradientBrush.GradientStops>
                 <GradientStop Offset="0" Color="#FF424242" />
                 <GradientStop Offset="0.16969700157642365" Color="#FF424242" />
@@ -1056,7 +1056,7 @@
         <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M6.6357,1.5235L-0.000300000000000189,6.4995 -0.000300000000000189,7.2945 4.9307,14.9645 13.6827,15.5485 16.0007,9.1765 16.0007,8.9285 14.8577,0.9355z" />
         <GeometryDrawing Geometry="F1M2.5,7L7.5,3.333 13,3 10,7z">
           <GeometryDrawing.Brush>
-            <RadialGradientBrush Center="5.0410156,0.5834961" GradientOrigin="5.0410156,0.5834961" MappingMode="Absolute" RadiusX="10.5010653" RadiusY="8.3708401">
+            <RadialGradientBrush Center="5.0410156,0.5834961" GradientOrigin="5.0410156,0.5834961"  Radius="10.5010653">
               <RadialGradientBrush.GradientStops>
                 <GradientStop Offset="0" Color="#FF424242" />
                 <GradientStop Offset="0.31749001145362854" Color="#FF424242" />
@@ -1074,7 +1074,7 @@
         </GeometryDrawing>
         <GeometryDrawing Geometry="F1M3,8L6,13 12.042,13.292 10,8z">
           <GeometryDrawing.Brush>
-            <RadialGradientBrush Center="4.2290039,16.5214844" GradientOrigin="4.2290039,16.5214844" MappingMode="Absolute" RadiusX="12.608866700000002" RadiusY="12.6088667">
+            <RadialGradientBrush Center="4.2290039,16.5214844" GradientOrigin="4.2290039,16.5214844"  Radius="12.608866700000002">
               <RadialGradientBrush.GradientStops>
                 <GradientStop Offset="0" Color="#FF424242" />
                 <GradientStop Offset="0.296970009803772" Color="#FF424242" />
@@ -1086,7 +1086,7 @@
         </GeometryDrawing>
         <GeometryDrawing Geometry="F1M11,7.5L13.5,4 14.333,8.75 12.875,12.625z">
           <GeometryDrawing.Brush>
-            <RadialGradientBrush Center="20.7910156,9.3535156" GradientOrigin="20.7910156,9.3535156" MappingMode="Absolute" RadiusX="10.0091438" RadiusY="10.009143799999999">
+            <RadialGradientBrush Center="20.7910156,9.3535156" GradientOrigin="20.7910156,9.3535156"  Radius="10.0091438">
               <RadialGradientBrush.GradientStops>
                 <GradientStop Offset="0" Color="#FF424242" />
                 <GradientStop Offset="0.16969700157642365" Color="#FF424242" />

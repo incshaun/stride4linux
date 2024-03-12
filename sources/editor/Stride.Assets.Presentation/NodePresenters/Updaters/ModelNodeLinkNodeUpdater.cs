@@ -14,7 +14,7 @@ using Stride.SpriteStudio.Runtime;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class ModelNodeLinkNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class ModelNodeLinkNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

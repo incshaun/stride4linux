@@ -5,7 +5,7 @@ using Stride.Assets.Textures;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class TextureAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class TextureAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         private const string AbsoluteWidth = nameof(AbsoluteWidth);
         private const string AbsoluteHeight = nameof(AbsoluteHeight);

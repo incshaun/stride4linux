@@ -1,0 +1,24 @@
+<Project>
+  <Import Project="..\..\targets\Stride.props" />
+  <PropertyGroup>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <StrideAssemblyProcessor>true</StrideAssemblyProcessor>
+    <StridePackAssets>true</StridePackAssets>
+    <StrideLocalized>true</StrideLocalized>
+    <TargetFramework>$(StrideEditorTargetFramework)</TargetFramework>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <StrideAssemblyProcessorOptions>--auto-module-initializer --serialization --parameter-key</StrideAssemblyProcessorOptions>
+    <RestorePackages>true</RestorePackages>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Stride.Samples.Templates\ThisPackageVersion.PackageBuild.cs" Link="ThisPackageVersion.PackageBuild.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Stride.Assets.Presentation/Stride.Assets.Presentation.csproj" />    
+  </ItemGroup>
+  <Import Project="$(StrideSdkTargets)" />
+</Project>

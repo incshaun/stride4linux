@@ -300,8 +300,7 @@ public partial class AvaloniaApp : Application
             //var mru = new MostRecentlyUsedFileCollection(InternalSettings.LoadProfileCopy, InternalSettings.MostRecentlyUsedSessions, InternalSettings.WriteFile);
             //mru.LoadFromSettings();
             var editor = new GameStudioViewModel(serviceProvider, mru);
-//             AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
-//            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
+            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
             AssetsPlugin.RegisterPlugin(typeof(StrideEditorPlugin));
 
             // Attempt to load the startup session, if available

@@ -6,7 +6,7 @@ using Stride.Rendering.Images;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class FXAAEffectNodeUpdater : NodePresenterUpdaterBase
+    public sealed class FXAAEffectNodeUpdater : NodePresenterUpdaterBase
     {
         public override void UpdateNode(INodePresenter node)
         {

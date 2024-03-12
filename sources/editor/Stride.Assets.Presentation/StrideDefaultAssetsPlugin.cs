@@ -32,7 +32,7 @@ using Stride.Editor.Preview.View;
 
 namespace Stride.Assets.Presentation
 {
-    public sealed partial class StrideDefaultAssetsPlugin
+    public interface IStrideDefaultAssetsPlugin
     {
 //placeholder
 public static IReadOnlyList<(Type type, int order)> ComponentOrders { get; private set; } = new List<(Type, int)>();
@@ -40,5 +40,6 @@ public static IReadOnlyDictionary<Type, Type> AssetHighlighterTypesDictionary =>
 private static readonly Dictionary<Type, Type> AssetHighlighterTypes = new Dictionary<Type, Type>();   
 private static readonly Dictionary<Type, Type> GizmoTypes = new Dictionary<Type, Type>();
 public static IReadOnlyDictionary<Type, Type> GizmoTypeDictionary => GizmoTypes;
+        
     }
 }

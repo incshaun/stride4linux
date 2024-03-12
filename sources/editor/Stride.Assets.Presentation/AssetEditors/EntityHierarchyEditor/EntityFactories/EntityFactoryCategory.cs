@@ -23,7 +23,7 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.EntityFa
             public IEntityFactory Factory { get; private set; }
         }
    
-        internal EntityFactoryCategory(string name)
+        public EntityFactoryCategory(string name)
         {
             Name = name;
             Factories = new SortedList<int, EntityFactoryViewModel>();

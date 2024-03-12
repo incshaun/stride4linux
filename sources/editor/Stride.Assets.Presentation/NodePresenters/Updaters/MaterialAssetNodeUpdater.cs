@@ -14,7 +14,7 @@ using Stride.Rendering.Materials.ComputeColors;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class MaterialAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class MaterialAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

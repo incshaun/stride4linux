@@ -24,7 +24,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Game
         public EditorGameAssetHighlighterService(IEditorGameController controller, [NotNull] IAssetDependencyManager dependencyManager)
         {
             this.controller = controller;
-            foreach (var assetHighlighterType in StrideDefaultAssetsPlugin.AssetHighlighterTypesDictionary)
+            foreach (var assetHighlighterType in IStrideDefaultAssetsPlugin.AssetHighlighterTypesDictionary)
             {
                 var instance = (AssetHighlighter)Activator.CreateInstance(assetHighlighterType.Value, dependencyManager);
                 assetHighlighters.Add(assetHighlighterType.Key, instance);

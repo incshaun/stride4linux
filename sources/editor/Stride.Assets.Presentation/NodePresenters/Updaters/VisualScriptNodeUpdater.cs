@@ -11,7 +11,7 @@ using Stride.Assets.Scripts;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class VisualScriptNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class VisualScriptNodeUpdater : AssetNodePresenterUpdaterBase
     {
         public const string OwnerAsset = nameof(OwnerAsset);
 

@@ -9,7 +9,7 @@ using Stride.Assets.SpriteFont;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class SpriteFontAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class SpriteFontAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         private static readonly IEnumerable<string> InstalledFonts;
 

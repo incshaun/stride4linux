@@ -13,7 +13,7 @@ using Stride.Data;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class GameSettingsAssetNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class GameSettingsAssetNodeUpdater : AssetNodePresenterUpdaterBase
     {
         protected override void UpdateNode(IAssetNodePresenter node)
         {

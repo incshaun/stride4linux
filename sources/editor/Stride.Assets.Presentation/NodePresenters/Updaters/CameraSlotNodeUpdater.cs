@@ -14,7 +14,7 @@ using Stride.Rendering.Compositing;
 
 namespace Stride.Assets.Presentation.NodePresenters.Updaters
 {
-    internal sealed class CameraSlotNodeUpdater : AssetNodePresenterUpdaterBase
+    public sealed class CameraSlotNodeUpdater : AssetNodePresenterUpdaterBase
     {
         /// <summary>
         /// Creates a new instance of <see cref="CameraSlotNodeUpdater"/>.
