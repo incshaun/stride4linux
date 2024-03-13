@@ -1,0 +1,186 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:scriptEditor="clr-namespace:Stride.Assets.Presentation.AssetEditors.ScriptEditor"
+                    xmlns:editor="clr-namespace:RoslynPad.Editor;assembly=RoslynPad.Editor.Avalonia"
+                    xmlns:codeFixes="clr-namespace:RoslynPad.Roslyn.CodeFixes;assembly=RoslynPad.Roslyn"
+                    xmlns:converters="clr-namespace:Stride.Assets.Presentation.AssetEditors.ScriptEditor.Converters"
+                    xmlns:codeActions="clr-namespace:Microsoft.CodeAnalysis.CodeActions;assembly=Microsoft.CodeAnalysis.Workspaces"
+                    xmlns:codeAnalysis="clr-namespace:Microsoft.CodeAnalysis;assembly=Microsoft.CodeAnalysis"
+                    xmlns:sd="http://schemas.stride3d.net/xaml/presentation">
+  <!-- Various styles and resources needed for the code editor; some of them are based on templates from AvalonEdit (MIT license) and RoslyPad (Apache license) -->
+  <ResourceDictionary.MergedDictionaries>
+<!--     <ResourceInclude Source="/RoslynPad.Editor.Windows;component/Themes/Generic.axaml" /> -->
+  </ResourceDictionary.MergedDictionaries>
+
+<!--  <ControlTheme x:Key="cc:CompletionWindow" TargetType="cc:CompletionWindow" BasedOn="{StaticResource {x:Type cc:CompletionWindow}}">
+    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+    
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Window">
+          <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+            <AdornerDecorator>
+              <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+            </AdornerDecorator>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>-->
+
+<!--  <SolidColorBrush x:Key="{ComponentResourceKey {x:Type avalonedit:DropDownButton}, ActiveBorder}" Color="#FF333333"/>
+  <SolidColorBrush x:Key="{ComponentResourceKey {x:Type avalonedit:DropDownButton}, ActiveBackground}" Color="#FF9D9D9D"/>-->
+
+<!--  <ControlTheme TargetType="scriptEditor:ScriptTextEditor">
+    <Setter Property="FontFamily" Value="Consolas"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="scriptEditor:ScriptTextEditor">
+          <scriptEditor:SimpleCodeTextEditor x:Name="PART_CodeEditor" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" ContextActionsIcon="{StaticResource Bulb}" />
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>-->
+
+  <TreeDataTemplate x:Key="codeFixes:CodeFixCollection" DataType="{x:Type codeFixes:CodeFixCollection}" ItemsSource="{Binding Fixes, Mode=OneTime}">
+    <TextBlock Text="{Binding Provider, Mode=OneTime}" />
+  </TreeDataTemplate>
+
+  <TreeDataTemplate x:Key="codeFixes:CodeFix" DataType="{x:Type codeFixes:CodeFix}" ItemsSource="{Binding Action, Mode=OneTime, Converter={converters:CodeActionsConverter}}">
+    <ContentPresenter Content="{Binding Action, Mode=OneTime}" />
+  </TreeDataTemplate>
+
+  <DataTemplate x:Key="codeActions:CodeAction" DataType="{x:Type codeActions:CodeAction}">
+    <DockPanel>
+      <Image Source="{Binding Mode=OneTime, Converter={converters:CodeActionToGlyphConverter}}" />
+      <TextBlock Text="{Binding Title, Mode=OneTime}" />
+    </DockPanel>
+  </DataTemplate>
+
+  <DataTemplate x:Key="codeAnalysis:Diagnostic" DataType="{x:Type codeAnalysis:Diagnostic}">
+    <TextBlock Text="{Binding Descriptor.Title, Mode=OneTime}" />
+  </DataTemplate>
+
+  <DataTemplate x:Key="IImage" DataType="{x:Type IImage}">
+    <Image Source="{Binding Mode=OneTime}" />
+  </DataTemplate>
+
+  <ControlTheme x:Key="scriptEditor:SimpleCodeTextEditor" TargetType="scriptEditor:SimpleCodeTextEditor">
+    <Setter Property="CompletionBackground" Value="{DynamicResource ControlBackgroundBrush}"/>
+    <Setter Property="FontFamily" Value="Consolas"/>
+    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+    <Setter Property="Background" Value="{DynamicResource CodeEditorBackgroundBrush}" />
+  </ControlTheme>
+
+<!--  <ControlTheme TargetType="editor:SearchReplacePanel">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="editor:SearchReplacePanel">
+          <Border Background="{DynamicResource BackgroundBrush}"
+                  BorderBrush="{DynamicResource BlueBrush}"
+                  BorderThickness="0 0 0 3"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Top"
+                  Cursor="Arrow"
+                  >
+
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition  Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+              </Grid.RowDefinitions>
+
+              <ToggleButton Theme="{StaticResource ExpanderToggle}"
+                            ToolTip.Tip="{sd:Localize Toggle between find and replace modes, Context=ToolTip}"
+                            
+                            Grid.Column="0" Grid.Row="0" Width="16" Margin="2" />
+
+              <sd:TextBox Name="PART_searchTextBox" Grid.Column="1" Grid.Row="0"
+                            Width="150" Height="24" Margin="3,3,3,0"
+                            Text="{Binding SearchPattern, RelativeSource={RelativeSource TemplatedParent}}" />
+
+              <sd:TextBox Name="ReplaceBox" IsVisible="false" Grid.Column="1" Grid.Row="1"
+                            Width="150" Height="24" Margin="3 3 3 0"
+                            Text="{Binding ReplacePattern, RelativeSource={RelativeSource TemplatedParent}}" />
+
+              <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="0">
+              </StackPanel>
+
+              <StackPanel Name="ReplaceButtons"
+                          IsVisible="false"
+                          Orientation="Horizontal"
+                          Grid.Column="2"
+                          Grid.Row="1">
+                <Button Margin="3"
+                        Height="16"
+                        Width="16"
+                        Command="editor:SearchCommandsEx.ReplaceNext"
+                        ToolTip.Tip="{sd:Localize Replace next (Alt+R), Context=ToolTip}">
+                  <Image Width="16"
+                         Height="16"
+                         Stretch="Fill"
+                         Source="{StaticResource ReplaceNext}" />
+                </Button>
+                <Button Margin="3"
+                        Height="16"
+                        Width="16"
+                        Command="editor:SearchCommandsEx.ReplaceAll"
+                        ToolTip.Tip="{sd:Localize Replace all (Alt+A), Context=ToolTip}">
+                  <Image Width="16"
+                         Height="16"
+                         Stretch="Fill"
+                         Source="{StaticResource ReplaceAll}" />
+                </Button>
+              </StackPanel>
+            </Grid>
+          </Border>-->
+          <!-- <ControlTemplate.Triggers>
+            <Trigger Property="IsReplaceMode" Value="True">
+              <Setter TargetName="ReplaceBox" Property="Visibility" Value="Visible" />
+              <Setter TargetName="ReplaceButtons" Property="Visibility" Value="Visible" />
+            </Trigger>
+          </ControlTemplate.Triggers> -->
+<!--        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>-->
+
+  <ControlTheme TargetType="{x:Type ListBoxItem}" x:Key="CompletionListBoxItem">
+    <Setter Property="Background" Value="{DynamicResource Background}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+          <Border Name="Bd"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  Padding="{TemplateBinding Padding}"
+                  >
+            <ContentPresenter
+              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+              />
+          </Border>
+          <!-- Simplified triggers:
+             we don't want a gray selection background when the ListBox doesn't have focus
+          -->
+          <!-- <ControlTemplate.Triggers>
+            <Trigger Property="IsSelected" Value="true">
+              <Setter Property="Background"
+                      Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+              <Setter Property="Foreground"
+                      Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+            </Trigger>
+          </ControlTemplate.Triggers> -->
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

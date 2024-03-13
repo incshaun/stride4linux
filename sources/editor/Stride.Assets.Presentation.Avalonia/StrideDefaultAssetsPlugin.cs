@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-//using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 
 using Avalonia.Controls;
@@ -99,18 +99,18 @@ namespace Stride.Assets.Presentation
         {
             // Load templates
             // Currently hardcoded, this will need to change with plugin system
-//             foreach (var packageInfo in new[] { new { Name = "Stride.Assets.Presentation", Version = StrideVersion.NuGetVersion }, new { Name = "Stride.SpriteStudio.Offline", Version = StrideVersion.NuGetVersion }, new { Name = "Stride.Samples.Templates", Version = Stride.Samples.Templates.ThisPackageVersion.Current } })
-//             {
-//                 var logger = new LoggerResult();
-//                 var packageFile = PackageStore.Instance.GetPackageFileName(packageInfo.Name, new PackageVersionRange(new PackageVersion(packageInfo.Version)));
-//                 if (packageFile is null)
-//                     throw new InvalidOperationException($"Could not find package {packageInfo.Name} {packageInfo.Version}. Ensure packages have been resolved.");
-//                 var package = Package.Load(logger, packageFile.ToWindowsPath());
-//                 if (logger.HasErrors)
-//                     throw new InvalidOperationException($"Could not load package {packageInfo.Name}:{Environment.NewLine}{logger.ToText()}");
-// 
-//                 TemplateManager.RegisterPackage(package);
-//             }
+            foreach (var packageInfo in new[] { new { Name = "Stride.Assets.Presentation", Version = StrideVersion.NuGetVersion }, new { Name = "Stride.SpriteStudio.Offline", Version = StrideVersion.NuGetVersion }, new { Name = "Stride.Samples.Templates", Version = Stride.Samples.Templates.ThisPackageVersion.Current } })
+            {
+                var logger = new LoggerResult();
+                var packageFile = PackageStore.Instance.GetPackageFileName(packageInfo.Name, new PackageVersionRange(new PackageVersion(packageInfo.Version)));
+                if (packageFile is null)
+                    throw new InvalidOperationException($"Could not find package {packageInfo.Name} {packageInfo.Version}. Ensure packages have been resolved.");
+                var package = Package.Load(logger, packageFile.ToWindowsPath());
+                if (logger.HasErrors)
+                    throw new InvalidOperationException($"Could not load package {packageInfo.Name}:{Environment.NewLine}{logger.ToText()}");
+
+                TemplateManager.RegisterPackage(package);
+            }
         }
 
         /// <inheritdoc />
@@ -136,11 +136,13 @@ namespace Stride.Assets.Presentation
 //             visualScriptingGraphTemplatesDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/VisualScriptEditor/Views/GraphTemplates.xaml", UriKind.RelativeOrAbsolute));
 
             // Make Visual Script colors available to StaticResourceConverter
-//             Application.Current.Resources.MergedDictionaries.Add(imageDictionary);
+            global::Avalonia.Application.Current.Resources.MergedDictionaries.Add(imageDictionary);
 
             // Make script editor styles and icons available to StaticResourceConverter
-//             Application.Current.Resources.MergedDictionaries.Add((ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/ScriptEditor/Resources/Icons.xaml", UriKind.RelativeOrAbsolute)));
-//             Application.Current.Resources.MergedDictionaries.Add((ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.xaml", UriKind.RelativeOrAbsolute)));
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/AssetEditors/ScriptEditor/Resources/Icons.axaml", UriKind.RelativeOrAbsolute);
+            global::Avalonia.Application.Current.Resources.MergedDictionaries.Add((new ResourceInclude (uri) {  Source = uri }).Loaded);
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.axaml", UriKind.RelativeOrAbsolute);
+            global::Avalonia.Application.Current.Resources.MergedDictionaries.Add((new ResourceInclude (uri) {  Source = uri }).Loaded);
 
             var entityFactories = new Core.Collections.SortedList<EntityFactoryCategory, EntityFactoryCategory>();
             foreach (var factoryType in Assembly.GetExecutingAssembly().GetTypes().Where(x => typeof(IEntityFactory).IsAssignableFrom(x) && x.GetConstructor(Type.EmptyTypes) != null))

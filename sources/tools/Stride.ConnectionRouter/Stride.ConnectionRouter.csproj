@@ -9,6 +9,7 @@
     <StrideAssemblyProcessor>true</StrideAssemblyProcessor>
     <StrideAssemblyProcessorOptions>--auto-module-initializer</StrideAssemblyProcessorOptions>
     <StrideNuGetResolverUI>true</StrideNuGetResolverUI>
+    <StrideSkipAutoPack>true</StrideSkipAutoPack>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <Prefer32Bit>false</Prefer32Bit>
@@ -67,5 +68,5 @@
   </ItemGroup>
   <Import Project="..\..\shared\Stride.Core.ShellHelper\Stride.Core.ShellHelper.projitems" Label="Shared" />
   <Import Project="..\..\shared\Stride.NuGetResolver.Targets\Stride.NuGetResolver.Targets.projitems" Label="Shared" />
-<!--   <Import Project="$(StrideSdkTargets)" /> -->
+  <Import Project="$(StrideSdkTargets)" />
   </Project>

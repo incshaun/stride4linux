@@ -53,7 +53,6 @@
 			<ResourceDictionary.MergedDictionaries>
 				<!--<ResourceInclude Source="ATheme.AvalonDock.axaml"/>-->
 				<ResourceInclude Source="avares://Stride.Core.Assets.Editor.Avalonia/View/CommonResources.axaml"/>
-				<ResourceInclude Source="avares://Stride.Assets.Presentation.Avalonia/View/ImageDictionary.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
 			<!--<BitmapImage x:Key="EditorIcon" UriSource="Resources/EditorIcon.png" />-->

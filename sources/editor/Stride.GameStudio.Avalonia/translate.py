@@ -226,11 +226,14 @@ def translateNames (contents):
   contents = re.sub ("Keyboard.Focus\(this\);", "this.Focus ();", contents)
   contents = re.sub ("Keyboard.FocusedElement", "TopLevel.GetTopLevel(this).FocusManager.GetFocusedElement ()", contents)
 
-  contents = re.sub ("Application.Current.TryFindResource\(value\)", "ResourceNodeExtensions.FindResource(Application.Current, value)", contents)
+  contents = re.sub ("Application.Current.TryFindResource\((.*?)\)", r"ResourceNodeExtensions.FindResource(Application.Current, \1)", contents)
 
   contents = re.sub ("Cursors.SizeWE", "new Cursor(StandardCursorType.SizeWestEast)", contents)
 
   contents = re.sub (" ImageSource ", " IImage ", contents)
+  contents = re.sub (" ImageSource;", " IImage;", contents)
+  contents = re.sub ("<ImageSource>", "<IImage>", contents)
+  contents = re.sub (" ImageSource>", " IImage>", contents)
   contents = re.sub ("\(ImageSource ", "(IImage ", contents)
   contents = re.sub ("RenderOptions\.BitmapScalingMode=\"Linear\"", r'RenderOptions.BitmapInterpolationMode="MediumQuality"', contents)
   contents = re.sub (" BitmapScalingMode ", r' BitmapInterpolationMode ', contents)
@@ -1299,7 +1302,10 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/GameSettingsFiltersTemplateProvider.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/GameSettingAddConfigurationTemplateProvider.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/TimeToFrames.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/NodeToCameraSlotIndex.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/NodeToCameraSlotIndex.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Converters/CodeActionsConverter.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/SimpleCodeTextEditor.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Converters/CodeActionToGlyphConverter.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1327,6 +1333,8 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/NodeToCamera
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/AnimationPropertyTemplates.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/EntityPropertyTemplates.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/Icons.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

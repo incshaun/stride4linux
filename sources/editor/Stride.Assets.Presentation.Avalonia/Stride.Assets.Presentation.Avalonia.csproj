@@ -15,7 +15,6 @@
     <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Stride.Samples.Templates\ThisPackageVersion.PackageBuild.cs" Link="ThisPackageVersion.PackageBuild.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Stride.Assets.Presentation/Stride.Assets.Presentation.csproj" />    

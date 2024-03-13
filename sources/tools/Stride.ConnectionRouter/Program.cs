@@ -91,10 +91,10 @@ namespace Stride.ConnectionRouter
                         }) { IsBackground = true }.Start();
                     }
 
-                    SetupTrayIcon(logFileName);
+//                     SetupTrayIcon(logFileName);
 
                     // Start WinForms loop
-                    System.Windows.Forms.Application.Run();
+//                     System.Windows.Forms.Application.Run();
                 }
             }
             catch (Exception e)
@@ -119,72 +119,72 @@ namespace Stride.ConnectionRouter
             return builder.ToString();
         }
 
-        private static void SetupTrayIcon(string logFileName)
-        {
-            // Create tray icon
-            var components = new System.ComponentModel.Container();
+//         private static void SetupTrayIcon(string logFileName)
+//         {
+//             // Create tray icon
+//             var components = new System.ComponentModel.Container();
+// 
+//             var notifyIcon = new System.Windows.Forms.NotifyIcon(components);
+//             notifyIcon.Text = "Stride Connection Router";
+//             notifyIcon.Icon = Properties.Resources.Logo;
+//             notifyIcon.Visible = true;
+//             var contextMenu = new System.Windows.Forms.ContextMenuStrip(components);
+// 
+//             if (!string.IsNullOrEmpty(logFileName))
+//             {
+//                 var showLogMenuItem = new System.Windows.Forms.ToolStripMenuItem("Show &Log");
+//                 showLogMenuItem.Click += (sender, args) => OnShowLogClick(logFileName);
+//                 contextMenu.Items.Add(showLogMenuItem);
+// 
+//                 notifyIcon.BalloonTipClicked += (sender, args) => OnShowLogClick(logFileName);
+//             }
+// 
+//             var openConsoleMenuItem = new System.Windows.Forms.ToolStripMenuItem("Open Console");
+//             openConsoleMenuItem.Click += (sender, args) => OnOpenConsoleClick((System.Windows.Forms.ToolStripMenuItem)sender);
+//             contextMenu.Items.Add(openConsoleMenuItem);
+// 
+//             var exitMenuItem = new System.Windows.Forms.ToolStripMenuItem("E&xit");
+//             exitMenuItem.Click += (sender, args) => OnExitClick();
+//             contextMenu.Items.Add(exitMenuItem);
+// 
+//             notifyIcon.ContextMenuStrip = contextMenu;
+// 
+//             GlobalLogger.GlobalMessageLogged += (logMessage) =>
+//             {
+//                 // Log only warning, errors and more
+//                 if (logMessage.Type < LogMessageType.Warning)
+//                     return;
+// 
+//                 var toolTipIcon = logMessage.Type < LogMessageType.Error ? System.Windows.Forms.ToolTipIcon.Warning : System.Windows.Forms.ToolTipIcon.Error;
+// 
+//                 // Display notification (for two second)
+//                 notifyIcon.ShowBalloonTip(2000, "Stride Connection Router", logMessage.ToString(), toolTipIcon);
+//             };
+// 
+//             System.Windows.Forms.Application.ApplicationExit += (sender, e) =>
+//             {
+//                 notifyIcon.Visible = false;
+//                 notifyIcon.Icon = null;
+//                 notifyIcon.Dispose();
+//             };
+//         }
 
-            var notifyIcon = new System.Windows.Forms.NotifyIcon(components);
-            notifyIcon.Text = "Stride Connection Router";
-            notifyIcon.Icon = Properties.Resources.Logo;
-            notifyIcon.Visible = true;
-            var contextMenu = new System.Windows.Forms.ContextMenuStrip(components);
-
-            if (!string.IsNullOrEmpty(logFileName))
-            {
-                var showLogMenuItem = new System.Windows.Forms.ToolStripMenuItem("Show &Log");
-                showLogMenuItem.Click += (sender, args) => OnShowLogClick(logFileName);
-                contextMenu.Items.Add(showLogMenuItem);
-
-                notifyIcon.BalloonTipClicked += (sender, args) => OnShowLogClick(logFileName);
-            }
-
-            var openConsoleMenuItem = new System.Windows.Forms.ToolStripMenuItem("Open Console");
-            openConsoleMenuItem.Click += (sender, args) => OnOpenConsoleClick((System.Windows.Forms.ToolStripMenuItem)sender);
-            contextMenu.Items.Add(openConsoleMenuItem);
-
-            var exitMenuItem = new System.Windows.Forms.ToolStripMenuItem("E&xit");
-            exitMenuItem.Click += (sender, args) => OnExitClick();
-            contextMenu.Items.Add(exitMenuItem);
-
-            notifyIcon.ContextMenuStrip = contextMenu;
-
-            GlobalLogger.GlobalMessageLogged += (logMessage) =>
-            {
-                // Log only warning, errors and more
-                if (logMessage.Type < LogMessageType.Warning)
-                    return;
-
-                var toolTipIcon = logMessage.Type < LogMessageType.Error ? System.Windows.Forms.ToolTipIcon.Warning : System.Windows.Forms.ToolTipIcon.Error;
-
-                // Display notification (for two second)
-                notifyIcon.ShowBalloonTip(2000, "Stride Connection Router", logMessage.ToString(), toolTipIcon);
-            };
-
-            System.Windows.Forms.Application.ApplicationExit += (sender, e) =>
-            {
-                notifyIcon.Visible = false;
-                notifyIcon.Icon = null;
-                notifyIcon.Dispose();
-            };
-        }
-
-        private static void OnOpenConsoleClick(System.Windows.Forms.ToolStripMenuItem menuItem)
-        {
-            menuItem.Enabled = false;
-
-            // Check if not already done
-            if (ConsoleVisible)
-                return;
-            ConsoleVisible = true;
-
-            // Show console
-            ConsoleLogListener.ShowConsole();
-
-            // Enable console logging
-            var consoleLogListener = new ConsoleLogListener { LogMode = ConsoleLogMode.Always };
-            GlobalLogger.GlobalMessageLogged += consoleLogListener;
-        }
+//         private static void OnOpenConsoleClick(System.Windows.Forms.ToolStripMenuItem menuItem)
+//         {
+//             menuItem.Enabled = false;
+// 
+//             // Check if not already done
+//             if (ConsoleVisible)
+//                 return;
+//             ConsoleVisible = true;
+// 
+//             // Show console
+//             ConsoleLogListener.ShowConsole();
+// 
+//             // Enable console logging
+//             var consoleLogListener = new ConsoleLogListener { LogMode = ConsoleLogMode.Always };
+//             GlobalLogger.GlobalMessageLogged += consoleLogListener;
+//         }
 
         private static void OnShowLogClick(string logFileName)
         {
@@ -193,7 +193,7 @@ namespace Stride.ConnectionRouter
 
         private static void OnExitClick()
         {
-            System.Windows.Forms.Application.Exit();
+//             System.Windows.Forms.Application.Exit();
         }
     }
 }
