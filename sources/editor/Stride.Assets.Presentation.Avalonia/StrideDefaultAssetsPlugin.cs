@@ -120,12 +120,11 @@ namespace Stride.Assets.Presentation
             
             uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/ImageDictionary.axaml", UriKind.RelativeOrAbsolute);
             imageDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
-            return;
             
-            uri = new Uri("avares://Stride.Assets.Presentation/View/AnimationPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/AnimationPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
             animationPropertyTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
 
-            uri = new Uri("avares://Stride.Assets.Presentation/View/EntityPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/EntityPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
             entityPropertyTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
             
 //             materialPropertyTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/MaterialPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
@@ -180,13 +179,13 @@ namespace Stride.Assets.Presentation
             RegisterResourceDictionary(imageDictionary);
             RegisterResourceDictionary(animationPropertyTemplateDictionary);
             RegisterResourceDictionary(entityPropertyTemplateDictionary);
-            RegisterResourceDictionary(materialPropertyTemplateDictionary);
+  /*          RegisterResourceDictionary(materialPropertyTemplateDictionary);
             RegisterResourceDictionary(skeletonTemplateDictionary);
             RegisterResourceDictionary(spriteFontTemplateDictionary);
             RegisterResourceDictionary(uiTemplateDictionary);
             RegisterResourceDictionary(graphicsCompositorTemplateDictionary);
             RegisterResourceDictionary(visualScriptingTemplateDictionary);
-            RegisterResourceDictionary(visualScriptingGraphTemplatesDictionary);
+            RegisterResourceDictionary(visualScriptingGraphTemplatesDictionary);*/
             RegisterComponentOrders(logger);
         }
 

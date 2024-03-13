@@ -882,6 +882,8 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:VisibleOrCollapsed}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:ObjectToBool}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), FallbackValue={sd:Collapsed}, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrHidden}}}\"", r'IsVisible="{Binding \1, FallbackValue=false, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrHidden}}, Mode=OneWay}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}, Mode=OneWay}"', contents)
 
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -1285,6 +1287,19 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/SearchComboBox.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/FrameworkElementDragDropBehavior.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/StrideDefaultAssetsPlugin.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/ComputeCurveTemplateProviders.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/AnimationFrameTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/EntityComponentReferenceTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/AnimationFrameBoxTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/EntityReferenceTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/EntityComponentCollectionTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/ModelComponentMaterialTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/ModelNodeLinkNameTemplateProvider.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/TemplateProviders/ContentReferenceTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/GameSettingsFiltersTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/GameSettingAddConfigurationTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/TimeToFrames.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/NodeToCameraSlotIndex.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1309,7 +1324,9 @@ def translateXAML (sourceFile):
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/Resources/TableView.ExpressionDark.normalcolor.Graphics.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/generic.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemUserControl.xaml")
-translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/ImageDictionary.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/ImageDictionary.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/AnimationPropertyTemplates.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/EntityPropertyTemplates.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
