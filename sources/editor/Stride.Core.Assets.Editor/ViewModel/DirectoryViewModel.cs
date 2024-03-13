@@ -94,9 +94,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
             const string assetKey = "FolderIconAlfredo";
             var objectId = ObjectId.FromObject(assetKey);
 //             var data = new ResourceThumbnailData(objectId, assetKey);
-            Console.WriteLine ("ResourceThumb A " + objectId + " " + assetKey);
             var data = ThumbnailDataBase.createThumb ("ResourceThumbnailData", objectId, assetKey);
-            Console.WriteLine ("ResourceThumb " + data);
             data.PrepareForPresentation(dispatcher).Forget();
             return data;
         }

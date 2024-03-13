@@ -237,11 +237,8 @@ namespace Stride.Editor.Thumbnails
                 var stream = new MemoryStream();
                 e.ThumbnailStream.CopyTo(stream);
                 
-                Console.WriteLine ("Bitmap thumb");
-                
                 thumbnailData = ThumbnailDataBase.createThumb ("BitmapThumbnailData", e.ThumbnailId, stream);
 //                 thumbnailData = new BitmapThumbnailData(e.ThumbnailId, stream);
-                Console.WriteLine ("Bitmap thumb B " + thumbnailData);
             }
 
             if (e.Result != ThumbnailBuildResult.Cancelled)

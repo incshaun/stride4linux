@@ -11,13 +11,14 @@ using Avalonia.Controls;
 using Stride.Core.Storage;
 using Stride.Core.Presentation.Services;
 using Stride.Core.Presentation.ViewModels;
+using Avalonia.Threading;
 
 namespace Stride.Core.Assets.Editor.Services
 {
     public abstract class ThumbnailData : ViewModelBase, IThumbnailData
     {
         protected readonly ObjectId thumbnailId;
-        private static readonly Dictionary<ObjectId, Task<IImage>> ComputingThumbnails = new Dictionary<ObjectId, Task<IImage>>();
+//         private static readonly Dictionary<ObjectId, Task<IImage>> ComputingThumbnails = new Dictionary<ObjectId, Task<IImage>>();
         private object presenter;
 
         protected ThumbnailData(ObjectId thumbnailId)
@@ -34,24 +35,25 @@ namespace Stride.Core.Assets.Editor.Services
 
         public async Task PrepareForPresentation(IDispatcherService dispatcher)
         {
-            Task<IImage> task;
-            lock (ComputingThumbnails)
-            {
-                if (!ComputingThumbnails.TryGetValue(thumbnailId, out task))
-                {
-                    task = Task.Run(() => BuildImageSource());
-                    ComputingThumbnails.Add(thumbnailId, task);
-                }
-            }
+//             Task<IImage> task;
+//             lock (ComputingThumbnails)
+//             {
+//                 if (!ComputingThumbnails.TryGetValue(thumbnailId, out task))
+//                 {
+//                     task = Task.Run(() => BuildImageSource());
+//                     ComputingThumbnails.Add(thumbnailId, task);
+//                 }
+//             }
 
-            var result = await task;
+            var result = await Dispatcher.UIThread.InvokeAsync(() => BuildImageSource());
+//             var result = await task;
             dispatcher.Invoke(() => Presenter = result);
             FreeBuildingResources();
 
-            lock (ComputingThumbnails)
-            {
-                ComputingThumbnails.Remove(thumbnailId);
-            }
+//             lock (ComputingThumbnails)
+//             {
+//                 ComputingThumbnails.Remove(thumbnailId);
+//             }
         }
 
         /// <summary>
@@ -76,16 +78,9 @@ namespace Stride.Core.Assets.Editor.Services
         [ModuleInitializer]
         public static void Initialize ()
         {
-            Console.WriteLine ("Init A");
             ThumbnailDataBase.addSource ("ResourceThumbnailData", new ResourceThumbnailData (ObjectId.Empty, null));
         }
-        
-        static ResourceThumbnailData ()
-        {
-            Console.WriteLine ("Init B");
-            ThumbnailDataBase.addSource ("ResourceThumbnailData", new ResourceThumbnailData (ObjectId.Empty, null));
-        }
-        
+                
         public override IThumbnailData Build (ObjectId thumbnailId, object param) 
         {
             return new ResourceThumbnailData (thumbnailId, param);
@@ -130,16 +125,9 @@ namespace Stride.Core.Assets.Editor.Services
         [ModuleInitializer]
         public static void Initialize ()
         {
-            Console.WriteLine ("Init AA");
             ThumbnailDataBase.addSource ("BitmapThumbnailData", new BitmapThumbnailData (ObjectId.Empty, null));
         }
 
-        static BitmapThumbnailData ()
-        {
-            Console.WriteLine ("Init BB");
-            ThumbnailDataBase.addSource ("BitmapThumbnailData", new BitmapThumbnailData (ObjectId.Empty, null));
-        }
-        
         public override IThumbnailData Build (ObjectId thumbnailId, object param) 
         {
             return new BitmapThumbnailData (thumbnailId, (Stream) param);
