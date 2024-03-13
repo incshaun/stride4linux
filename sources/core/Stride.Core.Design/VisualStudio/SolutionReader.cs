@@ -330,6 +330,7 @@ namespace Stride.Core.VisualStudio
             var projectName = match.Groups["PROJECTNAME"].Value.Trim();
             var relativePath = match.Groups["RELATIVEPATH"].Value.Trim();
             var projectGuid = new Guid(match.Groups["PROJECTGUID"].Value.Trim());
+            relativePath = relativePath.Replace ('\\', Path.DirectorySeparatorChar); // solution files hardcode windows separator.
 
             var projectSections = new List<Section>();
             for (var line = ReadLine(); !line.StartsWith("EndProject", StringComparison.Ordinal); line = ReadLine())
