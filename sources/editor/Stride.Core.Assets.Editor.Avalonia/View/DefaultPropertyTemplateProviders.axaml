@@ -95,11 +95,11 @@
                 </ControlTemplate>
               </ToggleButton.Template>
             </ToggleButton>
-            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False"  >
+            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="PART_Popup" Focusable="False"  >
               <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}"  x:Name="DropDown" >
                 <Border x:Name="DropDownBorder" Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="3,3,3,3" />
-                <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Foreground="{StaticResource ActiveCaptionTextBrushKey}">
-                  <StackPanel IsItemsHost="True"  />
+                <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  >
+                  <StackPanel   />
                 </ScrollViewer>
               </Grid>
             </Popup>

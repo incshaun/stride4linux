@@ -616,8 +616,7 @@
           <DockPanel>
             <ToolBarTray DockPanel.Dock="Top"
                          Visibility="{Binding IsToolBarVisible, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:VisibleOrCollapsed}}">
-              <ToolBar
-                Visibility="{Binding CanClearLog, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:VisibleOrCollapsed}}">
+              <ToolBar Visibility="{Binding CanClearLog, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:VisibleOrCollapsed}}">
                 <Button x:Name="PART_ClearLog" Content="Clear" />
               </ToolBar>
               <ToolBar Header="Filters"

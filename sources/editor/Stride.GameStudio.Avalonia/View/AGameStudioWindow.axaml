@@ -878,7 +878,8 @@
 
 
 
-									<Grid Background="{StaticResource ToolBarBackgroundBrush}">
+<!-- 									<Grid Background="{StaticResource ToolBarBackgroundBrush}"> -->
+									<Grid >
 										<Grid.RowDefinitions>
 											<RowDefinition Height="Auto"/>
 											<RowDefinition Height="Auto"/>
@@ -965,6 +966,140 @@
 										<TextBlock Grid.Row="4" Text="{Binding Session.ActiveProperties.FallbackMessage, Source={x:Static vm:GameStudioViewModel.GameStudio}}" HorizontalAlignment="Center" VerticalAlignment="Center"
 										   />
 
+										<sd:PropertyView x:Name="AssetPropertyView" Grid.Row="4"
+													   ItemsSource="{Binding Session.ActiveProperties.ViewModel.RootNode.Children, Source={x:Static vm:GameStudioViewModel.GameStudio}}"
+													   IsVisible="{Binding Session.ActiveProperties.CanDisplayProperties, Source={x:Static vm:GameStudioViewModel.GameStudio}}">
+											
+										<sd:PropertyView.Resources>
+											
+										<!--<RoutedUICommand x:Key="ReplaceCommand" Text="Replace">
+												<RoutedUICommand.InputGestures>
+													<KeyGesture>Ctrl+Shift+V</KeyGesture>
+												</RoutedUICommand.InputGestures>
+											</RoutedUICommand>-->
+										
+										</sd:PropertyView.Resources>
+											
+													<sd:PropertyView.ItemContainerTheme>
+											<ControlTheme TargetType="{x:Type sd:PropertyViewItem}" BasedOn="{StaticResource {x:Type sd:PropertyViewItem}}">
+												<!--<ControlTheme TargetType="{x:Type sd:PropertyViewItem}" BasedOn="{StaticResource {x:Type sd:PropertyViewItem}}">-->
+													<Setter Property="Background" Value="Transparent"/>
+												<Setter Property="ContextMenu">
+													<Setter.Value>
+														<ContextMenu IsVisible="{Binding HasItems, RelativeSource={RelativeSource Self}, FallbackValue=false}">
+															<MenuItem Header="{sd:Localize Reset to base value, Context=Menu}" Command="{Binding ResetOverride, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"
+																	  IsEnabled="{Binding HasBase}"/>
+															<Separator />
+															<!--<MenuItem Icon="{sd:Image {StaticResource ImageCopy}}"
+																	  Command="ApplicationCommands.Copy" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}"/>
+															<MenuItem Icon="{sd:Image {StaticResource ImagePaste}}"
+																	  Command="ApplicationCommands.Paste" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}" />-->
+															<!--<MenuItem Icon="{sd:Image {StaticResource ImagePaste}}"
+																	  IsVisible="{Binding HasCommand_ReplaceProperty, FallbackValue=false}"
+																	  Command="{StaticResource ReplaceCommand}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}"/>-->
+														</ContextMenu>
+													</Setter.Value>
+												</Setter>
+												<Setter Property="HeaderTemplate">
+													<Setter.Value>
+														<TreeDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels:NodeViewModel">
+															<ContentPresenter Content="{Binding}" 
+																			  ContentTemplate="{x:Static sd:PropertyViewHelper.HeaderProviders}" />
+															<!--<ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static sd:PropertyViewHelper.HeaderProviders}"/>-->
+														</TreeDataTemplate>
+														
+														<!--<HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels:NodeViewModel">
+															<ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static sd:PropertyViewHelper.HeaderProviders}"/>
+														</HierarchicalDataTemplate>-->
+														<!--<DataTemplate  DataType="viewModels:NodeViewModel">-->
+															
+														<!--<DataTemplate DataType="{x:Type viewModels:NodeViewModel}">
+														<StackPanel>
+															<ItemsControl ItemsSource="{Binding Children, Mode=OneWay}"/>
+															<ContentPresenter Content="{Binding}" />
+														</StackPanel>
+														</DataTemplate>-->
+															
+															<!--<ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static sd:PropertyViewHelper.HeaderProviders}"/>-->
+														<!--</DataTemplate>-->
+
+													</Setter.Value>
+												</Setter>
+												<Setter Property="Template">
+													<Setter.Value>
+														<ControlTemplate TargetType="{x:Type sd:PropertyViewItem}">
+															<Border BorderThickness="{TemplateBinding Border.BorderThickness}" BorderBrush="{TemplateBinding Border.BorderBrush}" 
+																	IsVisible="{Binding IsVisible}" d:DataContext="{d:DesignInstance viewModels:NodeViewModel}">
+																<DockPanel>
+																	<Border DockPanel.Dock="Top" Background="{TemplateBinding Background}">
+																		<ContentPresenter Name="PART_Header"
+																						  Content="{TemplateBinding HeaderedContentControl.Header}"
+																						  ContentTemplate="{TemplateBinding HeaderTemplate}"
+																						  IsVisible="true"/>
+																	</Border>
+																	<Expander x:Name="propertyExpander3" IsExpanded="{TemplateBinding IsExpanded}"  IsEnabled="True">
+																		<StackPanel>
+																			<ItemsPresenter Name="ItemsHost"/>
+																			<Border Background="{TemplateBinding Background}">
+																				<ContentPresenter Name="PART_Footer"
+																								  Content="{TemplateBinding HeaderedContentControl.Header}"
+																								  ContentTemplate="{x:Static sd:PropertyViewHelper.FooterProviders}"
+																								  IsVisible="true"/>
+																				<!--<ContentPresenter Name="PART_Footer"
+																								  Content="{TemplateBinding HeaderedContentControl.Header}"
+																								  ContentTemplate="{x:Static sd:PropertyViewHelper.FooterProviders}"
+																								  IsVisible="true"/>-->
+																			</Border>
+																		</StackPanel>
+																	</Expander>
+																</DockPanel>
+															</Border>
+														</ControlTemplate>
+													</Setter.Value>
+												</Setter>
+												<!--<Setter Property="sd:Interaction.Behaviors">
+													<Setter.Value>
+														<sd:BehaviorCollection>
+															<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" ContinueRouting="False" Command="{Binding CopyProperty, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
+															<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" ContinueRouting="False" Command="{Binding PasteProperty, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
+															<sd:CommandBindingBehavior RoutedCommand="{StaticResource ReplaceCommand}" ContinueRouting="False" Command="{Binding ReplaceProperty, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}" />
+															<sd:PropertyViewFilteringBehavior FilterToken="{Binding Text, ElementName=PropertyFilterTextBox, Mode=OneWay}"/>
+															<sd:PropertyViewItemDragDropBehavior CanDrop="False" CanDrag="False" CanInsert="True"/>
+														</sd:BehaviorCollection>
+													</Setter.Value>
+												</Setter>-->
+											
+										<!--<Style.Triggers>
+													<DataTrigger Binding="{Binding Documentation, FallbackValue={x:Null}}" Value="{x:Null}">
+														<Setter Property="Highlightable" Value="False"/>
+													</DataTrigger>
+													<Trigger Property="IsHovered" Value="True">
+														<Setter Property="Background" Value="{StaticResource PropertyGridItemHoverBrush}"/>
+													</Trigger>
+													<Trigger Property="IsFocused" Value="True">
+														<Setter Property="Background" Value="{StaticResource NormalBrush}"/>
+													</Trigger>
+													<Trigger Property="IsKeyboardActive" Value="True">
+														<Setter Property="Background" Value="{StaticResource NormalBrush}"/>
+													</Trigger>
+												</Style.Triggers>-->
+										<!--
+												<Style.Resources>
+													<Style TargetType="{x:Type sd:TextBox}" BasedOn="{StaticResource {x:Type sd:TextBox}}">
+														<Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}" />
+														<Setter Property="ToolTipService.IsEnabled" Value="{Binding Text, RelativeSource={RelativeSource Self}, Converter={sd:Chained {sd:EmptyStringToBool}, {sd:InvertBool}, Parameter1={sd:True}}}" />
+													</Style>
+												</Style.Resources>-->
+											</ControlTheme>
+										</sd:PropertyView.ItemContainerTheme>
+										<!--<i:Interaction.Behaviors>
+											<sd:PropertyViewDragDropBehavior Target="{Binding Session.ActiveProperties.ViewModel}" CanDrag="False" CanDrop="True" CanInsert="False" />
+											<sd:PropertyViewFilteringBehavior FilterToken="{Binding Text, ElementName=PropertyFilterTextBox, Mode=OneWay}"/>
+											<sd:PropertyViewAutoExpandNodesBehavior ViewModel="{Binding Session.ActiveProperties.ViewModel, Mode=OneWay}"/>
+										</i:Interaction.Behaviors>-->
+									</sd:PropertyView>
+										
+										
 										<GridSplitter Grid.Row="5" HorizontalAlignment="Stretch" Height="5" ResizeBehavior="PreviousAndNext"/>
 
 										<Border Grid.Row="6" Background="{StaticResource ToolBarBackgroundBrush}">

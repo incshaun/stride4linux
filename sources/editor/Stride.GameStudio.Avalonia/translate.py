@@ -191,6 +191,7 @@ def translateNames (contents):
   contents = re.sub ("CanExecuteRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
   contents = re.sub ("DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
+  contents = re.sub ("DependencyPropertyChangedEventArgs args", "AvaloniaPropertyChangedEventArgs args", contents)
   contents = re.sub ("private void OnValueChanged\(object sender, RoutedPropertyChangedEventArgs<double> e\)", "private void OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)", contents)
   contents = re.sub ("\(RoutedEventHandler\)", "(EventHandler)", contents)
   
@@ -229,6 +230,7 @@ def translateNames (contents):
   contents = re.sub ("Application.Current.TryFindResource\((.*?)\)", r"ResourceNodeExtensions.FindResource(Application.Current, \1)", contents)
 
   contents = re.sub ("Cursors.SizeWE", "new Cursor(StandardCursorType.SizeWestEast)", contents)
+  contents = re.sub ("Cursors.ScrollAll", "new Cursor(StandardCursorType.SizeAll)", contents) # no equivalent.
 
   contents = re.sub (" ImageSource ", " IImage ", contents)
   contents = re.sub (" ImageSource;", " IImage;", contents)
@@ -490,6 +492,16 @@ def translateProperties (contents):
       contents = re.sub (vpat, vsub, contents)
     contents = re.sub (pat, r"public static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4); // T10", contents)
   
+  pat = re.compile ("protected static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(nameof\((.*?)\), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);", re.DOTALL)
+  # set up backing variables.
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      vpat = "public " + match[4] + " " + match[3] + " { get { return \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\); } private set { SetValue\(" + match[0] + ", value\); } }"
+      vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } private set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      #print (match, vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+    contents = re.sub (pat, r"protected static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4); // T10A", contents)
+  
 
   pat = re.compile ("public static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?)\)\);", re.DOTALL)
   if (re.findall (pat, contents)):
@@ -643,6 +655,12 @@ def translateProperties (contents):
   contents = re.sub (pat, r"protected virtual void OnPointerReleased(PointerReleasedEventArgs e)", contents)
   pat = re.compile ("base.OnMouseLeftButtonUp\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerReleased(e);", contents)
+
+  pat = re.compile ("protected override void OnMouseMove\(PointerEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected virtual void OnPointerMoved(PointerEventArgs e)", contents)
+
+  pat = re.compile ("protected override void OnMouseUp\(PointerEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected virtual void OnPointerReleased(PointerReleasedEventArgs e)", contents)
 
   pat = re.compile ("\(object sender, MouseEventArgs e\)") # just the call to base.
   contents = re.sub (pat, r"(object sender, PointerEventArgs e)", contents)
@@ -887,6 +905,7 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:ObjectToBool}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), FallbackValue={sd:Collapsed}, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrHidden}}}\"", r'IsVisible="{Binding \1, FallbackValue=false, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrHidden}}, Mode=OneWay}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}, Mode=OneWay}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrCollapsed}}\"", r'IsVisible="{Binding \1"', contents)
 
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -1305,7 +1324,11 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/NodeToCameraSlotIndex.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Converters/CodeActionsConverter.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/SimpleCodeTextEditor.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Converters/CodeActionToGlyphConverter.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Converters/CodeActionToGlyphConverter.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Commands/DisabledCommand.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/NumericTextBoxDragBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/MouseMoveCaptureBehaviorBase.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/CanvasView/CanvasView.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1318,10 +1341,10 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Co
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
+
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")
-
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.ExpressionDark.normalcolor.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Themes/ExpressionDark/TableflowView.GridElementTemplates.xaml")
