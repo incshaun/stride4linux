@@ -379,7 +379,8 @@ namespace Stride.Assets.Presentation.AssetEditors
                 var host = await RoslynHost;
                 msbuildWorkspace = MSBuildWorkspace.Create(ImmutableDictionary<string, string>.Empty, host.HostServices);
             }
-            await msbuildWorkspace.OpenSolutionAsync(session.SolutionPath.ToWindowsPath());
+//            await msbuildWorkspace.OpenSolutionAsync(session.SolutionPath.ToWindowsPath());
+            await msbuildWorkspace.OpenSolutionAsync(session.SolutionPath);
 
             // Try up to 10 times (1 second)
             const int retryCount = 10;

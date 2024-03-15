@@ -172,29 +172,29 @@ namespace Stride.Core.Assets.Editor.View.Controls
             if (logGridView == null)
                 throw new InvalidOperationException("A part named 'PART_LogGridView' must be present in the ControlTemplate, and must be of type 'DataGridControl'.");
 
-//             logGridView.MouseDoubleClick += GridMouseDoubleClick;
+            logGridView.DoubleTapped += GridMouseDoubleClick;
         }
 
-        private void GridMouseDoubleClick(object sender, PointerEventArgs e)
+        private void GridMouseDoubleClick(object sender, TappedEventArgs e)
         {
             if (Session == null)
                 return;
 
-//             var logMessage = logGridView.SelectedItem as AssetSerializableLogMessage;
-//             if (logMessage != null && !string.IsNullOrEmpty(logMessage.AssetUrl))
-//             {
-//                 var asset = Session.GetAssetById(logMessage.AssetId);
-//                 if (asset != null)
-//                     Session.ActiveAssetView.SelectAssetCommand.Command.Execute(asset);
-//             }
-// 
-//             var assetLogMessage = logGridView.SelectedItem as AssetLogMessage;
-//             if (assetLogMessage != null && assetLogMessage.AssetReference != null)
-//             {
-//                 AssetViewModel asset = Session.GetAssetById(assetLogMessage.AssetReference.Id);
-//                 if (asset != null)
-//                     Session.ActiveAssetView.SelectAssetCommand.Command.Execute(asset);
-//             }
+            var logMessage = logGridView.SelectedItem as AssetSerializableLogMessage;
+            if (logMessage != null && !string.IsNullOrEmpty(logMessage.AssetUrl))
+            {
+                var asset = Session.GetAssetById(logMessage.AssetId);
+                if (asset != null)
+                    Session.ActiveAssetView.SelectAssetCommand.Execute(asset);
+            }
+
+            var assetLogMessage = logGridView.SelectedItem as AssetLogMessage;
+            if (assetLogMessage != null && assetLogMessage.AssetReference != null)
+            {
+                AssetViewModel asset = Session.GetAssetById(assetLogMessage.AssetReference.Id);
+                if (asset != null)
+                    Session.ActiveAssetView.SelectAssetCommand.Execute(asset);
+            }
 
         }
 
@@ -244,8 +244,8 @@ namespace Stride.Core.Assets.Editor.View.Controls
 
         private void ApplyFilters()
         {
-            if (logGridView == null || logGridView.ItemsSource == null || LogMessages == null)
-                return;
+//             if (logGridView == null || logGridView.ItemsSource == null || LogMessages == null)
+//                 return;
 
             FilteredLogMessages.Clear();
             FilteredLogMessages.AddRange(LogMessages.Where(IsMessageVisible));

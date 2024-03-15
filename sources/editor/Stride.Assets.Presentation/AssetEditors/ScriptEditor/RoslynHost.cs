@@ -50,7 +50,7 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
             workspace = new RoslynWorkspace(this);
 //             workspace.EnableDiagnostics(DiagnosticOptions.Semantic | DiagnosticOptions.Syntax);
 
-            GetService<IDiagnosticService>().DiagnosticsUpdated += OnDiagnosticsUpdated;
+//            GetService<IDiagnosticService>().DiagnosticsUpdated += OnDiagnosticsUpdated;
 
             ParseOptions = CreateDefaultParseOptions();
         }
