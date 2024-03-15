@@ -171,8 +171,9 @@ namespace Stride.Core.Assets.Editor.Services
                 Cache.Cache(thumbnailId, bitmap);
                 return bitmap;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine ("Build bitmap exception " + e);
                 return null;
             }
         }

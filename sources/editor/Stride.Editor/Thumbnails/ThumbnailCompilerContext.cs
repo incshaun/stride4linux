@@ -86,10 +86,10 @@ namespace Stride.Editor.Thumbnails
                         thumbnailBuiltArgs.ThumbnailStream = thumbnailStream;
                         thumbnailBuiltArgs.ThumbnailId = thumbnailHash;
                     }
-                    else //if (BuildFailedThumbnail != null)
+                    else if (BuildFailedThumbnail != null)
                     {
                         Console.WriteLine ("Build failed thumbnail");
- //                       thumbnailBuiltArgs.ThumbnailStream = new MemoryStream(BuildFailedThumbnail.Result);
+                        thumbnailBuiltArgs.ThumbnailStream = new MemoryStream(BuildFailedThumbnail.Result);
                     }
                     handler(assetItem, thumbnailBuiltArgs);
                 }

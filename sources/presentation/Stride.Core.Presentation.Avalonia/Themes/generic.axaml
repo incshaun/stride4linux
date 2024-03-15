@@ -60,7 +60,7 @@
 
   <ControlTheme x:Key="{x:Type ctrl:PropertyView}" TargetType="ctrl:PropertyView">
     <!-- TODO: Replace DynamicResource by StaticResource once it is stylized in the correct theme -->
-    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+<!--     <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" /> -->
     <Setter Property="BorderBrush" Value="{DynamicResource NormalBrush}" />
 <!--     <Setter Property="HorizontalContentAlignment" Value="Stretch" /> -->
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
@@ -670,8 +670,8 @@
                               Content="Match whole word" />
               </HeaderedItemsControl>
             </StackPanel>
-<!--            <RichTextBox x:Name="PART_LogTextBox" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"
-                         VerticalScrollBarVisibility="Auto" FontFamily="Consolas, Courrier New" FontSize="11" />-->
+            <TextBox x:Name="PART_LogTextBox" IsReadOnly="True" 
+                         FontFamily="Consolas, Courrier New" FontSize="11" />
           </DockPanel>
         </ControlTemplate>
       </Setter.Value>

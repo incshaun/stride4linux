@@ -29,10 +29,13 @@ namespace Stride.Core.Translation.Presentation.MarkupExtensions
                 // get the assembly name from the IUriContext
                 var uriContext = (IUriContext)serviceProvider.GetService(typeof(IUriContext));
                 var localPath = uriContext.BaseUri?.LocalPath;
-                var assemblyName = localPath?.Substring(1, localPath.IndexOf(";", StringComparison.InvariantCultureIgnoreCase) - 1);
-                if (!string.IsNullOrEmpty(assemblyName))
+                if (localPath.IndexOf(";", StringComparison.InvariantCultureIgnoreCase) > 0)
                 {
-                    assembly = Assembly.Load(assemblyName);
+                    var assemblyName = localPath?.Substring(1, localPath.IndexOf(";", StringComparison.InvariantCultureIgnoreCase) - 1);
+                    if (!string.IsNullOrEmpty(assemblyName))
+                    {
+                        assembly = Assembly.Load(assemblyName);
+                    }
                 }
             }
             catch (SystemException)

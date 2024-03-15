@@ -282,6 +282,7 @@ namespace Stride.Graphics
 
         private void ClearStateImpl()
         {
+            GraphicsDevice.UseOpenGLCreationContext();
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif

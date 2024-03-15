@@ -135,7 +135,8 @@ namespace Stride.Core.IO
 
             if (path != null && Directory.Exists(path))
             {
-                info = new DirectoryInfo(path.ToLowerInvariant());
+                info = new DirectoryInfo(path);
+//                 info = new DirectoryInfo(path.ToLowerInvariant()); // Does horrible things on case sensitive file systems.
             }
             else
             {
@@ -326,7 +327,8 @@ namespace Stride.Core.IO
         {
             public DirectoryWatcherItem(DirectoryInfo path)
             {
-                Path = path.FullName.ToLowerInvariant();
+                Path = path.FullName;
+                //Path = path.FullName.ToLowerInvariant(); // Does horrible things on case sensitive file systems.
             }
 
             public DirectoryWatcherItem Parent;

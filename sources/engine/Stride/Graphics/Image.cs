@@ -79,6 +79,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Stride.Core;
 using Stride.Core.Serialization.Contents;
+using SkiaSharp;
 
 namespace Stride.Graphics
 {
