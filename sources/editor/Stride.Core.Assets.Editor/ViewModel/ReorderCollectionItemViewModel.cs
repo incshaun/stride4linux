@@ -75,7 +75,7 @@ namespace Stride.Core.Assets.Editor.ViewModel
             //}
         }
 
-        public void SetTargetNode(NodeViewModel node)
+        public void SetTargetNode(INodeViewModel node)
         {
             // FIXME: This feature is disabled for now.
             //targetNode = node;

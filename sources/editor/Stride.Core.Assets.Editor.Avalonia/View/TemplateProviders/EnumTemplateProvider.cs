@@ -18,7 +18,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
 
         public bool FlagEnum { get; set; }
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             var isEnum = TypeIsEnum(node.Type) || (node.NodeValue != null && TypeIsEnum(node.NodeValue.GetType()));
             if (!isEnum)

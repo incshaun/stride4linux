@@ -10,7 +10,7 @@ namespace Stride.Assets.Presentation.TemplateProviders
     {
         public override string Name => "EntityReference";
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             return typeof(Entity).IsAssignableFrom(node.Type);
         }

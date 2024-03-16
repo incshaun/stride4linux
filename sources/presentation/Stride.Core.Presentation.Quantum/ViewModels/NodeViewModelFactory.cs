@@ -11,13 +11,13 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
 {
     public class NodeViewModelFactory : INodeViewModelFactory
     {
-        public NodeViewModel CreateGraph(GraphViewModel owner, Type rootType, IEnumerable<INodePresenter> rootNodes)
+        public INodeViewModel CreateGraph(GraphViewModel owner, Type rootType, IEnumerable<INodePresenter> rootNodes)
         {
             var rootViewModelNode = CreateNodeViewModel(owner, null, rootType, rootNodes.ToList(), true);
             return rootViewModelNode;
         }
 
-        public void GenerateChildren(GraphViewModel owner, NodeViewModel parent, List<INodePresenter> nodePresenters)
+        public void GenerateChildren(GraphViewModel owner, INodeViewModel parent, List<INodePresenter> nodePresenters)
         {
             foreach (var child in CombineChildren(nodePresenters))
             {
@@ -50,10 +50,11 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         }
 
         [NotNull]
-        protected virtual NodeViewModel CreateNodeViewModel([NotNull] GraphViewModel owner, NodeViewModel parent, Type nodeType, [NotNull] List<INodePresenter> nodePresenters, bool isRootNode = false)
+        protected virtual INodeViewModel CreateNodeViewModel([NotNull] GraphViewModel owner, INodeViewModel parent, Type nodeType, [NotNull] List<INodePresenter> nodePresenters, bool isRootNode = false)
         {
             // TODO: properly compute the name
-            var viewModel = new NodeViewModel(owner, parent, nodePresenters.First().Name, nodeType, nodePresenters);
+//             var viewModel = new NodeViewModel(owner, parent, nodePresenters.First().Name, nodeType, nodePresenters);
+            var viewModel = NodeViewModelBuilder.Build (owner, parent, nodePresenters.First().Name, nodeType, nodePresenters);
             if (isRootNode)
             {
                 owner.RootNode = viewModel;

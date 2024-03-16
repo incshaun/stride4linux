@@ -9,12 +9,12 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "Dictionary";
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             return CheckNode(node);
         }
 
-        public static bool CheckNode(NodeViewModel node)
+        public static bool CheckNode(NodeViewModelBase node)
         {
             return node.HasDictionary && node.NodeValue != null;
         }

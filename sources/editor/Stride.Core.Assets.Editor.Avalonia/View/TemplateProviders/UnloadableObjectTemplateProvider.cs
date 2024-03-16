@@ -11,7 +11,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "UnloadableObject";
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             return node.Name == DisplayData.UnloadableObjectInfo && node.NodeValue is IUnloadable;
         }

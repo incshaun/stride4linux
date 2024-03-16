@@ -14,7 +14,13 @@ namespace Stride.Core.Presentation.ValueConverters
         /// <inheritdoc/>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = string.Equals((string)value, (string)parameter);
+            string svalue = value as string;
+            if (svalue == null)
+            {
+                svalue = value.ToString();
+            }
+ 
+            var result = string.Equals(svalue, (string)parameter);
             return result;
         }
     }

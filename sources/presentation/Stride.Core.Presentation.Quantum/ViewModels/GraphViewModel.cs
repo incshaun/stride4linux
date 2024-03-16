@@ -24,7 +24,7 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         public const string HasChildPrefix = "HasChild_";
         public const string HasCommandPrefix = "HasCommand_";
         public const string HasAssociatedDataPrefix = "HasAssociatedData_";
-        private NodeViewModel rootNode;
+        private INodeViewModel rootNode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphViewModel"/> class.
@@ -86,7 +86,7 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         /// <summary>
         /// Gets the root node of this <see cref="GraphViewModel"/>.
         /// </summary>
-        public NodeViewModel RootNode { get { return rootNode; } set { SetValue(ref rootNode, value); } }
+        public INodeViewModel RootNode { get { return rootNode; } set { SetValue(ref rootNode, value); } }
 
         /// <summary>
         /// Gets the <see cref="GraphViewModelService"/> associated to this view model.
@@ -103,7 +103,7 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         /// </summary>
         public event EventHandler<NodeViewModelValueChangedArgs> NodeValueChanged;
 
-        internal void NotifyNodeChanged(NodeViewModel node)
+        public void NotifyNodeChanged(INodeViewModel node)
         {
             NodeValueChanged?.Invoke(this, new NodeViewModelValueChangedArgs(this, node));
         }

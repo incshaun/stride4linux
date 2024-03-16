@@ -8,7 +8,7 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
 {
     public class NodeViewModelValueChangedArgs : EventArgs
     {
-        public NodeViewModelValueChangedArgs(GraphViewModel viewModel, NodeViewModel node)
+        public NodeViewModelValueChangedArgs(GraphViewModel viewModel, INodeViewModel node)
         {
             ViewModel = viewModel;
             Node = node;
@@ -16,6 +16,6 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
 
         public GraphViewModel ViewModel { get; private set; }
 
-        public NodeViewModel Node { get; private set; }
+        public INodeViewModel Node { get; private set; }
     }
 }

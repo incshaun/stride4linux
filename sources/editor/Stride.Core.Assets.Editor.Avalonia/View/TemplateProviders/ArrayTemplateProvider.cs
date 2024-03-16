@@ -13,7 +13,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
 
         public Type ElementType { get; set; }
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             if (node.Type.IsArray)
             {

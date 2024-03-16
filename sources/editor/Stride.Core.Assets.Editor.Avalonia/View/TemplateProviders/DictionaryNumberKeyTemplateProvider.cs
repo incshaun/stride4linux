@@ -27,11 +27,11 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
             typeof(decimal),
         };
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             if (ApplyForItems)
             {
-                node = node.Parent;
+                node = (NodeViewModelBase) node.Parent;
                 if (node == null)
                     return false;
             }

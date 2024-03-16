@@ -14,7 +14,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
 
         public bool Struct { get; set; }
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             if (Struct)
             {

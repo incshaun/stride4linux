@@ -7,9 +7,9 @@ namespace Stride.Core.Assets.Editor.ViewModel
 {
     public abstract class AddReferenceViewModel : IAddReferenceViewModel
     {
-        protected NodeViewModel TargetNode;
+        protected NodeViewModelBase TargetNode;
 
-        public void SetTargetNode(NodeViewModel node)
+        public void SetTargetNode(NodeViewModelBase node)
         {
             TargetNode = node;
         }

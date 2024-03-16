@@ -13,7 +13,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
 
         public override string Name => (DynamicThumbnail ? "Thumbnail" : "Simple") + "reference";
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             var isReference = typeof(AssetReference).IsAssignableFrom(node.Type);
 

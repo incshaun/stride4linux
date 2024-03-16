@@ -18,11 +18,11 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
         /// </summary>
         public bool ApplyForItems { get; set; }
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             if (ApplyForItems)
             {
-                node = node.Parent;
+                node = (NodeViewModelBase) node.Parent;
                 if (node == null)
                     return false;
             }

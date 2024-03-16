@@ -6,6 +6,6 @@ namespace Stride.Core.Assets.Editor.ViewModel
 {
     public interface IAddReferenceViewModel : IAddChildViewModel
     {
-        void SetTargetNode(NodeViewModel node);
+        void SetTargetNode(NodeViewModelBase node);
     }
 }

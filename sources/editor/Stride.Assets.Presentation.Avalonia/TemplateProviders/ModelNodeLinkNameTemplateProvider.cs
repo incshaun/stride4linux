@@ -12,7 +12,7 @@ namespace Stride.Assets.Presentation.TemplateProviders
     {
         public override string Name => nameof(ModelNodeNameTemplateProvider);
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             return node.Name == nameof(ModelNodeLinkComponent.NodeName) && (node.Parent?.AssociatedData.ContainsKey(ModelNodeLinkData.AvailableNodes) ?? false);
         }

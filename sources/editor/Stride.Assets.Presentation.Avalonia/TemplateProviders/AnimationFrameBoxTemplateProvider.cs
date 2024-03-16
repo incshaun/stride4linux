@@ -12,7 +12,7 @@ namespace Stride.Assets.Presentation.TemplateProviders
     {
         public override string Name { get { return "AnimationFrameBoxTemplateProvider"; } }
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             return (node.Name.Equals(nameof(AnimationAssetDurationUnchecked.StartAnimationTimeBox)) || node.Name.Equals(nameof(AnimationAssetDurationUnchecked.EndAnimationTimeBox)));
         }

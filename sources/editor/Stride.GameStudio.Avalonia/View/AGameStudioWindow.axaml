@@ -1002,18 +1002,18 @@
 												</Setter>
 												<Setter Property="HeaderTemplate">
 													<Setter.Value>
-														<TreeDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels:NodeViewModel">
+														<TreeDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels:NodeViewModelBase">
 															<ContentPresenter Content="{Binding}" 
 																			  ContentTemplate="{x:Static sd:PropertyViewHelper.HeaderProviders}" />
 															<!--<ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static sd:PropertyViewHelper.HeaderProviders}"/>-->
 														</TreeDataTemplate>
 														
-														<!--<HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels:NodeViewModel">
+														<!--<HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels:NodeViewModelBase">
 															<ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static sd:PropertyViewHelper.HeaderProviders}"/>
 														</HierarchicalDataTemplate>-->
-														<!--<DataTemplate  DataType="viewModels:NodeViewModel">-->
+														<!--<DataTemplate  DataType="viewModels:NodeViewModelBase">-->
 															
-														<!--<DataTemplate DataType="{x:Type viewModels:NodeViewModel}">
+														<!--<DataTemplate DataType="{x:Type viewModels:NodeViewModelBase}">
 														<StackPanel>
 															<ItemsControl ItemsSource="{Binding Children, Mode=OneWay}"/>
 															<ContentPresenter Content="{Binding}" />
@@ -1029,7 +1029,7 @@
 													<Setter.Value>
 														<ControlTemplate TargetType="{x:Type sd:PropertyViewItem}">
 															<Border BorderThickness="{TemplateBinding Border.BorderThickness}" BorderBrush="{TemplateBinding Border.BorderBrush}" 
-																	IsVisible="{Binding IsVisible}" d:DataContext="{d:DesignInstance viewModels:NodeViewModel}">
+																	IsVisible="{Binding IsVisible}" d:DataContext="{d:DesignInstance viewModels:NodeViewModelBase}">
 																<DockPanel>
 																	<Border DockPanel.Dock="Top" Background="{TemplateBinding Background}">
 																		<ContentPresenter Name="PART_Header"
@@ -1102,7 +1102,8 @@
 										
 										<GridSplitter Grid.Row="5" HorizontalAlignment="Stretch" Height="5" ResizeBehavior="PreviousAndNext"/>
 
-										<Border Grid.Row="6" Background="{StaticResource ToolBarBackgroundBrush}">
+<!-- 										<Border Grid.Row="6" Background="{StaticResource ToolBarBackgroundBrush}"> -->
+										<Border Grid.Row="6" >
 											<DockPanel>
 												<Grid Margin="4" DockPanel.Dock="Top">
 													<Grid.ColumnDefinitions>

@@ -12,7 +12,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "AbstractType";
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             return node.AssociatedData.ContainsKey(AbstractNodeEntryData.AbstractNodeMatchingEntries);
         }

@@ -11,7 +11,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "RangedValueTemplateProvider";
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             // We need at least a minimum and a maximum to display a slider, but we also rely on having explicit small and large steps to make sure that the
             // slider won't be between the whole integer range for instance.

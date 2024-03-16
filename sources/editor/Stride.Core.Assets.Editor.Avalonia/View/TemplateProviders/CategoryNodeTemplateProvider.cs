@@ -10,7 +10,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "CategoryNode";
 
-        public override bool MatchNode(NodeViewModel node)
+        public override bool MatchNode(NodeViewModelBase node)
         {
             object value;
             if (node.AssociatedData.TryGetValue(CategoryData.Category, out value))
