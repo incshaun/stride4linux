@@ -9,9 +9,9 @@ namespace Stride.Assets.Presentation.TemplateProviders
     {
         public override string Name => nameof(GameSettingsFiltersTemplateProvider);
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
-            return node.Name == "SpecificFilter" && ((NodeViewModelBase) node.Root).Type == typeof(GameSettingsAsset);
+            return node.Name == "SpecificFilter" && node.Root.Type == typeof(GameSettingsAsset);
         }
     }
 }

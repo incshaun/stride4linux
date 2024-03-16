@@ -17,7 +17,7 @@ namespace Stride.Core.Assets.Editor.View
     {
         public override string Name => "SettingsEntry";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             return node?.NodeValue is PackageSettingsWrapper.SettingsKeyWrapper;
         }
@@ -27,7 +27,7 @@ namespace Stride.Core.Assets.Editor.View
     {
         public override string Name => "StringFromAcceptableValues";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             object hasAcceptableValues;
             return node.Parent != null && (node.Parent.AssociatedData.TryGetValue("HasAcceptableValues", out hasAcceptableValues) && (bool)hasAcceptableValues);
@@ -38,7 +38,7 @@ namespace Stride.Core.Assets.Editor.View
     {
         public override string Name => "SettingsCommand";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             return node?.NodeValue is SettingsCommand;
         }

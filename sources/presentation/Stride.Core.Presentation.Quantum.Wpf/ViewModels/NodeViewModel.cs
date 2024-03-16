@@ -223,10 +223,6 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         /// </summary>
         protected int? Order => NodePresenters.First().Order;
 
-        public delegate void InitializerExtensionFn (NodeViewModel nvm);
-        
-        public static InitializerExtensionFn InitializerExtension = null;
-        
         public void FinishInitialization()
         {
             if (initializingChildren != null)
@@ -275,11 +271,6 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
                 var values = attachedProperty.Select(x => x.Value).ToList();
                 var value = values.Count == 1 ? values[0] : combiner(values);
                 AddAssociatedData(attachedProperty.Key.Name, value);
-            }
-            
-            if (InitializerExtension != null)
-            {
-                InitializerExtension (this);
             }
         }
 
@@ -602,7 +593,7 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
                 return null;
             object convertedValue;
             if (!TypeConverterHelper.TryConvert(value, Type, out convertedValue))
-                throw new InvalidCastException("Can not convert value to the required type");
+                    throw new InvalidCastException("Can not convert value to the required type");
             return convertedValue;
         }
 

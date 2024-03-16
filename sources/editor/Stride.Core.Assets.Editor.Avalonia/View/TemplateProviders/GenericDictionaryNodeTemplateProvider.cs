@@ -15,7 +15,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
 
         public Type ValueType { get; set; }
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             if (node.HasDictionary && node.NodeValue != null)
             {

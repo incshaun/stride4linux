@@ -10,7 +10,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "Object";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             return node.Type != typeof(string) && (node.NodeValue == null || node.NodeValue.GetType().IsStruct() || node.NodeValue.GetType().IsClass);
         }

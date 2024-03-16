@@ -6,12 +6,12 @@
     <StrideAssemblyProcessor>true</StrideAssemblyProcessor>
     <StrideAssemblyProcessorOptions>--auto-module-initializer --serialization</StrideAssemblyProcessorOptions>
     <TargetFramework>$(StrideEditorTargetFramework)</TargetFramework>
-    <UseWPF>false</UseWPF>
+    <StrideLocalized>true</StrideLocalized>
+    <RestorePackages>true</RestorePackages>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
 
   <ItemGroup>
-  <PackageReference Include="Avalonia" />
     <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>

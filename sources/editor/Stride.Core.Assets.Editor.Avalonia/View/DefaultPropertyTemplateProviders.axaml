@@ -136,7 +136,7 @@
     <TextBlock Text="{Binding Mode=OneTime}" IsHitTestVisible="False"/>
   </DataTemplate>
 
-  <DataTemplate x:Key="DefaultPropertyHeaderTemplate" DataType="qvm:NodeViewModelBase">
+  <DataTemplate x:Key="DefaultPropertyHeaderTemplate" DataType="qvm:NodeViewModel">
     <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsVisible="{Binding IsVisible}">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="8"/>
@@ -209,7 +209,7 @@
             </sd:TextBox.Theme>
           </sd:TextBox>
           <CheckBox Grid.Column="3" Margin="2,0" VerticalAlignment="Center" HorizontalAlignment="Left"
-                    IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModelBase.DifferentValues}}"
+                    IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
                     IsChecked="{Binding Enabled.NodeValue, Converter={cvt:DifferentValueToParam}, ConverterParameter={x:Null}}"
                     IsVisible="{Binding HasChild_Enabled}"/>
         </Grid>
@@ -239,7 +239,7 @@
     </DataTemplate.Triggers> -->
   </DataTemplate>
 
-  <DataTemplate x:Key="HeaderReadOnlyProperty" DataType="qvm:NodeViewModelBase">
+  <DataTemplate x:Key="HeaderReadOnlyProperty" DataType="qvm:NodeViewModel">
     <Grid IsVisible="{Binding IsVisible}" edvw:PropertyViewHelper.Increment="0"
               Margin="{Binding Offset, Converter={sd:NumericToThickness}, ConverterParameter={sd:Thickness 1,0,0,0},
                                RelativeSource={RelativeSource AncestorType=sd:PropertyViewItem}, Mode=OneWay}" x:Name="Grid">
@@ -260,7 +260,7 @@
                                    />
         <StackPanel Orientation="Horizontal" Margin="8,0,0,0">
           <CheckBox Margin="4,0" VerticalAlignment="Center"
-                    IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModelBase.DifferentValues}}"
+                    IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
                     IsChecked="{Binding Enabled.NodeValue, Converter={cvt:DifferentValueToParam}, ConverterParameter={x:Null}}"
                     IsVisible="{Binding HasChild_Enabled}"/>
           <Image Source="{Binding NodeValue, Converter={sd:Chained {sd:ObjectToType}, {cvt:TypeToResource}}}" MaxWidth="16" MaxHeight="16"
@@ -288,7 +288,7 @@
                                                Converter={sd:AndMultiConverter}}" Value="{sd:True}">
         <Setter TargetName="HeaderTextBlock" Property="Opacity" Value="0.5"/>
       </DataTrigger>
-      <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+      <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
         <Setter TargetName="HeaderTextBlock" Property="Text" Value="{sd:Localize (Different values)}"/>
       </DataTrigger>
       <DataTrigger Binding="{Binding Level, Converter={sd:IsEqual}, ConverterParameter=2}" Value="True">
@@ -326,7 +326,7 @@
     
 	</pvdr:AbstractTypeTemplateProvider.OverriddenProviderNames>
 <pvdr:AbstractTypeTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <ComboBox x:Name="InstanceTypeSelectionComboBox" DockPanel.Dock="Right" Theme="{StaticResource AbstractTypeSelectionComboBox}"
@@ -402,7 +402,7 @@
   <!-- Provider for list: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:ListTemplateProvider x:Key="ListPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<pvdr:ListTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
@@ -425,7 +425,7 @@
   <!-- Provider for list: Button to add an entry, in the footer -->
   <pvdr:ListTemplateProvider x:Key="ListPropertyFooterTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyFooter">
 	<pvdr:ListTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
@@ -483,7 +483,7 @@
   <!-- Provider for array: Button to add an entry, TextBlock to describe the array -->
   <pvdr:ArrayTemplateProvider x:Key="ArrayPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<pvdr:ArrayTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <TextBlock Margin="2">
@@ -498,7 +498,7 @@
   <!-- Provider for array -->
   <pvdr:ArrayTemplateProvider x:Key="ArrayPropertyFooterTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyFooter">
 	<pvdr:ArrayTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
@@ -518,7 +518,7 @@
   <!-- Provider for set: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:SetTemplateProvider x:Key="SetPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<pvdr:SetTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
@@ -541,7 +541,7 @@
   <!-- Provider for set: Button to add an entry, in the footer -->
   <pvdr:SetTemplateProvider x:Key="SetPropertyFooterTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyFooter">
 	<pvdr:SetTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
            >
@@ -587,7 +587,7 @@
   <!-- Provider for dictionary: Button to add an entry, TextBlock to describe the collection -->
   <pvdr:DictionaryTemplateProvider x:Key="DictionaryTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<pvdr:DictionaryTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding AddPrimitiveKey}"
@@ -611,7 +611,7 @@
     
 	</pvdr:DictionaryNumberKeyTemplateProvider.OverriddenProviderNames>
 <pvdr:DictionaryNumberKeyTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <ComboBox DockPanel.Dock="Right" Margin="2,0"
@@ -672,7 +672,7 @@
     
 	</pvdr:DictionaryStringKeyTemplateProvider.OverriddenProviderNames>
 <pvdr:DictionaryStringKeyTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <ComboBox DockPanel.Dock="Right" Margin="2,0"
@@ -733,7 +733,7 @@
     
 	</pvdr:DictionaryEnumKeyTemplateProvider.OverriddenProviderNames>
 <pvdr:DictionaryEnumKeyTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <ComboBox DockPanel.Dock="Right" Margin="2,0"
@@ -791,10 +791,10 @@
   <!-- Provider for boolean editor -->
   <edvw:TypeMatchTemplateProvider x:Key="BoolPropertyTemplateProvider" Type="{x:Type s:Boolean}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <CheckBox x:Name="CheckBox" Margin="2" HorizontalAlignment="Left"
-                IsThreeState="{Binding NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModelBase.DifferentValues}}"
+                IsThreeState="{Binding NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
                 IsChecked="{Binding NodeValue, Converter={cvt:DifferentValueToParam}, ConverterParameter={x:Null}}"/>
     </DataTemplate>
 </edvw:TypeMatchTemplateProvider.Template>
@@ -803,7 +803,7 @@
   <!-- Provider for char editor -->
   <edvw:TypeMatchTemplateProvider x:Key="CharPropertyTemplateProvider" Type="{x:Type s:Char}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid>
         <Grid.ColumnDefinitions>
@@ -829,7 +829,7 @@
         </sd:NumericTextBox>
       </Grid>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -838,7 +838,7 @@
 </edvw:TypeMatchTemplateProvider>
 
   <!-- Providers for color editors -->
-  <DataTemplate x:Key="ColorEditorTemplate" DataType="qvm:NodeViewModelBase">
+  <DataTemplate x:Key="ColorEditorTemplate" DataType="qvm:NodeViewModel">
     <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto"/>
@@ -888,7 +888,7 @@
       </Popup>
     </Grid>
     <!-- <DataTemplate.Triggers>
-      <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+      <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
         <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
       </DataTrigger>
     </DataTemplate.Triggers> -->
@@ -900,7 +900,7 @@
   <!-- Providers for number with a range editors -->
   <pvdr:RangedValueTemplateProvider x:Key="RangedValueTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="Most">
 	<pvdr:RangedValueTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid>
         <Grid.ColumnDefinitions>
@@ -935,7 +935,7 @@
         </sd:NumericTextBox>
       </Grid>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -944,7 +944,7 @@
 </pvdr:RangedValueTemplateProvider>
 
   <!-- Providers for floating-point number editors -->
-  <DataTemplate x:Key="FloatEditorTemplate" DataType="qvm:NodeViewModelBase">
+  <DataTemplate x:Key="FloatEditorTemplate" DataType="qvm:NodeViewModel">
     <sd:NumericTextBox x:Name="TextBox" SelectAllOnFocus="True" Margin="2"
                          Value="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:ToDouble}}}"
                          Minimum="{Binding Minimum, FallbackValue={x:Static s:Double.MinValue}, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:ToDouble}}}"
@@ -960,7 +960,7 @@
       </i:Interaction.Behaviors>
     </sd:NumericTextBox>
     <!-- <DataTemplate.Triggers>
-      <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+      <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
         <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
       </DataTrigger>
     </DataTemplate.Triggers> -->
@@ -969,7 +969,7 @@
   <edvw:TypeMatchTemplateProvider x:Key="DoublePropertyTemplateProvider" Type="{x:Type s:Double}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" Template="{StaticResource FloatEditorTemplate}"/>
 
   <!-- Providers for fixed-point number editors -->
-  <DataTemplate x:Key="IntEditorTemplate" DataType="qvm:NodeViewModelBase">
+  <DataTemplate x:Key="IntEditorTemplate" DataType="qvm:NodeViewModel">
     <sd:NumericTextBox x:Name="TextBox" SelectAllOnFocus="True" Margin="2"
                          Value="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:ToDouble}}}"
                          Minimum="{Binding Minimum, FallbackValue={x:Static s:Double.MinValue}, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:ToDouble}}}"
@@ -985,7 +985,7 @@
       </i:Interaction.Behaviors>
     </sd:NumericTextBox>
     <!-- <DataTemplate.Triggers>
-      <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+      <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
         <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
       </DataTrigger>
     </DataTemplate.Triggers> -->
@@ -1003,14 +1003,14 @@
   <!-- Provider for time span editor -->
   <edvw:TypeMatchTemplateProvider x:Key="TimeSpanPropertyTemplateProvider" Type="{x:Type s:TimeSpan}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:TimeSpanEditor x:Name="TimeSpanEditor" Margin="2"
                          Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
       </sd:TimeSpanEditor>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TimeSpanEditor" Property="WatermarkContent" Value="×"/>
           <Setter TargetName="TimeSpanEditor" Property="IsEnabled" Value="False"/>
         </DataTrigger>
@@ -1022,14 +1022,14 @@
   <!-- Provider for date time editor -->
   <edvw:TypeMatchTemplateProvider x:Key="DateTimePropertyTemplateProvider" Type="{x:Type s:DateTime}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:DateTimeEditor x:Name="DateTimeEditor" Margin="2"
                          Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}">
       </sd:DateTimeEditor>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="DateTimeEditor" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
           <Setter TargetName="DateTimeEditor" Property="IsEnabled" Value="False"/>
         </DataTrigger>
@@ -1041,13 +1041,13 @@
   <!-- Provider for string editor -->
   <edvw:TypeMatchTemplateProvider x:Key="StringPropertyTemplateProvider" Type="{x:Type s:String}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:TextBox x:Name="TextBox" Margin="2" SelectAllOnFocus="True"
                     Text="{Binding NodeValue, Converter={cvt:DifferentValuesToString}}"
                     WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}"/>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1058,7 +1058,7 @@
   <!-- Provider for vector2 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Vector2PropertyTemplateProvider" Type="{x:Type math:Vector2}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:Vector2Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1068,7 +1068,7 @@
         </i:Interaction.Behaviors>
       </sd:Vector2Editor>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1079,7 +1079,7 @@
   <!-- Provider for vector3 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Vector3PropertyTemplateProvider" Type="{x:Type math:Vector3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:Vector3Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1090,7 +1090,7 @@
         </i:Interaction.Behaviors>
       </sd:Vector3Editor>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1101,7 +1101,7 @@
   <!-- Provider for vector4 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Vector4PropertyTemplateProvider" Type="{x:Type math:Vector4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:Vector4Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                           Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1113,7 +1113,7 @@
         </i:Interaction.Behaviors>
       </sd:Vector4Editor>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1124,7 +1124,7 @@
   <!-- Provider for int2 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Int2PropertyTemplateProvider" Type="{x:Type math:Int2}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:Int2Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1134,7 +1134,7 @@
         </i:Interaction.Behaviors>
       </sd:Int2Editor>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1145,7 +1145,7 @@
   <!-- Provider for int3 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Int3PropertyTemplateProvider" Type="{x:Type math:Int3}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:Int3Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1156,7 +1156,7 @@
         </i:Interaction.Behaviors>
       </sd:Int3Editor>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1167,7 +1167,7 @@
   <!-- Provider for int4 editor -->
   <edvw:TypeMatchTemplateProvider x:Key="Int4PropertyTemplateProvider" Type="{x:Type math:Int4}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:Int4Editor X="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                        Y="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1179,7 +1179,7 @@
         </i:Interaction.Behaviors>
       </sd:Int4Editor>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1190,7 +1190,7 @@
   <!-- Provider for rectangleF editor -->
   <edvw:TypeMatchTemplateProvider x:Key="RectangleFPropertyTemplateProvider" Type="{x:Type math:RectangleF}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:RectangleFEditor RectX="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                              RectY="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1198,7 +1198,7 @@
                              RectHeight="{Binding Height.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                              WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor"/>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1209,7 +1209,7 @@
   <!-- Provider for rectangle editor -->
   <edvw:TypeMatchTemplateProvider x:Key="RectanglePropertyTemplateProvider" Type="{x:Type math:Rectangle}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:RectangleEditor RectX="{Binding X.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                             RectY="{Binding Y.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1217,7 +1217,7 @@
                             RectHeight="{Binding Height.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                             WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" x:Name="VectorEditor"/>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1228,12 +1228,12 @@
   <!-- Provider for rotation editor -->
   <edvw:TypeMatchTemplateProvider x:Key="RotationPropertyTemplateProvider" Type="{x:Type math:Quaternion}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:RotationEditor Value="{Binding NodeValue, Converter={cvt:DifferentValuesToNull}}"
                            WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor"/>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1244,7 +1244,7 @@
   <!-- Provider for matrix editor -->
   <edvw:TypeMatchTemplateProvider x:Key="MatrixPropertyTemplateProvider" Type="{x:Type math:Matrix}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:MatrixEditor M11="{Binding M11.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          M12="{Binding M12.NodeValue, Converter={cvt:DifferentValuesToNull}}"
@@ -1264,7 +1264,7 @@
                          M44="{Binding M44.NodeValue, Converter={cvt:DifferentValuesToNull}}"
                          WatermarkContentTemplate="{StaticResource DifferentValuesWatermarkTemplate}" DecimalPlaces="3" x:Name="VectorEditor"/>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="VectorEditor" Property="WatermarkContent" Value="≠"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1275,7 +1275,7 @@
   <!-- Provider for angleSingle editor -->
   <edvw:TypeMatchTemplateProvider x:Key="AnglePropertyTemplateProvider" Type="{x:Type math:AngleSingle}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <sd:NumericTextBox x:Name="TextBox" DecimalPlaces="3"
                            Value="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:AngleSingleToDegrees}}}"
@@ -1288,7 +1288,7 @@
         </i:Interaction.Behaviors>
       </sd:NumericTextBox>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1299,7 +1299,7 @@
   <!-- Provider for UDirectory editor -->
   <edvw:TypeMatchTemplateProvider x:Key="UDirectoryPropertyTemplateProvider" Type="{x:Type io:UDirectory}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding BrowseDirectory}"
@@ -1317,7 +1317,7 @@
         </sd:TextBox>
       </DockPanel>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1328,7 +1328,7 @@
   <!-- Provider for UFile editor -->
   <edvw:TypeMatchTemplateProvider x:Key="UFilePropertyTemplateProvider" Type="{x:Type io:UFile}" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<edvw:TypeMatchTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <Button Theme="{StaticResource ImageButtonStyle}" DockPanel.Dock="Right" Command="{Binding BrowseFile}"
@@ -1347,7 +1347,7 @@
         </sd:TextBox>
       </DockPanel>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBox" Property="WatermarkContent" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1358,14 +1358,14 @@
   <!-- Provider for simple enum editor: A ComboBox to select a single value -->
   <pvdr:EnumTemplateProvider x:Key="EnumPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor">
 	<pvdr:EnumTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid>
         <ComboBox Theme="{StaticResource EnumComboBox}" PlaceholderText=""/>
         <TextBlock x:Name="TextBlock" VerticalAlignment="Center" Margin="9,0,30,0" HorizontalAlignment="Left" IsHitTestVisible="False"/>
       </Grid>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="TextBlock" Property="Text" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1380,7 +1380,7 @@
     
 	</pvdr:EnumTemplateProvider.OverriddenProviderNames>
 <pvdr:EnumTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid>
         <ToggleButton x:Name="ToggleButton" VerticalAlignment="Center" Margin="2" Content="{sd:Localize Change values..., Context=Button}">
@@ -1434,7 +1434,7 @@
         </Popup>
       </Grid>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="ToggleButton" Property="Content" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1449,7 +1449,7 @@
     
 	</pvdr:EnumTemplateProvider.OverriddenProviderNames>
 <pvdr:EnumTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <ListBox Margin="0" Padding="2" Background="Transparent" BorderThickness="0" sd:BehaviorProperties.HandlesMouseWheelScrolling="False"
                ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Focusable="False"
@@ -1653,7 +1653,7 @@
 
   <edvw:SettingsCommandTemplateProvider x:Key="SettingsCommandTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="All">
 	<edvw:SettingsCommandTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Border>
         <Button MinWidth="80" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2" Content="{Binding NodeValue.ActionName}" Command="{Binding NodeValue.Command}"/>
@@ -1664,7 +1664,7 @@
 
   <edvw:SettingsStringFromAcceptableValuesTemplateProvider x:Key="StringFromAcceptableValuesEditorTemplate" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="All">
 	<edvw:SettingsStringFromAcceptableValuesTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Border>
         <ComboBox  ItemsSource="{Binding Parent.AcceptableValues}"
@@ -1678,14 +1678,14 @@
   <!-- Fallback terminal provider -->
   <sd:DefaultTemplateProvider x:Key="ObjectPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="None">
 	<sd:DefaultTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
 <!--      <TextBlock Margin="2,0" VerticalAlignment="Center" x:Name="DefaultTextBlock"
                  Text="{Binding {Binding AttributeDisplayName, Mode=OneWay}, {Binding Type, Mode=OneWay, StringFormat={sd:Localize {}{0} (Not supported)}, Converter={sd:NotSupportedTypeToTypeName}}, {Binding NodeValue, Mode=OneWay, Converter={sd:ObjectToTypeName}}}"/>-->
       <TextBlock Margin="2,0" VerticalAlignment="Center" x:Name="DefaultTextBlock"
                  Text="{Binding AttributeDisplayName, Mode=OneWay}"/>
       <!-- <DataTemplate.Triggers>
-        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModelBase.DifferentValues}">
+        <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="DefaultTextBlock" Property="Text" Value="{sd:Localize (Different values)}"/>
         </DataTrigger>
       </DataTemplate.Triggers> -->
@@ -1695,7 +1695,7 @@
 
   <pvdr:UnloadableObjectTemplateProvider x:Key="YamlProxyTemplateProvider" OverrideRule="All" edvw:PropertyViewHelper.TemplateCategory="PropertyHeader">
 	<pvdr:UnloadableObjectTemplateProvider.Template>
-		<DataTemplate DataType="qvm:NodeViewModelBase">
+		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <DockPanel>
         <Border DockPanel.Dock="Top" BorderBrush="Black" Margin="4,8" BorderThickness="1" Background="{StaticResource NormalBrush}">

@@ -18,11 +18,11 @@ namespace Stride.Assets.Presentation.TemplateProviders
 
         public override string Name => "ModelComponentMaterial";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             return base.MatchNode(node)
                 && node.NodeValue is Material
-                && ((NodeViewModelBase)node.Parent?.Parent)?.NodeValue is ModelComponent;
+                && node.Parent?.Parent?.NodeValue is ModelComponent;
         }
     }
 }

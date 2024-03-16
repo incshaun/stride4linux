@@ -10,9 +10,9 @@ namespace Stride.Assets.Presentation.TemplateProviders
     {
         public override string Name => "EntityComponentCollection";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
-            return node.Type == typeof(EntityComponentCollection) && ((NodeViewModelBase) node.Parent)?.Type == typeof(Entity);
+            return node.Type == typeof(EntityComponentCollection) && node.Parent?.Type == typeof(Entity);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "InlinedProperty";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             object inlined;
             return node.AssociatedData.TryGetValue(InlineData.InlineMember, out inlined) && (bool)inlined;

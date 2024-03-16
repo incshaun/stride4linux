@@ -33,7 +33,7 @@ namespace Stride.Core.Assets.Editor.View
         public override string Name => Type.Name;
 
         /// <inheritdoc/>
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             if (Type == null)
                 return true;

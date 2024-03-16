@@ -19,7 +19,7 @@ using Avalonia.Data;
 
 namespace Stride.Core.Presentation.Controls
 {
-    public class PropertyView : ItemsControl
+    public class PropertyView : Avalonia.Controls.TreeView 
     {
         private readonly ObservableList<PropertyViewItem> properties = new ObservableList<PropertyViewItem>();
 

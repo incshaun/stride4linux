@@ -18,7 +18,7 @@ namespace Stride.Assets.Presentation.ViewModel
         {
             Symbol symbol = null;
             bool singleChild = true;
-            foreach (var child in children.Select(x => (NodeViewModelBase)x))
+            foreach (var child in children.Select(x => (NodeViewModel)x))
             {
                 if (!singleChild)
                 {
@@ -45,7 +45,7 @@ namespace Stride.Assets.Presentation.ViewModel
 
         public override void AddChildren(IReadOnlyCollection<object> children, AddChildModifiers modifiers)
         {
-            var symbol = (Symbol)children.Select(x => (NodeViewModelBase)x).First().NodeValue;
+            var symbol = (Symbol)children.Select(x => (NodeViewModel)x).First().NodeValue;
 //             var command = TargetNode.GetCommand(SetSymbolReferenceCommand.CommandName);
 //             command.Execute(symbol);
         }

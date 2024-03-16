@@ -6,6 +6,6 @@ namespace Stride.Core.Assets.Editor.ViewModel
 {
     public interface IReorderItemViewModel : IInsertChildViewModel
     {
-        void SetTargetNode(INodeViewModel node);
+        void SetTargetNode(NodeViewModel node);
     }
 }

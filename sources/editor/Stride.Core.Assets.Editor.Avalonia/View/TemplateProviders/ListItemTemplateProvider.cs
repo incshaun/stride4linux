@@ -9,9 +9,9 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "ListItem";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
-            return base.MatchNode(node) && node.Parent != null && (((NodeViewModelBase) node.Parent).HasList || ((NodeViewModelBase) node.Parent).HasDictionary || ((NodeViewModelBase) node.Parent).HasSet || ((NodeViewModelBase) node.Parent).HasCollection);
+            return base.MatchNode(node) && node.Parent != null && (node.Parent.HasList || node.Parent.HasDictionary || node.Parent.HasSet || node.Parent.HasCollection);
         }
     }
 }

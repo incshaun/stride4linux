@@ -13,9 +13,9 @@ namespace Stride.Assets.Presentation.TemplateProviders
     {
         public override string Name => nameof(GameSettingAddConfigurationTemplateProvider);
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
-            return ((NodeViewModelBase) node.Parent)?.Type == typeof(GameSettingsAsset)
+            return node.Parent?.Type == typeof(GameSettingsAsset)
                 && node.Type == typeof(List<Configuration>) 
                 && node.Name == nameof(GameSettingsAsset.Defaults);
         }

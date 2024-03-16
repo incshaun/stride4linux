@@ -12,7 +12,7 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "NullableStruct";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             return node.Type.IsNullable() && Nullable.GetUnderlyingType(node.Type).IsStruct();
         }

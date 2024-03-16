@@ -26,7 +26,7 @@ namespace Stride.Core.Assets.Editor.View
         /// <param name="node">The node to test.</param>
         /// <returns><c>true</c> if this template provider can provide a template for the given node, <c>false</c> otherwise.</returns>
         /// <remarks>This method is invoked by <see cref="Match"/>.</remarks>
-        public abstract bool MatchNode(NodeViewModelBase node);
+        public abstract bool MatchNode(NodeViewModel node);
 
         /// <summary>
         /// Indicates whether the given node matches the given type, either with the <see cref="Stride.Core.Presentation.Quantum.ViewModels.NodeViewModel.Type"/> property
@@ -35,7 +35,7 @@ namespace Stride.Core.Assets.Editor.View
         /// <param name="node">The node to check.</param>
         /// <param name="type">The type to match.</param>
         /// <returns><c>true</c> if the node matches the given type, <c>false</c> otherwise.</returns>
-        protected static bool MatchType([NotNull] NodeViewModelBase node, [NotNull] Type type)
+        protected static bool MatchType([NotNull] NodeViewModel node, [NotNull] Type type)
         {
             return type.IsAssignableFrom(node.Type) || type.IsInstanceOfType(node.NodeValue);
         }

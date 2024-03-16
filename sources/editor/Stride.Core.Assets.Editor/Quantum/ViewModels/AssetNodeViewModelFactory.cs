@@ -10,7 +10,7 @@ namespace Stride.Core.Assets.Editor.Quantum.ViewModels
 {
     public class AssetNodeViewModelFactory : NodeViewModelFactory
     {
-        protected override INodeViewModel CreateNodeViewModel(GraphViewModel owner, INodeViewModel parent, Type nodeType, List<INodePresenter> nodePresenters, bool isRootNode = false)
+        protected override NodeViewModel CreateNodeViewModel(GraphViewModel owner, NodeViewModel parent, Type nodeType, List<INodePresenter> nodePresenters, bool isRootNode = false)
         {
             // TODO: properly compute the name
             var viewModel = new AssetNodeViewModel(owner, parent, nodePresenters.First().Name, nodeType, nodePresenters);

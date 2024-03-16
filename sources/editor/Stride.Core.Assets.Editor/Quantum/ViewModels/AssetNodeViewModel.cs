@@ -11,11 +11,11 @@ using Stride.Core.Presentation.Services;
 
 namespace Stride.Core.Assets.Editor.Quantum.ViewModels
 {
-    public class AssetNodeViewModel : NodeViewModelBase, IInternalAssetNodeViewModel
+    public class AssetNodeViewModel : NodeViewModel, IInternalAssetNodeViewModel
     {
         private bool overrideChanging;
 
-        public AssetNodeViewModel(GraphViewModel ownerViewModel, INodeViewModel parent, string baseName, Type nodeType, List<INodePresenter> nodePresenters)
+        public AssetNodeViewModel(GraphViewModel ownerViewModel, NodeViewModel parent, string baseName, Type nodeType, List<INodePresenter> nodePresenters)
             : base(ownerViewModel, parent, baseName, nodeType, nodePresenters)
         {
             foreach (var nodePresenter in NodePresenters)

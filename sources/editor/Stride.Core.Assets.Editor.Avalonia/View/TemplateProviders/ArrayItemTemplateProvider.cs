@@ -9,9 +9,9 @@ namespace Stride.Core.Assets.Editor.View.TemplateProviders
     {
         public override string Name => "ArrayItem";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
-            return base.MatchNode(node) && node.Parent != null && ((NodeViewModelBase) node.Parent).Type.IsArray;
+            return base.MatchNode(node) && node.Parent != null && node.Parent.Type.IsArray;
         }
     }
 }

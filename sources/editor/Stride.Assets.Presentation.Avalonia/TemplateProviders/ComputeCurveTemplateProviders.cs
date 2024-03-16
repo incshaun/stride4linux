@@ -22,7 +22,7 @@ namespace Stride.Assets.Presentation.TemplateProviders
         public override string Name => $"IComputeCurve<{typeof(TValue)}>";
 
         /// <inheritdoc/>
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
             return MatchType(node, ComputeCurveType);
         }

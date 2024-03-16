@@ -332,13 +332,13 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game
         private void HighlightMaterialInPropertyGrid(string materialName)
         {
             var node = editor.EditorProperties.ViewModel?.RootNode.Children.FirstOrDefault(x => x.Name == "Components");
-            var modelComp = node?.Children.FirstOrDefault(x => ((NodeViewModelBase)x).NodeValue is ModelComponent);
+            var modelComp = node?.Children.FirstOrDefault(x => x.NodeValue is ModelComponent);
             node = modelComp?.Children.FirstOrDefault(x => x.Name == "Materials");
             if (node != null)
             {
                 foreach (var material in node.Children)
                 {
-                    ((NodeViewModelBase)material).IsHighlighted = ((NodeViewModelBase)material).DisplayName == materialName;
+                    ((NodeViewModel)material).IsHighlighted = material.DisplayName == materialName;
                 }
             }
         }

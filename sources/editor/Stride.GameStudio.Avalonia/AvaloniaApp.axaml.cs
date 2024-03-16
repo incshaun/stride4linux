@@ -43,6 +43,7 @@ using Stride.Metrics;
 // using Stride.PrivacyPolicy;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Stride.Core.Presentation.Quantum.ViewModels;
 
 namespace Stride.GameStudio.Avalonia;
 
@@ -185,6 +186,7 @@ public partial class AvaloniaApp : Application
         {
 //            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 //            EditorPath.EditorTitle = StrideGameStudio.EditorName;
+            NodeViewModelExtensions.Initialize ();
 
             Console.WriteLine ("Framework Initialized");
             

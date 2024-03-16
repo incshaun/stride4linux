@@ -10,8 +10,8 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
     public interface INodeViewModelFactory
     {
         [NotNull]
-        INodeViewModel CreateGraph([NotNull] GraphViewModel owner, [NotNull] Type rootType, [NotNull] IEnumerable<INodePresenter> rootNodes);
+        NodeViewModel CreateGraph([NotNull] GraphViewModel owner, [NotNull] Type rootType, [NotNull] IEnumerable<INodePresenter> rootNodes);
 
-        void GenerateChildren([NotNull] GraphViewModel owner, INodeViewModel parent, [NotNull] List<INodePresenter> nodePresenters);
+        void GenerateChildren([NotNull] GraphViewModel owner, NodeViewModel parent, [NotNull] List<INodePresenter> nodePresenters);
     }
 }

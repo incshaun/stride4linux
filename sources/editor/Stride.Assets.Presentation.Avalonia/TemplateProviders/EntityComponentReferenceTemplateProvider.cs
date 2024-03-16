@@ -12,9 +12,9 @@ namespace Stride.Assets.Presentation.TemplateProviders
     {
         public override string Name => "EntityComponentReference";
 
-        public override bool MatchNode(NodeViewModelBase node)
+        public override bool MatchNode(NodeViewModel node)
         {
-            if (((NodeViewModelBase) node.Parent)?.Type == typeof(EntityComponentCollection))
+            if (node.Parent?.Type == typeof(EntityComponentCollection))
                 return false;
 
             if (typeof(EntityComponent).IsAssignableFrom(node.Type))
