@@ -380,7 +380,7 @@
         </sd:SearchComboBox>
         <Button Command="{Binding ClearAssetFiltersCommand}" IsVisible="{Binding CurrentAssetFilters.Count, Converter={sd:NumericToBool}}"
                 ToolTip.Tip="{sd:Localize Clear filters, Context=ToolTip}" status:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
-          <Image Source="{StaticResource ImageClearFilters}"/>
+          <Image Source="{StaticResource ImageClearFilters}" Stretch="None"/>
         </Button>
       </ItemsControl>
       <!--  FILTER TAGS  -->

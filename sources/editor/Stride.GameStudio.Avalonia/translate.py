@@ -906,6 +906,8 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), FallbackValue={sd:Collapsed}, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrHidden}}}\"", r'IsVisible="{Binding \1, FallbackValue=false, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrHidden}}, Mode=OneWay}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}, Mode=OneWay}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrCollapsed}}\"", r'IsVisible="{Binding \1"', contents)
+  contents = re.sub ("Visibility=\"{Binding Converter={sd:Chained {sd:MatchType}, {sd:VisibleOrCollapsed}, Parameter1={x:Type svm:SceneRootViewModel}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type svm:SceneRootViewModel}, FallbackValue=false}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:VisibleOrCollapsed}, ConverterParameter={sd:False}}\"", r'IsVisible="{Binding \1}"', contents)
 
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -928,6 +930,7 @@ def translateTags (contents):
 
   # SnapToDevicePixels, AllowsTransparency. Elements that don't seem to have an equivalent.
   contents = re.sub ("SnapsToDevicePixels=\"(.*?)\"", "", contents)
+  contents = re.sub ("ScrollViewer\.CanContentScroll=\"(.*?)\"", "", contents)
   contents = re.sub ("CanContentScroll=\"(.*?)\"", "", contents)
   contents = re.sub ("KeyboardNavigation.DirectionalNavigation=\"(.*?)\"", "", contents)
   
@@ -940,6 +943,9 @@ def translateTags (contents):
   contents = re.sub ("DashCap=\"Flat\"", "", contents)
   #contents = re.sub ("d:DataContext=\"{d:DesignInstance (.*?)}\"", "", contents) # possibly bad. Version in header needs to be handled differently.
   contents = re.sub ("mc:Ignorable=\"d\" d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r'mc:Ignorable="d"\2>\n\t<Design.DataContext>\n\t\t<\1 />\n\t</Design.DataContext>', contents)
+  contents = re.sub ("d:DesignWidth=\"300\" d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r'd:DesignWidth="300" >\n\t<Design.DataContext>\n\t\t<\1 />\n\t</Design.DataContext>', contents)
+  contents = re.sub ("<Setter([^>]*?) d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r' <Setter\1>\n\t<Design.DataContext>\n\t\t<\2 />\n\t</Design.DataContext>\n\t</Setter>', contents)
+  contents = re.sub (" d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r' >\n\t<Design.DataContext>\n\t\t<\1 />\n\t</Design.DataContext>', contents)
 
   # xmlsn:i
   contents = re.sub ("xmlns:i=\"http://schemas.microsoft.com/xaml/behaviors\"", "xmlns:i=\"clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity\"", contents)
@@ -1017,6 +1023,22 @@ def translateTags (contents):
   
   # Remove routed commands using application commands.
   contents = re.sub ("<sd:CommandBindingBehavior RoutedCommand=\"ApplicationCommands\.Delete\" (.*?)/>", r'<!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" \1/> -->', contents)
+  contents = re.sub ("<sd:CommandBindingBehavior RoutedCommand=\"ApplicationCommands\.Paste\" (.*?)/>", r'<!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" \1/> -->', contents)
+  
+  # true/false
+  contents = re.sub ("\"{sd:True}\"", r'"true"', contents)
+  contents = re.sub ("\"{sd:False}\"", r'"false"', contents)
+ 
+  # HierarchicalDataTemplace
+  contents = re.sub ("HierarchicalDataTemplate", r'TreeDataTemplate', contents)
+  
+  # Adorners
+  contents = re.sub (re.compile ("AdornerStoryboard=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("DisplayDropAdorner=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("<AdornerDecorator>", re.DOTALL), "<StackPanel>", contents)
+  contents = re.sub (re.compile ("</AdornerDecorator>", re.DOTALL), "</StackPanel>", contents)
+  contents = re.sub (re.compile ("<sd:ContainTextAdornerBehavior />", re.DOTALL), "", contents)
+  
   
   # Templates.
   
@@ -1054,8 +1076,6 @@ def translateTags (contents):
   contents = re.sub (re.compile (" IsEnabled=\"(.*?)\"", re.DOTALL), "", contents)
   #contents = re.sub (re.compile (" Visibility=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("DisplayMemberPath=\"(.*?)\"", re.DOTALL), "", contents)
-  contents = re.sub (re.compile ("AdornerStoryboard=\"(.*?)\"", re.DOTALL), "", contents)
-  contents = re.sub (re.compile ("DisplayDropAdorner=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("StaysOpen=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("SelectedValuePath=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("ContentStringFormat=\"(.*?)\"", re.DOTALL), "", contents)
@@ -1069,6 +1089,7 @@ def translateTags (contents):
   contents = re.sub (re.compile ("IsChecked=\"(.*?)\"", re.DOTALL), "", contents)  # hopefully in new avalonia
   contents = re.sub (re.compile ("IsCheckable=\"False\"", re.DOTALL), "", contents)  # hopefully in new avalonia
   contents = re.sub (re.compile ("SelectionMode=\"Extended\"", re.DOTALL), "", contents)  # hopefully in new avalonia
+  contents = re.sub (re.compile ("<KeyBinding(.*?)/>", re.DOTALL), "", contents)  # temporary
   
   return contents
 
@@ -1328,7 +1349,8 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Commands/DisabledCommand.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/NumericTextBoxDragBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/MouseMoveCaptureBehaviorBase.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/CanvasView/CanvasView.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/CanvasView/CanvasView.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1358,6 +1380,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/CanvasView/Canv
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/EntityPropertyTemplates.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/Icons.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.xaml")
+translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

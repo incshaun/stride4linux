@@ -1,0 +1,907 @@
+<UserControl x:Class="Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Views.EntityHierarchyEditorView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:p="clr-namespace:Stride.Assets.Presentation"
+             xmlns:strings="clr-namespace:Stride.Assets.Presentation.Resources.Strings"
+             xmlns:pvc="clr-namespace:Stride.Assets.Presentation.ValueConverters;assembly=Stride.Assets.Presentation.Avalonia"
+             xmlns:assetEditors="clr-namespace:Stride.Assets.Presentation.AssetEditors;assembly=Stride.Assets.Presentation"
+             xmlns:gameEditor="clr-namespace:Stride.Assets.Presentation.AssetEditors.GameEditor;assembly=Stride.Assets.Presentation"
+             xmlns:ehvm="clr-namespace:Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewModels;assembly=Stride.Assets.Presentation"
+             xmlns:ehv="clr-namespace:Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Views;assembly=Stride.Assets.Presentation.Avalonia"
+             xmlns:svm="clr-namespace:Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels;assembly=Stride.Assets.Presentation"
+             xmlns:entityFactories="clr-namespace:Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.EntityFactories;assembly=Stride.Assets.Presentation"
+             xmlns:views="clr-namespace:Stride.Assets.Presentation.AssetEditors.AssetCompositeGameEditor.Views;assembly=Stride.Assets.Presentation.Avalonia"
+             xmlns:cmd="clr-namespace:Stride.Core.Presentation.Commands;assembly=Stride.Core.Presentation"
+             xmlns:core="clr-namespace:Stride.Core.Presentation.Core;assembly=Stride.Core.Presentation"
+             xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300" >
+	<Design.DataContext>
+		<ehvm:EntityHierarchyEditorViewModel />
+	</Design.DataContext>
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://Stride.Core.Assets.Editor.Avalonia/View/CommonResources.axaml" />
+        <ResourceInclude Source="avares://Stride.Assets.Presentation.Avalonia/View/ImageDictionary.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      <ControlTheme x:Key="EnumListBoxItemContainerStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="Width" Value="28"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Padding" Value="0"/>
+      </ControlTheme>
+
+      <ControlTheme x:Key="EnumListBox" BasedOn="{StaticResource {x:Type ListBox}}" TargetType="ListBox">
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ItemTemplate">
+          <Setter.Value>
+            <DataTemplate>
+              <Border Width="28" Height="28"
+                      >
+                <Image Width="16" Height="16" Source="{Binding Converter={sd:EnumToResource}}" />
+              </Border>
+            </DataTemplate>
+          </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerTheme" Value="{StaticResource EnumListBoxItemContainerStyle}"/>
+        <Setter Property="ItemsPanel">
+          <Setter.Value>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+          </Setter.Value>
+        </Setter>
+      </ControlTheme>
+
+      <ContextMenu x:Key="TreeViewContextMenu" >
+	<Design.DataContext>
+		<ehvm:EntityHierarchyRootViewModel />
+	</Design.DataContext>
+        <MenuItem Header="{sd:Localize Create, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+        <MenuItem Header="{sd:Localize Folder, Context=Menu}" Command="{Binding Editor.CreateFolderInRootCommand}"/>
+        <MenuItem Header="{sd:Localize Empty entity, Context=Menu}" Command="{Binding Editor.CreateEntityInRootCommand}"/>
+        <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
+        <MenuItem ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
+	<Design.DataContext>
+		<entityFactories:EntityFactoryCategory />
+	</Design.DataContext>
+          <MenuItem.ItemContainerTheme>
+            <ControlTheme TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+              <Setter Property="ItemsSource" Value="{Binding Factories.Values, Mode=OneWay}"/>
+              <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+              <Setter Property="ItemContainerTheme">
+                <Setter.Value>
+                  <ControlTheme TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+                    <Setter Property="CommandParameter" Value="{Binding Factory, Mode=OneWay}"/>
+                    <Setter Property="Command" Value="{Binding DataContext.Editor.CreateEntityInRootCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay}"/>
+                  </ControlTheme>
+                </Setter.Value>
+              </Setter>
+            </ControlTheme>
+          </MenuItem.ItemContainerTheme>
+          <MenuItem.Template>
+            <ControlTemplate>
+              <Border Background="Transparent">
+                <StackPanel IsItemsHost="True"/>
+              </Border>
+            </ControlTemplate>
+          </MenuItem.Template>
+        </MenuItem>
+        <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+<!--        <MenuItem Header="{sd:Localize Open prefab in editor, Context=Menu}" Command="{Binding Editor.OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <MenuItem Header="{sd:Localize Select prefab in asset view, Context=Menu}" Command="{Binding Editor.SelectPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <MenuItem Header="{sd:Localize Break link to prefab ,Context=Menu}" Command="{Binding Editor.BreakLinkToPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding Editor.CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <Separator/>
+        <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGestureText="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
+        <MenuItem Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Command="ApplicationCommands.Copy" Icon="{sd:Image {StaticResource ImageCopy}}" />
+        <MenuItem Command="ApplicationCommands.Paste" CommandParameter="true" Icon="{sd:Image {StaticResource ImagePaste}}" />
+        <MenuItem Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>
+        <Separator/>
+        <MenuItem Header="Rename" InputGestureText="F2" Command="{Binding Editor.EntityWithGizmo.RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>-->
+      </ContextMenu>
+
+      <ContextMenu x:Key="TreeViewItemContextMenu" >
+	<Design.DataContext>
+		<ehvm:EntityHierarchyElementViewModel />
+	</Design.DataContext>
+        <MenuItem Header="{sd:Localize Create, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+        <MenuItem Header="{sd:Localize Folder, Context=Menu}" Command="{Binding Editor.CreateFolderInSelectionCommand}"/>
+        <MenuItem Header="{sd:Localize Empty entity, Context=Menu}" Command="{Binding Editor.CreateEntityInSelectionCommand}"/>
+        <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
+        <MenuItem ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
+	<Design.DataContext>
+		<entityFactories:EntityFactoryCategory />
+	</Design.DataContext>
+          <MenuItem.ItemContainerTheme>
+            <ControlTheme TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+              <Setter Property="ItemsSource" Value="{Binding Factories.Values, Mode=OneWay}"/>
+              <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+              <Setter Property="ItemContainerTheme">
+                <Setter.Value>
+                  <ControlTheme  TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+                    <Setter Property="CommandParameter" Value="{Binding Factory, Mode=OneWay}"/>
+                    <Setter Property="Command" Value="{Binding DataContext.Editor.CreateEntityInSelectionCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay}"/>
+                  </ControlTheme>
+                </Setter.Value>
+              </Setter>
+            </ControlTheme>
+          </MenuItem.ItemContainerTheme>
+          <MenuItem.Template>
+            <ControlTemplate>
+              <Border Background="Transparent">
+                <StackPanel IsItemsHost="True"/>
+              </Border>
+            </ControlTemplate>
+          </MenuItem.Template>
+        </MenuItem>
+        <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+<!--        <MenuItem Header="{sd:Localize Set as active scene, Context=Menu}" Command="{Binding Editor.SetActiveRootCommand}" IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type svm:SceneRootViewModel}, FallbackValue=false}"
+                   />
+        <MenuItem Header="{sd:Localize Open prefab in editor, Context=Menu}" Command="{Binding Editor.OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <MenuItem Header="{sd:Localize Select prefab in asset view, Context=Menu}" Command="{Binding Editor.SelectPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <MenuItem Header="{sd:Localize Break link to prefab, Context=Menu}" Command="{Binding Editor.BreakLinkToPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding Editor.CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <Separator/>
+        <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGestureText="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
+        <MenuItem Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Command="ApplicationCommands.Copy" Icon="{sd:Image {StaticResource ImageCopy}}" />
+        <MenuItem Command="ApplicationCommands.Paste" Icon="{sd:Image {StaticResource ImagePaste}}" />
+        <MenuItem Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>
+        <Separator/>
+        <MenuItem Header="{sd:Localize Rename, Context=Menu}" InputGestureText="F2" Command="{Binding RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>-->
+      </ContextMenu>
+
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <i:Interaction.Behaviors>
+    <!-- These commands are available globally in the editor -->
+    <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding DeleteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
+    <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding PasteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
+<!--    <sd:CommandBindingBehavior RoutedCommand="{x:Static ehv:EntityHierarchyEditorView.FocusOnSelection}" Command="{Binding EntityWithGizmo.FocusOnEntityCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
+  </i:Interaction.Behaviors>
+  <Grid>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding SceneInitialized}">
+      <TextBlock Text="{sd:Localize Loading scene...}" Margin="20" HorizontalAlignment="Center"/>
+      <TextBlock Text="{sd:Localize This might take a few minutes the first time.}" Margin="20" HorizontalAlignment="Center"/>
+      <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="20" BorderThickness="1"/>
+    </StackPanel>
+    <Grid IsVisible="{Binding SceneInitialized}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="5"/>
+        <ColumnDefinition Width="3*"/>
+      </Grid.ColumnDefinitions>
+
+      <DockPanel Grid.Row="0" Grid.Column="0">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+          <ItemsControl>
+	<ItemsControl.ItemsPanel>
+		<ItemsPanelTemplate>
+			<StackPanel Orientation="Horizontal">
+			</StackPanel>
+		</ItemsPanelTemplate>
+	</ItemsControl.ItemsPanel>
+            <Menu Background="Transparent"
+                  DataContext="{sd:PriorityBinding {Binding ActiveRoot, Converter={sd:NullToUnset}, Mode=OneWay}, {Binding HierarchyRoot, Mode=OneWay}}"
+                  ToolTip.Tip="{sd:Localize Create a new entity, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Editor.Session.Editor.Status}" >
+              <MenuItem Theme="{StaticResource ToolBarIconMenuItemStyle}">
+                <MenuItem.Icon>
+                  <Image Source="{Binding Source={StaticResource ImageNewAsset}, Path=Source}" Stretch="None" MaxHeight="24" MaxWidth="24" />
+                </MenuItem.Icon>
+                <MenuItem Header="{sd:Localize Create, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+                <!-- For some reason I have to set the style explicitly for this menu item, otherwise it is wrong-->
+                <MenuItem Header="{sd:Localize New folder, Context=Menu}" Command="{Binding Editor.CreateFolderInRootCommand}" Theme="{StaticResource {x:Type MenuItem}}"/>
+                <!-- For some reason I have to set the style explicitly for this menu item, otherwise it is wrong-->
+                <MenuItem Header="{sd:Localize Empty entity, Context=Menu}" Command="{Binding Editor.CreateEntityInRootCommand}" Theme="{StaticResource {x:Type MenuItem}}"/>
+                <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
+                <MenuItem ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
+	<Design.DataContext>
+		<entityFactories:EntityFactoryCategory />
+	</Design.DataContext>
+                  <MenuItem.ItemContainerTheme>
+                    <ControlTheme TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                      <Setter Property="ItemsSource" Value="{Binding Factories.Values, Mode=OneWay}"/>
+                      <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+                      <Setter Property="ItemContainerTheme">
+                        <Setter.Value>
+                          <ControlTheme TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+                            <Setter Property="CommandParameter" Value="{Binding Factory, Mode=OneWay}"/>
+                            <Setter Property="Command" Value="{Binding DataContext.Editor.CreateEntityInRootCommand, RelativeSource={RelativeSource AncestorType=Menu}, Mode=OneWay}"/>
+                          </ControlTheme>
+                        </Setter.Value>
+                      </Setter>
+                    </ControlTheme>
+                  </MenuItem.ItemContainerTheme>
+                  <MenuItem.Template>
+                    <ControlTemplate>
+                      <Border Background="Transparent">
+                        <StackPanel IsItemsHost="True"/>
+                      </Border>
+                    </ControlTemplate>
+                  </MenuItem.Template>
+                </MenuItem>
+              </MenuItem>
+            </Menu>
+            <Separator/>
+            <StackPanel>
+              <sd:TextBox UseTimedValidation="True" Width="120" WatermarkContent="Filter" Text="{Binding FilterPattern}" VerticalAlignment="Center"
+                            ToolTip.Tip="{sd:Localize Filter entities by name, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
+                <i:Interaction.Behaviors>
+                  
+                </i:Interaction.Behaviors>
+              </sd:TextBox>
+            </StackPanel>
+            <Separator/>
+              <Image Source="{StaticResource ImageExpandAllFolders}" />
+              <Image Source="{StaticResource ImageCollapseAllFolders}" />
+          </ItemsControl>
+        </StackPanel>
+        <Grid>
+          <sd:ATreeView x:Name="HierarchyTreeView" ItemsSource="{Binding HierarchyRoot, Mode=OneWay, Converter={sd:Yield}}" 
+                         BorderBrush="Black" BorderThickness="0,1,0,0">
+            <sd:ATreeView.Resources>
+              <SolidColorBrush x:Key="UnloadedColor" Color="Gray" />
+              <!-- Name style -->
+              <ControlTheme x:Key="NameStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}" >
+	<Design.DataContext>
+		<ehvm:EntityHierarchyItemViewModel />
+	</Design.DataContext>
+                <Setter Property="Margin" Value="4,0"/>
+                <Setter Property="Text" Value="{Binding Name}"/>
+                <!-- <ControlTheme.Triggers>
+                  <DataTrigger Binding="{Binding Owner.IsLoaded, Mode=OneWay}" Value="false">
+                    <Setter Property="Foreground" Value="{StaticResource UnloadedColor}"/>
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sd:TreeViewItem}}, Mode=OneWay}" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}"/>
+                  </DataTrigger>
+                </Style\.Triggers> -->
+              </ControlTheme>
+              <!-- Loading style -->
+              <ControlTheme x:Key="LoadingStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}" >
+	<Design.DataContext>
+		<ehvm:EntityHierarchyElementViewModel />
+	</Design.DataContext>
+                <Setter Property="Margin" Value="4,0"/>
+                <Setter Property="Foreground" Value="{StaticResource LoadingAssetMessageFromBrush}" />
+                <Setter Property="Text" Value="{sd:Localize Loading...}" />
+                <Setter Property="IsVisible" Value="{Binding IsLoading, Mode=OneWay}" />
+                <!-- <ControlTheme.Triggers>
+                  <DataTrigger Binding="{Binding IsLoaded, Mode=OneWay}" Value="true">
+                    <Setter Property="Text" Value="{sd:Localize Unloading...}"/>
+                  </DataTrigger>
+                  <EventTrigger RoutedEvent="TextBlock.Loaded">
+                    <BeginStoryboard>
+                      
+                    </BeginStoryboard>
+                  </EventTrigger>
+                </Style\.Triggers> -->
+              </ControlTheme>
+              <!-- Default button style -->
+              <ControlTheme x:Key="{x:Type Button}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Margin" Value="4,0,0,0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="MinHeight" Value="16" />
+                <Setter Property="MinWidth" Value="16" />
+                
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+              </ControlTheme>
+              <!-- Load button -->
+              <Image x:Key="LoadImage" Source="{StaticResource ImageLoadEntity}" Height="16" Width="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <Image x:Key="UnloadImage" Source="{StaticResource ImageUnloadEntity}" Height="16" Width="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <ControlTheme x:Key="LoadButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}" >
+	<Design.DataContext>
+		<ehvm:EntityHierarchyElementViewModel />
+	</Design.DataContext>
+<!--                 <Setter Property="Command" Value="{Binding LoadCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/> -->
+                <Setter Property="Content" Value="{StaticResource UnloadImage}"/>
+                <!-- <ControlTheme.Triggers>
+                  <DataTrigger Binding="{Binding IsLoaded, Mode=OneWay}" Value="true">
+                    <Setter Property="Content" Value="{StaticResource LoadImage}"/>
+                  </DataTrigger>
+                </Style\.Triggers> -->
+              </ControlTheme>
+              <!-- Lock button -->
+              <Image x:Key="LockImage" Source="{StaticResource ImageLockEntity}" Height="16" Width="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <Image x:Key="UnlockImage" Source="{StaticResource ImageUnlockEntity}" Height="16" Width="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <ControlTheme x:Key="LockButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}" >
+	<Design.DataContext>
+		<ehvm:EntityHierarchyElementViewModel />
+	</Design.DataContext>
+<!--                 <Setter Property="Command" Value="{Binding LockCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/> -->
+                <Setter Property="IsEnabled" Value="{Binding IsLoaded, Mode=OneWay}"/>
+                <Setter Property="Content" Value="{StaticResource UnlockImage}"/>
+                <!-- <ControlTheme.Triggers>
+                  <DataTrigger Binding="{Binding IsLocked, Mode=OneWay}" Value="true">
+                    <Setter Property="Content" Value="{StaticResource LockImage}"/>
+                  </DataTrigger>
+                </Style\.Triggers> -->
+              </ControlTheme>
+              <!-- Default template -->
+              
+            </sd:ATreeView.Resources>
+            <sd:ATreeView.ItemsPanel>
+              <ItemsPanelTemplate>
+                <sd:AVirtualizingTreePanel Background="Transparent" DataContext="{sd:PriorityBinding {Binding ActiveRoot, Converter={sd:NullToUnset}, Mode=OneWay}, {Binding HierarchyRoot, Mode=OneWay}}"
+                                            ContextMenu="{StaticResource TreeViewContextMenu}"/>
+              </ItemsPanelTemplate>
+            </sd:ATreeView.ItemsPanel>
+              
+                <sd:ATreeView.DataTemplates>
+              <TreeDataTemplate DataType="{x:Type ehvm:EntityHierarchyItemViewModel}" ItemsSource="{Binding Children}">
+                <TextBlock Theme="{StaticResource NameStyle}"/>
+              </TreeDataTemplate>
+              <!-- Folder template -->
+              <TreeDataTemplate DataType="{x:Type ehvm:EntityFolderViewModel}" ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal">
+                  <Image Source="{StaticResource FolderIcon}"
+                         MaxWidth="16" MaxHeight="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+                  <TextBlock Theme="{StaticResource NameStyle}"/>
+                </StackPanel>
+              </TreeDataTemplate>
+              <!-- Entity template -->
+              <TreeDataTemplate DataType="{x:Type ehvm:EntityViewModel}" ItemsSource="{Binding Children}">
+                <DockPanel>
+                  <!-- Focus button -->
+                  <Button DockPanel.Dock="Right"
+                          Content="{sd:Image {StaticResource ImageFetchEntity}, 16, 16, LowQuality}">
+<!--                    <Button.ToolTip>
+                      <TextBlock Text="{sd:Localize Focus on this entity (F), Context=ToolTip}" />
+                    </Button.ToolTip>-->
+                  </Button>
+                  <!-- Lock button -->
+                  <Button DockPanel.Dock="Right" Theme="{StaticResource LockButtonStyle}">
+<!--                    <Button.ToolTip>
+                      <StackPanel>
+                        <TextBlock Text="{sd:Localize Lock/unlock this entity, Context=ToolTip}" />
+                        <TextBlock Text="{sd:Localize (Hold Ctrl to apply to child entities recursively), Context=ToolTip}" />
+                      </StackPanel>
+                    </Button.ToolTip>-->
+                  </Button>
+                  <!-- Load button -->
+                  <!-- FIXME place holder until we allow to load/unload a single entity -->
+                  <Button DockPanel.Dock="Right" />
+                  <!--<Button DockPanel.Dock="Right" Theme="{StaticResource LoadButtonStyle}">
+                    <Button.ToolTip>
+                      <StackPanel>
+                        <TextBlock Text="{sd:Localize Toggle visibility on this entity, Context=ToolTip}" />
+                        <TextBlock Text="{sd:Localize (Hold CTRL to apply to the entity children recursively), Context=ToolTip}" IsVisible="{Binding IsLoaded}" />
+                      </StackPanel>
+                    </Button.ToolTip>
+                  </Button>-->
+                  <StackPanel Orientation="Horizontal">
+                    <TextBlock Theme="{StaticResource NameStyle}"/>
+                    <!-- FIXME uncomment this when we allow to load/unload a single entity -->
+                    <!--<TextBlock Theme="{StaticResource LoadingStyle}" />-->
+                    <TextBlock Text="{Binding SourcePrefab.Name, Mode=OneWay, StringFormat=(Prefab: {0}), FallbackValue={}}" Foreground="{DynamicResource PrefabTextColor}" />
+                  </StackPanel>
+                </DockPanel>
+              </TreeDataTemplate>
+              <!-- Scene template -->
+              <TreeDataTemplate DataType="{x:Type svm:SceneRootViewModel}" ItemsSource="{Binding Children}">
+                <DockPanel>
+                  <!-- Focus button -->
+                  <!-- FIXME place holder until we have a selectable gizmo for the scene anchor -->
+                  <Button DockPanel.Dock="Right" />
+                  <!--<Button DockPanel.Dock="Right"
+                          Content="{sd:Image {StaticResource ImageFetchEntity}, 16, 16, LowQuality}" />-->
+                  <!-- Lock button -->
+                  <Button DockPanel.Dock="Right" Theme="{StaticResource LockButtonStyle}">
+<!--                    <Button.ToolTip>
+                      <StackPanel>
+                        <TextBlock Text="{sd:Localize Lock/unlock all entities, Context=ToolTip}" />
+                        <TextBlock Text="{sd:Localize (Hold Ctrl to apply to child scenes recursively), Context=ToolTip}" />
+                      </StackPanel>
+                    </Button.ToolTip>-->
+                  </Button>
+                  <!-- Load button -->
+                  <Button DockPanel.Dock="Right" Theme="{StaticResource LoadButtonStyle}">
+<!--                    <Button.ToolTip>
+                      <StackPanel>
+                        <TextBlock Text="{sd:Localize Load/unload all entities, Context=ToolTip}" />
+                        <TextBlock Text="{sd:Localize (Hold Ctrl to apply to child scenes recursively), Context=ToolTip}" IsVisible="{Binding IsLoaded, Mode=OneWay}" />
+                      </StackPanel>
+                    </Button.ToolTip>-->
+                  </Button>
+                  <StackPanel Orientation="Horizontal">
+                    <Image Source="{StaticResource SceneIcon}"
+                           MaxWidth="16" MaxHeight="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+                    <TextBlock>
+                      <TextBlock.Theme>
+                        <ControlTheme TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NameStyle}">
+                          <Setter Property="FontWeight" Value="Normal" />
+                          <!-- <ControlTheme.Triggers>
+                            <DataTrigger Binding="{sd:MultiBinding {Binding Mode=OneWay}, {Binding Editor.ActiveRoot, Mode=OneWay}, Converter={sd:AllEqualMultiConverter}, FallbackValue={sd:True}}" Value="true">
+                              <Setter Property="FontWeight" Value="Bold" />
+                            </DataTrigger>
+                          </Style\.Triggers> -->
+                        </ControlTheme>
+                      </TextBlock.Theme>
+                    </TextBlock>
+                    <TextBlock Theme="{StaticResource LoadingStyle}" />
+<!--                    <TextBlock Margin="4,0" Text="{sd:Localize (Unloaded)}" Foreground="{StaticResource UnloadedColor}"
+                               IsVisible="{sd:MultiBinding {Binding IsLoaded, Mode=OneWay, FallbackValue=false}, {Binding IsLoading, Mode=OneWay, FallbackValue=false},
+                                                              Converter={sd:MultiChained {sd:OrMultiConverter}, {sd:InvertBool}}, FallbackValue=false}"/>-->
+                  </StackPanel>
+                </DockPanel>
+              </TreeDataTemplate>
+              </sd:ATreeView.DataTemplates>	
+            <sd:ATreeView.ItemContainerTheme>
+              
+              <ControlTheme  TargetType="{x:Type sd:ATreeViewItem}" BasedOn="{StaticResource {x:Type sd:ATreeViewItem}}" >
+	<Design.DataContext>
+		<ehvm:EntityHierarchyItemViewModel />
+	</Design.DataContext>
+                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}">
+	<Design.DataContext>
+		<ehvm:EntityHierarchyItemViewModel />
+	</Design.DataContext>
+	</Setter>
+                
+                <Setter Property="IsEditing" Value="{Binding IsEditing, Mode=TwoWay}"/>
+<!--                 <Setter Property="IsVisible" Value="{Binding IsVisible, Mode=OneWay}"/> -->
+                <Setter Property="ContextMenu" Value="{StaticResource TreeViewItemContextMenu}"/>
+                <Setter Property="TemplateEdit">
+                  <Setter.Value>
+                    <DataTemplate DataType="{x:Type ehvm:EntityViewModel}">
+                      <StackPanel Orientation="Horizontal">
+<!--                        <Image Source="{Binding Components, Converter={pvc:EntityComponentToResource}}"
+                               MaxWidth="16" MaxHeight="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>-->
+                        <sd:TextBox Text="{Binding Name}" GetFocusOnLoad="True" SelectAllOnFocus="True" Margin="6,2"/>
+                      </StackPanel>
+                    </DataTemplate>
+                  </Setter.Value>
+                </Setter>
+                <Setter Property="sd:Interaction.Behaviors">
+                  <Setter.Value>
+                    <sd:BehaviorCollection>
+                    </sd:BehaviorCollection>
+                  </Setter.Value>
+                </Setter>
+              </ControlTheme>
+            </sd:ATreeView.ItemContainerTheme>
+            <i:Interaction.Behaviors>
+
+            </i:Interaction.Behaviors>
+          </sd:ATreeView>
+        </Grid>
+      </DockPanel>
+
+      <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+
+      <DockPanel Grid.Column="2">
+        <DockPanel.Resources>
+<!--           <ControlTheme x:Key="{x:Type Separator}" TargetType="{x:Type Separator}" BasedOn="{StaticResource {x:Static ItemsControl.SeparatorStyleKey}}"></ControlTheme> -->
+        </DockPanel.Resources>
+        <Border Background="{StaticResource BackgroundBrush}" DockPanel.Dock="Top" Padding="8,2">
+          <DockPanel>
+            <WrapPanel HorizontalAlignment="Right" DockPanel.Dock="Right">
+              <!-- Grid -->
+              <ToggleButton x:Name="ToggleGrid" Content="{sd:Image {StaticResource ImageGrid}, 16, 16, LowQuality}"
+                            ToolTip.Tip="{sd:Localize Viewport grid settings..., Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" 
+                            Width="28" Height="28" Background="Transparent" >
+              </ToggleButton>
+              <Popup IsOpen="{Binding ElementName=ToggleGrid, Path=IsChecked}"  PlacementTarget="{Binding ElementName=ToggleGrid}">
+                <Grid Background="{StaticResource BackgroundBrush}" MinWidth="130" MinHeight="100">
+                  <StackPanel>
+                    <CheckBox Content="Show Grid" Margin="8" />
+                    <Border Padding="8,2" Background="{StaticResource NormalBrush}" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{sd:Localize Grid axis}" FontWeight="Bold"/>
+                    </Border>
+                    <DockPanel Margin="8">
+                      <CheckBox Content="{sd:Localize X, Context=Button}"  Margin="4"/>
+                      <CheckBox Content="{sd:Localize Y, Context=Button}"  Margin="4"/>
+                      <CheckBox Content="{sd:Localize Z, Context=Button}"  Margin="4"/>
+                    </DockPanel>
+                    <Border Padding="8,2" Background="{StaticResource NormalBrush}" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{sd:Localize Grid opacity}" FontWeight="Bold"/>
+                    </Border>
+                    <sd:NumericTextBox Value="{Binding Grid.Alpha}" SmallChange="0.1"  Minimum="0" Maximum="1" DecimalPlaces="3" Margin="8"/>
+                  </StackPanel>
+                </Grid>
+              </Popup>
+              <!-- Lighting -->
+              <ToggleButton x:Name="ToggleLighting" Content="{sd:Image {StaticResource ImageLighting}, 16, 16, LowQuality}"
+                            ToolTip.Tip="{sd:Localize Light probes and cubemaps..., Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" 
+                            Width="28" Height="28" Background="Transparent" >
+                <i:Interaction.Behaviors>
+                  <sd:ToggleButtonPopupBehavior/>
+                </i:Interaction.Behaviors>
+              </ToggleButton>
+              <Popup IsOpen="{Binding ElementName=ToggleLighting, Path=IsChecked}"  PlacementTarget="{Binding ElementName=ToggleLighting}">
+                <Grid Background="{StaticResource BackgroundBrush}" MinWidth="130" MinHeight="100">
+                  <StackPanel>
+                    <Border Padding="8,2" Background="{StaticResource NormalBrush}" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{sd:Localize Light probes}" FontWeight="Bold"/>
+                    </Border>
+                    <StackPanel Margin="4">
+                      <DockPanel Margin="4">
+                        <sd:NumericTextBox DockPanel.Dock="Right" Width="50" Value="{Binding Lighting.LightProbeBounces}" Minimum="0" DecimalPlaces="3" Margin="2"/>
+                        <TextBlock Text="{sd:Localize Bounces:}" VerticalAlignment="Center"/>
+                      </DockPanel>
+                      <UniformGrid Columns="2">
+                        <Button HorizontalAlignment="Stretch"  Margin="4" Padding="4"
+                                ToolTip.Tip="{sd:Localize Compute lighting using light probes, Context=ToolTip}"
+                                Command="{Binding Lighting.RequestLightProbesComputeCommand}">
+                          <StackPanel Orientation="Horizontal">
+                            <Image Source="{StaticResource ImageLightProbesCompute}" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+                            <TextBlock Text="Compute" VerticalAlignment="Center" Margin="4"/>
+                          </StackPanel>
+                        </Button>
+                        <Button HorizontalAlignment="Stretch"  Margin="4" Padding="4"
+                                ToolTip.Tip="{sd:Localize Reset light probes, Context=ToolTip}"
+                                Command="{Binding Lighting.RequestLightProbesResetCommand}">
+                          <StackPanel Orientation="Horizontal">
+                            <Image Source="{StaticResource ImageLightProbesReset}" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+                            <TextBlock Text="{sd:Localize Reset}" VerticalAlignment="Center" Margin="4"/>
+                          </StackPanel>
+                        </Button>
+                      </UniformGrid>
+                    </StackPanel>
+                    <Border Padding="8,2" Background="{StaticResource NormalBrush}" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{sd:Localize Cubemap}" FontWeight="Bold"/>
+                    </Border>
+                    <StackPanel Margin="4">
+                      <Button HorizontalAlignment="Stretch"  Margin="4" Padding="4"
+                              ToolTip.Tip="{sd:Localize Generate a cubemap from the scene view and save as a texture, Context=ToolTip}"
+                              Command="{Binding Lighting.CaptureCubemapCommand}">
+                        <StackPanel Orientation="Horizontal">
+                          <Image Source="{StaticResource ImageGenerateCubeMap}" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+                          <TextBlock Text="{sd:Localize Capture}" VerticalAlignment="Center" Margin="4"/>
+                        </StackPanel>
+                      </Button>
+                    </StackPanel>
+                  </StackPanel>
+                </Grid>
+              </Popup>
+              <!-- Navigation -->
+              <ToggleButton x:Name="ToggleNavigation" Content="{sd:Image {StaticResource ImageNavigation}, 16, 16, LowQuality}"
+                            ToolTip.Tip="{sd:Localize Navigation visibility..., Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" 
+                            Width="28" Height="28" Background="Transparent" >
+                <i:Interaction.Behaviors>
+                  <sd:ToggleButtonPopupBehavior/>
+                </i:Interaction.Behaviors>
+              </ToggleButton>
+              <Popup IsOpen="{Binding ElementName=ToggleNavigation, Path=IsChecked}"  PlacementTarget="{Binding ElementName=ToggleNavigation}">
+                <Grid Background="{StaticResource BackgroundBrush}" MinWidth="200" MaxWidth="400" MaxHeight="400">
+                  <DockPanel Margin="5,2">
+                    <StackPanel DockPanel.Dock="Top">
+                      <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Show navigation meshes:}" Margin="5"/>
+                      <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <Button Content="{sd:Localize All, Context=Button}" Margin="5" Command="{Binding Navigation.ToggleAllGroupsCommand}" CommandParameter="true" Width="40"/>
+                        <Button Content="{sd:Localize None, Context=Button}" Margin="5" Command="{Binding Navigation.ToggleAllGroupsCommand}" CommandParameter="false" Width="40"/>
+                      </StackPanel>
+                      <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="3">
+                        <StackPanel>
+                          <ItemsControl ItemsSource="{Binding Navigation.Visuals}" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                            <ItemsControl.ItemTemplate>
+                              <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch">
+                                  <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                  </Grid.ColumnDefinitions>
+                                  <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{Binding Color, Converter={sd:ColorConverter}}" Width="20" Height="20" Stroke="#FF211E1E" OpacityMask="Black" StrokeThickness="1" />
+                                  <CheckBox Grid.Column="1" Content="{Binding DisplayName, Mode=OneWay}"  Margin="2"/>
+                                </Grid>
+                              </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                          </ItemsControl>
+                        </StackPanel>
+                      </ScrollViewer>
+                    </StackPanel>
+                  </DockPanel>
+                </Grid>
+              </Popup>
+              <!-- Gizmos -->
+              <ToggleButton x:Name="ToggleGizmo" Content="{sd:Image {StaticResource ImageGizmos}, 16, 16, LowQuality}"
+                            ToolTip.Tip="{sd:Localize Grid and gizmo options..., Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" 
+                            Width="28" Height="28" Background="Transparent" >
+                <i:Interaction.Behaviors>
+                  <sd:ToggleButtonPopupBehavior/>
+                </i:Interaction.Behaviors>
+              </ToggleButton>
+              <Popup IsOpen="{Binding ElementName=ToggleGizmo, Path=IsChecked}"  PlacementTarget="{Binding ElementName=ToggleGizmo}">
+                <Grid Background="{StaticResource BackgroundBrush}" MinWidth="200" MaxWidth="400" MaxHeight="400">
+                  <DockPanel Margin="5,2">
+                    <StackPanel DockPanel.Dock="Top">
+                      <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Transformation gizmo size:}" Margin="5"/>
+                      <Slider HorizontalAlignment="Stretch" Height="18" Margin="5" Minimum="0"
+                              Maximum="{Binding Length, Source={x:Static core:Utils.ZoomFactors}, Converter={sd:SumNum}, ConverterParameter=-1}"
+                              Value="{Binding Transform.GizmoSize, Converter={sd:ItemToIndex}, ConverterParameter={x:Static core:Utils.ZoomFactors}}"/>
+                      <DockPanel>
+                        <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Component gizmo size:}" Margin="5"/>
+                        <CheckBox  Content="{sd:Localize Fixed, Context=Button}" HorizontalAlignment="Right" Margin="5"/>
+                      </DockPanel>
+                      <Slider HorizontalAlignment="Stretch" Height="18" Margin="5" Minimum="0"
+                              Maximum="{Binding Length, Source={x:Static core:Utils.ZoomFactors}, Converter={sd:SumNum}, ConverterParameter=-1}"
+                              Value="{Binding EntityGizmos.GizmoSize, Converter={sd:ItemToIndex}, ConverterParameter={x:Static core:Utils.ZoomFactors}}"/>
+                      <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <CheckBox Content="{sd:Localize Camera preview, Context=Button}" Margin="5" />
+                        <CheckBox Content="{sd:Localize Light probe volumes, Context=Button}" Margin="5" />
+                      </StackPanel>
+                    </StackPanel>
+                    <Separator Margin="5" Height="2" HorizontalAlignment="Stretch" DockPanel.Dock="Top"/>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                      <Button Content="{sd:Localize All, Context=Button}" Margin="5" Command="{Binding EntityGizmos.ToggleAllGizmosCommand}" CommandParameter="true" Width="40"/>
+                      <Button Content="{sd:Localize None, Context=Button}" Margin="5" Command="{Binding EntityGizmos.ToggleAllGizmosCommand}" CommandParameter="false" Width="40"/>
+                    </StackPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="3">
+                      <StackPanel>
+                        <ItemsControl ItemsSource="{Binding EntityGizmos.ActiveGizmos}" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                              <CheckBox Content="{Binding ComponentName, Mode=OneWay}"  Margin="2"/>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <CheckBox Content="{sd:Localize Other entities, Context=Button}"  Margin="2"/>
+                      </StackPanel>
+                    </ScrollViewer>
+                  </DockPanel>
+                </Grid>
+              </Popup>
+              <!-- Camera -->
+              <ToggleButton x:Name="ToggleCamera" Content="{sd:Image {StaticResource ImageCameraSettings}, 16, 16, LowQuality}"
+                            ToolTip.Tip="{sd:Localize Editor camera options..., Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" 
+                            Width="28" Height="28" Background="Transparent">
+                <i:Interaction.Behaviors>
+                  <sd:ToggleButtonPopupBehavior/>
+                </i:Interaction.Behaviors>
+              </ToggleButton>
+              <Popup IsOpen="{Binding ElementName=ToggleCamera, Path=IsChecked}"  PlacementTarget="{Binding ElementName=ToggleCamera}">
+                <Grid Background="{StaticResource BackgroundBrush}" MinWidth="130" MinHeight="100" Width="180">
+                  <StackPanel>
+                    <Border Padding="8,2" Background="{StaticResource NormalBrush}" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{sd:Localize Projection}" FontWeight="Bold"/>
+                    </Border>
+                    <StackPanel Margin="4">
+                      <RadioButton Content="{sd:Localize Perspective, Context=Button}"  Margin="4"/>
+                      <RadioButton Content="{sd:Localize Orthographic, Context=Button}"  Margin="4"/>
+                      <StackPanel>
+                        <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Near plane:}" Margin="5"/>
+                        <sd:NumericTextBox Value="{Binding Camera.NearPlane}" DecimalPlaces="4" HorizontalAlignment="Stretch" Margin="5" Minimum="0"/>
+                        <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Far plane:}" Margin="5"/>
+                        <sd:NumericTextBox Value="{Binding Camera.FarPlane}" DecimalPlaces="4" HorizontalAlignment="Stretch" Margin="5" Minimum="0"/>
+                        <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Field of view:}" Margin="5"
+                                   IsVisible="{Binding Camera.OrthographicProjection, Converter={sd:InvertBool}}"/>
+                        <sd:NumericTextBox Value="{Binding Camera.FieldOfView}" DecimalPlaces="1"  HorizontalAlignment="Stretch" Margin="5" Minimum="0" Maximum="180"
+                                             IsVisible="{Binding Camera.OrthographicProjection, Converter={sd:InvertBool}}"/>
+                        <Slider HorizontalAlignment="Stretch" Height="18" Margin="5" Minimum="0" Maximum="180" Value="{Binding Camera.FieldOfView}"
+                                IsVisible="{Binding Camera.OrthographicProjection, Converter={sd:InvertBool}}"/>
+                        <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Orthographic size:}" Margin="5" IsVisible="{Binding Camera.OrthographicProjection}"/>
+                        <sd:NumericTextBox Value="{Binding Camera.OrthographicSize}" HorizontalAlignment="Stretch" DecimalPlaces="4" Margin="5" Minimum="0"
+                                             IsVisible="{Binding Camera.OrthographicProjection}"/>
+                      </StackPanel>
+                    </StackPanel>
+                    <Border Padding="8,2" Background="{StaticResource NormalBrush}" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{sd:Localize Movement}" FontWeight="Bold"/>
+                    </Border>
+                    <UniformGrid Columns="3" Margin="4,4,4,2">
+                        <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Speed:}" Margin="5,5,5,2"/>
+                        <TextBlock DockPanel.Dock="Right" Text="{Binding Camera.MoveSpeed}" Margin="5,5,0,2" TextAlignment="Right"/>
+                        <TextBlock DockPanel.Dock="Left" Text="x" Margin="0,5,5,2" TextAlignment="Left"/>
+                    </UniformGrid>
+                      <Slider HorizontalAlignment="Stretch" Height="18" Margin="5,2,5,5" Minimum="0" Maximum="{Binding Camera.AvailableMovementSpeedCount}" Value="{Binding Camera.MoveSpeedIndex}"/>
+                    <Border Padding="8,2" Background="{StaticResource NormalBrush}" HorizontalAlignment="Stretch">
+                      <TextBlock Text="{sd:Localize Orientation}" FontWeight="Bold"/>
+                    </Border>
+                    <UniformGrid Columns="2" Margin="4">
+                      <Button Content="{sd:Localize Front, Context=Button}" Command="{Binding Camera.ResetCameraOrientationCommand}" CommandParameter="{x:Static assetEditors:CameraOrientation.Front}"
+                              Theme="{StaticResource TransparentButtonStyle}" Margin="2" HorizontalAlignment="Center"/>
+                      <Button Content="{sd:Localize Back, Context=Button}" Command="{Binding Camera.ResetCameraOrientationCommand}" CommandParameter="{x:Static assetEditors:CameraOrientation.Back}"
+                              Theme="{StaticResource TransparentButtonStyle}" Margin="2" HorizontalAlignment="Center"/>
+                      <Button Content="{sd:Localize Top, Context=Button}" Command="{Binding Camera.ResetCameraOrientationCommand}" CommandParameter="{x:Static assetEditors:CameraOrientation.Top}"
+                              Theme="{StaticResource TransparentButtonStyle}" Margin="2" HorizontalAlignment="Center"/>
+                      <Button Content="{sd:Localize Bottom, Context=Button}" Command="{Binding Camera.ResetCameraOrientationCommand}" CommandParameter="{x:Static assetEditors:CameraOrientation.Bottom}"
+                              Theme="{StaticResource TransparentButtonStyle}" Margin="2" HorizontalAlignment="Center"/>
+                      <Button Content="{sd:Localize Left, Context=Button}" Command="{Binding Camera.ResetCameraOrientationCommand}" CommandParameter="{x:Static assetEditors:CameraOrientation.Left}"
+                              Theme="{StaticResource TransparentButtonStyle}" Margin="2" HorizontalAlignment="Center"/>
+                      <Button Content="{sd:Localize Right, Context=Button}" Command="{Binding Camera.ResetCameraOrientationCommand}" CommandParameter="{x:Static assetEditors:CameraOrientation.Right}"
+                              Theme="{StaticResource TransparentButtonStyle}" Margin="2" HorizontalAlignment="Center"/>
+                    </UniformGrid>
+                  </StackPanel>
+                </Grid>
+              </Popup>
+              <ComboBox ItemsSource="{Binding Rendering.AvailableRenderModes}" SelectedItem="{Binding Rendering.RenderMode}"  Width="80">
+                <ComboBox.ItemContainerTheme>
+                  <ControlTheme  TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                    <!-- <ControlTheme.Triggers>
+                      <DataTrigger Binding="{Binding Name}" Value="-">
+                        <Setter Property="IsEnabled" Value="False"/>
+                        <Setter Property="Template">
+                          <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                              <Separator Theme="{StaticResource ComboBoxSeparator}"/>
+                            </ControlTemplate>
+                          </Setter.Value>
+                        </Setter>
+                      </DataTrigger>
+                    </Style\.Triggers> -->
+                  </ControlTheme>
+                </ComboBox.ItemContainerTheme>
+              </ComboBox>
+            </WrapPanel>
+            <WrapPanel>
+              <ListBox Theme="{StaticResource EnumListBox}" SelectedItem="{Binding Transform.ActiveTransformation, Mode=TwoWay}"
+                       ItemsSource="{Binding Source={x:Type gameEditor:Transformation}, Converter={sd:EnumValues}}"/>
+              <ToggleButton  Height="28" Background="Transparent"
+                            IsVisible="{Binding Transform.ActiveTransformation, Mode=OneWay,
+                                                 Converter={sd:Chained {sd:IsEqualToParam}, Parameter1={x:Static gameEditor:Transformation.Translation}}}"
+                            ToolTip.Tip="{sd:Localize Snap translations to this value, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
+                <StackPanel Orientation="Horizontal">
+                  <Image Source="{StaticResource ImageTranslateSnap}" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+                  <sd:NumericTextBox Width="50" Value="{Binding Transform.TranslationSnap.Value}" Minimum="0" DecimalPlaces="3" Margin="2"/>
+                </StackPanel>
+              </ToggleButton>
+              <ToggleButton  Height="28" Background="Transparent"
+                            IsVisible="{Binding Transform.ActiveTransformation, Mode=OneWay,
+                                                 Converter={sd:Chained {sd:IsEqualToParam}, Parameter1={x:Static gameEditor:Transformation.Rotation}}}"
+                            ToolTip.Tip="{sd:Localize Snap rotations to this value, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
+                <StackPanel Orientation="Horizontal">
+                  <Image Source="{StaticResource ImageRotateSnap}" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+                  <sd:NumericTextBox Width="50" Value="{Binding Transform.RotationSnap.Value}" Minimum="0" DecimalPlaces="3" Margin="2"/>
+                </StackPanel>
+              </ToggleButton>
+              <ToggleButton  Height="28" Background="Transparent"
+                            IsVisible="{Binding Transform.ActiveTransformation, Mode=OneWay,
+                                                 Converter={sd:Chained {sd:IsEqualToParam}, Parameter1={x:Static gameEditor:Transformation.Scale}}}"
+                            ToolTip.Tip="{sd:Localize Snap scale to this factor, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}" >
+                <StackPanel Orientation="Horizontal">
+                  <Image Source="{StaticResource ImageScaleSnap}" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+                  <sd:NumericTextBox Width="50" Value="{Binding Transform.ScaleSnap.Value}" Minimum="0" DecimalPlaces="3" Margin="2"/>
+                </StackPanel>
+              </ToggleButton>
+              <Separator Background="{StaticResource ToggleButtonNormalBackground}"/>
+              <ListBox Theme="{StaticResource EnumListBox}" SelectedItem="{Binding Transform.Space, Mode=TwoWay}"
+                     ItemsSource="{Binding Source={x:Type gameEditor:TransformationSpace}, Converter={sd:EnumValues}}">
+                <ListBox.ItemContainerTheme>
+                  <ControlTheme TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource EnumListBoxItemContainerStyle}">
+                    <!-- <ControlTheme.Triggers>
+                      <DataTrigger Binding="{sd:MultiBinding {Binding},
+                                                               {Binding DataContext.Transform.AvailableSpaces, RelativeSource={RelativeSource AncestorType=ListBox}},
+                                                               Converter={pvc:CollectionContainsItem}}" Value="False">
+                        <Setter Property="IsEnabled" Value="False"/>
+                      </DataTrigger>
+                    </Style\.Triggers> -->
+                  </ControlTheme>
+                </ListBox.ItemContainerTheme>
+              </ListBox>
+              <Separator Background="{StaticResource ToggleButtonNormalBackground}"/>
+              <ToggleButton  Background="Transparent"
+                            Content="{sd:Image {StaticResource ImageToggleMaterialMode}, 16, 16, LowQuality}" Width="28" Height="28"
+                            ToolTip.Tip="{sd:Localize Toggle material selection (click a selected asset to select its material), Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}"  />
+              <ToggleButton  Background="Transparent"
+                            Content="{sd:Image {StaticResource ImageToggleSelectionMask}, 16, 16, LowQuality}" Width="28" Height="28"
+                            ToolTip.Tip="{sd:Localize Show or hide selection mask, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Session.Editor.Status}"  />
+              <Separator Background="{StaticResource ToggleButtonNormalBackground}"/>
+              <TextBlock Text="{sd:Localize Loading assets...}" IsVisible="{Binding CompilingAssets}"
+                         VerticalAlignment="Center" FontWeight="Bold" Foreground="{StaticResource LoadingAssetMessageFromBrush}">
+              </TextBlock>
+            </WrapPanel>
+          </DockPanel>
+        </Border>
+        <ItemsControl DockPanel.Dock="Bottom">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="2*"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+              </Grid>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <!--<ItemsControlItem Grid.Column="0">
+            <TextBlock Text="{Binding SelectedItemName}"/>
+          </ItemsControlItem>-->
+        </ItemsControl>
+        <Grid Background="Transparent" Focusable="True" >
+          <i:Interaction.Behaviors>
+            <sd:FrameworkElementDragDropBehavior DragVisualTemplate="{StaticResource DragVisualTemplate}" CanDrag="False" />
+          </i:Interaction.Behaviors>
+          <Grid.ContextMenu>
+            <ContextMenu>
+              <MenuItem Header="{sd:Localize Create, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+              <MenuItem Header="{sd:Localize Empty entity, Context=Menu}" Command="{Binding CreateEntityCommand}"/>
+              <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
+              <MenuItem ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}" >
+                <MenuItem.ItemContainerTheme>
+                  <ControlTheme  TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}" >
+	<Design.DataContext>
+		<entityFactories:EntityFactoryCategory />
+	</Design.DataContext>
+                    <Setter Property="ItemsSource" Value="{Binding Factories.Values, Mode=OneWay}"/>
+                    <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+                    <Setter Property="ItemContainerTheme">
+                      <Setter.Value>
+                        <ControlTheme  TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                          <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+                          <Setter Property="CommandParameter" Value="{Binding Factory, Mode=OneWay}"/>
+                          <Setter Property="Command" Value="{Binding DataContext.CreateEntityCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay}"/>
+                        </ControlTheme>
+                      </Setter.Value>
+                    </Setter>
+                  </ControlTheme>
+                </MenuItem.ItemContainerTheme>
+                <MenuItem.Template>
+                  <ControlTemplate>
+                    <Border Background="Transparent">
+                      <StackPanel IsItemsHost="True"/>
+                    </Border>
+                  </ControlTemplate>
+                </MenuItem.Template>
+              </MenuItem>
+              <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+<!--              <MenuItem Header="{sd:Localize Open in prefab editor, Context=Menu}" Command="{Binding OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+              <MenuItem Header="{sd:Localize Select prefab in asset view, Context=Menu}" Command="{Binding SelectPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+              <MenuItem Header="{sd:Localize Break link to prefab, Context=Menu}" Command="{Binding BreakLinkToPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+              <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+              <Separator/>
+              <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" Command="{Binding DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
+              <Separator/>
+              <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding EntityWithGizmo.RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>-->
+            </ContextMenu>
+          </Grid.ContextMenu>
+          <Grid>
+            <ContentPresenter x:Name="SceneView" IsVisible="{Binding LastException, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}">
+            </ContentPresenter>
+
+            <!-- Crash message -->
+            <Grid IsVisible="{Binding LastException, Converter={sd:ObjectToBool}}">
+              <Border HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Background="{StaticResource BackgroundBrush}" />
+              <Grid HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{StaticResource ControlBackgroundBrush}"
+                    MinWidth="400" MaxWidth="1200"
+                    Margin="20">
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="*" />
+                  <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBox Text="{Binding LastException.Message, StringFormat=Error: {0}, Mode=OneWay}" Foreground="{StaticResource TextBrush}" Margin="20"
+                         IsReadOnly="True" TextWrapping="Wrap" BorderThickness="0" Background="Transparent" FontWeight="Bold"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"  FontSize="20"/>
+                <TextBox Text="{Binding LastException, Mode=OneWay}" Foreground="{StaticResource TextBrush}" Margin="20"
+                         IsReadOnly="True" TextWrapping="Wrap" BorderThickness="0" Background="Transparent" Grid.Row="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"  />
+                <StackPanel Grid.Row="2" Orientation="Vertical" Margin="20">
+                  <TextBlock Text="{sd:Localize Before you resume\, fix the failing asset (likely a graphics compositor or scene).}" Margin="0,8" HorizontalAlignment="Center"/>
+                  <UniformGrid HorizontalAlignment="Center" Rows="1" Columns="2">
+                    <Button Content="{sd:Localize Resume, Context=Button}" Command="{Binding ResumeCommand}"
+                            Padding="24,8" HorizontalAlignment="Stretch" Margin="10,0"/>
+                    <Button Content="{sd:Localize Copy error to clipboard, Context=Button}" Command="{Binding CopyErrorToClipboardCommand}"
+                            Padding="24,8" HorizontalAlignment="Stretch" Margin="10,0"/>
+                  </UniformGrid>
+                </StackPanel>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DockPanel>
+    </Grid>
+  </Grid>
+</UserControl>

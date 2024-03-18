@@ -747,20 +747,20 @@
 								</Border>
 
 								<!-- view -->
-								<!--<sd:AssetViewUserControl AssetCollection="{Binding Session.References.DisplayedReferences}" AssetContextMenu="{StaticResource AssetContextMenu}" GiveFocusOnSelectionChange="False"
+								<sd:AssetViewUserControl AssetCollection="{Binding Session.References.DisplayedReferences}" AssetContextMenu="{StaticResource AssetContextMenu}" GiveFocusOnSelectionChange="False"
 															   CanEditAssets="False" CanAddAssets="False" CanDeleteAssets="False" CanRecursivelyDisplayAssets="False" TileThumbnailSize="64" AssetDoubleClick="{Binding Session.ActiveAssetView.SelectAssetCommand}"
 															   BorderThickness="0">
 										<sd:AssetViewUserControl.PrimaryToolBarItems>
 											<ToggleButton IsChecked="{Binding Session.References.ShowReferencers, Converter={sd:InvertBool}}" Content="{sd:Localize References}" MinWidth="80"/>
 											<ToggleButton IsChecked="{Binding Session.References.ShowReferencers}" Content="{sd:Localize Referenced by}" MinWidth="80"/>
 										</sd:AssetViewUserControl.PrimaryToolBarItems>
-										-->
+										
 								<!--<i:Interaction.Behaviors>
 											<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Cut" Command="{Binding Session.References.DisplayedReferences.CutContentCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
 											<sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" Command="{Binding Session.References.DisplayedReferences.CopyContentCommand, FallbackValue={x:Static sd:DisabledCommand.Instance}, Mode=OneWay}"/>
 										</i:Interaction.Behaviors>-->
-								<!--
-									</sd:AssetViewUserControl>-->
+								
+									</sd:AssetViewUserControl>
 							</DockPanel>
 
 								</Document>
@@ -794,7 +794,7 @@
 
 
 
-							<!--<TabControl x:Name="LogTabControl">
+							<TabControl x:Name="LogTabControl">
 									<TabItem DataContext="{Binding Debugging.BuildLog}">
 										<TabItem.Header>
 											<TextBlock 
@@ -805,19 +805,19 @@
 										</TabItem.Header>
 										
 										
-										-->
+										
 							<sd:TextLogViewer LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/>
-							<!--
+							
 										
 										
 										
 										<i:Interaction.Behaviors>
-											<sd:TabItemActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Messages}"/>
+<!-- 											<sd:TabItemActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Messages}"/> -->
 										</i:Interaction.Behaviors>
 									</TabItem>
-									-->
+									
 							<!-- FIXME live scripting is disabled (XK-4309) -->
-							<!--
+							
 									<TabItem DataContext="{Binding Debugging.LiveScriptingLog}" >
 										<TabItem.Header>
 											<TextBlock 
@@ -829,14 +829,14 @@
 										
 										
 										
-										-->
-<!-- 							<sd:TextLogViewer LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/> -->
-							<!--
+										
+ 							<sd:TextLogViewer LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/> 
+							
 										
 										
 										
 										<i:Interaction.Behaviors>
-											<sd:TabItemActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Messages}"/>
+<!-- 											<sd:TabItemActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Messages}"/> -->
 										</i:Interaction.Behaviors>
 									</TabItem>
 									<i:Interaction.Behaviors>
@@ -845,9 +845,9 @@
 								</TabControl>
 								<i:Interaction.Behaviors>
 									<sd:OnEventCommandBehavior Command="{Binding Debugging.ResetOutputTitleCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" EventName="IsActiveChanged"/>
-									<gl:LayoutAnchorableActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Debugging.BuildLog.Messages, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
-									<gl:LayoutAnchorableActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Debugging.LiveScriptingLog.Messages, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
-								</i:Interaction.Behaviors>-->
+<!-- 									<gl:LayoutAnchorableActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Debugging.BuildLog.Messages, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/> -->
+<!-- 									<gl:LayoutAnchorableActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Debugging.LiveScriptingLog.Messages, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/> -->
+								</i:Interaction.Behaviors>
 
 
 								</Document>
@@ -1179,7 +1179,7 @@
 											<DataTemplate>
 												<DockPanel HorizontalAlignment="Stretch">
 													<TextBlock DockPanel.Dock="Left" x:Name="txt" Text="{Binding Name, Mode=OneWay}"/>
-													<Image DockPanel.Dock="Right" x:Name="img" Source="{StaticResource ImageSave}" HorizontalAlignment="Right" />
+													<Image DockPanel.Dock="Right" x:Name="img" Source="{StaticResource ImageSave}" HorizontalAlignment="Right" Stretch="None"/>
 												</DockPanel>
 												<!--<DataTemplate.Triggers>
 													<DataTrigger Binding="{Binding IsDone, Mode=OneWay}" Value="False">
