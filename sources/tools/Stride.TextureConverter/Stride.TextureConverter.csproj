@@ -16,6 +16,9 @@
     <StrideNativeLib Include="$(MSBuildThisFileDirectory)..\..\..\deps\FreeImage\Release\**\*.dll">
       <Link>runtimes\%(RecursiveDir)native\%(Filename)%(Extension)</Link>
     </StrideNativeLib>
+    <StrideNativeLib Include="$(MSBuildThisFileDirectory)..\..\..\deps\FreeImage\Release\**\*.so">
+      <Link>runtimes\%(RecursiveDir)native\%(Filename)%(Extension)</Link>
+    </StrideNativeLib>
     <StrideNativeLib Include="$(MSBuildThisFileDirectory)..\..\..\deps\TextureWrappers\Release\**\*.dll">
       <Link>runtimes\%(RecursiveDir)native\%(Filename)%(Extension)</Link>
     </StrideNativeLib>

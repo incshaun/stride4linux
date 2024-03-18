@@ -134,10 +134,20 @@ namespace Stride.Core
                     })
                     {
                         var libraryFilename = Path.Combine(libraryPath, libraryNameWithExtension);
-                        if (NativeLibrary.TryLoad(libraryFilename, out var result))
+                        IntPtr result;
+                        if (NativeLibrary.TryLoad(libraryFilename, out result))
                         {
                             LoadedLibraries.Add(libraryName, result);
                             return;
+                        }
+                        else if (!libraryName.StartsWith(UNIX_LIB_PREFIX, StringComparison.Ordinal))
+                        {
+                            libraryFilename = Path.Combine(libraryPath, UNIX_LIB_PREFIX + libraryNameWithExtension);
+                            if (NativeLibrary.TryLoad(libraryFilename, out result))
+                            {
+                                LoadedLibraries.Add(libraryName, result);
+                                return;
+                            }
                         }
                     }
                 }
