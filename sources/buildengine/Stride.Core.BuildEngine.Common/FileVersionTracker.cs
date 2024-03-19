@@ -15,7 +15,7 @@ namespace Stride.Core.BuildEngine
     /// </summary>
     public class FileVersionTracker : IDisposable
     {
-        private const string DefaultFileVersionTrackerFile = @"Stride\FileVersionTracker.cache";
+        private const string DefaultFileVersionTrackerFile = @"Stride/FileVersionTracker.cache";
         private readonly FileVersionStorage storage;
         private readonly Dictionary<FileVersionKey, object> locks;
         private static readonly Logger log = GlobalLogger.GetLogger("FileVersionTracker");
