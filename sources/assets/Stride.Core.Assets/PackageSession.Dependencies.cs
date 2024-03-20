@@ -58,9 +58,11 @@ namespace Stride.Core.Assets
 
                     project.TargetPath = msProject.GetPropertyValue("TargetPath");
                     project.AssemblyProcessorSerializationHashFile = msProject.GetProperty("StrideAssemblyProcessorSerializationHashFile")?.EvaluatedValue;
-                    project.AssemblyProcessorSerializationHashFile = project.AssemblyProcessorSerializationHashFile.Replace ("\\", "/");
                     if (project.AssemblyProcessorSerializationHashFile != null)
+                    {
+                        project.AssemblyProcessorSerializationHashFile = project.AssemblyProcessorSerializationHashFile.Replace ("\\", "/");
                         project.AssemblyProcessorSerializationHashFile = Path.Combine(Path.GetDirectoryName(project.FullPath), project.AssemblyProcessorSerializationHashFile);
+                    }
                     package.Meta.Name = (msProject.GetProperty("PackageId") ?? msProject.GetProperty("AssemblyName"))?.EvaluatedValue ?? package.Meta.Name;
 
                     var outputType = msProject.GetPropertyValue("OutputType");
