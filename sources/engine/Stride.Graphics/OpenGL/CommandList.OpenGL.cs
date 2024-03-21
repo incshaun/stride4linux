@@ -99,6 +99,8 @@ namespace Stride.Graphics
 
         public void Clear(Texture depthStencilBuffer, DepthStencilClearOptions options, float depth = 1, byte stencil = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {            
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -124,10 +126,13 @@ namespace Stride.Graphics
 
             if (clearFBO != boundFBO)
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, boundFBO);
+            }
         }
 
         public void Clear(Texture renderTarget, Color4 color)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {            
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -152,10 +157,13 @@ namespace Stride.Graphics
 
             if (clearFBO != boundFBO)
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, boundFBO);
+            }
         }
 
         public unsafe void ClearReadWrite(Buffer buffer, Vector4 value)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {            
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -170,10 +178,13 @@ namespace Stride.Graphics
             GL.ClearBufferData((BufferStorageTarget)buffer.BufferTarget, (SizedInternalFormat)buffer.TextureInternalFormat, buffer.TextureFormat, PixelType.UnsignedInt8888, value);
             GL.BindBuffer(buffer.BufferTarget, 0);
 #endif
+            }
         }
 
         public unsafe void ClearReadWrite(Buffer buffer, Int4 value)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {            
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -188,10 +199,13 @@ namespace Stride.Graphics
             GL.ClearBufferData((BufferStorageTarget)buffer.BufferTarget, (SizedInternalFormat)buffer.TextureInternalFormat, buffer.TextureFormat, PixelType.UnsignedInt8888, value);
             GL.BindBuffer(buffer.BufferTarget, 0);
 #endif
+            }
         }
 
         public unsafe void ClearReadWrite(Buffer buffer, UInt4 value)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {            
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -206,10 +220,13 @@ namespace Stride.Graphics
             GL.ClearBufferData((BufferStorageTarget)buffer.BufferTarget, (SizedInternalFormat)buffer.TextureInternalFormat, buffer.TextureFormat, PixelType.UnsignedInt8888, value);
             GL.BindBuffer(buffer.BufferTarget, 0);
 #endif
+            }
         }
 
         public unsafe void ClearReadWrite(Texture texture, Vector4 value)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -230,10 +247,13 @@ namespace Stride.Graphics
             GL.BindTexture(texture.TextureTarget, 0);
             boundShaderResourceViews[0] = null;
 #endif
+            }
         }
 
         public unsafe void ClearReadWrite(Texture texture, Int4 value)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -254,10 +274,13 @@ namespace Stride.Graphics
             GL.BindTexture(texture.TextureTarget, 0);
             boundShaderResourceViews[0] = null;
 #endif
+            }
         }
 
         public unsafe void ClearReadWrite(Texture texture, UInt4 value)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -278,11 +301,13 @@ namespace Stride.Graphics
             GL.BindTexture(texture.TextureTarget, 0);
             boundShaderResourceViews[0] = null;
 #endif
+            }
         }
 
         private void ClearStateImpl()
         {
-            GraphicsDevice.UseOpenGLCreationContext();
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -314,6 +339,7 @@ namespace Stride.Graphics
 #if STRIDE_GRAPHICS_API_OPENGLCORE
             GL.Enable(EnableCap.FramebufferSrgb);
 #endif
+            }
         }
 
         /// <summary>
@@ -325,6 +351,8 @@ namespace Stride.Graphics
         /// <remarks>This might alter some states such as currently bound texture.</remarks>
         public unsafe void CopyRegion(GraphicsResource source, int sourceSubresource, ResourceRegion? regionSource, GraphicsResource destination, int destinationSubResource, int dstX = 0, int dstY = 0, int dstZ = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -466,6 +494,7 @@ namespace Stride.Graphics
                 // Restore FBO and viewport
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, boundFBO);
                 GL.Viewport((int)viewports[0].X, (int)viewports[0].Y, (uint)viewports[0].Width, (uint)viewports[0].Height);
+            }
             }
         }
 
@@ -695,15 +724,20 @@ namespace Stride.Graphics
 
         public void CopyCount(Buffer sourceBuffer, Buffer destBuffer, int offsetToDest)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
 
             Internal.Refactor.ThrowNotImplementedException();
+            }
         }
 
         public void Dispatch(int threadCountX, int threadCountY, int threadCountZ)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -713,10 +747,13 @@ namespace Stride.Graphics
 #else
             Internal.Refactor.ThrowNotImplementedException();
 #endif
+            }
         }
 
         public void Dispatch(Buffer indirectBuffer, int offsetInBytes)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -730,10 +767,13 @@ namespace Stride.Graphics
 #else
             Internal.Refactor.ThrowNotImplementedException();
 #endif
+            }
         }
 
         public void Draw(int vertexCount, int startVertex = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -743,10 +783,13 @@ namespace Stride.Graphics
 
             GraphicsDevice.FrameTriangleCount += (uint)vertexCount;
             GraphicsDevice.FrameDrawCalls++;
+            }
         }
 
         public void DrawAuto(PrimitiveType primitiveType)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -755,6 +798,7 @@ namespace Stride.Graphics
             //GL.DrawArraysIndirect(newPipelineState.PrimitiveType, (IntPtr)0);
             //GraphicsDevice.FrameDrawCalls++;
             Internal.Refactor.ThrowNotImplementedException();
+            }
         }
 
         /// <summary>
@@ -765,6 +809,8 @@ namespace Stride.Graphics
         /// <param name="baseVertexLocation">A value added to each index before reading a vertex from the vertex buffer.</param>
         public unsafe void DrawIndexed(int indexCount, int startIndexLocation = 0, int baseVertexLocation = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -780,6 +826,7 @@ namespace Stride.Graphics
 
             GraphicsDevice.FrameDrawCalls++;
             GraphicsDevice.FrameTriangleCount += (uint)indexCount;
+            }
         }
 
         /// <summary>
@@ -792,6 +839,8 @@ namespace Stride.Graphics
         /// <param name="startInstanceLocation">A value added to each index before reading per-instance data from a vertex buffer.</param>
         public unsafe void DrawIndexedInstanced(int indexCountPerInstance, int instanceCount, int startIndexLocation = 0, int baseVertexLocation = 0, int startInstanceLocation = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -804,6 +853,7 @@ namespace Stride.Graphics
 
             GraphicsDevice.FrameDrawCalls++;
             GraphicsDevice.FrameTriangleCount += (uint)(indexCountPerInstance * instanceCount);
+            }
         }
 
         /// <summary>
@@ -813,6 +863,8 @@ namespace Stride.Graphics
         /// <param name="alignedByteOffsetForArgs">Offset in <em>pBufferForArgs</em> to the start of the GPU generated primitives.</param>
         public void DrawIndexedInstanced(Buffer argumentsBuffer, int alignedByteOffsetForArgs = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 
             if (argumentsBuffer == null) throw new ArgumentNullException(nameof(argumentsBuffer));
 
@@ -824,6 +876,7 @@ namespace Stride.Graphics
             //GraphicsDevice.FrameDrawCalls++;
 
             Internal.Refactor.ThrowNotImplementedException();
+            }
         }
 
         /// <summary>
@@ -835,6 +888,8 @@ namespace Stride.Graphics
         /// <param name="startInstanceLocation">A value added to each index before reading per-instance data from a vertex buffer.</param>
         public void DrawInstanced(int vertexCountPerInstance, int instanceCount, int startVertexLocation = 0, int startInstanceLocation = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -844,6 +899,7 @@ namespace Stride.Graphics
 
             GraphicsDevice.FrameDrawCalls++;
             GraphicsDevice.FrameTriangleCount += (uint)(vertexCountPerInstance * instanceCount);
+            }
         }
 
         /// <summary>
@@ -853,6 +909,8 @@ namespace Stride.Graphics
         /// <param name="alignedByteOffsetForArgs">Offset in <em>pBufferForArgs</em> to the start of the GPU generated primitives.</param>
         public void DrawInstanced(Buffer argumentsBuffer, int alignedByteOffsetForArgs = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
             if (argumentsBuffer == null)
                 throw new ArgumentNullException(nameof(argumentsBuffer));
 
@@ -874,21 +932,28 @@ namespace Stride.Graphics
 
             GraphicsDevice.FrameDrawCalls++;
 #endif
+            }
         }
 
         public void BeginProfile(Color4 profileColor, string name)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
             if (GraphicsDevice.ProfileEnabled)
             {
                 GL.PushDebugGroup(DebugSource.DebugSourceApplication, 1, uint.MaxValue, name);
+            }
             }
         }
 
         public void EndProfile()
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
             if (GraphicsDevice.ProfileEnabled)
             {
                 GL.PopDebugGroup();
+            }
             }
         }
 
@@ -899,11 +964,14 @@ namespace Stride.Graphics
         /// <param name="index">The query index.</param>
         public void WriteTimestamp(QueryPool queryPool, int index)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {            
 #if STRIDE_GRAPHICS_API_OPENGLES
             GraphicsDevice.GLExtDisjointTimerQuery.QueryCounter(queryPool.NativeQueries[index], QueryCounterTarget.Timestamp);
 #else
             GL.QueryCounter(queryPool.NativeQueries[index], QueryCounterTarget.Timestamp);
 #endif
+            }
         }
 
         public void ResetQueryPool(QueryPool queryPool)
@@ -912,6 +980,8 @@ namespace Stride.Graphics
 
         public unsafe MappedResource MapSubresource(GraphicsResource resource, int subResourceIndex, MapMode mapMode, bool doNotWait = false, int offsetInBytes = 0, int lengthInBytes = 0)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -990,10 +1060,13 @@ namespace Stride.Graphics
             }
 
             throw Internal.Refactor.NewNotImplementedException("MapSubresource not implemented for type " + resource.GetType());
+            }
         }
 
         public void UnmapSubresource(MappedResource unmapped)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1069,10 +1142,13 @@ namespace Stride.Graphics
                     Internal.Refactor.ThrowNotImplementedException("UnmapSubresource not implemented for type " + unmapped.Resource.GetType());
                 }
             }
+            }
         }
 
         private unsafe MappedResource MapTexture(Texture texture, bool adjustOffsetForSubresource, BufferTargetARB bufferTarget, uint pixelBufferObjectId, int subResourceIndex, MapMode mapMode, int offsetInBytes, int lengthInBytes)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
             int mipLevel = subResourceIndex % texture.MipLevels;
 
             GL.BindBuffer(bufferTarget, pixelBufferObjectId);
@@ -1083,6 +1159,7 @@ namespace Stride.Graphics
             {
                 PixelBufferObjectId = pixelBufferObjectId,
             };
+            }
         }
 
         internal unsafe void PreDraw()
@@ -1213,6 +1290,8 @@ namespace Stride.Graphics
         /// <param name="buffer">The constant buffer to set.</param>
         internal void SetConstantBuffer(ShaderStage stage, int slot, Buffer buffer)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1222,6 +1301,7 @@ namespace Stride.Graphics
                 // TODO OPENGL if OpenGL ES 2, might be good to have some dirty flags to explain if cbuffer changed
                 constantBuffers[slot] = buffer;
                 GL.BindBufferBase(BufferTargetARB.UniformBuffer, (uint)slot, buffer != null ? buffer.BufferId : 0);
+            }
             }
         }
 
@@ -1244,6 +1324,9 @@ namespace Stride.Graphics
                 }
             }
 
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
+
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1256,6 +1339,7 @@ namespace Stride.Graphics
             needUpdateFBO = true;
 
             SetupTargets();
+            }
         }
 
         private void ResetTargetsImpl()
@@ -1271,23 +1355,31 @@ namespace Stride.Graphics
         /// <param name="samplerState">The sampler state to set.</param>
         public void SetSamplerState(ShaderStage stage, int slot, SamplerState samplerState)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
 
             samplerStates[slot] = samplerState;
+            }
         }
 
         unsafe partial void SetScissorRectangleImpl(ref Rectangle scissorRectangle)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
             GL.Scissor(scissorRectangle.Left, scissorRectangle.Top, (uint)scissorRectangle.Width, (uint)scissorRectangle.Height);
+            }
         }
 
         unsafe partial void SetScissorRectanglesImpl(int scissorCount, Rectangle[] scissorRectangles)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1305,6 +1397,7 @@ namespace Stride.Graphics
 
             GL.ScissorArray(0, (uint)scissorCount, nativeScissorRectangles);
 #endif
+            }
         }
 
         /// <summary>
@@ -1315,20 +1408,26 @@ namespace Stride.Graphics
         /// <param name="shaderResourceView">The shader resource view.</param>
         internal void SetShaderResourceView(ShaderStage stage, int slot, GraphicsResource shaderResourceView)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
             shaderResourceViews[slot] = shaderResourceView;
+            }
         }
 
         /// <inheritdoc/>
         public void SetStreamTargets(params Buffer[] buffers)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
 
             Internal.Refactor.ThrowNotImplementedException();
+            }
         }
 
         /// <summary>
@@ -1344,6 +1443,8 @@ namespace Stride.Graphics
         /// <exception cref="System.ArgumentException">Invalid stage.;stage</exception>
         internal void SetUnorderedAccessView(ShaderStage stage, int slot, GraphicsResource unorderedAccessView, int uavInitialOffset)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1352,6 +1453,7 @@ namespace Stride.Graphics
                 throw new ArgumentException("Invalid stage.", nameof(stage));
 
             Internal.Refactor.ThrowNotImplementedException();
+            }
         }
         
         /// <summary>
@@ -1360,20 +1462,26 @@ namespace Stride.Graphics
         /// <param name="unorderedAccessView">The unordered access view.</param>
         internal void UnsetUnorderedAccessView(GraphicsResource unorderedAccessView)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
             
             //Internal.Refactor.ThrowNotImplementedException();
+            }
         }
 
         internal void SetupTargets()
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
             if (needUpdateFBO)
             {
                 boundFBO = GraphicsDevice.FindOrCreateFBO(boundDepthStencilBuffer, boundRenderTargets, boundRenderTargetCount);
             }
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, boundFBO);
+            }
         }
 
         public void SetPipelineState(PipelineState pipelineState)
@@ -1393,6 +1501,8 @@ namespace Stride.Graphics
 
         public void SetIndexBuffer(Buffer buffer, int offset, bool is32bits)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
             var newIndexBuffer = new IndexBufferView(buffer, offset, is32bits);
             if (indexBuffer != newIndexBuffer)
             {
@@ -1401,6 +1511,7 @@ namespace Stride.Graphics
 
                 // Setup index buffer
                 GL.BindBuffer(BufferTargetARB.ElementArrayBuffer, indexBuffer.Buffer != null ? indexBuffer.Buffer.BufferId : 0);
+            }
             }
         }
 
@@ -1434,6 +1545,8 @@ namespace Stride.Graphics
 
             viewportDirty = false;
 
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1444,17 +1557,23 @@ namespace Stride.Graphics
 #else
             UpdateViewports();
 #endif
+            }
         }
 
         private void UpdateViewport(Viewport viewport)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
             GL.DepthRange(viewport.MinDepth, viewport.MaxDepth);
             GL.Viewport((int)viewport.X, (int)viewport.Y, (uint)viewport.Width, (uint)viewport.Height);
+            }
         }
 
 #if !STRIDE_GRAPHICS_API_OPENGLES
         private void UpdateViewports()
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
             int nbViewports = viewports.Length;
             for (int i = 0; i < boundViewportCount; ++i)
             {
@@ -1466,27 +1585,36 @@ namespace Stride.Graphics
             }
             GL.DepthRange(viewports[0].MinDepth, viewports[0].MaxDepth);
             GL.ViewportArray(0, (uint)boundViewportCount, nativeViewports);
+            }
         }
 #endif
 
         public void UnsetReadWriteBuffers()
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
+            }
         }
 
         public void UnsetRenderTargets()
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
 
             SetRenderTargets(null, null);
+            }
         }
 
         internal unsafe void UpdateSubresource(GraphicsResource resource, int subResourceIndex, DataBox databox)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1561,10 +1689,13 @@ namespace Stride.Graphics
                     Internal.Refactor.ThrowNotImplementedException("UpdateSubresource not implemented for type " + resource.GetType());
                 }
             }
+            }
         }
 
         internal unsafe void UpdateSubresource(GraphicsResource resource, int subResourceIndex, DataBox databox, ResourceRegion region)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1661,6 +1792,7 @@ namespace Stride.Graphics
                         GL.BindBuffer(buffer.BufferTarget, 0);
                     }
                 }
+            }
             }
         }
 
