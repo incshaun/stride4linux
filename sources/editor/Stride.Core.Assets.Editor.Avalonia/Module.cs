@@ -5,6 +5,7 @@ using Stride.Core.Assets.Editor.Services;
 using Stride.Core.Reflection;
 using Stride.Core.Translation;
 using Stride.Core.Translation.Providers;
+using Avalonia;
 
 namespace Stride.Core.Assets.Editor
 {
@@ -13,10 +14,7 @@ namespace Stride.Core.Assets.Editor
         [ModuleInitializer]
         public static void Initialize()
         {
-            AssemblyRegistry.Register(typeof(Module).GetTypeInfo().Assembly, AssemblyCommonCategories.Assets);
-            AssetsPlugin.RegisterPlugin(typeof(CoreAssetsEditorPlugin));
-            // Initialize translation
-            TranslationManager.Instance.RegisterProvider(new GettextTranslationProvider());
+            Presentation.Quantum.ViewModels.NodeViewModel.UnsetValue = AvaloniaProperty.UnsetValue;
         }
     }
 }

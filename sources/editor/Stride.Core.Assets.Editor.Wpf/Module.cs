@@ -13,10 +13,7 @@ namespace Stride.Core.Assets.Editor
         [ModuleInitializer]
         public static void Initialize()
         {
-            AssemblyRegistry.Register(typeof(Module).GetTypeInfo().Assembly, AssemblyCommonCategories.Assets);
-            AssetsPlugin.RegisterPlugin(typeof(CoreAssetsEditorPlugin));
-            // Initialize translation
-            TranslationManager.Instance.RegisterProvider(new GettextTranslationProvider());
+            Presentation.Quantum.ViewModels.NodeViewModel.UnsetValue = System.Windows.DependencyProperty.UnsetValue;
         }
     }
 }
