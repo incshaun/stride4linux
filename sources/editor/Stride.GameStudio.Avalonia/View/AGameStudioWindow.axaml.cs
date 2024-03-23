@@ -28,8 +28,8 @@ using Stride.Core.Translation;
 // using AvalonDock.Layout;
 using Stride.GameStudio.Avalonia.ViewModels;
 using Stride.GameStudio.Avalonia.Helpers;
-// using Stride.GameStudio.Avalonia.AssetsEditors;
-// using Stride.GameStudio.Avalonia.Layout;
+using Stride.GameStudio.Avalonia.AssetsEditors;
+using Stride.GameStudio.Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Interactivity;
 using Avalonia;
@@ -51,8 +51,8 @@ namespace Stride.GameStudio.Avalonia.View
     {
         private DebugWindow debugWindow;
         private bool forceClose;
-//        private readonly ADockingLayoutManager dockingLayout;
-//        private readonly AAssetEditorsManager assetEditorsManager;
+        private readonly DockingLayoutManager dockingLayout;
+        private readonly AssetEditorsManager assetEditorsManager;
         private TaskCompletionSource<bool> closingTask;
 
 #if DEBUG
@@ -68,9 +68,10 @@ namespace Stride.GameStudio.Avalonia.View
 //            if (editor.Session == null) throw new ArgumentException($@"A valid session must exist before creating a {nameof(GameStudioWindow)}", nameof(editor));
             DataContext = editor; // Must be set before calling InitializeComponent
 
-//            dockingLayout = new ADockingLayoutManager(this, editor.Session);
-//            assetEditorsManager = new AAssetEditorsManager(dockingLayout, editor.Session);
-//            editor.ServiceProvider.Get<IEditorDialogService>().AssetEditorsManager = assetEditorsManager;
+            dockingLayout = new DockingLayoutManager(this, editor.Session);
+            assetEditorsManager = new AssetEditorsManager(dockingLayout, editor.Session);
+            //editor.ServiceProvider.Get<IEditorDialogService>().AssetEditorsManager = assetEditorsManager;
+            editor.ServiceProvider.RegisterService(assetEditorsManager);
 
             Console.WriteLine ("Initializing GameStudioWindow D");
 
@@ -95,7 +96,7 @@ namespace Stride.GameStudio.Avalonia.View
         }
         private async Task ResetAllLayouts()
         {
-//             var assets = assetEditorsManager.OpenedAssets.Select(x => x.Id).ToList();
+            var assets = assetEditorsManager.OpenedAssets.Select(x => x.Id).ToList();
 //             if (assets.Count > 0)
 //             {
 //                 var message = Tr._p("Message", "To reset the layout, Game Studio needs to close and re-open all asset and document editors. You won't lose unsaved changes.");
@@ -114,9 +115,9 @@ namespace Stride.GameStudio.Avalonia.View
 // 
 //             // Safely reset layout
 //             dockingLayout.ResetAllLayouts();
-// 
-//             // Reopen editors
-//             await ReopenAssetEditors(assets);
+ 
+            // Reopen editors
+            await ReopenAssetEditors(assets);
         }
 
         private static void OpenMetricsProjectSession(EditorViewModel editor)
@@ -272,7 +273,7 @@ namespace Stride.GameStudio.Avalonia.View
                 // Initialize plugins
                 Editor.Session.ServiceProvider.Get<IAssetsPluginService>().Plugins.ForEach(x => x.InitializeSession(Editor.Session));
                 // Open assets that were being edited in the previous session
-//                 ReopenAssetEditors(dockingLayout.LoadOpenAssets().ToList()).Forget();
+                ReopenAssetEditors(dockingLayout.LoadOpenAssets().ToList()).Forget();
 
                 // Listen to clipboard
 //                ClipboardMonitor.RegisterListener(this);
@@ -415,7 +416,7 @@ namespace Stride.GameStudio.Avalonia.View
 
             Editor.Session.ActiveAssetView.SelectAssets(asset.Yield());
 
-//             await assetEditorsManager.OpenAssetEditorWindow(asset);
+            await assetEditorsManager.OpenAssetEditorWindow(asset);
         }
 
         private void OpenDebugWindow()

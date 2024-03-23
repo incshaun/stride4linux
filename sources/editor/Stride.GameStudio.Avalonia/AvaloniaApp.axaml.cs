@@ -184,8 +184,8 @@ public partial class AvaloniaApp : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-//            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-//            EditorPath.EditorTitle = StrideGameStudio.EditorName;
+//                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            EditorPath.EditorTitle = StrideGameStudio.EditorName;
             NodeViewModelExtensions.Initialize ();
 
             Console.WriteLine ("Framework Initialized");
