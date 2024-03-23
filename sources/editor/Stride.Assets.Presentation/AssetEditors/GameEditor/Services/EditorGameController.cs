@@ -104,7 +104,14 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             Game = gameFactory(gameContentLoadedTaskSource, builderService.EffectCompiler, builderService.EffectLogPath);
             Game.PackageSettings = asset.ServiceProvider.Get<GameSettingsProviderService>();
             sceneGameThread = new Thread(SafeAction.Wrap(SceneGameRunThread)) { IsBackground = true, Name = $"EditorGameThread ({asset.Url})" };
-            sceneGameThread.SetApartmentState(ApartmentState.STA);
+            try
+            {
+              sceneGameThread.SetApartmentState(ApartmentState.STA);
+            }
+            catch (PlatformNotSupportedException ex)
+            {
+                // Not available on Linux.
+            }
 
             Debug = new EditorGameDebugService();
             Loader = new EditorContentLoader(this, Logger, asset, editor, Game);

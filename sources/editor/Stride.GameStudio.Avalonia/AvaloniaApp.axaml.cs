@@ -303,6 +303,7 @@ public partial class AvaloniaApp : Application
             //mru.LoadFromSettings();
             var editor = new GameStudioViewModel(serviceProvider, mru);
             AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
+            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultPresentationAssetsPlugin)); // include non-view Stride.Assets.Presentation.
             AssetsPlugin.RegisterPlugin(typeof(StrideEditorPlugin));
 
             // Attempt to load the startup session, if available

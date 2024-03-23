@@ -350,7 +350,6 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
 
                         // Initialize the editor view
                         editor = (AssetEditorViewModel)Activator.CreateInstance(editorType, asset);     
-                        view.DataContext = editor;
                         if (!await view.InitializeEditor(editor))
                         {
                             // Could not initialize editor
@@ -366,6 +365,8 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
 //                         }
                         else
                         {
+                            view.DataContext = editor;
+
                             assetEditors[editor] = editorPane;
                             if (editor is IMultipleAssetEditorViewModel multiEditor)
                             {
