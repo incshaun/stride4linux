@@ -73,6 +73,15 @@
   <ImageBrush x:Key="ImageUnlocked" Source="/Resources/Images/lock-unlock.png" />
   <ImageBrush x:Key="ImageLength" Source="/Resources/Images/ruler-triangle.png" />
 
+		
+        <ControlTheme x:Key="{x:Type TextBlock}" TargetType="TextBlock">
+          <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <!--<ControlTheme.Triggers>
+        <Trigger Property="IsEnabled" Value="False">
+        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+        </Trigger>
+        </ControlTheme.Triggers>-->
+        </ControlTheme>		
   
 
 	<!-- For Avalonia TreeView, not the Stride version -->

@@ -248,8 +248,8 @@
               </sd:TextBox>
             </StackPanel>
             <Separator/>
-              <Image Source="{StaticResource ImageExpandAllFolders}" />
-              <Image Source="{StaticResource ImageCollapseAllFolders}" />
+              <Image Source="{StaticResource ImageExpandAllFolders}" Stretch="None"/>
+              <Image Source="{StaticResource ImageCollapseAllFolders}" Stretch="None"/>
           </ItemsControl>
         </StackPanel>
         <Grid>
