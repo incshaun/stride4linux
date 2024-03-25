@@ -408,6 +408,10 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
 //             };
 //             windowHandle = GameForm.Handle;
 //             var context = new GameContextWinforms(GameForm) { InitializeDatabase = false };
+            var context = GameContextFactory.NewGameContext(AppContextType.DesktopSDL);
+            context.InitializeDatabase = false;
+            windowHandle = ((GameContextSDL)context).Control.Handle;
+            
             RegisterToDragDropEvents();
 
             // Wait for shaders to be loaded
@@ -420,7 +424,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
 
             // Notify game start
             gameStartedTaskSource.SetResult(true);
-//             Game.Run(context);
+            Game.Run(context);
             Game.Dispose();
         }
 
