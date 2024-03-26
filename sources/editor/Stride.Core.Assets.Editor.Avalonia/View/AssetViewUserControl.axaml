@@ -35,7 +35,9 @@
             <DataTemplate x:Key="ItemTemplate" DataType="{x:Type viewModel:ISessionObjectViewModel}">
               <HeaderedContentControl  >
                 <i:Interaction.Behaviors>
-                  <sd:OnEventCommandBehavior EventName="MouseDoubleClick" Command="{Binding AssetDoubleClick, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"
+<!--                  <sd:OnEventCommandBehavior EventName="MouseDoubleClick" Command="{Binding AssetDoubleClick, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"
+                                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=controls:EditableContentListBox}}"/>-->
+                  <sd:OnEventCommandBehavior EventName="DoubleTapped" Command="{Binding AssetDoubleClick, RelativeSource={RelativeSource AncestorType=view:AssetViewUserControl}}"
                                                CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=controls:EditableContentListBox}}"/>
                 </i:Interaction.Behaviors>
                 <HeaderedContentControl.Header>
@@ -165,8 +167,8 @@
                 <Setter Property="sd:Interaction.Behaviors">
                   <Setter.Value>
                     <sd:BehaviorCollection>
-                      <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="sd:TextBox" Property="controls:EditableContentListBoxItem.IsEditing" Value="False"/>
-                      <sd:OnEventSetPropertyBehavior EventName="Cancelled" EventOwnerType="sd:TextBox" Property="controls:EditableContentListBoxItem.IsEditing" Value="False"/>
+<!--                      <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="sd:TextBox" Property="controls:EditableContentListBoxItem.IsEditing" Value="False"/>
+                      <sd:OnEventSetPropertyBehavior EventName="Cancelled" EventOwnerType="sd:TextBox" Property="controls:EditableContentListBoxItem.IsEditing" Value="False"/>-->
                     </sd:BehaviorCollection>
                   </Setter.Value>
                 </Setter>
@@ -228,7 +230,7 @@
                                               SelectFilesToCreateItemCommand="{Binding SelectFilesToCreateAssetCommand}"/>
           </Border>
           <i:Interaction.Behaviors>
-            <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="sd:FilteringComboBox" Property="{x:Static Popup.IsOpenProperty}" Value="false"/>
+<!--             <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="sd:FilteringComboBox" Property="{x:Static Popup.IsOpenProperty}" Value="false"/> -->
           </i:Interaction.Behaviors>
         </Popup>
         <!--  UPDATE ASSETS FROM SOURCE BUTTON  -->

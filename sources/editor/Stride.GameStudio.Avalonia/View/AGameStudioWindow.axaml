@@ -844,7 +844,7 @@
 									</i:Interaction.Behaviors>
 								</TabControl>
 								<i:Interaction.Behaviors>
-									<sd:OnEventCommandBehavior Command="{Binding Debugging.ResetOutputTitleCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" EventName="IsActiveChanged"/>
+<!-- 									<sd:OnEventCommandBehavior Command="{Binding Debugging.ResetOutputTitleCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" EventName="IsActiveChanged"/> -->
 <!-- 									<gl:LayoutAnchorableActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Debugging.BuildLog.Messages, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/> -->
 <!-- 									<gl:LayoutAnchorableActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Debugging.LiveScriptingLog.Messages, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/> -->
 								</i:Interaction.Behaviors>

@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 
 using Avalonia.Input;
+using System.Windows.Input;
 
 namespace Stride.Core.Presentation.Behaviors
 {
@@ -15,17 +16,17 @@ namespace Stride.Core.Presentation.Behaviors
         /// <summary>
         /// Identifies the <see cref="Command"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<ICommandSource> CommandProperty = StyledProperty<ICommandSource>.Register<OnEventCommandBehavior, ICommandSource>("Command");
+        public static readonly StyledProperty<ICommand> CommandProperty = StyledProperty<ICommand>.Register<OnEventCommandBehavior, ICommand>("Command"); // T1
 
         /// <summary>
         /// Identifies the <see cref="CommandParameter"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<object> CommandParameterProperty = StyledProperty<object>.Register<OnEventCommandBehavior, object>("CommandParameter");
+        public static readonly StyledProperty<object> CommandParameterProperty = StyledProperty<object>.Register<OnEventCommandBehavior, object>("CommandParameter"); // T1
 
         /// <summary>
         /// Gets or sets the command to invoke when the event is raised.
         /// </summary>
-        public ICommandSource Command { get { return (ICommandSource)GetValue(CommandProperty); } set { SetValue(CommandProperty, value); } }
+        public ICommand Command { get { return (ICommand)GetValue(CommandProperty); } set { SetValue(CommandProperty, value); } }
 
         /// <summary>
         /// Gets or sets the parameter of the command to invoke when the event is raised.
@@ -37,8 +38,8 @@ namespace Stride.Core.Presentation.Behaviors
         {
             var cmd = Command;
 
-            if (cmd != null && cmd.Command.CanExecute(CommandParameter))
-                cmd.Command.Execute(CommandParameter);
+            if (cmd != null && cmd.CanExecute(CommandParameter))
+                cmd.Execute(CommandParameter);
         }
     }
 }

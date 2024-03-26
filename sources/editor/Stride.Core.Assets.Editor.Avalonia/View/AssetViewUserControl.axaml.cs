@@ -88,12 +88,12 @@ namespace Stride.Core.Assets.Editor.View
         /// <summary>
         /// Identifies the <see cref="AssetDoubleClick"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<ICommandSource> AssetDoubleClickProperty = StyledProperty<ICommandSource>.Register<AssetViewUserControl, ICommandSource>(nameof(AssetDoubleClick)); // T1
+        public static readonly StyledProperty<ICommand> AssetDoubleClickProperty = StyledProperty<ICommand>.Register<AssetViewUserControl, ICommand>(nameof(AssetDoubleClick)); // T1
 
         /// <summary>
         /// Gets the command that initiate the edition of the currently selected item.
         /// </summary>
-        public static ICommandSource BeginEditCommand { get; }
+        public static ICommand BeginEditCommand { get; }
 
         /// <summary>
         /// Gets the command that will increase the size of thumbnails.
@@ -110,7 +110,7 @@ namespace Stride.Core.Assets.Editor.View
 			AssetCollectionProperty.Changed.AddClassHandler<AssetViewUserControl>(AssetCollectionChanged);
 			AssetContextMenuProperty.Changed.AddClassHandler<AssetViewUserControl>(OnAssetContextMenuChanged);
 
-//             BeginEditCommand = new ICommandSource(nameof(BeginEditCommand), typeof(AssetViewUserControl));
+//             BeginEditCommand = new ICommand(nameof(BeginEditCommand), typeof(AssetViewUserControl));
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), new CommandBinding(BeginEditCommand, BeginEdit, CanBeginEditCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(AssetViewUserControl), new InputBinding(BeginEditCommand, new KeyGesture(Key.F2)));
 // 
@@ -123,7 +123,7 @@ namespace Stride.Core.Assets.Editor.View
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), zoomInCommandBinding);
 // 
              ZoomOutCommand = new RoutedCommand<AssetViewUserControl>(ZoomOut);
-//             ZoomOutCommand = new ICommandSource(nameof(ZoomOutCommand), typeof(AssetViewUserControl));
+//             ZoomOutCommand = new ICommand(nameof(ZoomOutCommand), typeof(AssetViewUserControl));
 //             var zoomOutCommandBinding = new CommandBinding(ZoomOutCommand, ZoomOut);
 //             zoomOutCommandBinding.PreviewCanExecute += (s, e) => e.CanExecute = true;
 //             zoomOutCommandBinding.PreviewExecuted += ZoomOut;
@@ -207,7 +207,7 @@ namespace Stride.Core.Assets.Editor.View
         /// <summary>
         /// Gets or sets the command to execute when user double-clicks an asset.
         /// </summary>
-        public ICommandSource AssetDoubleClick { get => (ICommandSource)GetValue(AssetDoubleClickProperty); set => SetValue(AssetDoubleClickProperty, value); }
+        public ICommand AssetDoubleClick { get => (ICommand)GetValue(AssetDoubleClickProperty); set => SetValue(AssetDoubleClickProperty, value); }
 
         /// <summary>
         /// Begins edition of the currently selected content.
@@ -292,7 +292,7 @@ namespace Stride.Core.Assets.Editor.View
 //             }
         }
 
-        protected virtual void OnPointerPressed(PointerPressedEventArgs e)
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             base.OnPointerPressed(e);
             if (!IsFocused && !IsKeyboardFocusWithin)

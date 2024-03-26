@@ -1,0 +1,20 @@
+<UserControl x:Class="Stride.Assets.Presentation.AssetEditors.ScriptEditor.ScriptEditorView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Stride.Assets.Presentation.AssetEditors.ScriptEditor"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" >
+	<Design.DataContext>
+		<local:ScriptEditorViewModel />
+	</Design.DataContext>
+  <i:Interaction.Behaviors>
+<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Save" Command="{Binding SaveDocumentCommand}" /> -->
+  </i:Interaction.Behaviors>
+  <Grid>
+    <local:SimpleCodeTextEditor x:Name="CodeEditor" x:FieldModifier="private" FontSize="{Binding Code.EditorFontSize}" ContextActionsIcon="{StaticResource Bulb}" />
+  </Grid>
+</UserControl>

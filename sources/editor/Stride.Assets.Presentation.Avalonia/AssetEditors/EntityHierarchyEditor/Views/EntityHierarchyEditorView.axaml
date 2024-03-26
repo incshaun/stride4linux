@@ -14,7 +14,7 @@
              xmlns:svm="clr-namespace:Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels;assembly=Stride.Assets.Presentation"
              xmlns:entityFactories="clr-namespace:Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.EntityFactories;assembly=Stride.Assets.Presentation"
              xmlns:views="clr-namespace:Stride.Assets.Presentation.AssetEditors.AssetCompositeGameEditor.Views;assembly=Stride.Assets.Presentation.Avalonia"
-             xmlns:cmd="clr-namespace:Stride.Core.Presentation.Commands;assembly=Stride.Core.Presentation"
+             xmlns:cmd="clr-namespace:Stride.Core.Presentation.Commands;assembly=Stride.Core.Presentation.Avalonia"
              xmlns:core="clr-namespace:Stride.Core.Presentation.Core;assembly=Stride.Core.Presentation"
              xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
              mc:Ignorable="d"
@@ -100,18 +100,18 @@
           </MenuItem.Template>
         </MenuItem>
         <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
-<!--        <MenuItem Header="{sd:Localize Open prefab in editor, Context=Menu}" Command="{Binding Editor.OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+        <MenuItem Header="{sd:Localize Open prefab in editor, Context=Menu}" Command="{Binding Editor.OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <MenuItem Header="{sd:Localize Select prefab in asset view, Context=Menu}" Command="{Binding Editor.SelectPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <MenuItem Header="{sd:Localize Break link to prefab ,Context=Menu}" Command="{Binding Editor.BreakLinkToPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding Editor.CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <Separator/>
-        <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGestureText="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
-        <MenuItem Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGesture="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
+<!--        <MenuItem Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
         <MenuItem Command="ApplicationCommands.Copy" Icon="{sd:Image {StaticResource ImageCopy}}" />
-        <MenuItem Command="ApplicationCommands.Paste" CommandParameter="true" Icon="{sd:Image {StaticResource ImagePaste}}" />
-        <MenuItem Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>
+        <MenuItem Command="ApplicationCommands.Paste" CommandParameter="{sd:True}" Icon="{sd:Image {StaticResource ImagePaste}}" />
+        <MenuItem Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
         <Separator/>
-        <MenuItem Header="Rename" InputGestureText="F2" Command="{Binding Editor.EntityWithGizmo.RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>-->
+        <MenuItem Header="Rename" InputGesture="F2" Command="{Binding Editor.EntityWithGizmo.RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>
       </ContextMenu>
 
       <ContextMenu x:Key="TreeViewItemContextMenu" >
@@ -150,20 +150,20 @@
           </MenuItem.Template>
         </MenuItem>
         <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
-<!--        <MenuItem Header="{sd:Localize Set as active scene, Context=Menu}" Command="{Binding Editor.SetActiveRootCommand}" IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type svm:SceneRootViewModel}, FallbackValue=false}"
+        <MenuItem Header="{sd:Localize Set as active scene, Context=Menu}" Command="{Binding Editor.SetActiveRootCommand}" IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type svm:SceneRootViewModel}, FallbackValue=false}"
                    />
         <MenuItem Header="{sd:Localize Open prefab in editor, Context=Menu}" Command="{Binding Editor.OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <MenuItem Header="{sd:Localize Select prefab in asset view, Context=Menu}" Command="{Binding Editor.SelectPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <MenuItem Header="{sd:Localize Break link to prefab, Context=Menu}" Command="{Binding Editor.BreakLinkToPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding Editor.CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <Separator/>
-        <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGestureText="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
-        <MenuItem Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGesture="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
+<!--        <MenuItem Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
         <MenuItem Command="ApplicationCommands.Copy" Icon="{sd:Image {StaticResource ImageCopy}}" />
         <MenuItem Command="ApplicationCommands.Paste" Icon="{sd:Image {StaticResource ImagePaste}}" />
-        <MenuItem Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>
+        <MenuItem Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
         <Separator/>
-        <MenuItem Header="{sd:Localize Rename, Context=Menu}" InputGestureText="F2" Command="{Binding RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>-->
+        <MenuItem Header="{sd:Localize Rename, Context=Menu}" InputGesture="F2" Command="{Binding RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>
       </ContextMenu>
 
     </ResourceDictionary>
@@ -310,7 +310,7 @@
 	<Design.DataContext>
 		<ehvm:EntityHierarchyElementViewModel />
 	</Design.DataContext>
-<!--                 <Setter Property="Command" Value="{Binding LoadCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/> -->
+                <Setter Property="Command" Value="{Binding LoadCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
                 <Setter Property="Content" Value="{StaticResource UnloadImage}"/>
                 <!-- <ControlTheme.Triggers>
                   <DataTrigger Binding="{Binding IsLoaded, Mode=OneWay}" Value="true">
@@ -325,7 +325,7 @@
 	<Design.DataContext>
 		<ehvm:EntityHierarchyElementViewModel />
 	</Design.DataContext>
-<!--                 <Setter Property="Command" Value="{Binding LockCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/> -->
+                <Setter Property="Command" Value="{Binding LockCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
                 <Setter Property="IsEnabled" Value="{Binding IsLoaded, Mode=OneWay}"/>
                 <Setter Property="Content" Value="{StaticResource UnlockImage}"/>
                 <!-- <ControlTheme.Triggers>
@@ -585,8 +585,8 @@
                     <StackPanel DockPanel.Dock="Top">
                       <TextBlock DockPanel.Dock="Left" Text="{sd:Localize Show navigation meshes:}" Margin="5"/>
                       <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                        <Button Content="{sd:Localize All, Context=Button}" Margin="5" Command="{Binding Navigation.ToggleAllGroupsCommand}" CommandParameter="true" Width="40"/>
-                        <Button Content="{sd:Localize None, Context=Button}" Margin="5" Command="{Binding Navigation.ToggleAllGroupsCommand}" CommandParameter="false" Width="40"/>
+                        <Button Content="{sd:Localize All, Context=Button}" Margin="5" Command="{Binding Navigation.ToggleAllGroupsCommand}" CommandParameter="{sd:True}" Width="40"/>
+                        <Button Content="{sd:Localize None, Context=Button}" Margin="5" Command="{Binding Navigation.ToggleAllGroupsCommand}" CommandParameter="{sd:False}" Width="40"/>
                       </StackPanel>
                       <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="3">
                         <StackPanel>
@@ -640,8 +640,8 @@
                     </StackPanel>
                     <Separator Margin="5" Height="2" HorizontalAlignment="Stretch" DockPanel.Dock="Top"/>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                      <Button Content="{sd:Localize All, Context=Button}" Margin="5" Command="{Binding EntityGizmos.ToggleAllGizmosCommand}" CommandParameter="true" Width="40"/>
-                      <Button Content="{sd:Localize None, Context=Button}" Margin="5" Command="{Binding EntityGizmos.ToggleAllGizmosCommand}" CommandParameter="false" Width="40"/>
+                      <Button Content="{sd:Localize All, Context=Button}" Margin="5" Command="{Binding EntityGizmos.ToggleAllGizmosCommand}" CommandParameter="{sd:True}" Width="40"/>
+                      <Button Content="{sd:Localize None, Context=Button}" Margin="5" Command="{Binding EntityGizmos.ToggleAllGizmosCommand}" CommandParameter="{sd:False}" Width="40"/>
                     </StackPanel>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="3">
                       <StackPanel>
@@ -853,14 +853,14 @@
                 </MenuItem.Template>
               </MenuItem>
               <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
-<!--              <MenuItem Header="{sd:Localize Open in prefab editor, Context=Menu}" Command="{Binding OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
+              <MenuItem Header="{sd:Localize Open in prefab editor, Context=Menu}" Command="{Binding OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
               <MenuItem Header="{sd:Localize Select prefab in asset view, Context=Menu}" Command="{Binding SelectPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
               <MenuItem Header="{sd:Localize Break link to prefab, Context=Menu}" Command="{Binding BreakLinkToPrefabCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
               <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
               <Separator/>
               <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" Command="{Binding DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
               <Separator/>
-              <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding EntityWithGizmo.RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>-->
+              <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding EntityWithGizmo.RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>
             </ContextMenu>
           </Grid.ContextMenu>
           <Grid>

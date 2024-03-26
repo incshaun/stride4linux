@@ -86,12 +86,12 @@ namespace Stride.Core.Presentation.Behaviors
             }
             else
             {
-//                 var eventInfo = AssociatedObject.GetType().GetEvent(EventName);
-// 
-//                 if (eventInfo == null)
-//                     throw new InvalidOperationException($"Impossible to find a valid event named '{EventName}'.");
-// 
-//                 eventHandler = AnonymousEventHandler.RegisterEventHandler(eventInfo, AssociatedObject, OnEvent);
+                var eventInfo = AssociatedObject.GetType().GetEvent(EventName);
+
+                if (eventInfo == null)
+                   throw new InvalidOperationException($"Impossible to find a valid event named '{EventName}'.");
+
+                eventHandler = AnonymousEventHandler.RegisterEventHandler(eventInfo, AssociatedObject, OnEvent);
             }
         }
 

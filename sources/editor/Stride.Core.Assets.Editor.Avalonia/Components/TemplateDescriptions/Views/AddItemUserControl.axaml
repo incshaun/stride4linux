@@ -128,7 +128,7 @@
       </DataTemplate>
     </sd:FilteringComboBox.ItemTemplate>
     <i:Interaction.Behaviors>
-      <sd:OnEventCommandBehavior EventName="Validated" Command="{Binding AddItemCommand, RelativeSource={RelativeSource AncestorType=view:AddItemUserControl}}" CommandParameter="{Binding ValidatedItem, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}}"/>
+<!--       <sd:OnEventCommandBehavior EventName="Validated" Command="{Binding AddItemCommand, RelativeSource={RelativeSource AncestorType=view:AddItemUserControl}}" CommandParameter="{Binding ValidatedItem, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}}"/> -->
     </i:Interaction.Behaviors>
   </sd:FilteringComboBox>
 </UserControl>

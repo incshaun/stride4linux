@@ -642,25 +642,25 @@ def translateProperties (contents):
   
   # Mouse
   pat = re.compile ("protected override void OnMouseDown\(MouseButtonEventArgs e\)") # no call to base.
-  contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
+  contents = re.sub (pat, r"protected override void OnPointerPressed(PointerPressedEventArgs e)", contents)
   pat = re.compile ("base.OnMouseDown\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
 
   pat = re.compile ("protected override void OnMouseLeftButtonDown\(MouseButtonEventArgs e\)") # no call to base.
-  contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
+  contents = re.sub (pat, r"protected override void OnPointerPressed(PointerPressedEventArgs e)", contents)
   pat = re.compile ("base.OnMouseLeftButtonDown\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
 
   pat = re.compile ("protected override void OnMouseLeftButtonUp\(MouseButtonEventArgs e\)") # no call to base.
-  contents = re.sub (pat, r"protected virtual void OnPointerReleased(PointerReleasedEventArgs e)", contents)
+  contents = re.sub (pat, r"protected override void OnPointerReleased(PointerReleasedEventArgs e)", contents)
   pat = re.compile ("base.OnMouseLeftButtonUp\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerReleased(e);", contents)
 
   pat = re.compile ("protected override void OnMouseMove\(PointerEventArgs e\)") # no call to base.
-  contents = re.sub (pat, r"protected virtual void OnPointerMoved(PointerEventArgs e)", contents)
+  contents = re.sub (pat, r"protected override void OnPointerMoved(PointerEventArgs e)", contents)
 
   pat = re.compile ("protected override void OnMouseUp\(PointerEventArgs e\)") # no call to base.
-  contents = re.sub (pat, r"protected virtual void OnPointerReleased(PointerReleasedEventArgs e)", contents)
+  contents = re.sub (pat, r"protected override void OnPointerReleased(PointerReleasedEventArgs e)", contents)
 
   pat = re.compile ("\(object sender, MouseEventArgs e\)") # just the call to base.
   contents = re.sub (pat, r"(object sender, PointerEventArgs e)", contents)
@@ -671,7 +671,7 @@ def translateProperties (contents):
   pat = re.compile ("protected override void OnPreviewMouseWheel\(MouseWheelEventArgs e\)") # just the call to base.
   contents = re.sub (pat, r"protected override void OnPointerWheelChanged(PointerWheelEventArgs e)", contents)
   pat = re.compile ("protected override void OnPreviewMouseDown\(MouseButtonEventArgs e\)") # no call to base.
-  contents = re.sub (pat, r"protected virtual void OnPointerPressed(PointerPressedEventArgs e)", contents)
+  contents = re.sub (pat, r"protected override void OnPointerPressed(PointerPressedEventArgs e)", contents)
   pat = re.compile ("base.OnPreviewMouseWheel\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerWheelChanged(e);", contents)
   pat = re.compile ("base.OnPreviewMouseDown\(e\);") # just the call to base.
@@ -1010,6 +1010,10 @@ def translateTags (contents):
   contents = re.sub ("<DrawingBrush Viewport=\"(.*?)\"", "<DrawingBrush", contents)
   contents = re.sub ("ViewportUnits=\"(.*?)\"", "", contents)
   
+  # Gestures
+  contents = re.sub ("InputGestureText=", "InputGesture=", contents)
+  contents = re.sub ("\"MouseDoubleClick\"", "\"DoubleTapped\"", contents)
+  
   # Grid
   contents = re.sub ("MinWidth=\"{TemplateBinding ActualWidth}\"", "", contents)
   contents = re.sub ("view:DataGridEx", "DataGrid", contents)
@@ -1025,9 +1029,9 @@ def translateTags (contents):
   contents = re.sub ("<sd:CommandBindingBehavior RoutedCommand=\"ApplicationCommands\.Delete\" (.*?)/>", r'<!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" \1/> -->', contents)
   contents = re.sub ("<sd:CommandBindingBehavior RoutedCommand=\"ApplicationCommands\.Paste\" (.*?)/>", r'<!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" \1/> -->', contents)
   
-  # true/false
-  contents = re.sub ("\"{sd:True}\"", r'"true"', contents)
-  contents = re.sub ("\"{sd:False}\"", r'"false"', contents)
+  # true/false. 
+  #contents = re.sub ("\"{sd:True}\"", r'"true"', contents) # is required.
+  #contents = re.sub ("\"{sd:False}\"", r'"false"', contents)
  
   # HierarchicalDataTemplace
   contents = re.sub ("HierarchicalDataTemplate", r'TreeDataTemplate', contents)
@@ -1259,7 +1263,7 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/IDragDropBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Trimming.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/OnComboBoxClosedWithSelectionBehavior.cs")
-#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventCommandBehavior.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventCommandBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/AnonymousEventHandler.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/TypeToResource.cs")
@@ -1350,7 +1354,10 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/NumericTextBoxDragBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/MouseMoveCaptureBehaviorBase.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/CanvasView/CanvasView.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/TrueExtension.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/FalseExtension.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1380,7 +1387,8 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchy
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/EntityPropertyTemplates.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/Icons.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.xaml")
-translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml")
+translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
