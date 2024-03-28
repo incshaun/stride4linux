@@ -315,6 +315,8 @@ def translateNames (contents):
 
   contents = re.sub (": Selector", ": SelectingItemsControl", contents)
   
+  contents = re.sub ("using TextDocument = ICSharpCode.AvalonEdit.Document.TextDocument;", "using TextDocument = AvaloniaEdit.Document.TextDocument;", contents)
+  
   contents = re.sub ("Dispatcher.CurrentDispatcher.BeginInvoke", "Dispatcher.UIThread.InvokeAsync", contents)
 
   contents = re.sub ("ModifierKeys\.Windows", "KeyModifiers.Meta", contents)
@@ -481,6 +483,18 @@ def translateProperties (contents):
 
   
   # Direct properties
+  
+  pat = re.compile ("private static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
+  # set up backing variables.
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      vpat = "public " + match[4] + " " + match[3] + " { get { return \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\); } set { SetValue\(" + match[0] + ", value\); } }"
+      vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
+      classname = match[5];
+      print (match, vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+    contents = re.sub (pat, r"private static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4); // T10H", contents)
   
   pat = re.compile ("public static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(nameof\((.*?)\), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);", re.DOTALL)
   # set up backing variables.
@@ -1263,7 +1277,7 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/IDragDropBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Trimming.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/OnComboBoxClosedWithSelectionBehavior.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventCommandBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventCommandBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/AnonymousEventHandler.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/TypeToResource.cs")
@@ -1357,7 +1371,8 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/OnEventCommand
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/TrueExtension.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/FalseExtension.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptTextEditor.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1388,7 +1403,7 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Sc
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/Icons.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml")
-translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

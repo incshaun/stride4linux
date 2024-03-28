@@ -55,6 +55,9 @@
     <PackageVersion Include="NuGet.PackageManagement" Version="6.8.0" />
     <PackageVersion Include="NuGet.Protocol" Version="6.8.0" />
     <PackageVersion Include="NuGet.Resolver" Version="6.8.0" />
+    <PackageVersion Include="NuGet.Frameworks" Version="6.9.1" />
+    <PackageVersion Include="NuGet.Packaging" Version="6.9.1" />
+    <PackageVersion Include="NuGet.ProjectModel" Version="6.9.1" />
     <PackageVersion Include="Silk.NET.Assimp" Version="2.20.0" />
     <PackageVersion Include="Stride.GNU.Getopt" Version="2.0.0" />
     <PackageVersion Include="Stride.GNU.Gettext" Version="2.0.0" />
@@ -123,6 +126,7 @@
     <PackageVersion Include="Dock.Model.ReactiveUI" Version="11.0.0.5" />
     <PackageVersion Include="Dock.Serializer" Version="11.0.0.5" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageVersion Include="Avalonia.AvaloniaEdit" Version="11.0.6" />
   </ItemGroup>
   <!-- Windows/WPF dependencies -->
   <ItemGroup>

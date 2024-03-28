@@ -26,12 +26,16 @@ using Stride.Core.Presentation.Windows;
 using Stride.Core.Translation;
 // using TextDocument = ICSharpCode.AvalonEdit.Document.TextDocument;
 
+using AvaloniaEdit.Document;
+using AvaloniaEdit.Utils;
+using TextDocument = AvaloniaEdit.Document.TextDocument;
+
 namespace Stride.Assets.Presentation.ViewModel
 {
     [AssetViewModel<ScriptSourceFileAsset>]
     public class ScriptSourceFileAssetViewModel : CodeAssetViewModel<ScriptSourceFileAsset>
     {
-//         private Rope<char> mirroredText;
+        private Rope<char> mirroredText;
         private RoslynWorkspace workspace;
         private bool textReloading;
         private bool existsOnDisk;
@@ -50,44 +54,44 @@ namespace Stride.Assets.Presentation.ViewModel
         /// </remarks>
         public Task<DocumentId> DocumentId { get; private set; }
 
-//         public AvalonEditTextContainer TextContainer { get; private set; }
+        public AvalonEditTextContainer TextContainer { get; private set; }
 
-//         public TextDocument TextDocument => TextContainer.Document;
+        public TextDocument TextDocument => TextContainer.Document;
 
         protected override void Initialize()
         {
             base.Initialize();
 
-//             // Duplicate the text so it is more easily accessible from a different thread
-//             mirroredText = new Rope<char>(Asset.TextAccessor.Get());
-// 
+            // Duplicate the text so it is more easily accessible from a different thread
+            mirroredText = new Rope<char>(Asset.TextAccessor.Get());
+
             // Text document and container needs to be owned by the UI thread
-//             TextContainer = Dispatcher.Invoke(() =>
-//             {
-//                 // Load initial text from asset and create a text document
-//                 var textDocument = new TextDocument(Asset.TextAccessor.Get());
-//                 textDocument.UndoStack.PropertyChanged += UndoStackOnPropertyChanged;
-// 
-//                 // Replace the text accessor with one using custom save logic
-//                 Asset.TextAccessor = new ScriptTextAccessor(this);
-// 
-//                 textDocument.Changed += TextDocumentOnChanged;
-// 
-//                 return new AvalonEditTextContainer(textDocument);
-//             });
+            TextContainer = Dispatcher.Invoke(() =>
+            {
+                // Load initial text from asset and create a text document
+                var textDocument = new TextDocument(Asset.TextAccessor.Get());
+                textDocument.UndoStack.PropertyChanged += UndoStackOnPropertyChanged;
+
+                // Replace the text accessor with one using custom save logic
+                Asset.TextAccessor = new ScriptTextAccessor(this);
+
+                textDocument.Changed += TextDocumentOnChanged;
+
+                return new AvalonEditTextContainer (textDocument);
+            });
 
             // Track document
             TrackDocument();
         }
 
-//         private void TextDocumentOnChanged(object sender, DocumentChangeEventArgs documentChangeEventArgs)
-//         {
-//             lock (mirroredText)
-//             {
-//                 mirroredText.RemoveRange(documentChangeEventArgs.Offset, documentChangeEventArgs.RemovalLength);
-//                 mirroredText.InsertRange(documentChangeEventArgs.Offset, documentChangeEventArgs.InsertedText.Text);
-//             }
-//         }
+        private void TextDocumentOnChanged(object sender, DocumentChangeEventArgs documentChangeEventArgs)
+        {
+            lock (mirroredText)
+            {
+                mirroredText.RemoveRange(documentChangeEventArgs.Offset, documentChangeEventArgs.RemovalLength);
+                mirroredText.InsertRange(documentChangeEventArgs.Offset, documentChangeEventArgs.InsertedText.Text);
+            }
+        }
 
         /// <inheritdoc/>
         public override void Destroy()
@@ -97,14 +101,14 @@ namespace Stride.Assets.Presentation.ViewModel
 
             DocumentId = null;
 
-//             // Dispose of text container
-//             TextContainer.Dispose();
-// 
-//             // Restore text accessor on the asset
-//             if (Asset.TextAccessor is ScriptTextAccessor)
-//                 Asset.TextAccessor = null;
-// 
-//             base.Destroy();
+            // Dispose of text container
+            TextContainer.Dispose();
+
+            // Restore text accessor on the asset
+            if (Asset.TextAccessor is ScriptTextAccessor)
+                Asset.TextAccessor = null;
+
+            base.Destroy();
         }
 
         protected override void UpdateIsDeletedStatus()
@@ -148,14 +152,14 @@ namespace Stride.Assets.Presentation.ViewModel
                 document = workspace.GetDocument(DocumentId.Result);
 
                 // Set new text
-//                 TextDocument.Text = document.GetTextAsync().Result.ToString();
+                TextDocument.Text = document.GetTextAsync().Result.ToString();
 
                 // Update dirty state
                 hasExternalChanges = false;
                 existsOnDisk = File.Exists(FullPath);
 
                 // Tris will trigger UpdateDirtiness
-//                 TextDocument.UndoStack.MarkAsOriginalFile();
+                TextDocument.UndoStack.MarkAsOriginalFile();
             }
         }
 
@@ -210,7 +214,7 @@ namespace Stride.Assets.Presentation.ViewModel
         /// </summary>
         private void OnFileSaved()
         {
-//             TextDocument?.UndoStack.MarkAsOriginalFile();
+            TextDocument?.UndoStack.MarkAsOriginalFile();
 
             existsOnDisk = true;
             hasExternalChanges = false;
@@ -234,7 +238,7 @@ namespace Stride.Assets.Presentation.ViewModel
             if (hasExternalChanges)
                 return true;
 
-//             return !TextDocument.UndoStack.IsOriginalFile;
+            return !TextDocument.UndoStack.IsOriginalFile;
 return true;
         }
 
@@ -399,15 +403,15 @@ return true;
             {
                 textReloading = true;
                 // If text didn't change, ignore (that's probably because we are the one who saved the new version of the file, or it's a "touch")
-//                 if (TextContainer.CurrentText != newSourceText && !TextContainer.CurrentText.ContentEquals(newSourceText))
-//                 {
-//                     TextContainer.UpdateText(newSourceText);
-//                 }
+                if (TextContainer.CurrentText != newSourceText && !TextContainer.CurrentText.ContentEquals(newSourceText))
+                {
+                    TextContainer.UpdateText(newSourceText);
+                }
 
                 // On external changes, reset the file to a non-dirty state
                 if (external)
                 {
-//                     TextDocument.UndoStack.MarkAsOriginalFile();
+                    TextDocument.UndoStack.MarkAsOriginalFile();
                     hasExternalChanges = false;
                 }
 
@@ -440,12 +444,12 @@ return true;
 
             public override Task<TextAndVersion> LoadTextAndVersionAsync(Workspace workspace, DocumentId documentId, CancellationToken cancellationToken)
             {
-//                 lock (script.mirroredText)
-//                 {
-//                     var sourceText = SourceText.From(script.mirroredText.ToString());
-//                     return Task.FromResult(TextAndVersion.Create(sourceText, VersionStamp.Create()));
-//                 }
-return Task.FromResult((TextAndVersion)null);        
+                lock (script.mirroredText)
+                {
+                    var sourceText = SourceText.From(script.mirroredText.ToString());
+                    return Task.FromResult(TextAndVersion.Create(sourceText, VersionStamp.Create()));
+                }
+// return Task.FromResult((TextAndVersion)null);        
             }
         }
 
@@ -465,11 +469,11 @@ return Task.FromResult((TextAndVersion)null);
             public string Get()
             {
                 // Retrieve text from the editor thread
-//                 lock (asset.mirroredText)
-//                 {
-//                     return asset.mirroredText.ToString();
-//                 }
-return "";
+                lock (asset.mirroredText)
+                {
+                    return asset.mirroredText.ToString();
+                }
+// return "";
             }
 
             public void Set([NotNull] string value)
@@ -477,10 +481,10 @@ return "";
                 if (value == null) throw new ArgumentNullException(nameof(value));
 
                 // Set text on the editor thread
-//                 if (asset.Dispatcher.CheckAccess())
-//                     asset.TextDocument.Text = value;
-//                 else
-//                     asset.Dispatcher.InvokeAsync(() => asset.TextDocument.Text = value).Wait();
+                if (asset.Dispatcher.CheckAccess())
+                    asset.TextDocument.Text = value;
+                else
+                    asset.Dispatcher.InvokeAsync(() => asset.TextDocument.Text = value).Wait();
             }
 
             public async Task Save(Stream stream)

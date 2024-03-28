@@ -377,10 +377,30 @@ namespace Stride.Assets.Presentation.AssetEditors
             if (msbuildWorkspace == null)
             {
                 var host = await RoslynHost;
-                msbuildWorkspace = MSBuildWorkspace.Create(ImmutableDictionary<string, string>.Empty, host.HostServices);
+                var properties = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                // This property ensures that XAML files will be compiled in the current AppDomain
+                // rather than a separate one. Any tasks isolated in AppDomains or tasks that create
+                // AppDomains will likely not work due to https://github.com/Microsoft/MSBuildLocator/issues/16.
+                { "AlwaysCompileMarkupFilesInSeparateDomain", bool.FalseString },
+                // This flag is used at restore time to avoid imports from packages changing the inputs to restore,
+                // without this it is possible to get different results between the first and second restore.
+                { "ExcludeRestorePackageImports", bool.TrueString },
+            };
+//                 msbuildWorkspace = MSBuildWorkspace.Create(ImmutableDictionary<string, string>.Empty, host.HostServices);
+//                 msbuildWorkspace = MSBuildWorkspace.Create(properties, host.HostServices);
+                msbuildWorkspace = MSBuildWorkspace.Create(properties);
             }
 //            await msbuildWorkspace.OpenSolutionAsync(session.SolutionPath.ToWindowsPath());
-            await msbuildWorkspace.OpenSolutionAsync(session.SolutionPath);
+msbuildWorkspace.AssociateFileExtensionWithLanguage ("csproj", LanguageNames.CSharp);
+// msbuildWorkspace.SkipUnrecognizedProjects = false;
+// msbuildWorkspace.CanOpenDocuments = true;
+// msbuildWorkspace.LoadMetadataForReferencedProjects = true;
+msbuildWorkspace.WorkspaceFailed += (_sender, diag) =>
+{
+    var a = diag;
+};
+            var sol = await msbuildWorkspace.OpenSolutionAsync(session.SolutionPath);
 
             // Try up to 10 times (1 second)
             const int retryCount = 10;

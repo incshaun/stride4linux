@@ -307,7 +307,7 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
                     {
                         view = (IEditorView)Activator.CreateInstance(viewType);
                         // Pane may already exists (e.g. created from layout saving)
-    //                    editorPane = AvalonDockHelper.GetAllAnchorables(dockingLayoutManager.DockingManager).FirstOrDefault(p => p.Title == asset.Url);
+                        //editorPane = AvalonDockHelper.GetAllAnchorables(dockingLayoutManager.DockingManager).FirstOrDefault(p => p.Title == asset.Url);
                         if (editorPane == null)
                         {
                             //editorPane = new LayoutAnchorable { CanClose = true };
@@ -315,9 +315,13 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
                             //                    editorPane.AttachDevTools();
                             // Stack the asset in the dictionary of editor to prevent double-opening while double-clicking twice on the asset, since the initialization is async
                             //                        AvalonDockHelper.GetDocumentPane(dockingLayoutManager.DockingManager).Children.Add(editorPane);
+                        }
 
+                        var dockparentpane = (LayoutAnchorablePane) dockingLayoutManager.DockingManager.Factory.FindDockable(dockingLayoutManager.DockingManager.Layout, p => p.Title == "AnchorablePane");
+                        if (dockparentpane == null) // still have the default pane, so replace it with a new base.
+                        {
                             ProportionalDock dockpanel = (ProportionalDock)((ProportionalDock)dockingLayoutManager.DockingManager.Layout.VisibleDockables[0]).VisibleDockables[0];
-                            var dockparentpane = new LayoutAnchorablePane
+                            dockparentpane = new LayoutAnchorablePane
                             {
                                 Title = "AnchorablePane",
                             };
@@ -327,13 +331,14 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
                             // Insert the new pane at the start.
                             dockpanel.Factory?.InsertDockable(dockpanel, dockparentpane, 0);
                             dockpanel.Factory.OnDockableAdded(dockparentpane);
-
-                            // Add the editor pane within the parent we've created.
-                            dockparentpane.Factory?.AddDockable(dockparentpane, editorPane);
-                            dockparentpane.Factory.OnDockableAdded(editorPane);
-                            dockparentpane.Factory?.SetActiveDockable(editorPane);
-                            dockparentpane.Factory?.SetFocusedDockable(dockingLayoutManager.DockingManager.Layout, editorPane);
                         }
+
+                        // Add the editor pane within the parent we've created.
+                        dockparentpane.Factory?.AddDockable(dockparentpane, editorPane);
+                        dockparentpane.Factory.OnDockableAdded(editorPane);
+                        dockparentpane.Factory?.SetActiveDockable(editorPane);
+                        dockparentpane.Factory?.SetFocusedDockable(dockingLayoutManager.DockingManager.Layout, editorPane);
+                        //}
                         //                    editorPane.IsActiveChanged += EditorPaneIsActiveChanged;
                         //                   editorPane.IsSelectedChanged += EditorPaneIsSelectedChanged;
      //                   editorPane.Factory.ActiveDockableChanged += EditorPaneIsActiveChanged;
