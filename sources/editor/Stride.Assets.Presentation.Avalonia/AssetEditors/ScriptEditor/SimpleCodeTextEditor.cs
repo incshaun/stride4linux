@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Microsoft.CodeAnalysis;
 using RoslynPad.Editor;
 using RoslynPad.Roslyn.BraceMatching;
@@ -46,7 +47,7 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
             SimpleCodeTextEditor editor = (SimpleCodeTextEditor) e;
             if (editor.contextActionsRenderer != null)
             {
-//                 editor.contextActionsRenderer.IconImage = args.NewValue;
+                editor.contextActionsRenderer.IconImage = (IImage) args.NewValue;
             }
         }
 
@@ -77,14 +78,15 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
             TextArea.Caret.PositionChanged += CaretOnPositionChanged;
 
             // Syntax highlighting
-//             var classificationHighlightColors = ThemeController.CurrentTheme.GetThemeBase() == IconThemeSelector.ThemeBase.Dark ? new ClassificationHighlightColorsDark() : new ClassificationHighlightColors();
-//             syntaxHighlightingColorizer = new RoslynHighlightingColorizer(documentId, workspace.Host, classificationHighlightColors);
+            var classificationHighlightColors = ThemeController.CurrentTheme.GetThemeBase() == IconThemeSelector.ThemeBase.Dark ? new ClassificationHighlightColorsDark() : new ClassificationHighlightColors();
+            syntaxHighlightingColorizer = new RoslynHighlightingColorizer(documentId, workspace.Host, classificationHighlightColors);
             TextArea.TextView.LineTransformers.Insert(0, syntaxHighlightingColorizer);
 
             // Context Actions
             contextActionsRenderer = new ContextActionsRenderer(this, textMarkerService) { IconImage = ContextActionsIcon };
-            contextActionProvider = new RoslynContextActionProvider(documentId, workspace.Host);
-            contextActionsRenderer.Providers.Add(contextActionProvider);
+// FIXME: issue with finding a CodeFix service.            
+//            contextActionProvider = new RoslynContextActionProvider(documentId, workspace.Host);
+//            contextActionsRenderer.Providers.Add(contextActionProvider);
 
             // Completion provider
             CompletionProvider = new RoslynCodeEditorCompletionProvider(documentId, workspace.Host);
@@ -94,7 +96,7 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
             quickInfoProvider = workspace.Host.GetService<IQuickInfoProvider>();
 
             // Brace matching
-//             braceMatcherHighlighter = new BraceMatcherHighlightRenderer(TextArea.TextView, classificationHighlightColors);
+            braceMatcherHighlighter = new BraceMatcherHighlightRenderer(TextArea.TextView, classificationHighlightColors);
             braceMatchingService = workspace.Host.GetService<IBraceMatchingService>();
             AsyncToolTipRequest = ProcessAsyncToolTipRequest;
         }
@@ -136,13 +138,13 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
 
         public void ProcessDiagnostics(DiagnosticsUpdatedArgs args)
         {
-//             if (this.Dispatcher.CheckAccess())
-//             {
-//                 ProcessDiagnosticsOnUiThread(args);
-//                 return;
-//             }
-// 
-//             this.Dispatcher.InvokeAsync(() => ProcessDiagnosticsOnUiThread(args));
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                ProcessDiagnosticsOnUiThread(args);
+                return;
+            }
+
+            Dispatcher.UIThread.InvokeAsync(() => ProcessDiagnosticsOnUiThread(args));
         }
 
         private void ProcessDiagnosticsOnUiThread(DiagnosticsUpdatedArgs args)
@@ -153,7 +155,10 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
             {
                 return;
             }
-
+            
+            var document = workspace.Host.GetDocument(documentId);      
+            document.TryGetText(out var sourceText);
+            
             foreach (var diagnosticData in args.Diagnostics)
             {
                 if (diagnosticData.Severity == DiagnosticSeverity.Hidden || diagnosticData.IsSuppressed)
@@ -161,18 +166,18 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
                     continue;
                 }
 
-//                 if (diagnosticData.GetTextSpan() is Microsoft.CodeAnalysis.Text.TextSpan diag == false)
-//                 {
-//                     continue;
-//                 }
+                if (diagnosticData.GetTextSpan(sourceText) is Microsoft.CodeAnalysis.Text.TextSpan diag == false)
+                {
+                    continue;
+                }
 
-//                 var marker = textMarkerService.TryCreate(diag.Start, diag.Length);
-//                 if (marker != null)
-//                 {
-//                     marker.Tag = args.Id;
-//                     marker.MarkerColor = GetDiagnosticsColor(diagnosticData);
-//                     marker.ToolTip = diagnosticData.Message;
-//                 }
+                var marker = textMarkerService.TryCreate(diag.Start, diag.Length);
+                if (marker != null)
+                {
+                    marker.Tag = args.Id;
+                    marker.MarkerColor = GetDiagnosticsColor(diagnosticData);
+                    marker.ToolTip = diagnosticData.Message;
+                }
             }
         }
 
@@ -194,7 +199,10 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
                 if (caretOffset <= text.Length)
                 {
                     var result = await braceMatchingService.GetAllMatchingBracesAsync(document, caretOffset, token).ConfigureAwait(true);
-                    braceMatcherHighlighter.SetHighlight(result.leftOfPosition, result.rightOfPosition);
+                    if (result.leftOfPosition != null && result.rightOfPosition != null)
+                    {
+                        braceMatcherHighlighter.SetHighlight(result.leftOfPosition, result.rightOfPosition);
+                    }
                 }
             }
             catch (OperationCanceledException) { }
@@ -204,15 +212,15 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
         {
             base.OnKeyDown(e);
 
-//             if ((Keyboard.Modifiers & KeyModifiers.Control) != 0)
-//             {
-//                 switch (e.Key)
-//                 {
-//                     case Key.OemCloseBrackets:
-//                         TryJumpToBrace();
-//                         break;
-//                 }
-//             }
+            if ((e.KeyModifiers & KeyModifiers.Control) != 0)
+            {
+                switch (e.Key)
+                {
+                    case Key.OemCloseBrackets:
+                        TryJumpToBrace();
+                        break;
+                }
+            }
         }
 
         private void TryJumpToBrace()

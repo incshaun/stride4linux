@@ -13,7 +13,7 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
     /// <summary>
     /// Highlighting colors for dark theme.
     /// </summary>
-    class ClassificationHighlightColorsDark : ClassificationHighlightColors
+    public class ClassificationHighlightColorsDark : ClassificationHighlightColors
     {
         public static readonly Color DefaultColor = Color.FromRgb(220, 220, 220);
         public static readonly Color TypeColor = Color.FromRgb(78, 201, 176);
