@@ -242,7 +242,7 @@ namespace Stride.Engine
 
             // Make sure skeleton is up to date
             CheckSkeleton();
-            if (skeleton != null)
+            if ((skeleton != null) && (skeleton.NodeTransformations.Length > 0))
             {
                 // Update model view hierarchy node matrices
                 skeleton.NodeTransformations[0].LocalMatrix = worldMatrix;

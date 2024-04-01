@@ -146,9 +146,9 @@ namespace Stride.Editor.Thumbnails
             gameSystems.LoadContent();
 
             // create the default fonts
-//             var fontItem = OfflineRasterizedSpriteFontFactory.Create();
-//             fontItem.FontType.Size = 22;
-//             DefaultFont = OfflineRasterizedFontCompiler.Compile(fontSystem.FontSystem, fontItem, true);
+            var fontItem = OfflineRasterizedSpriteFontFactory.Create();
+            fontItem.FontType.Size = 22;
+            DefaultFont = OfflineRasterizedFontCompiler.Compile(fontSystem.FontSystem, fontItem, true);
 
             // create utility members
             nullGameTime = new GameTime();
@@ -171,7 +171,7 @@ namespace Stride.Editor.Thumbnails
         /// <summary>
         /// The micro-thread in charge of processing the thumbnail build requests and creating the thumbnails.
         /// </summary>
-        private ResultStatus ProcessThumbnailRequests(ThumbnailBuildRequest request)
+        private unsafe ResultStatus ProcessThumbnailRequests(ThumbnailBuildRequest request)
         {
             var status = ResultStatus.Successful;
 
@@ -184,18 +184,40 @@ namespace Stride.Editor.Thumbnails
                     {
                         MicrothreadLocalDatabases.MountCommonDatabase();
 
+                            using (GraphicsDevice.UseOpenGLCreationContext ())
+            {
                         // set the master output
                         var renderTarget = GraphicsContext.Allocator.GetTemporaryTexture2D(request.Size.X, request.Size.Y, request.ColorSpace == ColorSpace.Linear ? PixelFormat.R8G8B8A8_UNorm_SRgb : PixelFormat.R8G8B8A8_UNorm, TextureFlags.ShaderResource | TextureFlags.RenderTarget);
                         var depthStencil = GraphicsContext.Allocator.GetTemporaryTexture2D(request.Size.X, request.Size.Y, PixelFormat.D24_UNorm_S8_UInt, TextureFlags.DepthStencil);
+                            using (var thumbnailImage = renderTarget.GetDataAsImage(GraphicsCommandList))
+                            {
+                                var srcPtr = (uint*)thumbnailImage.DataPointer;
+                                Console.WriteLine (String.Format ("TI Header: {0:X} {0:X} {0:X} {0:X} {0:X}", srcPtr[0], srcPtr[1], srcPtr[2], srcPtr[3], srcPtr[4]));
+                            }
 
                         try
                         {
+          //  using (var context = new UseOpenGLCreationContext(GraphicsDevice))
+// GraphicsDevice.CurrentGraphicsContext = GraphicsContext;                            
+//GraphicsDevice gd= GraphicsDevice;               Console.WriteLine ("A1 Graphics context " + __makeref (gd).GetHashCode () + " " + gd.CurrentGraphicsContext + " " + Graphics.SDL.Window.SDL.GetHashCode ()/* + " " + GL.GetError ()*/);
+
                             // Fake presenter
                             // TODO GRAPHICS REFACTOR: Try to remove that
                             GraphicsDevice.Presenter = new RenderTargetGraphicsPresenter(GraphicsDevice, renderTarget, depthStencil.ViewFormat);
+                            using (var thumbnailImage = renderTarget.GetDataAsImage(GraphicsCommandList))
+                            {
+                                var srcPtr = (uint*)thumbnailImage.DataPointer;
+                                Console.WriteLine (String.Format ("TI Header: {0:X} {0:X} {0:X} {0:X} {0:X}", srcPtr[0], srcPtr[1], srcPtr[2], srcPtr[3], srcPtr[4]));
+                            }
 
                             // Always clear the state of the GraphicsDevice to make sure a scene doesn't start with a wrong setup 
                             GraphicsCommandList.ClearState();
+                            GraphicsCommandList.ClearState();
+                            using (var thumbnailImage = renderTarget.GetDataAsImage(GraphicsCommandList))
+                            {
+                                var srcPtr = (uint*)thumbnailImage.DataPointer;
+                                Console.WriteLine (String.Format ("TI Header: {0:X} {0:X} {0:X} {0:X} {0:X}", srcPtr[0], srcPtr[1], srcPtr[2], srcPtr[3], srcPtr[4]));
+                            }
 
                             // Setup the color space when rendering a thumbnail
                             GraphicsDevice.ColorSpace = request.ColorSpace;
@@ -206,6 +228,11 @@ namespace Stride.Editor.Thumbnails
                             // Store the graphics compositor to use, so we can dispose it when disposing this ThumbnailGenerator
                             thumbnailGraphicsCompositors.Add(request.GraphicsCompositor);
                             sceneSystem.GraphicsCompositor = request.GraphicsCompositor;
+                            using (var thumbnailImage = renderTarget.GetDataAsImage(GraphicsCommandList))
+                            {
+                                var srcPtr = (uint*)thumbnailImage.DataPointer;
+                                Console.WriteLine (String.Format ("TI Header: {0:X} {0:X} {0:X} {0:X} {0:X}", srcPtr[0], srcPtr[1], srcPtr[2], srcPtr[3], srcPtr[4]));
+                            }
 
                             // Render once to setup render processors
                             // TODO GRAPHICS REFACTOR: Should not require two rendering
@@ -215,12 +242,16 @@ namespace Stride.Editor.Thumbnails
                             // Draw
                             gameSystems.Update(nullGameTime);
                             GraphicsContext.ResourceGroupAllocator.Reset(GraphicsContext.CommandList);
+
                             gameSystems.Draw(nullGameTime);
 
                             // write the thumbnail to the file
                             using (var thumbnailImage = renderTarget.GetDataAsImage(GraphicsCommandList))
                             using (var outputImageStream = request.FileProvider.OpenStream(request.Url, VirtualFileMode.Create, VirtualFileAccess.Write))
                             {
+                                var srcPtr = (uint*)thumbnailImage.DataPointer;
+                                Console.WriteLine (String.Format ("TI Header: {0:X} {0:X} {0:X} {0:X} {0:X}", srcPtr[0], srcPtr[1], srcPtr[2], srcPtr[3], srcPtr[4]));
+
                                 request.PostProcessThumbnail?.Invoke(thumbnailImage);
 
                                 ThumbnailBuildHelper.ApplyThumbnailStatus(thumbnailImage, request.DependencyBuildStatus);
@@ -240,6 +271,7 @@ namespace Stride.Editor.Thumbnails
                             GraphicsContext.Allocator.ReleaseReference(renderTarget);
                         }
 
+            }
                         MicrothreadLocalDatabases.UnmountDatabase();
                     }
                 }

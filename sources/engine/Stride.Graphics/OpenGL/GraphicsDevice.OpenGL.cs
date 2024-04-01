@@ -96,6 +96,7 @@ namespace Stride.Graphics
                 if (_graphicsDevicesInUse != null && _graphicsDevicesInUse.Count > 0)
                     return _graphicsDevicesInUse[_graphicsDevicesInUse.Count - 1];
 
+                Console.WriteLine ("Current context ... " + __makeref (_currentGraphicsDevice).GetHashCode () + " " + _currentGraphicsDevice.CurrentGraphicsContext);
                 return _currentGraphicsDevice;
             }
 
@@ -175,7 +176,7 @@ namespace Stride.Graphics
                 _graphicsDevicesInUse = null;
         }
 
-        internal UseOpenGLCreationContext UseOpenGLCreationContext()
+        public UseOpenGLCreationContext UseOpenGLCreationContext()
         {
             return new UseOpenGLCreationContext(this);
         }
@@ -390,7 +391,7 @@ namespace Stride.Graphics
             UpdateFBO(FramebufferTarget.Framebuffer, depthStencilBuffer, renderTargets, renderTargetCount);
 
             var framebufferStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-            if (framebufferStatus != GLEnum.FramebufferComplete)
+/*            if (framebufferStatus != GLEnum.FramebufferComplete)
             {
                 throw new InvalidOperationException(string.Format("FBO is incomplete: {0} RTs: [RT0: {1}]; Depth {2} (error: {3})",
                                                                   renderTargetCount,
@@ -398,7 +399,7 @@ namespace Stride.Graphics
                                                                   depthStencilBuffer.Texture != null ? depthStencilBuffer.Texture.TextureId : 0,
                                                                   framebufferStatus));
             }
-
+*/
             FBOTexture[] newFBOTextures = null;
             if (renderTargets != null)
             {
@@ -704,6 +705,17 @@ namespace Stride.Graphics
 
             // Create default OpenGL State objects
             DefaultSamplerState = SamplerState.New(this, new SamplerStateDescription(TextureFilter.MinPointMagMipLinear, TextureAddressMode.Wrap) { MaxAnisotropy = 1 }).DisposeBy(this);
+        }
+
+        private static bool localInit = false;
+        public void LocalInitialize ()
+        {
+            if (!localInit)
+            {
+            GL.GenVertexArrays(1, out defaultVAO);
+            GL.BindVertexArray(defaultVAO);
+            localInit = true;
+            }
         }
 
         private unsafe void InitializePostFeatures()

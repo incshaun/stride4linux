@@ -29,6 +29,10 @@ using Stride.Core;
 using Stride.Rendering;
 using Stride.Shaders;
 
+using Stride.Core.Mathematics;
+using Stride;
+using Stride.Shaders;
+
 namespace Stride.Graphics
 {
     /// <summary>
@@ -172,6 +176,7 @@ namespace Stride.Graphics
         {
             CheckEndHasBeenCalled("begin");
 
+            graphicsDevice.LocalInitialize ();
             ResourceContext = ResourceContextPool.Value;
 
             GraphicsContext = graphicsContext;
@@ -524,9 +529,12 @@ namespace Stride.Graphics
                     if (ResourceContext.IsIndexBufferDynamic)
                         GraphicsContext.CommandList.UnmapSubresource(mappedIndices);
                 }
+//var color = new Color4(0.8f,0.5f,1,1);                    
+//                    GraphicsContext.CommandList.Clear2(color);
 
                 // Draw from the specified index
                 GraphicsContext.CommandList.DrawIndexed(indexCount, ResourceContext.IndexBufferPosition);
+
 
                 // Update position, offset and remaining count
                 ResourceContext.IndexBufferPosition += indexCount;
