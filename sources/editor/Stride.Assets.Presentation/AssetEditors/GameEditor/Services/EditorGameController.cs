@@ -13,10 +13,11 @@ using Stride.Core;
 using Stride.Core.Annotations;
 using Stride.Core.Diagnostics;
 using Stride.Core.Mathematics;
-//using Stride.Core.Presentation.Controls;
+using Stride.Core.Presentation.Controls;
 using Stride.Core.Presentation.Services;
 using Stride.Assets.Presentation.AssetEditors.GameEditor.Game;
 using Stride.Assets.Presentation.AssetEditors.GameEditor.ViewModels;
+using Stride.Assets.Presentation.AssetEditors.GameEditor.Services;
 using Stride.Editor.Build;
 using Stride.Editor.EditorGame.ContentLoader;
 using Stride.Editor.EditorGame.Game;
@@ -129,6 +130,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
         public SessionNodeContainer GameSideNodeContainer { get; }
 
 //         public GameEngineHost EditorHost => GameForm.Host;
+        public GameEngineHostBase EditorHost;
 
         /// <inheritdoc/>
         public Task GameContentLoaded => gameContentLoadedTaskSource.Task;
@@ -175,6 +177,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             EditorDebugTools.UnregisterDebugPage(debugPage);
             UnregisterFromDragDropEvents();
 //             GameForm?.Host?.Dispose();
+            EditorHost?.Dispose();
             IsDestroying = true;
 
             // Clean after everything
@@ -232,7 +235,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             await gameStartedTaskSource.Task;
 //             GameForm.MouseDown += (sender, e) => lastClickPosition = Control.MousePosition;
             // Initialize the WPF GameEngineHwndHost on this thread
-//             GameForm.Host = new GameEngineHost(windowHandle);
+            EditorHost = new GameEngineHostBase(windowHandle);
 
             // TODO: we could check if the game fails to create.
             return true;
@@ -257,7 +260,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
 //             var localPosition = GameForm.Host.PointFromScreen(new Point(mousePosition.X, mousePosition.Y));
 //             var relativePos = new Vector2((float)(localPosition.X / GameForm.Host.ActualWidth), (float)(localPosition.Y / GameForm.Host.ActualHeight));
 //             return Game.GetPositionInScene(relativePos);
-            return new Vector3();
+            return new Vector3 ();
         }
 
         public void TriggerActiveRenderStageReevaluation()
@@ -268,13 +271,13 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             Game.TriggerActiveRenderStageReevaluation();
         }
 
-//         public void ChangeCursor(Cursor cursor)
-//         {
-//             EnsureNotDestroyed();
-//             if (IsDestroying)
-//                 return;
-//             GameForm.Cursor = cursor;
-//         }
+/*        public void ChangeCursor(Cursor cursor)
+        {
+            EnsureNotDestroyed();
+            if (IsDestroying)
+                return;
+            GameForm.Cursor = cursor;
+        }*/
 
         /// <inheritdoc/>
         public Task InvokeAsync(Action callback, CancellationToken token = default)
@@ -411,7 +414,6 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             var context = GameContextFactory.NewGameContext(AppContextType.DesktopSDL);
             context.InitializeDatabase = false;
             windowHandle = ((GameContextSDL)context).Control.Handle;
-            
             RegisterToDragDropEvents();
 
             // Wait for shaders to be loaded

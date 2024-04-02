@@ -1025,6 +1025,10 @@ namespace Stride.Games
 
                         var graphicsDeviceInformation = FindBestDevice(forceCreate);
 
+graphicsDeviceInformation.PresentationParameters.BackBufferWidth = 800;
+graphicsDeviceInformation.PresentationParameters.BackBufferHeight = 600;
+
+
                         OnPreparingDeviceSettings(this, new PreparingDeviceSettingsEventArgs(graphicsDeviceInformation));
 
                         isFullScreen = graphicsDeviceInformation.PresentationParameters.IsFullScreen;

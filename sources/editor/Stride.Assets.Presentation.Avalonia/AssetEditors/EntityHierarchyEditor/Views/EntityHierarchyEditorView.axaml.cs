@@ -49,7 +49,7 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Views
                 return false;
             }
 
-//             SceneView.Content = hierarchyEditor.Controller.EditorHost;
+            SceneView.Content = hierarchyEditor.EntityController.EditorHost.GetHost ();
             SceneView.InvalidateVisual();
 
             editorInitializationNotifier.SetResult();

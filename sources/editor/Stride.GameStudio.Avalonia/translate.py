@@ -1372,7 +1372,9 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/TrueExtension.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/FalseExtension.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptTextEditor.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptTextEditor.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/GameEditor/Services/EditorGameRecoveryService.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/GameEngineHost.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
