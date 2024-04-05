@@ -372,6 +372,58 @@ namespace Stride.Importer.FBX
         private static StringBuilder IMP_FBX_ANIMATION        = new StringBuilder (IMP_FBX + "|" + IOSN_ANIMATION);
         private static StringBuilder IMP_FBX_EXTRACT_EMBEDDED_DATA = new StringBuilder (IMP_FBX + "|" + IOSN_EXTRACT_EMBEDDED_DATA);
         
+        private static long FBXSDK_TC_ZERO = 0;
+        
+        public enum EType
+        {
+            eUnknown,
+            eNull,
+            eMarker,
+            eSkeleton,
+            eMesh,
+            eNurbs,
+            ePatch,
+            eCamera,
+            eCameraStereo,
+            eCameraSwitcher,
+            eLight,
+            eOpticalReference,
+            eOpticalMarker,
+            eNurbsCurve,
+            eTrimNurbsSurface,
+            eBoundary,
+            eNurbsSurface,
+            eShape,
+            eLODGroup,
+            eSubDiv,
+            eCachedEffect,
+            eLine
+        };
+        
+        public enum EUpVector
+        {
+        eXAxis = 1,
+        eYAxis = 2,
+        eZAxis = 3
+        };
+
+        public enum EFrontVector
+        {
+        eParityEven = 1,
+        eParityOdd = 2
+        };
+        
+        public enum ECoordSystem
+            {
+            eRightHanded,
+            eLeftHanded
+        };
+        
+        enum EPivotSet
+        {
+                eSourcePivot,           //!< The source pivot context.
+                eDestinationPivot       //!< The destination pivot context.
+        };
         
         [DllImport("fbx")]
         static public extern IntPtr FbxManagerCreate();
@@ -400,11 +452,82 @@ namespace Stride.Importer.FBX
         [DllImport("fbx")]
         static public extern StringBuilder FbxStatusGetErrorString(IntPtr sta);
         
+        [DllImport("fbx")]
+        static public extern IntPtr FbxSceneCreate(IntPtr pManager, StringBuilder pName);
         
+        [DllImport("fbx")]
+        static public extern bool FbxImporterImport(IntPtr imp, IntPtr pDocument, bool pNonBlocking = false);
         
+        [DllImport("fbx")]
+        static public extern double FbxTimeGetFrameRate(int pTimeMode);
+
+        [DllImport("fbx")]
+        static public extern int FbxGlobalSettingsGetTimeMode(IntPtr glo);
+
+        [DllImport("fbx")]
+        static public extern IntPtr FbxSceneGetGlobalSettings(IntPtr sce);
         
+        [DllImport("fbx")]
+        static public extern IntPtr FbxSceneGetRootNode(IntPtr sce);
         
+        [DllImport("fbx")]
+        static public extern void FbxNodeResetPivotSetAndConvertAnimation(IntPtr nod, double pFrameRate=30.0, bool pKeyReduce=false, bool pToNodeCenter=true, bool pForceResetLimits=false);
         
+        [DllImport("fbx")]
+        static public extern int FbxNodeGetNodeAttributeCount(IntPtr nod);
+
+        [DllImport("fbx")]
+        static public extern IntPtr FbxNodeGetNodeAttributeByIndex(IntPtr nod, int pIndex);
+
+        [DllImport("fbx")]
+        static public extern int FbxNodeAttributeGetAttributeType(IntPtr att);
+
+        [DllImport("fbx")]
+        static public extern int FbxNodeGetChildCount(IntPtr nod, bool pRecursive = false);
+
+        [DllImport("fbx")]
+        static public extern IntPtr FbxNodeGetChild(IntPtr nod, int pIndex);
+
+        [DllImport("fbx")]
+        static public extern IntPtr FbxMeshGetNode(IntPtr mes, int pIndex = 0);
+
+        [DllImport("fbx")]
+        static public extern StringBuilder FbxNodeGetName(IntPtr nod);
+
+        [DllImport("fbx")]
+        static public extern int FbxSceneGetMaterialCount(IntPtr sce);
+
+        [DllImport("fbx")]
+        static public extern IntPtr FbxSceneGetMaterialByName(IntPtr sce, StringBuilder pName);
+
+        [DllImport("fbx")]
+        static public extern IntPtr FbxSceneGetMaterial(IntPtr sce, int pIndex);
+        
+        [DllImport("fbx")]
+        static public extern IntPtr FbxGlobalSettingsGetAxisSystem(IntPtr set);
+
+        [DllImport("fbx")]
+        static public extern IntPtr FbxGlobalSettingsGetSystemUnit(IntPtr set);
+
+        [DllImport("fbx")]
+        static public extern double FbxSystemUnitGetScaleFactor(IntPtr syu);
+
+        [DllImport("fbx")]
+        static public extern int FbxAxisSystemGetUpVector(IntPtr axi, ref int pSign );
+
+        [DllImport("fbx")]
+        static public extern int FbxAxisSystemGetFrontVector(IntPtr axi, ref int pSign );
+
+        [DllImport("fbx")]
+        static public extern int FbxAxisSystemGetCoordSystem(IntPtr axi);
+
+        [DllImport("fbx")]
+        static public extern double[] FbxNodeEvaluateLocalTransform(IntPtr nod, long pTime, int pPivotSet=(int) EPivotSet.eSourcePivot, bool pApplyTarget=false, bool pForceEval=false);
+
+
+
+
+
         
         
         private static String [] MappingModeName = new String [] { "None", "ByControlPoint", "ByPolygonVertex", "ByPolygon", "ByEdge", "AllSame" };
@@ -423,9 +546,9 @@ namespace Stride.Importer.FBX
 	internal String vfsOutputFilename;
 	internal String inputPath;
 
-// 	Model^ modelData;
+	internal Model modelData;
 // 
-// 	SceneMapping^ sceneMapping;
+ 	internal SceneMapping sceneMapping;
 // 	
 // 	static array<Byte>^ currentBuffer;
 // 
@@ -481,10 +604,10 @@ namespace Stride.Importer.FBX
 // 				mappingMode = (int)FbxLayerElement.eAllSame;
 // 			string layerName = layerElement.GetName();
 // 			logger.Warning(String.Format("'{0}' mapping mode for layer '{1}' in mesh '{2}' is not supported by the FBX importer.{3}",
-// 				gcnew String(MappingModeName[mappingMode]),
-// 				strlen(layerName) > 0 ? gcnew String(layerName) : gcnew String("Unknown"),
+// 				new String(MappingModeName[mappingMode]),
+// 				strlen(layerName) > 0 ? new String(layerName) : new String("Unknown"),
 // 				meshName,
-// 				gcnew String(MappingModeSuggestion[mappingMode])), (CallerInfo^)nullptr);
+// 				new String(MappingModeSuggestion[mappingMode])), (CallerInfo^)nullptr);
 // 		}
 // 
 // 		return groupIndex;
@@ -522,7 +645,7 @@ namespace Stride.Importer.FBX
 		// -----------------------------------------------------
 	}
 // 
-// 	void ProcessMesh(FbxMesh* pMesh, std.map<FbxMesh*, std.string> meshNames, std.map<FbxSurfaceMaterial*, int> materials)
+// 	void ProcessMesh(FbxMesh* pMesh, Dictionary<FbxMesh*, String> meshNames, Dictionary<FbxSurfaceMaterial*, int> materials)
 // 	{
 // 		// Checks normals availability.
 // 		bool has_normals = pMesh.GetElementNormalCount() > 0 && pMesh.GetElementNormal(0).GetMappingMode() != FbxLayerElement.eNone;
@@ -541,17 +664,17 @@ namespace Stride.Importer.FBX
 // 		FbxGeometryElementSmoothing* smoothingElement = pMesh.GetElementSmoothing();
 // 
 // 		// UV set name mapping
-// 		std.map<std.string, int> uvElementMapping;
+// 		Dictionary<String, int> uvElementMapping;
 // 		std.vector<FbxGeometryElementUV*> uvElements;
 // 
 // 		for (int i = 0; i < pMesh.GetElementUVCount(); ++i)
 // 		{
-// 			auto uvElement = pMesh.GetElementUV(i);
+// 			var uvElement = pMesh.GetElementUV(i);
 // 			uvElements.push_back(uvElement);
 // 			needEdgeIndexing |= IsGroupMappingModeByEdge(uvElement);
 // 		}
 // 
-// 		auto meshName = gcnew String(meshNames[pMesh].c_str());
+// 		var meshName = new String(meshNames[pMesh].c_str());
 // 
 // 		bool hasSkinningPosition = false;
 // 		bool hasSkinningNormal = false;
@@ -564,7 +687,7 @@ namespace Stride.Importer.FBX
 // 		int skinDeformerCount = pMesh.GetDeformerCount(FbxDeformer.eSkin);
 // 		if (skinDeformerCount > 0)
 // 		{
-// 			bones = gcnew List<MeshBoneDefinition>();
+// 			bones = new List<MeshBoneDefinition>();
 // 			for (int deformerIndex = 0; deformerIndex < skinDeformerCount; deformerIndex++)
 // 			{
 // 				FbxSkin* skin = FbxCast<FbxSkin>(pMesh.GetDeformer(deformerIndex, FbxDeformer.eSkin));
@@ -590,7 +713,7 @@ namespace Stride.Importer.FBX
 // 
 // 					cluster.GetTransformMatrix(transformMatrix);
 // 					cluster.GetTransformLinkMatrix(transformLinkMatrix);
-// 					auto globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix;
+// 					var globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix;
 // 
 // 					MeshBoneDefinition bone;
 // 					int boneIndex = bones.Count;
@@ -658,7 +781,7 @@ namespace Stride.Importer.FBX
 // 		// *********************************************************************************
 // 		// Build the vertex declaration
 // 		// *********************************************************************************
-// 		auto vertexElements = gcnew List<VertexElement>();
+// 		var vertexElements = new List<VertexElement>();
 // 
 // 		// POSITION
 // 		int vertexStride = 0;
@@ -737,12 +860,12 @@ namespace Stride.Importer.FBX
 // 		}
 // 
 // 		// COLOR
-// 		auto elementVertexColorCount = pMesh.GetElementVertexColorCount();
+// 		var elementVertexColorCount = pMesh.GetElementVertexColorCount();
 // 		std.vector<FbxGeometryElementVertexColor*> vertexColorElements;
 // 		int colorOffset = vertexStride;
 // 		for (int i = 0; i < elementVertexColorCount; i++)
 // 		{
-// 			auto vertexColorElement = pMesh.GetElementVertexColor(i);
+// 			var vertexColorElement = pMesh.GetElementVertexColor(i);
 // 			vertexColorElements.push_back(vertexColorElement);
 // 			vertexElements.Add(VertexElement.Color<Color>(i, vertexStride));
 // 			vertexStride += sizeof(Color);
@@ -751,12 +874,12 @@ namespace Stride.Importer.FBX
 // 
 // 		// USERDATA
 // 		// TODO: USERData how to handle then?
-// 		//auto userDataCount = pMesh.GetElementUserDataCount();
+// 		//var userDataCount = pMesh.GetElementUserDataCount();
 // 		//for (int i = 0; i < userDataCount; i++)
 // 		//{
-// 		//	auto userData = pMesh.GetElementUserData(i);
-// 		//	auto dataType = userData.GetDataName(0);
-// 		//	Console.WriteLine("DataName {0}", gcnew String(dataType));
+// 		//	var userData = pMesh.GetElementUserData(i);
+// 		//	var dataType = userData.GetDataName(0);
+// 		//	Console.WriteLine("DataName {0}", new String(dataType));
 // 		//}
 // 
 // 		// Add the smoothing group information at the end of the vertex declaration
@@ -785,7 +908,7 @@ namespace Stride.Importer.FBX
 // 			materialIndices = &pMesh.GetElementMaterial().GetIndexArray();
 // 		}
 // 
-// 		auto buildMeshes = gcnew List<BuildMesh^>();
+// 		var buildMeshes = new List<BuildMesh^>();
 // 
 // 		// Count polygon per materials
 // 		for (int i = 0; i < polygonCount; i++)
@@ -803,7 +926,7 @@ namespace Stride.Importer.FBX
 // 			}
 // 
 // 			if (buildMeshes[materialIndex] == nullptr)
-// 				buildMeshes[materialIndex] = gcnew BuildMesh();
+// 				buildMeshes[materialIndex] = new BuildMesh();
 // 
 // 			int polygonSize = pMesh.GetPolygonSize(i) - 2;
 // 			if (polygonSize > 0)
@@ -816,7 +939,7 @@ namespace Stride.Importer.FBX
 // 			if (buildMesh == nullptr)
 // 				continue;
 // 
-// 			buildMesh.buffer = gcnew array<Byte>(vertexStride * buildMesh.polygonCount * 3);
+// 			buildMesh.buffer = new array<Byte>(vertexStride * buildMesh.polygonCount * 3);
 // 		}
 // 
 // 		bool layerIndexFirstTimeError = true;
@@ -834,8 +957,8 @@ namespace Stride.Importer.FBX
 // 				materialIndex = materialIndices.GetAt(i);
 // 			}
 // 
-// 			auto buildMesh = buildMeshes[materialIndex];
-// 			auto buffer = buildMesh.buffer;
+// 			var buildMesh = buildMeshes[materialIndex];
+// 			var buffer = buildMesh.buffer;
 // 
 // 			int polygonSize = pMesh.GetPolygonSize(i);
 // 
@@ -893,7 +1016,7 @@ namespace Stride.Importer.FBX
 // 					int edgeIndex = needEdgeIndexing ? pMesh.GetMeshEdgeIndexForPolygon(i, edgesInPolygon[polygonFanVertex]) : 0;
 // 
 // 					// POSITION
-// 					auto controlPoint = sceneMapping.ConvertPointFromFbx(controlPoints[controlPointIndex]);
+// 					var controlPoint = sceneMapping.ConvertPointFromFbx(controlPoints[controlPointIndex]);
 // 					*(Vector3*)(vbPointer + positionOffset) = controlPoint;
 // 
 // 					// NORMAL
@@ -901,8 +1024,8 @@ namespace Stride.Importer.FBX
 // 					if (normalElement != NULL)
 // 					{
 // 						int normalIndex = GetGroupIndexForLayerElementTemplate(normalElement, controlPointIndex, vertexIndex, edgeIndex, i, meshName, layerIndexFirstTimeError);
-// 						auto src_normal = normalElement.GetDirectArray().GetAt(normalIndex);
-// 						auto normalPointer = ((Vector3*)(vbPointer + normalOffset));
+// 						var src_normal = normalElement.GetDirectArray().GetAt(normalIndex);
+// 						var normalPointer = ((Vector3*)(vbPointer + normalOffset));
 // 						normal = sceneMapping.ConvertNormalFromFbx(src_normal);
 // 						if (isnan(normal.X) || isnan(normal.Y) || isnan(normal.Z) || normal.Length() < FLT_EPSILON)
 // 							normal = Vector3(1, 0, 0);
@@ -913,9 +1036,9 @@ namespace Stride.Importer.FBX
 // 					// UV
 // 					for (int uvGroupIndex = 0; uvGroupIndex < (int)uvElements.size(); ++uvGroupIndex)
 // 					{
-// 						auto uvElement = uvElements[uvGroupIndex];
+// 						var uvElement = uvElements[uvGroupIndex];
 // 						int uvIndex = GetGroupIndexForLayerElementTemplate(uvElement, controlPointIndex, vertexIndex, edgeIndex, i, meshName, layerIndexFirstTimeError);
-// 						auto uv = uvElement.GetDirectArray().GetAt(uvIndex);
+// 						var uv = uvElement.GetDirectArray().GetAt(uvIndex);
 // 
 // 						((float*)(vbPointer + uvOffsets[uvGroupIndex]))[0] = (float)uv[0];
 // 						((float*)(vbPointer + uvOffsets[uvGroupIndex]))[1] = 1.0f - (float)uv[1];
@@ -925,8 +1048,8 @@ namespace Stride.Importer.FBX
 // 					if (tangentElement != NULL)
 // 					{
 // 						int tangentIndex = GetGroupIndexForLayerElementTemplate(tangentElement, controlPointIndex, vertexIndex, edgeIndex, i, meshName, layerIndexFirstTimeError);
-// 						auto src_tangent = tangentElement.GetDirectArray().GetAt(tangentIndex);
-// 						auto tangentPointer = ((Vector4*)(vbPointer + tangentOffset));
+// 						var src_tangent = tangentElement.GetDirectArray().GetAt(tangentIndex);
+// 						var tangentPointer = ((Vector4*)(vbPointer + tangentOffset));
 // 						Vector3 tangent = sceneMapping.ConvertNormalFromFbx(src_tangent);
 // 						if (isnan(tangent.X) || isnan(tangent.Y) || isnan(tangent.Z) || tangent.Length() < FLT_EPSILON)
 // 						{
@@ -937,7 +1060,7 @@ namespace Stride.Importer.FBX
 // 							tangent = Vector3.Normalize(tangent);
 // 
 // 							int binormalIndex = GetGroupIndexForLayerElementTemplate(binormalElement, controlPointIndex, vertexIndex, edgeIndex, i, meshName, layerIndexFirstTimeError);
-// 							auto src_binormal = binormalElement.GetDirectArray().GetAt(binormalIndex);
+// 							var src_binormal = binormalElement.GetDirectArray().GetAt(binormalIndex);
 // 							Vector3 binormal = sceneMapping.ConvertNormalFromFbx(src_binormal);
 // 							if (isnan(binormal.X) || isnan(binormal.Y) || isnan(binormal.Z) || binormal.Length() < FLT_EPSILON)
 // 							{
@@ -954,7 +1077,7 @@ namespace Stride.Importer.FBX
 // 					// BLENDINDICES and BLENDWEIGHT
 // 					if (!controlPointWeights.empty())
 // 					{
-// 						const auto& blendWeights = controlPointWeights[controlPointIndex];
+// 						const var& blendWeights = controlPointWeights[controlPointIndex];
 // 						for (int i = 0; i < 4; ++i)
 // 						{
 // 							if (controlPointIndices16)
@@ -978,9 +1101,9 @@ namespace Stride.Importer.FBX
 // 					// COLOR
 // 					for (int elementColorIndex = 0; elementColorIndex < elementVertexColorCount; elementColorIndex++)
 // 					{
-// 						auto vertexColorElement = vertexColorElements[elementColorIndex];
-// 						auto groupIndex = GetGroupIndexForLayerElementTemplate(vertexColorElement, controlPointIndex, vertexIndex, edgeIndex, i, meshName, layerIndexFirstTimeError);
-// 						auto color = vertexColorElement.GetDirectArray().GetAt(groupIndex);
+// 						var vertexColorElement = vertexColorElements[elementColorIndex];
+// 						var groupIndex = GetGroupIndexForLayerElementTemplate(vertexColorElement, controlPointIndex, vertexIndex, edgeIndex, i, meshName, layerIndexFirstTimeError);
+// 						var color = vertexColorElement.GetDirectArray().GetAt(groupIndex);
 // 						((Color*)(vbPointer + colorOffset))[elementColorIndex] = Color((float)color.mRed, (float)color.mGreen, (float)color.mBlue, (float)color.mAlpha);
 // 					}
 // 
@@ -990,8 +1113,8 @@ namespace Stride.Importer.FBX
 // 					// SMOOTHINGGROUP
 // 					if (smoothingElement != NULL)
 // 					{
-// 						auto groupIndex = GetGroupIndexForLayerElementTemplate(smoothingElement, controlPointIndex, vertexIndex, edgeIndex, i, meshName, layerIndexFirstTimeError);
-// 						auto group = smoothingElement.GetDirectArray().GetAt(groupIndex);
+// 						var groupIndex = GetGroupIndexForLayerElementTemplate(smoothingElement, controlPointIndex, vertexIndex, edgeIndex, i, meshName, layerIndexFirstTimeError);
+// 						var group = smoothingElement.GetDirectArray().GetAt(groupIndex);
 // 						((int*)(vbPointer + smoothingOffset))[0] = (int)group;
 // 					}
 // 
@@ -1008,28 +1131,28 @@ namespace Stride.Importer.FBX
 // 		// Create submeshes
 // 		for (int i = 0; i < buildMeshes.Count; ++i)
 // 		{
-// 			auto buildMesh = buildMeshes[i];
+// 			var buildMesh = buildMeshes[i];
 // 			if (buildMesh == nullptr)
 // 				continue;
 // 
-// 			auto buffer = buildMesh.buffer;
-// 			auto vertexBufferBinding = VertexBufferBinding(GraphicsSerializerExtensions.ToSerializableVersion(gcnew BufferData(BufferFlags.VertexBuffer, buffer)), gcnew VertexDeclaration(vertexElements.ToArray()), buildMesh.polygonCount * 3, 0, 0);
+// 			var buffer = buildMesh.buffer;
+// 			var vertexBufferBinding = VertexBufferBinding(GraphicsSerializerExtensions.ToSerializableVersion(new BufferData(BufferFlags.VertexBuffer, buffer)), new VertexDeclaration(vertexElements.ToArray()), buildMesh.polygonCount * 3, 0, 0);
 // 			
-// 			auto drawData = gcnew MeshDraw();
-// 			auto vbb = gcnew List<VertexBufferBinding>();
+// 			var drawData = new MeshDraw();
+// 			var vbb = new List<VertexBufferBinding>();
 // 			vbb.Add(vertexBufferBinding);
 // 			drawData.VertexBuffers = vbb.ToArray();
 // 			drawData.PrimitiveType = PrimitiveType.TriangleList;
 // 			drawData.DrawCount = buildMesh.polygonCount * 3;
 // 
 // 			// build the final VertexDeclaration removing the declaration element needed only for the buffer's correct construction
-// 			auto finalVertexElements = gcnew List<VertexElement>();
+// 			var finalVertexElements = new List<VertexElement>();
 // 			for each (VertexElement element in vertexElements)
 // 			{
 // 				if (element.SemanticName != "SMOOTHINGGROUP")
 // 					finalVertexElements.Add(element);
 // 			}
-// 			auto finalDeclaration = gcnew VertexDeclaration(finalVertexElements.ToArray());
+// 			var finalDeclaration = new VertexDeclaration(finalVertexElements.ToArray());
 // 
 // 			// Generate index buffer
 // 			// For now, if user requests 16 bits indices but it doesn't fit, it
@@ -1044,28 +1167,28 @@ namespace Stride.Importer.FBX
 // 				logger.Warning("The index buffer could not be generated with --force-compact-indices because it would use more than 16 bits per index.", nullptr, CallerInfo.Get(__FILEW__, __FUNCTIONW__, __LINE__));
 // 			}*/
 // 
-// 			auto lMaterial = pMesh.GetNode().GetMaterial(i);
+// 			var lMaterial = pMesh.GetNode().GetMaterial(i);
 // 		
 // 			// Generate TNB
 // 			if (tangentElement == NULL && normalElement != NULL && uvElements.size() > 0)
 // 				TNBExtensions.GenerateTangentBinormal(drawData);
 // 
-// 			auto meshData = gcnew Mesh();
+// 			var meshData = new Mesh();
 // 			meshData.NodeIndex = sceneMapping.FindNodeIndex(pMesh.GetNode());
 // 			meshData.Draw = drawData;
 // 			if (!controlPointWeights.empty())
 // 			{
-// 				meshData.Skinning = gcnew MeshSkinningDefinition();
+// 				meshData.Skinning = new MeshSkinningDefinition();
 // 				meshData.Skinning.Bones = bones.ToArray();
 // 			}
 // 
-// 			auto materialIndex = materials.find(lMaterial);
+// 			var materialIndex = materials.find(lMaterial);
 // 			meshData.MaterialIndex = (materialIndex != materials.end()) ? materialIndex.second : 0;
 // 
-// 			auto meshName = meshNames[pMesh];
+// 			var meshName = meshNames[pMesh];
 // 			if (buildMeshes.Count > 1)
 // 				meshName = meshName + "_" + std.to_string(i + 1);
-// 			meshData.Name = gcnew String(meshName.c_str());
+// 			meshData.Name = new String(meshName.c_str());
 // 			
 // 			if (hasSkinningPosition || hasSkinningNormal || totalClusterCount > 0)
 // 			{
@@ -1079,76 +1202,76 @@ namespace Stride.Importer.FBX
 // 	}
 // 
 // 	// return a boolean indicating whether the built material is transparent or not
-// 	MaterialAsset^ ProcessMeshMaterialAsset(FbxSurfaceMaterial* lMaterial, std.map<std.string, size_t>& uvElementMapping)
+// 	MaterialAsset^ ProcessMeshMaterialAsset(FbxSurfaceMaterial* lMaterial, Dictionary<String, size_t>& uvElementMapping)
 // 	{
-// 		auto uvEltMappingOverride = uvElementMapping;
-// 		auto textureMap = gcnew Dictionary<IntPtr, ComputeTextureColor^>();
-// 		std.map<std.string, int> textureNameCount;
+// 		var uvEltMappingOverride = uvElementMapping;
+// 		var textureMap = new Dictionary<IntPtr, ComputeTextureColor^>();
+// 		Dictionary<String, int> textureNameCount;
 // 
-// 		auto finalMaterial = gcnew Stride.Assets.Materials.MaterialAsset();
+// 		var finalMaterial = new Stride.Assets.Materials.MaterialAsset();
 // 		
-// 		auto phongSurface = FbxCast<FbxSurfacePhong>(lMaterial);
-// 		auto lambertSurface = FbxCast<FbxSurfaceLambert>(lMaterial);
+// 		var phongSurface = FbxCast<FbxSurfacePhong>(lMaterial);
+// 		var lambertSurface = FbxCast<FbxSurfaceLambert>(lMaterial);
 // 
 // 		{   // The diffuse color
-// 			auto diffuseTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sDiffuse, FbxSurfaceMaterial.sDiffuseFactor, finalMaterial);
+// 			var diffuseTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sDiffuse, FbxSurfaceMaterial.sDiffuseFactor, finalMaterial);
 // 			if(lambertSurface || diffuseTree != nullptr)
 // 			{
 // 				if(diffuseTree == nullptr)	
 // 				{
-// 					auto diffuseColor = lambertSurface.Diffuse.Get();
-// 					auto diffuseFactor = lambertSurface.DiffuseFactor.Get();
-// 					auto diffuseColorValue = diffuseFactor * diffuseColor;
+// 					var diffuseColor = lambertSurface.Diffuse.Get();
+// 					var diffuseFactor = lambertSurface.DiffuseFactor.Get();
+// 					var diffuseColorValue = diffuseFactor * diffuseColor;
 // 
 // 					// Create diffuse value even if the color is black
-// 					diffuseTree = gcnew ComputeColor(FbxDouble3ToColor4(diffuseColorValue));
+// 					diffuseTree = new ComputeColor(FbxDouble3ToColor4(diffuseColorValue));
 // 				}
 // 
 // 				if (diffuseTree != nullptr)
 // 				{
-// 					finalMaterial.Attributes.Diffuse = gcnew MaterialDiffuseMapFeature(diffuseTree);
-// 					finalMaterial.Attributes.DiffuseModel = gcnew MaterialDiffuseLambertModelFeature();
+// 					finalMaterial.Attributes.Diffuse = new MaterialDiffuseMapFeature(diffuseTree);
+// 					finalMaterial.Attributes.DiffuseModel = new MaterialDiffuseLambertModelFeature();
 // 				}
 // 			}
 // 		}
 // 		{   // The emissive color
-// 			auto emissiveTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sEmissive, FbxSurfaceMaterial.sEmissiveFactor, finalMaterial);
+// 			var emissiveTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sEmissive, FbxSurfaceMaterial.sEmissiveFactor, finalMaterial);
 // 			if(lambertSurface || emissiveTree != nullptr)
 // 			{
 // 				if(emissiveTree == nullptr)	
 // 				{
-// 					auto emissiveColor = lambertSurface.Emissive.Get();
-// 					auto emissiveFactor = lambertSurface.EmissiveFactor.Get();
-// 					auto emissiveColorValue = emissiveFactor * emissiveColor;
+// 					var emissiveColor = lambertSurface.Emissive.Get();
+// 					var emissiveFactor = lambertSurface.EmissiveFactor.Get();
+// 					var emissiveColorValue = emissiveFactor * emissiveColor;
 // 
 // 					// Do not create the node if the value has not been explicitly specified by the user.
 // 					if(emissiveColorValue != FbxDouble3(0))
 // 					{
-// 						emissiveTree = gcnew ComputeColor(FbxDouble3ToColor4(emissiveColorValue));
+// 						emissiveTree = new ComputeColor(FbxDouble3ToColor4(emissiveColorValue));
 // 					}
 // 				}
 // 
 // 				if (emissiveTree != nullptr)
 // 				{
-// 					finalMaterial.Attributes.Emissive = gcnew MaterialEmissiveMapFeature(emissiveTree);
+// 					finalMaterial.Attributes.Emissive = new MaterialEmissiveMapFeature(emissiveTree);
 // 				}
 // 			}
 // 		}
 // 		// TODO: Check if we want to support Ambient Color
 // 		//{   // The ambient color
-// 		//	auto ambientTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sAmbient, FbxSurfaceMaterial.sAmbientFactor, finalMaterial);
+// 		//	var ambientTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sAmbient, FbxSurfaceMaterial.sAmbientFactor, finalMaterial);
 // 		//	if(lambertSurface || ambientTree != nullptr)
 // 		//	{
 // 		//		if(ambientTree == nullptr)	
 // 		//		{
-// 		//			auto ambientColor = lambertSurface.Emissive.Get();
-// 		//			auto ambientFactor = lambertSurface.EmissiveFactor.Get();
-// 		//			auto ambientColorValue = ambientFactor * ambientColor;
+// 		//			var ambientColor = lambertSurface.Emissive.Get();
+// 		//			var ambientFactor = lambertSurface.EmissiveFactor.Get();
+// 		//			var ambientColorValue = ambientFactor * ambientColor;
 // 
 // 		//			// Do not create the node if the value has not been explicitly specified by the user.
 // 		//			if(ambientColorValue != FbxDouble3(0))
 // 		//			{
-// 		//				ambientTree = gcnew ComputeColor(FbxDouble3ToColor4(ambientColorValue));
+// 		//				ambientTree = new ComputeColor(FbxDouble3ToColor4(ambientColorValue));
 // 		//			}
 // 		//		}
 // 
@@ -1157,41 +1280,41 @@ namespace Stride.Importer.FBX
 // 		//	}
 // 		//}
 // 		{   // The normal map
-// 			auto normalMapTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sNormalMap, NULL, finalMaterial);
+// 			var normalMapTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sNormalMap, NULL, finalMaterial);
 // 			if(lambertSurface || normalMapTree != nullptr)
 // 			{
 // 				if(normalMapTree == nullptr)	
 // 				{
-// 					auto normalMapValue = lambertSurface.NormalMap.Get();
+// 					var normalMapValue = lambertSurface.NormalMap.Get();
 // 
 // 					// Do not create the node if the value has not been explicitly specified by the user.
 // 					if(normalMapValue != FbxDouble3(0))
 // 					{
-// 						normalMapTree = gcnew ComputeFloat4(FbxDouble3ToVector4(normalMapValue));
+// 						normalMapTree = new ComputeFloat4(FbxDouble3ToVector4(normalMapValue));
 // 					}
 // 				}
 // 				
 // 				if (normalMapTree != nullptr)
 // 				{
-// 					finalMaterial.Attributes.Surface = gcnew MaterialNormalMapFeature(normalMapTree);
+// 					finalMaterial.Attributes.Surface = new MaterialNormalMapFeature(normalMapTree);
 // 				}
 // 			}
 // 		}
 // 		// TODO: Support for BumpMap
 // 		//{   // The bump map
-// 		//	auto bumpMapTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sBump, FbxSurfaceMaterial.sBumpFactor, finalMaterial);
+// 		//	var bumpMapTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sBump, FbxSurfaceMaterial.sBumpFactor, finalMaterial);
 // 		//	if(lambertSurface || bumpMapTree != nullptr)
 // 		//	{
 // 		//		if(bumpMapTree == nullptr)	
 // 		//		{
-// 		//			auto bumpValue = lambertSurface.Bump.Get();
-// 		//			auto bumpFactor = lambertSurface.BumpFactor.Get();
-// 		//			auto bumpMapValue = bumpFactor * bumpValue;
+// 		//			var bumpValue = lambertSurface.Bump.Get();
+// 		//			var bumpFactor = lambertSurface.BumpFactor.Get();
+// 		//			var bumpMapValue = bumpFactor * bumpValue;
 // 
 // 		//			// Do not create the node if the value has not been explicitly specified by the user.
 // 		//			if(bumpMapValue != FbxDouble3(0))
 // 		//			{
-// 		//				bumpMapTree = gcnew MaterialFloat4ComputeColor(FbxDouble3ToVector4(bumpMapValue));
+// 		//				bumpMapTree = new MaterialFloat4ComputeColor(FbxDouble3ToVector4(bumpMapValue));
 // 		//			}
 // 		//		}
 // 		//		
@@ -1203,20 +1326,20 @@ namespace Stride.Importer.FBX
 // 		//}
 // 		// TODO: Support for Transparency
 // 		//{   // The transparency
-// 		//	auto transparencyTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sTransparentColor, FbxSurfaceMaterial.sTransparencyFactor, finalMaterial);
+// 		//	var transparencyTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sTransparentColor, FbxSurfaceMaterial.sTransparencyFactor, finalMaterial);
 // 		//	if(lambertSurface || transparencyTree != nullptr)
 // 		//	{
 // 		//		if(transparencyTree == nullptr)	
 // 		//		{
-// 		//			auto transparencyColor = lambertSurface.TransparentColor.Get();
-// 		//			auto transparencyFactor = lambertSurface.TransparencyFactor.Get();
-// 		//			auto transparencyValue = transparencyFactor * transparencyColor;
-// 		//			auto opacityValue = std.min(1.0f, std.max(0.0f, 1-(float)transparencyValue[0]));
+// 		//			var transparencyColor = lambertSurface.TransparentColor.Get();
+// 		//			var transparencyFactor = lambertSurface.TransparencyFactor.Get();
+// 		//			var transparencyValue = transparencyFactor * transparencyColor;
+// 		//			var opacityValue = std.min(1.0f, std.max(0.0f, 1-(float)transparencyValue[0]));
 // 
 // 		//			// Do not create the node if the value has not been explicitly specified by the user.
 // 		//			if(opacityValue < 1)
 // 		//			{
-// 		//				transparencyTree = gcnew MaterialFloatComputeColor(opacityValue);
+// 		//				transparencyTree = new MaterialFloatComputeColor(opacityValue);
 // 		//			}
 // 		//		}
 // 
@@ -1226,19 +1349,19 @@ namespace Stride.Importer.FBX
 // 		//}
 // 		//// TODO: Support for displacement map
 // 		//{   // The displacement map
-// 		//	auto displacementColorTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sDisplacementColor, FbxSurfaceMaterial.sDisplacementFactor, finalMaterial);
+// 		//	var displacementColorTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sDisplacementColor, FbxSurfaceMaterial.sDisplacementFactor, finalMaterial);
 // 		//	if(lambertSurface || displacementColorTree != nullptr)
 // 		//	{
 // 		//		if(displacementColorTree == nullptr)	
 // 		//		{
-// 		//			auto displacementColor = lambertSurface.DisplacementColor.Get();
-// 		//			auto displacementFactor = lambertSurface.DisplacementFactor.Get();
-// 		//			auto displacementValue = displacementFactor * displacementColor;
+// 		//			var displacementColor = lambertSurface.DisplacementColor.Get();
+// 		//			var displacementFactor = lambertSurface.DisplacementFactor.Get();
+// 		//			var displacementValue = displacementFactor * displacementColor;
 // 
 // 		//			// Do not create the node if the value has not been explicitly specified by the user.
 // 		//			if(displacementValue != FbxDouble3(0))
 // 		//			{
-// 		//				displacementColorTree = gcnew MaterialFloat4ComputeColor(FbxDouble3ToVector4(displacementValue));
+// 		//				displacementColorTree = new MaterialFloat4ComputeColor(FbxDouble3ToVector4(displacementValue));
 // 		//			}
 // 		//		}
 // 		//		
@@ -1247,30 +1370,30 @@ namespace Stride.Importer.FBX
 // 		//	}
 // 		//}
 // 		{	// The specular color
-// 			auto specularTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sSpecular, NULL, finalMaterial);
+// 			var specularTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sSpecular, NULL, finalMaterial);
 // 			if(phongSurface || specularTree != nullptr)
 // 			{
 // 				if(specularTree == nullptr)	
 // 				{
-// 					auto specularColor = phongSurface.Specular.Get();
+// 					var specularColor = phongSurface.Specular.Get();
 // 		
 // 					// Do not create the node if the value has not been explicitly specified by the user.
 // 					if(specularColor != FbxDouble3(0))
 // 					{
-// 						specularTree = gcnew ComputeColor(FbxDouble3ToColor4(specularColor));
+// 						specularTree = new ComputeColor(FbxDouble3ToColor4(specularColor));
 // 					}
 // 				}
 // 						
 // 				if (specularTree != nullptr)
 // 				{
-// 					auto specularFeature = gcnew MaterialSpecularMapFeature();
+// 					var specularFeature = new MaterialSpecularMapFeature();
 // 					specularFeature.SpecularMap = specularTree;
 // 					finalMaterial.Attributes.Specular = specularFeature;
 // 
-// 					auto specularModel = gcnew MaterialSpecularMicrofacetModelFeature();
-// 					specularModel.Fresnel = gcnew MaterialSpecularMicrofacetFresnelSchlick();
-// 					specularModel.Visibility = gcnew MaterialSpecularMicrofacetVisibilityImplicit();
-// 					specularModel.NormalDistribution = gcnew MaterialSpecularMicrofacetNormalDistributionBlinnPhong();
+// 					var specularModel = new MaterialSpecularMicrofacetModelFeature();
+// 					specularModel.Fresnel = new MaterialSpecularMicrofacetFresnelSchlick();
+// 					specularModel.Visibility = new MaterialSpecularMicrofacetVisibilityImplicit();
+// 					specularModel.NormalDistribution = new MaterialSpecularMicrofacetNormalDistributionBlinnPhong();
 // 
 // 					finalMaterial.Attributes.SpecularModel = specularModel;
 // 				}
@@ -1278,17 +1401,17 @@ namespace Stride.Importer.FBX
 // 		}
 // 		// TODO REPLUG SPECULAR INTENSITY
 // 	//{	// The specular intensity map
-// 	//		auto specularIntensityTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sSpecularFactor, NULL, finalMaterial);
+// 	//		var specularIntensityTree = (IComputeColor^)GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sSpecularFactor, NULL, finalMaterial);
 // 	//		if(phongSurface || specularIntensityTree != nullptr)
 // 	//		{
 // 	//			if(specularIntensityTree == nullptr)	
 // 	//			{
-// 	//				auto specularIntensity = phongSurface.SpecularFactor.Get();
+// 	//				var specularIntensity = phongSurface.SpecularFactor.Get();
 // 	//	
 // 	//				// Do not create the node if the value has not been explicitly specified by the user.
 // 	//				if(specularIntensity > 0)
 // 	//				{
-// 	//					specularIntensityTree = gcnew MaterialFloatComputeNode((float)specularIntensity);
+// 	//					specularIntensityTree = new MaterialFloatComputeNode((float)specularIntensity);
 // 	//				}
 // 	//			}
 // 	//					
@@ -1297,7 +1420,7 @@ namespace Stride.Importer.FBX
 // 	//				MaterialSpecularMapFeature^ specularFeature;
 // 	//				if (finalMaterial.Attributes.Specular == nullptr || finalMaterial.Attributes.Specular.GetType() != MaterialSpecularMapFeature.typeid)
 // 	//				{
-// 	//					specularFeature = gcnew MaterialSpecularMapFeature();
+// 	//					specularFeature = new MaterialSpecularMapFeature();
 // 	//				}
 // 	//				else
 // 	//				{
@@ -1310,17 +1433,17 @@ namespace Stride.Importer.FBX
 // 	//		}
 // 	//	}
 // 	/*			{	// The specular power map
-// 			auto specularPowerTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sShininess, NULL, finalMaterial);
+// 			var specularPowerTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sShininess, NULL, finalMaterial);
 // 			if(phongSurface || specularPowerTree != nullptr)
 // 			{
 // 				if(specularPowerTree == nullptr)	
 // 				{
-// 					auto specularPower = phongSurface.Shininess.Get();
+// 					var specularPower = phongSurface.Shininess.Get();
 // 		
 // 					// Do not create the node if the value has not been explicitly specified by the user.
 // 					if(specularPower > 0)
 // 					{
-// 						specularPowerTree = gcnew MaterialFloatComputeColor((float)specularPower);
+// 						specularPowerTree = new MaterialFloatComputeColor((float)specularPower);
 // 					}
 // 				}
 // 						
@@ -1329,7 +1452,7 @@ namespace Stride.Importer.FBX
 // 					MaterialSpecularMapFeature^ specularFeature;
 // 					if (finalMaterial.Attributes.Specular == nullptr || finalMaterial.Attributes.Specular.GetType() != MaterialSpecularMapFeature.typeid)
 // 					{
-// 						specularFeature = gcnew MaterialSpecularMapFeature();
+// 						specularFeature = new MaterialSpecularMapFeature();
 // 					}
 // 					else
 // 					{
@@ -1343,19 +1466,19 @@ namespace Stride.Importer.FBX
 // 		}*/
 // 		//// TODO: Support for reflection map
 // 		//{   // The reflection map
-// 		//	auto reflectionMapTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sReflection, FbxSurfaceMaterial.sReflectionFactor, finalMaterial);
+// 		//	var reflectionMapTree = GenerateSurfaceTextureTree(lMaterial, uvEltMappingOverride, textureMap, textureNameCount, FbxSurfaceMaterial.sReflection, FbxSurfaceMaterial.sReflectionFactor, finalMaterial);
 // 		//	if(phongSurface || reflectionMapTree != nullptr)
 // 		//	{
 // 		//		if(reflectionMapTree == nullptr)	
 // 		//		{
-// 		//			auto reflectionColor = lambertSurface.DisplacementColor.Get();
-// 		//			auto reflectionFactor = lambertSurface.DisplacementFactor.Get();
-// 		//			auto reflectionValue = reflectionFactor * reflectionColor;
+// 		//			var reflectionColor = lambertSurface.DisplacementColor.Get();
+// 		//			var reflectionFactor = lambertSurface.DisplacementFactor.Get();
+// 		//			var reflectionValue = reflectionFactor * reflectionColor;
 // 
 // 		//			// Do not create the node if the value has not been explicitly specified by the user.
 // 		//			if(reflectionValue != FbxDouble3(0))
 // 		//			{
-// 		//				reflectionMapTree = gcnew ComputeColor(FbxDouble3ToColor4(reflectionValue));
+// 		//				reflectionMapTree = new ComputeColor(FbxDouble3ToColor4(reflectionValue));
 // 		//			}
 // 		//		}
 // 		//		
@@ -1370,7 +1493,7 @@ namespace Stride.Importer.FBX
 // 	{
 // 		for (int i = 0; i < 2; ++i)
 // 		{
-// 			auto propertyName = i == 0 ? FbxSurfaceMaterial.sTransparentColor : FbxSurfaceMaterial.sTransparencyFactor;
+// 			var propertyName = i == 0 ? FbxSurfaceMaterial.sTransparentColor : FbxSurfaceMaterial.sTransparencyFactor;
 // 			if (propertyName == NULL)
 // 				continue;
 // 
@@ -1393,7 +1516,7 @@ namespace Stride.Importer.FBX
 // 				}
 // 				if (lTextureCount == 0)
 // 				{
-// 					auto val = FbxDouble3ToVector3(lProperty.Get<FbxDouble3>());
+// 					var val = FbxDouble3ToVector3(lProperty.Get<FbxDouble3>());
 // 					if (val == Vector3.Zero || val != Vector3.One)
 // 						return true;
 // 				}
@@ -1402,16 +1525,16 @@ namespace Stride.Importer.FBX
 // 		return false;
 // 	}
 // 
-// 	IComputeNode^ GenerateSurfaceTextureTree(FbxSurfaceMaterial* lMaterial, std.map<std.string, size_t>& uvElementMapping, Dictionary<IntPtr, ComputeTextureColor^>^ textureMap,
-// 												std.map<std.string, int>& textureNameCount, char const* surfaceMaterial, char const* surfaceMaterialFactor,
+// 	IComputeNode^ GenerateSurfaceTextureTree(FbxSurfaceMaterial* lMaterial, Dictionary<String, size_t>& uvElementMapping, Dictionary<IntPtr, ComputeTextureColor^>^ textureMap,
+// 												Dictionary<String, int>& textureNameCount, char const* surfaceMaterial, char const* surfaceMaterialFactor,
 // 												Stride.Assets.Materials.MaterialAsset^ finalMaterial)
 // 	{
-// 		auto compositionTrees = gcnew cli.array<IComputeColor^>(2);
+// 		var compositionTrees = new cli.array<IComputeColor^>(2);
 // 
 // 		for (int i = 0; i < 2; ++i)
 // 		{
 // 			// Scan first for component name, then its factor (i.e. sDiffuse, then sDiffuseFactor)
-// 			auto propertyName = i == 0 ? surfaceMaterial : surfaceMaterialFactor;
+// 			var propertyName = i == 0 ? surfaceMaterial : surfaceMaterialFactor;
 // 			if (propertyName == NULL)
 // 				continue;
 // 
@@ -1433,22 +1556,22 @@ namespace Stride.Importer.FBX
 // 						{
 // 							FbxFileTexture* lSubTexture = FbxCast<FbxFileTexture>(lLayeredTexture.GetSrcObject<FbxFileTexture>(k));
 // 
-// 							auto uvName = std.string(lSubTexture.UVSet.Get());
+// 							var uvName = String(lSubTexture.UVSet.Get());
 // 							if (uvElementMapping.find(uvName) == uvElementMapping.end())
 // 								uvElementMapping[uvName] = uvElementMapping.size();
 // 
-// 							auto currentMaterialReference = GenerateMaterialTextureNodeFBX(lSubTexture, uvElementMapping, textureMap, textureNameCount, finalMaterial);
+// 							var currentMaterialReference = GenerateMaterialTextureNodeFBX(lSubTexture, uvElementMapping, textureMap, textureNameCount, finalMaterial);
 // 							
 // 							if (lNbTextures == 1 || compositionCount == 0)
 // 							{
 // 								if (previousNode == nullptr)
 // 									previousNode = currentMaterialReference;
 // 								else
-// 									previousNode = gcnew ComputeBinaryColor(previousNode, currentMaterialReference, BinaryOperator.Add); // not sure
+// 									previousNode = new ComputeBinaryColor(previousNode, currentMaterialReference, BinaryOperator.Add); // not sure
 // 							}
 // 							else
 // 							{
-// 								auto newNode = gcnew ComputeBinaryColor(previousNode, currentMaterialReference, BinaryOperator.Add);
+// 								var newNode = new ComputeBinaryColor(previousNode, currentMaterialReference, BinaryOperator.Add);
 // 								previousNode = newNode;
 // 								
 // 								FbxLayeredTexture.EBlendMode blendMode;
@@ -1463,12 +1586,12 @@ namespace Stride.Importer.FBX
 // 					{
 // 						compositionCount++;
 // 
-// 						auto newMaterialReference = GenerateMaterialTextureNodeFBX(lFileTexture, uvElementMapping, textureMap, textureNameCount, finalMaterial);
+// 						var newMaterialReference = GenerateMaterialTextureNodeFBX(lFileTexture, uvElementMapping, textureMap, textureNameCount, finalMaterial);
 // 						
 // 						if (previousNode == nullptr)
 // 							previousNode = newMaterialReference;
 // 						else
-// 							previousNode = gcnew ComputeBinaryColor(previousNode, newMaterialReference, BinaryOperator.Add); // not sure
+// 							previousNode = new ComputeBinaryColor(previousNode, newMaterialReference, BinaryOperator.Add); // not sure
 // 					}
 // 				}
 // 
@@ -1488,7 +1611,7 @@ namespace Stride.Importer.FBX
 // 		}
 // 		else
 // 		{
-// 			compositionTree = gcnew ComputeBinaryColor(compositionTrees[0], compositionTrees[1], BinaryOperator.Multiply);
+// 			compositionTree = new ComputeBinaryColor(compositionTrees[0], compositionTrees[1], BinaryOperator.Multiply);
 // 		}
 // 
 // 		return compositionTree;
@@ -1561,17 +1684,17 @@ namespace Stride.Importer.FBX
 // 		case FbxLayeredTexture.eOverlay:
 // 			return BinaryOperator.Overlay;
 // 		default:
-// 			logger.Error(String.Format("Material blending mode '{0}' is not supported yet. Multiplying blending mode will be used instead.", gcnew Int32(blendMode)), (CallerInfo^)nullptr);
+// 			logger.Error(String.Format("Material blending mode '{0}' is not supported yet. Multiplying blending mode will be used instead.", new Int32(blendMode)), (CallerInfo^)nullptr);
 // 			return BinaryOperator.Multiply;
 // 		}
 // 	}
 // 
-// 	ShaderClassSource^ GenerateTextureLayerFBX(FbxFileTexture* lFileTexture, std.map<std.string, int>& uvElementMapping, Mesh^ meshData, int& textureCount, ParameterKey<Texture^>^ surfaceMaterialKey)
+// 	ShaderClassSource^ GenerateTextureLayerFBX(FbxFileTexture* lFileTexture, Dictionary<String, int>& uvElementMapping, Mesh^ meshData, int& textureCount, ParameterKey<Texture^>^ surfaceMaterialKey)
 // 	{
-// 		auto texScale = lFileTexture.GetUVScaling();
-// 		auto texturePath = FindFilePath(lFileTexture);
+// 		var texScale = lFileTexture.GetUVScaling();
+// 		var texturePath = FindFilePath(lFileTexture);
 // 
-// 		return TextureLayerGenerator.GenerateTextureLayer(vfsOutputFilename, texturePath, uvElementMapping[std.string(lFileTexture.UVSet.Get())], Vector2((float)texScale[0], (float)texScale[1]) , 
+// 		return TextureLayerGenerator.GenerateTextureLayer(vfsOutputFilename, texturePath, uvElementMapping[String(lFileTexture.UVSet.Get())], Vector2((float)texScale[0], (float)texScale[1]) , 
 // 									textureCount, surfaceMaterialKey,
 // 									meshData,
 // 									nullptr);
@@ -1579,12 +1702,12 @@ namespace Stride.Importer.FBX
 // 
 // 	String^ FindFilePath(FbxFileTexture* lFileTexture)
 // 	{		
-// 		auto relFileName = gcnew String(lFileTexture.GetRelativeFileName());
-// 		auto absFileName = gcnew String(lFileTexture.GetFileName());
+// 		var relFileName = new String(lFileTexture.GetRelativeFileName());
+// 		var absFileName = new String(lFileTexture.GetFileName());
 // 
 // 		// First try to get the texture filename by relative path, if not valid then use absolute path
 // 		// (According to FBX doc, resolved first by absolute name, and relative name if absolute name is not valid)
-// 		auto fileNameToUse = Path.Combine(inputPath, relFileName);
+// 		var fileNameToUse = Path.Combine(inputPath, relFileName);
 // 		if(fileNameToUse.StartsWith("\\\\", StringComparison.Ordinal))
 // 		{
 // 			logger.Warning(String.Format("Importer detected a network address in referenced assets. This may temporary block the build if the file does not exist. [Address='{0}']", fileNameToUse), (CallerInfo^)nullptr);
@@ -1595,7 +1718,7 @@ namespace Stride.Importer.FBX
 // 		}
 // 
 // 		// Make sure path is absolute
-// 		if (!(gcnew UFile(fileNameToUse)).IsAbsolute)
+// 		if (!(new UFile(fileNameToUse)).IsAbsolute)
 // 		{
 // 			fileNameToUse = Path.Combine(inputPath, fileNameToUse);
 // 		}
@@ -1603,14 +1726,14 @@ namespace Stride.Importer.FBX
 // 		return fileNameToUse;
 // 	}
 // 
-// 	ComputeTextureColor^ GenerateMaterialTextureNodeFBX(FbxFileTexture* lFileTexture, std.map<std.string, size_t>& uvElementMapping, Dictionary<IntPtr, ComputeTextureColor^>^ textureMap, std.map<std.string, int>& textureNameCount, Stride.Assets.Materials.MaterialAsset^ finalMaterial)
+// 	ComputeTextureColor^ GenerateMaterialTextureNodeFBX(FbxFileTexture* lFileTexture, Dictionary<String, size_t>& uvElementMapping, Dictionary<IntPtr, ComputeTextureColor^>^ textureMap, Dictionary<String, int>& textureNameCount, Stride.Assets.Materials.MaterialAsset^ finalMaterial)
 // 	{
-// 		auto texScale = lFileTexture.GetUVScaling();		
-// 		auto texturePath = FindFilePath(lFileTexture);
-// 		auto wrapModeU = lFileTexture.GetWrapModeU();
-// 		auto wrapModeV = lFileTexture.GetWrapModeV();
-// 		auto wrapTextureU = (wrapModeU == FbxTexture.EWrapMode.eRepeat) ? TextureAddressMode.Wrap : TextureAddressMode.Clamp;
-// 		auto wrapTextureV = (wrapModeV == FbxTexture.EWrapMode.eRepeat) ? TextureAddressMode.Wrap : TextureAddressMode.Clamp;
+// 		var texScale = lFileTexture.GetUVScaling();		
+// 		var texturePath = FindFilePath(lFileTexture);
+// 		var wrapModeU = lFileTexture.GetWrapModeU();
+// 		var wrapModeV = lFileTexture.GetWrapModeV();
+// 		var wrapTextureU = (wrapModeU == FbxTexture.EWrapMode.eRepeat) ? TextureAddressMode.Wrap : TextureAddressMode.Clamp;
+// 		var wrapTextureV = (wrapModeV == FbxTexture.EWrapMode.eRepeat) ? TextureAddressMode.Wrap : TextureAddressMode.Clamp;
 // 		
 // 		ComputeTextureColor^ textureValue;
 // 		
@@ -1620,20 +1743,20 @@ namespace Stride.Importer.FBX
 // 		}
 // 		else
 // 		{
-// 			textureValue = TextureLayerGenerator.GenerateMaterialTextureNode(vfsOutputFilename, texturePath, uvElementMapping[std.string(lFileTexture.UVSet.Get())], Vector2((float)texScale[0], (float)texScale[1]), wrapTextureU, wrapTextureV, nullptr);
+// 			textureValue = TextureLayerGenerator.GenerateMaterialTextureNode(vfsOutputFilename, texturePath, uvElementMapping[String(lFileTexture.UVSet.Get())], Vector2((float)texScale[0], (float)texScale[1]), wrapTextureU, wrapTextureV, nullptr);
 // 
-// 			auto attachedReference = AttachedReferenceManager.GetAttachedReference(textureValue.Texture);
+// 			var attachedReference = AttachedReferenceManager.GetAttachedReference(textureValue.Texture);
 // 
-// 			auto textureNamePtr = Marshal.StringToHGlobalAnsi(attachedReference.Url);
-// 			std.string textureName = std.string((char*)textureNamePtr.ToPointer());
+// 			var textureNamePtr = Marshal.StringToHGlobalAnsi(attachedReference.Url);
+// 			String textureName = String((char*)textureNamePtr.ToPointer());
 // 			Marshal. FreeHGlobal(textureNamePtr);
 // 
-// 			auto textureCount = GetTextureNameCount(textureNameCount, textureName);
+// 			var textureCount = GetTextureNameCount(textureNameCount, textureName);
 // 			if (textureCount > 1)
 // 				textureName = textureName + "_" + std.to_string(textureCount - 1);
 // 
-// 			auto referenceName = gcnew String(textureName.c_str());
-// 			//auto materialReference = gcnew MaterialReferenceNode(referenceName);
+// 			var referenceName = new String(textureName.c_str());
+// 			//var materialReference = new MaterialReferenceNode(referenceName);
 // 			//finalMaterial.AddNode(referenceName, textureValue);
 // 			textureMap[IntPtr(lFileTexture)] = textureValue;
 // 			return textureValue;
@@ -1642,9 +1765,9 @@ namespace Stride.Importer.FBX
 // 		return nullptr;
 // 	}
 // 
-// 	int GetTextureNameCount(std.map<std.string, int>& textureNameCount, std.string textureName)
+// 	int GetTextureNameCount(Dictionary<String, int>& textureNameCount, String textureName)
 // 	{
-// 		auto textureFound = textureNameCount.find(textureName);
+// 		var textureFound = textureNameCount.find(textureName);
 // 		if (textureFound == textureNameCount.end())
 // 			textureNameCount[textureName] = 1;
 // 		else
@@ -1652,65 +1775,65 @@ namespace Stride.Importer.FBX
 // 		return textureNameCount[textureName];
 // 	}
 // 
-// 	void ProcessAttribute(FbxNode* pNode, FbxNodeAttribute* pAttribute, std.map<FbxMesh*, std.string> meshNames, std.map<FbxSurfaceMaterial*, int> materials)
-// 	{
-// 		if(!pAttribute) return;
-//  
-// 		if (pAttribute.GetAttributeType() == FbxNodeAttribute.eMesh)
-// 		{
-// 			ProcessMesh((FbxMesh*)pAttribute, meshNames, materials);
-// 		}
-// 	}
-// 
-// 	void ProcessNodeTransformation(FbxNode* pNode)
-// 	{
-// 		auto nodeIndex = sceneMapping.FindNodeIndex(pNode);
-// 		auto nodes = sceneMapping.Nodes;
-// 		auto node = &nodes[nodeIndex];
-// 
-// 		// Use GlobalTransform instead of LocalTransform
-// 
-// 		auto fbxMatrix = pNode.EvaluateLocalTransform(FBXSDK_TIME_ZERO);
-// 		auto matrix = sceneMapping.ConvertMatrixFromFbx(fbxMatrix);
-// 
-// 		// Extract the translation and scaling
-// 		Vector3 translation;
-// 		Quaternion rotation;
-// 		Vector3 scaling;
-// 		matrix.Decompose(scaling, rotation, translation);
-// 
-// 		// Apply rotation on top level nodes only
-// 		if (node.ParentIndex == 0)
-// 		{
-// 			Vector3.TransformCoordinate(translation, sceneMapping.AxisSystemRotationMatrix, translation);
-// 			rotation = Quaternion.Multiply(rotation, Quaternion.RotationMatrix(sceneMapping.AxisSystemRotationMatrix));
-// 		}
-// 
-// 		// Setup the transform for this node
-// 		node.Transform.Position = translation;
-// 		node.Transform.Rotation = rotation;
-// 		node.Transform.Scale = scaling;
-// 
-// 		// Recursively process the children nodes.
-// 		for (int j = 0; j < pNode.GetChildCount(); j++)
-// 		{
-// 			ProcessNodeTransformation(pNode.GetChild(j));
-// 		}
-// 	}
-// 
-// 	void ProcessNodeAttributes(FbxNode* pNode, std.map<FbxMesh*, std.string> meshNames, std.map<FbxSurfaceMaterial*, int> materials)
-// 	{
-// 		// Process the node's attributes.
-// 		for(int i = 0; i < pNode.GetNodeAttributeCount(); i++)
-// 			ProcessAttribute(pNode, pNode.GetNodeAttributeByIndex(i), meshNames, materials);
-// 
-// 		// Recursively process the children nodes.
-// 		for(int j = 0; j < pNode.GetChildCount(); j++)
-// 		{
-// 			ProcessNodeAttributes(pNode.GetChild(j), meshNames, materials);
-// 		}
-// 	}
-// 
+	void ProcessAttribute(/*FbxNode*/IntPtr pNode, /*FbxNodeAttribute*/IntPtr pAttribute, Dictionary<IntPtr, String> meshNames, Dictionary<IntPtr, int> materials)
+	{
+		if(pAttribute == IntPtr.Zero) return;
+ 
+		if ((EType) FbxNodeAttributeGetAttributeType(pAttribute) == EType.eMesh)
+		{
+			ProcessMesh(/*(FbxMesh*)*/pAttribute, meshNames, materials);
+		}
+	}
+
+	void ProcessNodeTransformation(/*FbxNode*/IntPtr pNode)
+	{
+		var nodeIndex = sceneMapping.FindNodeIndex(pNode);
+		var nodes = sceneMapping.Nodes;
+		var node = nodes[nodeIndex];
+
+		// Use GlobalTransform instead of LocalTransform
+
+		var fbxMatrix = FbxNodeEvaluateLocalTransform (pNode, FBXSDK_TC_ZERO);
+		var matrix = sceneMapping.ConvertMatrixFromFbx(fbxMatrix);
+
+		// Extract the translation and scaling
+		Vector3 translation;
+		Quaternion rotation;
+		Vector3 scaling;
+		matrix.Decompose(out scaling, out rotation, out translation);
+
+		// Apply rotation on top level nodes only
+		if (node.ParentIndex == 0)
+		{
+			Vector3.TransformCoordinate(translation, sceneMapping.AxisSystemRotationMatrix, out translation);
+			rotation = Quaternion.Multiply(rotation, Quaternion.RotationMatrix(sceneMapping.AxisSystemRotationMatrix));
+		}
+
+		// Setup the transform for this node
+		node.Transform.Position = translation;
+		node.Transform.Rotation = rotation;
+		node.Transform.Scale = scaling;
+
+		// Recursively process the children nodes.
+		for (int j = 0; j < FbxNodeGetChildCount(pNode); j++)
+		{
+			ProcessNodeTransformation(FbxNodeGetChild(pNode, j));
+		}
+	}
+
+	void ProcessNodeAttributes(/*FbxNode*/IntPtr pNode, Dictionary</*FbxMesh*/IntPtr, String> meshNames, Dictionary</*FbxSurfaceMaterial*/IntPtr, int> materials)
+	{
+		// Process the node's attributes.
+		for(int i = 0; i < FbxNodeGetNodeAttributeCount(pNode); i++)
+			ProcessAttribute(pNode, FbxNodeGetNodeAttributeByIndex(pNode, i), meshNames, materials);
+
+		// Recursively process the children nodes.
+		for(int j = 0; j < FbxNodeGetChildCount(pNode); j++)
+		{
+			ProcessNodeAttributes(FbxNodeGetChild(pNode, j), meshNames, materials);
+		}
+	}
+
 // 	ref class BuildMesh
 // 	{
 // 	public:
@@ -1943,16 +2066,17 @@ namespace Stride.Importer.FBX
 		}
 
 		// Create a new scene so it can be populated by the imported file.
-// 		scene = FbxScene.Create(lSdkManager, "myScene");
+		scene = FbxSceneCreate(lSdkManager, new StringBuilder ("myScene"));
 
 		// Import the contents of the file into the scene.
-// 		lImporter.Import(scene);
+		FbxImporterImport(lImporter, scene);
+        
+		float framerate = (float)(FbxTimeGetFrameRate(FbxGlobalSettingsGetTimeMode (FbxSceneGetGlobalSettings (scene))));
+		FbxNodeResetPivotSetAndConvertAnimation(FbxSceneGetRootNode (scene), framerate, false, false);
 
-// 		const float framerate = static_cast<float>(FbxTime.GetFrameRate(scene.GetGlobalSettings().GetTimeMode()));
-// 		scene.GetRootNode().ResetPivotSetAndConvertAnimation(framerate, false, false);
-
+        Console.WriteLine ("Framerate: " + framerate);
 		// Initialize the node mapping
-// 		sceneMapping = new SceneMapping(scene);
+ 		sceneMapping = new SceneMapping(scene);
 	}
 // 	
 // 	bool HasAnimationData(String^ inputFile)
@@ -1960,7 +2084,7 @@ namespace Stride.Importer.FBX
 // 		try
 // 		{
 // 			Initialize(inputFile, nullptr, ImportConfiguration.ImportAnimationsOnly());
-// 			auto animConverter = gcnew AnimationConverter(logger, sceneMapping);
+// 			var animConverter = new AnimationConverter(logger, sceneMapping);
 // 			return animConverter.HasAnimationData();
 // 		}
 // 		finally
@@ -1968,131 +2092,131 @@ namespace Stride.Importer.FBX
 // 			Destroy();
 // 		}
 // 	}
-// 	
-// 	void GenerateMaterialNames(std.map<FbxSurfaceMaterial*, std.string>& materialNames)
-// 	{
-// 		auto materials = gcnew List<MaterialAsset^>();
-// 		std.map<std.string, int> materialNameTotalCount;
-// 		std.map<std.string, int> materialNameCurrentCount;
-// 		std.map<FbxSurfaceMaterial*, std.string> tempNames;
-// 		auto materialCount = scene.GetMaterialCount();
-// 		
-// 		for (int i = 0;  i < materialCount; i++)
-// 		{
-// 			auto lMaterial = scene.GetMaterial(i);
-// 			auto materialName = std.string(lMaterial.GetName());
-// 			auto materialPart = std.string();
-// 
-// 			size_t materialNameSplitPosition = materialName.find('#');
-// 			if (materialNameSplitPosition != std.string.npos)
-// 			{
-// 				materialPart = materialName.substr(materialNameSplitPosition + 1);
-// 				materialName = materialName.substr(0, materialNameSplitPosition);
-// 			}
-// 
-// 			materialNameSplitPosition = materialName.find("__");
-// 			if (materialNameSplitPosition != std.string.npos)
-// 			{
-// 				materialPart = materialName.substr(materialNameSplitPosition + 2);
-// 				materialName = materialName.substr(0, materialNameSplitPosition);
-// 			}
-// 
-// 			// remove all bad characters
-// 			ReplaceCharacter(materialName, ':', '_');
-// 			ReplaceCharacter(materialName, '/', '_');
-// 			RemoveCharacter(materialName, ' ');
-// 			tempNames[lMaterial] = materialName;
-// 			
-// 			if (materialNameTotalCount.count(materialName) == 0)
-// 				materialNameTotalCount[materialName] = 1;
-// 			else
-// 				materialNameTotalCount[materialName] = materialNameTotalCount[materialName] + 1;
-// 		}
-// 
-// 		for (int i = 0;  i < materialCount; i++)
-// 		{
-// 			auto lMaterial = scene.GetMaterial(i);
-// 			auto materialName = tempNames[lMaterial];
-// 			int currentCount = 0;
-// 
-// 			if (materialNameCurrentCount.count(materialName) == 0)
-// 				materialNameCurrentCount[materialName] = 1;
-// 			else
-// 				materialNameCurrentCount[materialName] = materialNameCurrentCount[materialName] + 1;
-// 
-// 			if(materialNameTotalCount[materialName] > 1)
-// 				materialName = materialName + "_" + std.to_string(materialNameCurrentCount[materialName]);
-// 
-// 			materialNames[lMaterial] = materialName;
-// 		}
-// 	}
-// 
-// 	void GetMeshes(FbxNode* pNode, std.vector<FbxMesh*>& meshes)
-// 	{
-// 		// Process the node's attributes.
-// 		for(int i = 0; i < pNode.GetNodeAttributeCount(); i++)
-// 		{
-// 			auto pAttribute = pNode.GetNodeAttributeByIndex(i);
-// 
-// 			if(!pAttribute) return;
-// 		
-// 			if (pAttribute.GetAttributeType() == FbxNodeAttribute.eMesh)
-// 			{
-// 				auto pMesh = (FbxMesh*)pAttribute;
-// 				meshes.push_back(pMesh);
-// 			}
-// 		}
-// 
-// 		// Recursively process the children nodes.
-// 		for(int j = 0; j < pNode.GetChildCount(); j++)
-// 		{
-// 			GetMeshes(pNode.GetChild(j), meshes);
-// 		}
-// 	}
-// 	
-// 	void GenerateMeshesName(std.map<FbxMesh*, std.string>& meshNames)
-// 	{
-// 		std.vector<FbxMesh*> meshes;
-// 		GetMeshes(scene.GetRootNode(), meshes);
-// 
-// 		std.map<std.string, int> meshNameTotalCount;
-// 		std.map<std.string, int> meshNameCurrentCount;
-// 		std.map<FbxMesh*, std.string> tempNames;
-// 
-// 		for (auto iter = meshes.begin(); iter != meshes.end(); ++iter)
-// 		{
-// 			auto pMesh = *iter;
-// 			auto meshName = std.string(pMesh.GetNode().GetName());
-// 
-// 			// remove all bad characters
-// 			RemoveCharacter(meshName, ' ');
-// 			tempNames[pMesh] = meshName;
-// 
-// 			if (meshNameTotalCount.count(meshName) == 0)
-// 				meshNameTotalCount[meshName] = 1;
-// 			else
-// 				meshNameTotalCount[meshName] = meshNameTotalCount[meshName] + 1;
-// 		}
-// 
-// 		for (auto iter = meshes.begin(); iter != meshes.end(); ++iter)
-// 		{
-// 			auto pMesh = *iter;
-// 			auto meshName = tempNames[pMesh];
-// 			int currentCount = 0;
-// 
-// 			if (meshNameCurrentCount.count(meshName) == 0)
-// 				meshNameCurrentCount[meshName] = 1;
-// 			else
-// 				meshNameCurrentCount[meshName] = meshNameCurrentCount[meshName] + 1;
-// 
-// 			if(meshNameTotalCount[meshName] > 1)
-// 				meshName = meshName + "_" + std.to_string(meshNameCurrentCount[meshName]);
-// 
-// 			meshNames[pMesh] = meshName;
-// 		}
-// 	}
-// 
-// 	MaterialInstantiation^ GetOrCreateMaterial(FbxSurfaceMaterial* lMaterial, List<String^>^ uvNames, List<MaterialInstantiation^>^ instances, std.map<std.string, size_t>& uvElements, std.map<FbxSurfaceMaterial*, std.string>& materialNames)
+	
+	void GenerateMaterialNames(Dictionary<IntPtr, String> materialNames)
+	{
+		var materials = new List</*MaterialAsset*/IntPtr>();
+		Dictionary<String, int> materialNameTotalCount = new Dictionary<String, int> ();
+		Dictionary<String, int> materialNameCurrentCount = new Dictionary<String, int> ();
+		Dictionary</*FbxSurfaceMaterial*/IntPtr, String> tempNames = new Dictionary<IntPtr, String> ();
+		var materialCount = FbxSceneGetMaterialCount(scene);
+		
+		for (int i = 0;  i < materialCount; i++)
+		{
+			var lMaterial = FbxSceneGetMaterial(scene, i);
+			var materialName = FbxNodeGetName(lMaterial).ToString ();
+			var materialPart = "";
+
+			int materialNameSplitPosition = materialName.IndexOf('#');
+			if (materialNameSplitPosition != -1)
+			{
+				materialPart = materialName.Substring(materialNameSplitPosition + 1);
+				materialName = materialName.Substring(0, materialNameSplitPosition);
+			}
+
+			materialNameSplitPosition = materialName.IndexOf("__");
+			if (materialNameSplitPosition != -1)
+			{
+				materialPart = materialName.Substring(materialNameSplitPosition + 2);
+				materialName = materialName.Substring(0, materialNameSplitPosition);
+			}
+
+			// remove all bad characters
+			materialName.Replace (':', '_');
+			materialName.Replace ('/', '_');
+			materialName.Replace (" ", string.Empty);
+			tempNames[lMaterial] = materialName;
+			
+			if (!materialNameTotalCount.ContainsKey (materialName))
+				materialNameTotalCount[materialName] = 1;
+			else
+				materialNameTotalCount[materialName] = materialNameTotalCount[materialName] + 1;
+		}
+
+		for (int i = 0;  i < materialCount; i++)
+		{
+			var lMaterial = FbxSceneGetMaterial(scene, i);
+			var materialName = tempNames[lMaterial];
+			int currentCount = 0;
+
+			if (!materialNameCurrentCount.ContainsKey (materialName))
+				materialNameCurrentCount[materialName] = 1;
+			else
+				materialNameCurrentCount[materialName] = materialNameCurrentCount[materialName] + 1;
+
+			if(materialNameTotalCount[materialName] > 1)
+				materialName = materialName + "_" + materialNameCurrentCount[materialName];
+
+            Console.WriteLine ("Material: " + materialName);
+			materialNames[lMaterial] = materialName;
+		}
+	}
+
+	void GetMeshes(IntPtr pNode, List<IntPtr> meshes)
+	{
+		// Process the node's attributes.
+		for(int i = 0; i < FbxNodeGetNodeAttributeCount(pNode); i++)
+		{
+			var pAttribute = FbxNodeGetNodeAttributeByIndex(pNode, i);
+
+			if(pAttribute == IntPtr.Zero) return;
+		
+			if ((EType) FbxNodeAttributeGetAttributeType(pAttribute) == EType.eMesh)
+			{
+				var pMesh = /*(FbxMesh*)*/pAttribute;
+				meshes.Add(pMesh);
+			}
+		}
+
+		// Recursively process the children nodes.
+		for(int j = 0; j < FbxNodeGetChildCount(pNode); j++)
+		{
+			GetMeshes(FbxNodeGetChild(pNode, j), meshes);
+		}
+	}
+	
+	void GenerateMeshesName(Dictionary<IntPtr, String> meshNames)
+	{
+		List<IntPtr> meshes = new List<IntPtr> ();
+		GetMeshes(FbxSceneGetRootNode(scene), meshes);
+
+		Dictionary<String, int> meshNameTotalCount = new Dictionary<String, int> ();
+		Dictionary<String, int> meshNameCurrentCount = new Dictionary<String, int> ();
+		Dictionary<IntPtr, String> tempNames = new Dictionary<IntPtr, String> ();
+
+		foreach (var pMesh in meshes)
+		{
+			var meshName = FbxNodeGetName(FbxMeshGetNode (pMesh)).ToString ();
+            Console.WriteLine ("Mesh name: " + meshName);
+
+			// remove all bad characters
+            meshName.Replace (" ", string.Empty);
+			tempNames[pMesh] = meshName;
+
+			if (!meshNameTotalCount.ContainsKey (meshName))
+				meshNameTotalCount[meshName] = 1;
+			else
+				meshNameTotalCount[meshName] = meshNameTotalCount[meshName] + 1;
+		}
+
+		foreach (var pMesh in meshes)
+		{
+			var meshName = tempNames[pMesh];
+			int currentCount = 0;
+
+			if (!meshNameCurrentCount.ContainsKey (meshName))
+				meshNameCurrentCount[meshName] = 1;
+			else
+				meshNameCurrentCount[meshName] = meshNameCurrentCount[meshName] + 1;
+
+			if(meshNameTotalCount[meshName] > 1)
+				meshName = meshName + "_" + meshNameCurrentCount[meshName];
+
+			meshNames[pMesh] = meshName;
+		}
+	}
+
+// 	MaterialInstantiation^ GetOrCreateMaterial(FbxSurfaceMaterial* lMaterial, List<String^>^ uvNames, List<MaterialInstantiation^>^ instances, Dictionary<String, size_t>& uvElements, Dictionary<FbxSurfaceMaterial*, String>& materialNames)
 // 	{
 // 		for (int i = 0; i < instances.Count; ++i)
 // 		{
@@ -2100,9 +2224,9 @@ namespace Stride.Importer.FBX
 // 				return instances[i];
 // 		}
 // 
-// 		auto newMaterialInstantiation = gcnew MaterialInstantiation();
+// 		var newMaterialInstantiation = new MaterialInstantiation();
 // 		newMaterialInstantiation.SourceMaterial = lMaterial;
-// 		newMaterialInstantiation.MaterialName = gcnew String(materialNames[lMaterial].c_str());
+// 		newMaterialInstantiation.MaterialName = new String(materialNames[lMaterial].c_str());
 // 
 // 		// TODO: We currently use UV mapping of first requesting mesh.
 // 		//       However, we probably need to reverse everything: mesh describes what they have, materials what they need, and an appropriate input layout is created at runtime?
@@ -2112,13 +2236,13 @@ namespace Stride.Importer.FBX
 // 		return newMaterialInstantiation;
 // 	}
 // 
-// 	void SearchMeshInAttribute(FbxNode* pNode, FbxNodeAttribute* pAttribute, std.map<FbxSurfaceMaterial*, std.string> materialNames, std.map<FbxMesh*, std.string> meshNames, List<MeshParameters^>^ models, List<MaterialInstantiation^>^ materialInstantiations)
+// 	void SearchMeshInAttribute(FbxNode* pNode, FbxNodeAttribute* pAttribute, Dictionary<FbxSurfaceMaterial*, String> materialNames, Dictionary<FbxMesh*, String> meshNames, List<MeshParameters^>^ models, List<MaterialInstantiation^>^ materialInstantiations)
 // 	{
 // 		if(!pAttribute) return;
 //  
 // 		if (pAttribute.GetAttributeType() == FbxNodeAttribute.eMesh)
 // 		{
-// 			auto pMesh = (FbxMesh*)pAttribute;
+// 			var pMesh = (FbxMesh*)pAttribute;
 // 			int polygonCount = pMesh.GetPolygonCount();
 // 			FbxGeometryElement.EMappingMode materialMappingMode = FbxGeometryElement.eNone;
 // 			FbxLayerElementArrayTemplate<int>* materialIndices = NULL;
@@ -2129,7 +2253,7 @@ namespace Stride.Importer.FBX
 // 				materialIndices = &pMesh.GetElementMaterial().GetIndexArray();
 // 			}
 // 
-// 			auto buildMeshes = gcnew List<BuildMesh^>();
+// 			var buildMeshes = new List<BuildMesh^>();
 // 
 // 			// Count polygon per materials
 // 			for (int i = 0; i < polygonCount; i++)
@@ -2151,7 +2275,7 @@ namespace Stride.Importer.FBX
 // 				}
 // 
 // 				if (buildMeshes[materialIndex] == nullptr)
-// 					buildMeshes[materialIndex] = gcnew BuildMesh();
+// 					buildMeshes[materialIndex] = new BuildMesh();
 // 
 // 				int polygonSize = pMesh.GetPolygonSize(i) - 2;
 // 				if (polygonSize > 0)
@@ -2160,23 +2284,23 @@ namespace Stride.Importer.FBX
 // 
 // 			for (int i = 0; i < buildMeshes.Count; ++i)
 // 			{
-// 				auto meshParams = gcnew MeshParameters();
-// 				auto meshName = meshNames[pMesh];
+// 				var meshParams = new MeshParameters();
+// 				var meshName = meshNames[pMesh];
 // 				if (buildMeshes.Count > 1)
 // 					meshName = meshName + "_" + std.to_string(i + 1);
-// 				meshParams.MeshName = gcnew String(meshName.c_str());
+// 				meshParams.MeshName = new String(meshName.c_str());
 // 				meshParams.NodeName = sceneMapping.FindNode(pNode).Name;
 // 
 // 				// Collect bones
 // 				int skinDeformerCount = pMesh.GetDeformerCount(FbxDeformer.eSkin);
 // 				if (skinDeformerCount > 0)
 // 				{
-// 					meshParams.BoneNodes = gcnew HashSet<String^>();
+// 					meshParams.BoneNodes = new HashSet<String^>();
 // 					for (int deformerIndex = 0; deformerIndex < skinDeformerCount; deformerIndex++)
 // 					{
 // 						FbxSkin* skin = FbxCast<FbxSkin>(pMesh.GetDeformer(deformerIndex, FbxDeformer.eSkin));
 // 
-// 						auto totalClusterCount = skin.GetClusterCount();
+// 						var totalClusterCount = skin.GetClusterCount();
 // 						for (int clusterIndex = 0; clusterIndex < totalClusterCount; ++clusterIndex)
 // 						{
 // 							FbxCluster* cluster = skin.GetCluster(clusterIndex);
@@ -2199,15 +2323,15 @@ namespace Stride.Importer.FBX
 // 				if ((materialMappingMode == FbxGeometryElement.eByPolygon || materialMappingMode == FbxGeometryElement.eAllSame)
 // 					&& lMaterialElement != NULL && lMaterial != NULL)
 // 				{
-// 					std.map<std.string, size_t> uvElements;
-// 					auto uvNames = gcnew List<String^>();
+// 					Dictionary<String, size_t> uvElements;
+// 					var uvNames = new List<String^>();
 // 					for (int j = 0; j < pMesh.GetElementUVCount(); ++j)
 // 					{
 // 						uvElements[pMesh.GetElementUV(j).GetName()] = j;
-// 						uvNames.Add(gcnew String(pMesh.GetElementUV(j).GetName()));
+// 						uvNames.Add(new String(pMesh.GetElementUV(j).GetName()));
 // 					}
 // 
-// 					auto material = GetOrCreateMaterial(lMaterial, uvNames, materialInstantiations, uvElements, materialNames);
+// 					var material = GetOrCreateMaterial(lMaterial, uvNames, materialInstantiations, uvElements, materialNames);
 // 					meshParams.MaterialName = material.MaterialName;
 // 				}
 // 				else
@@ -2220,7 +2344,7 @@ namespace Stride.Importer.FBX
 // 		}
 // 	}
 // 
-// 	void SearchMesh(FbxNode* pNode, std.map<FbxSurfaceMaterial*, std.string> materialNames, std.map<FbxMesh*, std.string> meshNames, List<MeshParameters^>^ models, List<MaterialInstantiation^>^ materialInstantiations)
+// 	void SearchMesh(FbxNode* pNode, Dictionary<FbxSurfaceMaterial*, String> materialNames, Dictionary<FbxMesh*, String> meshNames, List<MeshParameters^>^ models, List<MaterialInstantiation^>^ materialInstantiations)
 // 	{
 // 		// Process the node's attributes.
 // 		for(int i = 0; i < pNode.GetNodeAttributeCount(); i++)
@@ -2235,36 +2359,36 @@ namespace Stride.Importer.FBX
 // 
 // 	Dictionary<String^, MaterialAsset^>^ ExtractMaterialsNoInit()
 // 	{
-// 		std.map<FbxSurfaceMaterial*, std.string> materialNames;
+// 		Dictionary<FbxSurfaceMaterial*, String> materialNames;
 // 		GenerateMaterialNames(materialNames);
 // 
-// 		auto materials = gcnew Dictionary<String^, MaterialAsset^>();
+// 		var materials = new Dictionary<String^, MaterialAsset^>();
 // 		for (int i = 0;  i < scene.GetMaterialCount(); i++)
 // 		{
-// 			std.map<std.string, size_t> dict;
-// 			auto lMaterial = scene.GetMaterial(i);
-// 			auto materialName = materialNames[lMaterial];
-// 			materials.Add(gcnew String(materialName.c_str()), ProcessMeshMaterialAsset(lMaterial, dict));
+// 			Dictionary<String, size_t> dict;
+// 			var lMaterial = scene.GetMaterial(i);
+// 			var materialName = materialNames[lMaterial];
+// 			materials.Add(new String(materialName.c_str()), ProcessMeshMaterialAsset(lMaterial, dict));
 // 		}
 // 		return materials;
 // 	}
 // 
 // 	MeshMaterials^ ExtractModelNoInit()
 // 	{
-// 		std.map<FbxSurfaceMaterial*, std.string> materialNames;
+// 		Dictionary<FbxSurfaceMaterial*, String> materialNames;
 // 		GenerateMaterialNames(materialNames);
 // 
-// 		std.map<FbxMesh*, std.string> meshNames;
+// 		Dictionary<FbxMesh*, String> meshNames;
 // 		GenerateMeshesName(meshNames);
 // 			
-// 		std.map<std.string, FbxSurfaceMaterial*> materialPerMesh;
-// 		auto models = gcnew List<MeshParameters^>();
-// 		auto materialInstantiations = gcnew List<MaterialInstantiation^>();
+// 		Dictionary<String, FbxSurfaceMaterial*> materialPerMesh;
+// 		var models = new List<MeshParameters^>();
+// 		var materialInstantiations = new List<MaterialInstantiation^>();
 // 		SearchMesh(scene.GetRootNode(), materialNames, meshNames, models, materialInstantiations);
 // 
-// 		auto ret = gcnew MeshMaterials();
+// 		var ret = new MeshMaterials();
 // 		ret.Models = models;
-// 		ret.Materials = gcnew Dictionary<String^, MaterialAsset^>();
+// 		ret.Materials = new Dictionary<String^, MaterialAsset^>();
 // 		for (int i = 0; i < materialInstantiations.Count; ++i)
 // 		{
 // 			if (!ret.Materials.ContainsKey(materialInstantiations[i].MaterialName))
@@ -2278,17 +2402,17 @@ namespace Stride.Importer.FBX
 // 
 // 	List<String^>^ ExtractTextureDependenciesNoInit()
 // 	{
-// 		auto textureNames = gcnew List<String^>();
+// 		var textureNames = new List<String^>();
 // 			
-// 		auto textureCount = scene.GetTextureCount();
+// 		var textureCount = scene.GetTextureCount();
 // 		for(int i=0; i<textureCount; ++i)
 // 		{
-// 			auto texture  = FbxCast<FbxFileTexture>(scene.GetTexture(i));
+// 			var texture  = FbxCast<FbxFileTexture>(scene.GetTexture(i));
 // 
 // 			if(texture == nullptr)
 // 				continue;
 // 			
-// 			auto texturePath = FindFilePath(texture);
+// 			var texturePath = FindFilePath(texture);
 // 			if (!String.IsNullOrEmpty(texturePath))
 // 			{
 // 				if (texturePath.Contains(".fbm\\"))
@@ -2333,7 +2457,7 @@ namespace Stride.Importer.FBX
 // 
 // 	void GetNodes(FbxNode* node, int depth, List<NodeInfo^>^ allNodes)
 // 	{
-// 		auto newNodeInfo = gcnew NodeInfo();
+// 		var newNodeInfo = new NodeInfo();
 // 		newNodeInfo.Name = sceneMapping.FindNode(node).Name;
 // 		newNodeInfo.Depth = depth;
 // 		newNodeInfo.Preserve = true;
@@ -2345,7 +2469,7 @@ namespace Stride.Importer.FBX
 // 
 // 	List<NodeInfo^>^ ExtractNodeHierarchy()
 // 	{
-// 		auto allNodes = gcnew List<NodeInfo^>();
+// 		var allNodes = new List<NodeInfo^>();
 // 		GetNodes(scene.GetRootNode(), 0, allNodes);
 // 		return allNodes;
 // 	}
@@ -2357,13 +2481,13 @@ namespace Stride.Importer.FBX
 // 		{
 // 			Initialize(inputFileName, nullptr, ImportConfiguration.ImportEntityConfig());
 // 			
-// 			auto animationConverter = gcnew AnimationConverter(logger, sceneMapping);
+// 			var animationConverter = new AnimationConverter(logger, sceneMapping);
 // 			
-// 			auto entityInfo = gcnew EntityInfo();
+// 			var entityInfo = new EntityInfo();
 // 			if (extractTextureDependencies)
 // 				entityInfo.TextureDependencies = ExtractTextureDependenciesNoInit();
 // 			entityInfo.AnimationNodes = animationConverter.ExtractAnimationNodesNoInit();
-// 			auto models = ExtractModelNoInit();
+// 			var models = ExtractModelNoInit();
 // 			entityInfo.Models = models.Models;
 // 			entityInfo.Materials = models.Materials;
 // 			entityInfo.Nodes = ExtractNodeHierarchy();
@@ -2383,8 +2507,8 @@ namespace Stride.Importer.FBX
 // 		{
 // 			Initialize(inputFileName, nullptr, ImportConfiguration.ImportEntityConfig());
 // 
-// 			auto animationConverter = gcnew AnimationConverter(logger, sceneMapping);
-// 			auto animationData = animationConverter.ProcessAnimation(inputFilename, "", true, animationStack);
+// 			var animationConverter = new AnimationConverter(logger, sceneMapping);
+// 			var animationData = animationConverter.ProcessAnimation(inputFilename, "", true, animationStack);
 // 
 // 			return animationData.Duration.TotalSeconds;
 // 		}
@@ -2401,47 +2525,47 @@ namespace Stride.Importer.FBX
 		try
 		{
 			Initialize(inputFilename, vfsOutputFilename, ImportConfiguration.ImportAll());
-// 
-// 			// Create default ModelViewData
-// 			modelData = gcnew Model();
-// 
-// 			//auto sceneName = scene.GetName();
-// 			//if (sceneName != NULL && strlen(sceneName) > 0)
-// 			//{
-// 			//	entity.Name = gcnew String(sceneName);
-// 			//}
-// 			//else
-// 			//{
-// 			//	// Build scene name from file name
-// 			//	entity.Name = Path.GetFileName(this.inputFilename);
-// 			//}
-// 
-// 			std.map<FbxMesh*, std.string> meshNames;
-// 			GenerateMeshesName(meshNames);
-// 
-// 			std.map<FbxSurfaceMaterial*, std.string> materialNames;
-// 			GenerateMaterialNames(materialNames);
-// 
-// 			std.map<FbxSurfaceMaterial*, int> materials;
-// 			for (auto it = materialNames.begin(); it != materialNames.end(); ++it)
-// 			{
-// 				auto materialName = gcnew String(it.second.c_str());
-// 				int materialIndex;
-// 				if (materialIndices.TryGetValue(materialName, materialIndex))
-// 				{
-// 					materials[it.first] = materialIndex;
-// 				}
-// 				else
-// 				{
-// 					logger.Warning(String.Format("Model references material '{0}', but it was not defined in the ModelAsset.", materialName), (CallerInfo^)nullptr);
-// 				}
-// 			}
-// 
-// 			// Process and add root entity
-// 			ProcessNodeTransformation(scene.GetRootNode());
-// 			ProcessNodeAttributes(scene.GetRootNode(), meshNames, materials);
-// 
-// 			return modelData;
+
+			// Create default ModelViewData
+			modelData = new Model();
+
+			//var sceneName = scene.GetName();
+			//if (sceneName != NULL && strlen(sceneName) > 0)
+			//{
+			//	entity.Name = new String(sceneName);
+			//}
+			//else
+			//{
+			//	// Build scene name from file name
+			//	entity.Name = Path.GetFileName(this.inputFilename);
+			//}
+
+			Dictionary<IntPtr, String> meshNames = new Dictionary<IntPtr, String> ();
+			GenerateMeshesName(meshNames);
+
+			Dictionary<IntPtr, String> materialNames = new Dictionary<IntPtr, String> ();
+			GenerateMaterialNames(materialNames);
+
+			Dictionary</*FbxSurfaceMaterial*/IntPtr, int> materials = new Dictionary<IntPtr, int> ();
+			foreach (KeyValuePair<IntPtr, String> entry in materialNames)
+			{
+				var materialName = entry.Value;
+				int materialIndex;
+				if (materialIndices.TryGetValue(materialName, out materialIndex))
+				{
+					materials[entry.Key] = materialIndex;
+				}
+				else
+				{
+					logger.Warning(String.Format("Model references material '{0}', but it was not defined in the ModelAsset.", materialName));
+				}
+			}
+
+			// Process and add root entity
+			ProcessNodeTransformation(FbxSceneGetRootNode (scene));
+			ProcessNodeAttributes(FbxSceneGetRootNode (scene), meshNames, materials);
+
+			return modelData;
 		}
 		finally
 		{
@@ -2457,7 +2581,7 @@ namespace Stride.Importer.FBX
 		{
 // 			Initialize(inputFilename, vfsOutputFilename, ImportConfiguration.ImportAnimationsOnly());
 
-// 			auto animationConverter = gcnew AnimationConverter(logger, sceneMapping);
+// 			var animationConverter = new AnimationConverter(logger, sceneMapping);
 // 			return animationConverter.ProcessAnimation(inputFilename, vfsOutputFilename, importCustomAttributeAnimations, animationStack);
 		}
 		finally
@@ -2475,7 +2599,7 @@ namespace Stride.Importer.FBX
 // 			Initialize(inputFilename, vfsOutputFilename, ImportConfiguration.ImportSkeletonOnly());
 // 			ProcessNodeTransformation(scene.GetRootNode());
 // 
-// 			auto skeleton = gcnew Skeleton();
+// 			var skeleton = new Skeleton();
 // 			skeleton.Nodes = sceneMapping.Nodes;
 // 			return skeleton;
 		}
