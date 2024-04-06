@@ -53,68 +53,71 @@ namespace Stride.Graphics
 
         public void Apply(CommandList commandList)
         {
-            var GL = commandList.GL;
+            using (commandList.GraphicsDevice.UseOpenGLCreationContext ())
+            {
+                var GL = commandList.GL;
 
 #if !STRIDE_GRAPHICS_API_OPENGLES
-            if (commandList.RasterizerBoundState.PolygonMode != State.PolygonMode)
-            {
-                commandList.RasterizerBoundState.PolygonMode = State.PolygonMode;
-                GL.PolygonMode(GLEnum.FrontAndBack, State.PolygonMode);
-            }
+                if (commandList.RasterizerBoundState.PolygonMode != State.PolygonMode)
+                {
+                    commandList.RasterizerBoundState.PolygonMode = State.PolygonMode;
+                    GL.PolygonMode(GLEnum.FrontAndBack, State.PolygonMode);
+                }
 #endif
 
-            if (commandList.RasterizerBoundState.DepthBias != State.DepthBias || commandList.RasterizerBoundState.SlopeScaleDepthBias != State.SlopeScaleDepthBias)
-            {
-                commandList.RasterizerBoundState.DepthBias = State.DepthBias;
-                commandList.RasterizerBoundState.SlopeScaleDepthBias = State.SlopeScaleDepthBias;
-                GL.PolygonOffset(State.DepthBias, State.SlopeScaleDepthBias);
-            }
-
-            if (commandList.RasterizerBoundState.FrontFaceDirection != State.FrontFaceDirection)
-            {
-                commandList.RasterizerBoundState.FrontFaceDirection = State.FrontFaceDirection;
-                GL.FrontFace(State.FrontFaceDirection);
-            }
-
-            if (commandList.GraphicsDevice.HasDepthClamp)
-            {
-                if (commandList.RasterizerBoundState.DepthClamp != State.DepthClamp)
+                if (commandList.RasterizerBoundState.DepthBias != State.DepthBias || commandList.RasterizerBoundState.SlopeScaleDepthBias != State.SlopeScaleDepthBias)
                 {
-                    commandList.RasterizerBoundState.DepthClamp = State.DepthClamp;
-                    if (State.DepthClamp)
-                        GL.Enable(EnableCap.DepthClamp);
+                    commandList.RasterizerBoundState.DepthBias = State.DepthBias;
+                    commandList.RasterizerBoundState.SlopeScaleDepthBias = State.SlopeScaleDepthBias;
+                    GL.PolygonOffset(State.DepthBias, State.SlopeScaleDepthBias);
+                }
+
+                if (commandList.RasterizerBoundState.FrontFaceDirection != State.FrontFaceDirection)
+                {
+                    commandList.RasterizerBoundState.FrontFaceDirection = State.FrontFaceDirection;
+                    GL.FrontFace(State.FrontFaceDirection);
+                }
+
+                if (commandList.GraphicsDevice.HasDepthClamp)
+                {
+                    if (commandList.RasterizerBoundState.DepthClamp != State.DepthClamp)
+                    {
+                        commandList.RasterizerBoundState.DepthClamp = State.DepthClamp;
+                        if (State.DepthClamp)
+                            GL.Enable(EnableCap.DepthClamp);
+                        else
+                            GL.Disable(EnableCap.DepthClamp);
+                    }
+                }
+
+                if (commandList.RasterizerBoundState.NeedCulling != State.NeedCulling)
+                {
+                    commandList.RasterizerBoundState.NeedCulling = State.NeedCulling;
+                    if (State.NeedCulling)
+                    {
+                        GL.Enable(EnableCap.CullFace);
+                    }
                     else
-                        GL.Disable(EnableCap.DepthClamp);
+                    {
+                        GL.Disable(EnableCap.CullFace);
+                    }
                 }
-            }
 
-            if (commandList.RasterizerBoundState.NeedCulling != State.NeedCulling)
-            {
-                commandList.RasterizerBoundState.NeedCulling = State.NeedCulling;
-                if (State.NeedCulling)
+                if (commandList.RasterizerBoundState.CullMode != State.CullMode)
                 {
-                    GL.Enable(EnableCap.CullFace);
+                    commandList.RasterizerBoundState.CullMode = State.CullMode;
+                    GL.CullFace(State.CullMode);
                 }
-                else
+
+                if (commandList.RasterizerBoundState.ScissorTestEnable != State.ScissorTestEnable)
                 {
-                    GL.Disable(EnableCap.CullFace);
+                    commandList.RasterizerBoundState.ScissorTestEnable = State.ScissorTestEnable;
+
+                    if (State.ScissorTestEnable)
+                        GL.Enable(EnableCap.ScissorTest);
+                    else
+                        GL.Disable(EnableCap.ScissorTest);
                 }
-            }
-
-            if (commandList.RasterizerBoundState.CullMode != State.CullMode)
-            {
-                commandList.RasterizerBoundState.CullMode = State.CullMode;
-                GL.CullFace(State.CullMode);
-            }
-
-            if (commandList.RasterizerBoundState.ScissorTestEnable != State.ScissorTestEnable)
-            {
-                commandList.RasterizerBoundState.ScissorTestEnable = State.ScissorTestEnable;
-
-                if (State.ScissorTestEnable)
-                    GL.Enable(EnableCap.ScissorTest);
-                else
-                    GL.Disable(EnableCap.ScissorTest);
             }
         }
 

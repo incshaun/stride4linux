@@ -99,15 +99,18 @@ namespace Stride.Graphics
 
             if (TextureId == 0)
             {
-                GL.GenTextures(1, out TextureId);
+                using (GraphicsDevice.UseOpenGLCreationContext ())
+                {
+                    GL.GenTextures(1, out TextureId);
 
-                //Android.Opengl.GLES20.GlBindTexture(Android.Opengl.GLES11Ext.GlTextureExternalOes, TextureId);
+                    //Android.Opengl.GLES20.GlBindTexture(Android.Opengl.GLES11Ext.GlTextureExternalOes, TextureId);
 
-                //Any "proper" way to do this? (GLES20 could directly accept it, not GLES30 anymore)
-                TextureTarget = (TextureTarget) Android.Opengl.GLES11Ext.GlTextureExternalOes;
-                GL.BindTexture(TextureTarget, TextureId);
+                    //Any "proper" way to do this? (GLES20 could directly accept it, not GLES30 anymore)
+                    TextureTarget = (TextureTarget) Android.Opengl.GLES11Ext.GlTextureExternalOes;
+                    GL.BindTexture(TextureTarget, TextureId);
 
-                //GL.BindTexture(TextureTarget, 0);
+                    //GL.BindTexture(TextureTarget, 0);
+                }
             }
         }
 #endif

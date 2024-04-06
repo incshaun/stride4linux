@@ -104,40 +104,43 @@ namespace Stride.Graphics
 
         internal void Apply(bool hasMipmap, SamplerState oldSamplerState, TextureTarget target)
         {
-            if (Description.MinMipLevel != oldSamplerState.Description.MinMipLevel)
-                GL.TexParameter(target, TextureParameterName.TextureMinLod, Description.MinMipLevel);
-            if (Description.MaxMipLevel != oldSamplerState.Description.MaxMipLevel)
-                GL.TexParameter(target, TextureParameterName.TextureMaxLod, Description.MaxMipLevel);
-            if (textureWrapR != oldSamplerState.textureWrapR)
-                GL.TexParameter(target, TextureParameterName.TextureWrapR, (int)textureWrapR);
-            if (compareMode != oldSamplerState.compareMode)
-                GL.TexParameter(target, TextureParameterName.TextureCompareMode, (int)compareMode);
-            if (compareFunc != oldSamplerState.compareFunc)
-                GL.TexParameter(target, TextureParameterName.TextureCompareFunc, (int)compareFunc);
+            using (GraphicsDevice.UseOpenGLCreationContext ())
+            {
+                if (Description.MinMipLevel != oldSamplerState.Description.MinMipLevel)
+                    GL.TexParameter(target, TextureParameterName.TextureMinLod, Description.MinMipLevel);
+                if (Description.MaxMipLevel != oldSamplerState.Description.MaxMipLevel)
+                    GL.TexParameter(target, TextureParameterName.TextureMaxLod, Description.MaxMipLevel);
+                if (textureWrapR != oldSamplerState.textureWrapR)
+                    GL.TexParameter(target, TextureParameterName.TextureWrapR, (int)textureWrapR);
+                if (compareMode != oldSamplerState.compareMode)
+                    GL.TexParameter(target, TextureParameterName.TextureCompareMode, (int)compareMode);
+                if (compareFunc != oldSamplerState.compareFunc)
+                    GL.TexParameter(target, TextureParameterName.TextureCompareFunc, (int)compareFunc);
 
 #if !STRIDE_GRAPHICS_API_OPENGLES
-            if (borderColor != oldSamplerState.borderColor)
-                GL.TexParameter(target, TextureParameterName.TextureBorderColor, borderColor);
-            if (Description.MipMapLevelOfDetailBias != oldSamplerState.Description.MipMapLevelOfDetailBias)
-                GL.TexParameter(target, TextureParameterName.TextureLodBias, Description.MipMapLevelOfDetailBias);
-            if (minFilter != oldSamplerState.minFilter)
-                GL.TexParameter(target, TextureParameterName.TextureMinFilter, (int)minFilter);
+                if (borderColor != oldSamplerState.borderColor)
+                    GL.TexParameter(target, TextureParameterName.TextureBorderColor, borderColor);
+                if (Description.MipMapLevelOfDetailBias != oldSamplerState.Description.MipMapLevelOfDetailBias)
+                    GL.TexParameter(target, TextureParameterName.TextureLodBias, Description.MipMapLevelOfDetailBias);
+                if (minFilter != oldSamplerState.minFilter)
+                    GL.TexParameter(target, TextureParameterName.TextureMinFilter, (int)minFilter);
 #else
-            // On OpenGL ES, we need to choose the appropriate min filter ourself if the texture doesn't contain mipmaps (done at PreDraw)
-            if (minFilter != oldSamplerState.minFilter)
-                GL.TexParameter(target, TextureParameterName.TextureMinFilter, hasMipmap ? (int)minFilter : (int)minFilterNoMipmap);
+                // On OpenGL ES, we need to choose the appropriate min filter ourself if the texture doesn't contain mipmaps (done at PreDraw)
+                if (minFilter != oldSamplerState.minFilter)
+                    GL.TexParameter(target, TextureParameterName.TextureMinFilter, hasMipmap ? (int)minFilter : (int)minFilterNoMipmap);
 #endif
 
 #if !STRIDE_PLATFORM_IOS
-            if (maxAnisotropy != oldSamplerState.maxAnisotropy && GraphicsDevice.HasAnisotropicFiltering)
-                GL.TexParameter(target, (TextureParameterName)SamplerParameterF.TextureMaxAnisotropy, Description.MaxAnisotropy);
+                if (maxAnisotropy != oldSamplerState.maxAnisotropy && GraphicsDevice.HasAnisotropicFiltering)
+                    GL.TexParameter(target, (TextureParameterName)SamplerParameterF.TextureMaxAnisotropy, Description.MaxAnisotropy);
 #endif
-            if (magFilter != oldSamplerState.magFilter)
-                GL.TexParameter(target, TextureParameterName.TextureMagFilter, (int)magFilter);
-            if (textureWrapS != oldSamplerState.textureWrapS)
-                GL.TexParameter(target, TextureParameterName.TextureWrapS, (int)textureWrapS);
-            if (textureWrapT != oldSamplerState.textureWrapT)
-                GL.TexParameter(target, TextureParameterName.TextureWrapT, (int)textureWrapT);
+                if (magFilter != oldSamplerState.magFilter)
+                    GL.TexParameter(target, TextureParameterName.TextureMagFilter, (int)magFilter);
+                if (textureWrapS != oldSamplerState.textureWrapS)
+                    GL.TexParameter(target, TextureParameterName.TextureWrapS, (int)textureWrapS);
+                if (textureWrapT != oldSamplerState.textureWrapT)
+                    GL.TexParameter(target, TextureParameterName.TextureWrapT, (int)textureWrapT);
+            }
         }
     }
 }
