@@ -827,66 +827,69 @@ namespace Stride.Graphics
             // Calculate the subResourceIndex for a Texture
             int subResourceIndex = this.GetSubResourceIndex(arraySlice, mipSlice);
 
-            // Map the staging resource to a CPU accessible memory
-            var mappedResource = commandList.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, doNotWait);
-
-            // Box can be empty if DoNotWait is set to true, return false if empty
-            var box = mappedResource.DataBox;
-            if (box.IsEmpty)
+            using (commandList.GraphicsDevice.UseOpenGLCreationContext ())
             {
-                return false;
-            }
+                // Map the staging resource to a CPU accessible memory
+                var mappedResource = commandList.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, doNotWait);
 
-            // If depth == 1 (Texture, Texture or TextureCube), then depthStride is not used
-            var boxDepthStride = this.Depth == 1 ? box.SlicePitch : textureDepthStride;
-
-            var isFlippedTexture = IsFlipped();
-
-            // The fast way: If same stride, we can directly copy the whole texture in one shot
-            if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride && !isFlippedTexture)
-            {
-                Unsafe.CopyBlockUnaligned((void*)toData.Pointer, (void*)box.DataPointer, (uint)mipMapSize);
-            }
-            else
-            {
-                // Otherwise, the long way by copying each scanline
-                var sourcePerDepthPtr = (byte*)box.DataPointer;
-                var destPtr = (byte*)toData.Pointer;
-
-                // Iterate on all depths
-                for (int j = 0; j < depth; j++)
+                // Box can be empty if DoNotWait is set to true, return false if empty
+                var box = mappedResource.DataBox;
+                if (box.IsEmpty)
                 {
-                    var sourcePtr = sourcePerDepthPtr;
-                    // Iterate on each line
-
-                    if (isFlippedTexture)
-                    {
-                        sourcePtr += box.RowPitch * (height - 1);
-                        for (int i = height - 1; i >= 0; i--)
-                        {
-                            // Copy a single row
-                            Unsafe.CopyBlockUnaligned(destPtr, sourcePtr, (uint)rowStride);
-                            sourcePtr -= box.RowPitch;
-                            destPtr += rowStride;
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < height; i++)
-                        {
-                            // Copy a single row
-                            Unsafe.CopyBlockUnaligned(destPtr, sourcePtr, (uint)rowStride);
-                            sourcePtr += box.RowPitch;
-                            destPtr += rowStride;
-                        }
-                    }
-                    sourcePerDepthPtr += box.SlicePitch;
+                    return false;
                 }
+
+                // If depth == 1 (Texture, Texture or TextureCube), then depthStride is not used
+                var boxDepthStride = this.Depth == 1 ? box.SlicePitch : textureDepthStride;
+
+                var isFlippedTexture = IsFlipped();
+
+                // The fast way: If same stride, we can directly copy the whole texture in one shot
+                if (box.RowPitch == rowStride && boxDepthStride == textureDepthStride && !isFlippedTexture)
+                {
+                    Unsafe.CopyBlockUnaligned((void*)toData.Pointer, (void*)box.DataPointer, (uint)mipMapSize);
+                }
+                else
+                {
+                    // Otherwise, the long way by copying each scanline
+                    var sourcePerDepthPtr = (byte*)box.DataPointer;
+                    var destPtr = (byte*)toData.Pointer;
+
+                    // Iterate on all depths
+                    for (int j = 0; j < depth; j++)
+                    {
+                        var sourcePtr = sourcePerDepthPtr;
+                        // Iterate on each line
+
+                        if (isFlippedTexture)
+                        {
+                            sourcePtr += box.RowPitch * (height - 1);
+                            for (int i = height - 1; i >= 0; i--)
+                            {
+                                // Copy a single row
+                                Unsafe.CopyBlockUnaligned(destPtr, sourcePtr, (uint)rowStride);
+                                sourcePtr -= box.RowPitch;
+                                destPtr += rowStride;
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < height; i++)
+                            {
+                                // Copy a single row
+                                Unsafe.CopyBlockUnaligned(destPtr, sourcePtr, (uint)rowStride);
+                                sourcePtr += box.RowPitch;
+                                destPtr += rowStride;
+                            }
+                        }
+                        sourcePerDepthPtr += box.SlicePitch;
+                    }
+                }
+
+                // Make sure that we unmap the resource in case of an exception
+                commandList.UnmapSubresource(mappedResource);
             }
-
-            // Make sure that we unmap the resource in case of an exception
-            commandList.UnmapSubresource(mappedResource);
-
+            
             return true;
         }
 

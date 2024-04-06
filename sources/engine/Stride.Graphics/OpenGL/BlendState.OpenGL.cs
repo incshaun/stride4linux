@@ -111,31 +111,34 @@ namespace Stride.Graphics
 
         internal void Apply(CommandList commandList, BlendState oldBlendState)
         {
-            var GL = commandList.GL;
-            // note: need to update blend equation, blend function and color mask even when the blend state is disable in order to keep the hash based caching system valid
-
-            if (blendEnable && !oldBlendState.blendEnable)
-                GL.Enable(EnableCap.Blend);
-
-            if (blendEquationHash != oldBlendState.blendEquationHash)
-                GL.BlendEquationSeparate(blendEquationModeColor, blendEquationModeAlpha);
-
-            if (blendFuncHash != oldBlendState.blendFuncHash)
-                GL.BlendFuncSeparate(blendFactorSrcColor, blendFactorDestColor, blendFactorSrcAlpha, blendFactorDestAlpha);
-
-            if (commandList.NewBlendFactor != commandList.BoundBlendFactor)
+            using (commandList.GraphicsDevice.UseOpenGLCreationContext ())
             {
-                commandList.BoundBlendFactor = commandList.NewBlendFactor;
-                GL.BlendColor(commandList.NewBlendFactor.R, commandList.NewBlendFactor.G, commandList.NewBlendFactor.B, commandList.NewBlendFactor.A);
-            }
+                var GL = commandList.GL;
+                // note: need to update blend equation, blend function and color mask even when the blend state is disable in order to keep the hash based caching system valid
 
-            if (ColorWriteChannels != oldBlendState.ColorWriteChannels)
-            {
-                RestoreColorMask(GL);
-            }
+                if (blendEnable && !oldBlendState.blendEnable)
+                    GL.Enable(EnableCap.Blend);
 
-            if (!blendEnable && oldBlendState.blendEnable)
-                GL.Disable(EnableCap.Blend);
+                if (blendEquationHash != oldBlendState.blendEquationHash)
+                    GL.BlendEquationSeparate(blendEquationModeColor, blendEquationModeAlpha);
+
+                if (blendFuncHash != oldBlendState.blendFuncHash)
+                    GL.BlendFuncSeparate(blendFactorSrcColor, blendFactorDestColor, blendFactorSrcAlpha, blendFactorDestAlpha);
+
+                if (commandList.NewBlendFactor != commandList.BoundBlendFactor)
+                {
+                    commandList.BoundBlendFactor = commandList.NewBlendFactor;
+                    GL.BlendColor(commandList.NewBlendFactor.R, commandList.NewBlendFactor.G, commandList.NewBlendFactor.B, commandList.NewBlendFactor.A);
+                }
+
+                if (ColorWriteChannels != oldBlendState.ColorWriteChannels)
+                {
+                    RestoreColorMask(GL);
+                }
+
+                if (!blendEnable && oldBlendState.blendEnable)
+                    GL.Disable(EnableCap.Blend);
+            }
         }
 
         internal void RestoreColorMask(GL GL)

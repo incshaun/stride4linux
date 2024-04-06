@@ -147,16 +147,19 @@ namespace Stride.Graphics
         /// <param name="format"></param>
         public void Resize(int width, int height, PixelFormat format)
         {
-            GraphicsDevice.Begin();
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
+                GraphicsDevice.Begin();
 
-            Description.BackBufferWidth = width;
-            Description.BackBufferHeight = height;
-            Description.BackBufferFormat = NormalizeBackBufferFormat(format);
+                Description.BackBufferWidth = width;
+                Description.BackBufferHeight = height;
+                Description.BackBufferFormat = NormalizeBackBufferFormat(format);
 
-            ResizeBackBuffer(width, height, format);
-            ResizeDepthStencilBuffer(width, height, format);
+                ResizeBackBuffer(width, height, format);
+                ResizeDepthStencilBuffer(width, height, format);
 
-            GraphicsDevice.End();
+                GraphicsDevice.End();
+            }
         }
 
         private PixelFormat NormalizeBackBufferFormat(PixelFormat backBufferFormat)

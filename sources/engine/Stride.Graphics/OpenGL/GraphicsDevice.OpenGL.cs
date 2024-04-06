@@ -252,6 +252,10 @@ namespace Stride.Graphics
 
         private uint CreateCopyProgram(bool srgb, out int offsetLocation, out int scaleLocation)
         {
+#if DEBUG
+            EnsureContextActive();
+#endif
+
 #if STRIDE_GRAPHICS_API_OPENGLES
             // We aim at OpenGLES 3.0 or greater.
             var shaderVersion = "#version 300 es";
@@ -325,7 +329,7 @@ namespace Stride.Graphics
             ProfileEnabled = true;
         }
 
-        internal void EnsureContextActive()
+        public void EnsureContextActive()
         {
             // TODO: Better checks (is active context the expected one?)
             var context = CurrentGraphicsContext;
@@ -386,6 +390,10 @@ namespace Stride.Graphics
         // TODO: I think having a class for FBOs would simplify some stuff. We could implement methods like "Bind()" for it.
         uint GenerateFBO(FBOTexture depthStencilBuffer, FBOTexture[] renderTargets, int renderTargetCount)
         {
+#if DEBUG
+            EnsureContextActive();
+#endif
+
             GL.GenFramebuffers(1, out uint fboID);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboID);
             UpdateFBO(FramebufferTarget.Framebuffer, depthStencilBuffer, renderTargets, renderTargetCount);
@@ -457,6 +465,10 @@ namespace Stride.Graphics
 
         internal void UpdateFBO(FramebufferTarget framebufferTarget, FBOTexture depthStencilBuffer, FBOTexture[] renderTargets, int renderTargetCount)  // TODO: What's the point of passing an array that has reduntant elements? This could probably be reduced to only the "renderTargets" parameter.
         {
+#if DEBUG
+            EnsureContextActive();
+#endif
+
             for (int i = 0; i < renderTargetCount; ++i)
             {
                 UpdateFBOColorAttachment(framebufferTarget, i, renderTargets[i]);
@@ -485,6 +497,10 @@ namespace Stride.Graphics
 
         void BindColorAttachment(FramebufferTarget framebufferTarget, int i, FBOTexture renderTarget)
         {
+#if DEBUG
+            EnsureContextActive();
+#endif
+
             FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0 + i;
 
             if (renderTarget.Texture.IsMultisample)
@@ -511,6 +527,10 @@ namespace Stride.Graphics
 
         internal void UpdateFBOColorAttachment(FramebufferTarget framebufferTarget, int i, FBOTexture renderTarget)
         {
+#if DEBUG
+            EnsureContextActive();
+#endif
+
             switch (renderTarget.Texture.TextureTarget)
             {
 #if !STRIDE_GRAPHICS_API_OPENGLES
@@ -537,6 +557,10 @@ namespace Stride.Graphics
 
         internal FramebufferAttachment UpdateFBODepthStencilAttachment(FramebufferTarget framebufferTarget, FBOTexture depthStencilBuffer)
         {
+#if DEBUG
+            EnsureContextActive();
+#endif
+
             bool useSharedAttachment = depthStencilBuffer.Texture.StencilId == depthStencilBuffer.Texture.TextureId;
             var attachmentType = useSharedAttachment ? (FramebufferAttachment)GLEnum.DepthStencilAttachment : FramebufferAttachment.DepthAttachment;
 
@@ -572,6 +596,10 @@ namespace Stride.Graphics
 
         internal uint TryCompileShader(ShaderType shaderType, string sourceCode)
         {
+#if DEBUG
+            EnsureContextActive();
+#endif
+
             var shaderGL = GL.CreateShader(shaderType);
             GL.ShaderSource(shaderGL, sourceCode);
             GL.CompileShader(shaderGL);
@@ -593,6 +621,10 @@ namespace Stride.Graphics
 
         private void OnApplicationPaused(object sender, EventArgs e)
         {
+#if DEBUG
+            EnsureContextActive();
+#endif
+
             // Block async resource creation
             Monitor.Enter(asyncCreationLockObject, ref asyncCreationLockTaken);
 
@@ -659,14 +691,14 @@ namespace Stride.Graphics
 #endif
 
 #if STRIDE_UI_SDL
-if (windowHandle != null)
-{
-            gameWindow = (Stride.Graphics.SDL.Window)windowHandle.NativeWindow;
-}
-else
-{
-            gameWindow = new Stride.Graphics.SDL.Window ("SDL Window", IntPtr.Zero);
-}
+            if (windowHandle != null)
+            {
+                gameWindow = (Stride.Graphics.SDL.Window)windowHandle.NativeWindow;
+            }
+            else
+            {
+                gameWindow = new Stride.Graphics.SDL.Window ("SDL Window", IntPtr.Zero);
+            }
 
             var SDL = Graphics.SDL.Window.SDL;
 
@@ -713,49 +745,45 @@ else
             DefaultSamplerState = SamplerState.New(this, new SamplerStateDescription(TextureFilter.MinPointMagMipLinear, TextureAddressMode.Wrap) { MaxAnisotropy = 1 }).DisposeBy(this);
         }
 
-        private static bool localInit = false;
-        public void LocalInitialize ()
-        {
-            if (!localInit)
-            {
-            GL.GenVertexArrays(1, out defaultVAO);
-            GL.BindVertexArray(defaultVAO);
-            localInit = true;
-            }
-        }
-
         private unsafe void InitializePostFeatures()
         {
-            // Create and bind default VAO
-            GL.GenVertexArrays(1, out defaultVAO);
-            GL.BindVertexArray(defaultVAO);
-
-            // Save current FBO aside
-            GL.GetInteger(GetPName.DrawFramebufferBinding, out var boundFBO);
-
-            // Create FBO that will be used for copy operations
-            CopyColorSourceFBO = GL.GenFramebuffer();
-            CopyDepthSourceFBO = GL.GenFramebuffer();
-
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, CopyDepthSourceFBO);
-            GL.ReadBuffer(ReadBufferMode.None);
-
-            // Restore FBO
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, (uint)boundFBO);
-
-            if (IsDebugMode && HasKhronosDebug)
+            using (UseOpenGLCreationContext ())
             {
-                GL.DebugMessageCallback(debugCallbackInstance ?? (debugCallbackInstance = DebugCallback), null);
-                GL.Enable(EnableCap.DebugOutputSynchronous);
-                ProfileEnabled = true;
-
-                // Also do it on async creation context
                 deviceCreationContext.MakeCurrent();
-                GL.DebugMessageCallback(debugCallbackInstance, IntPtr.Zero);
-                GL.Enable(EnableCap.DebugOutputSynchronous);
-                MainGraphicsContext.MakeCurrent();
-            }
+                GL.GenVertexArrays(1, out defaultVAO);
+                GL.BindVertexArray(defaultVAO);
 
+                // Create and bind default VAO
+                MainGraphicsContext.MakeCurrent();
+                GL.GenVertexArrays(1, out defaultVAO);
+                GL.BindVertexArray(defaultVAO);
+
+                // Save current FBO aside
+                GL.GetInteger(GetPName.DrawFramebufferBinding, out var boundFBO);
+
+                // Create FBO that will be used for copy operations
+                CopyColorSourceFBO = GL.GenFramebuffer();
+                CopyDepthSourceFBO = GL.GenFramebuffer();
+
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, CopyDepthSourceFBO);
+                GL.ReadBuffer(ReadBufferMode.None);
+
+                // Restore FBO
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, (uint)boundFBO);
+
+                if (IsDebugMode && HasKhronosDebug)
+                {
+                    GL.DebugMessageCallback(debugCallbackInstance ?? (debugCallbackInstance = DebugCallback), null);
+                    GL.Enable(EnableCap.DebugOutputSynchronous);
+                    ProfileEnabled = true;
+
+                    // Also do it on async creation context
+                    deviceCreationContext.MakeCurrent();
+                    GL.DebugMessageCallback(debugCallbackInstance, IntPtr.Zero);
+                    GL.Enable(EnableCap.DebugOutputSynchronous);
+                    MainGraphicsContext.MakeCurrent();
+                }
+            }
             // Create the main command list
             InternalMainCommandList = CommandList.New(this);
         }

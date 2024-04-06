@@ -516,57 +516,60 @@ namespace Stride.Rendering.Lights
             /// <inheritdoc/>
             public override unsafe void UpdateViewResources(RenderDrawContext context, int viewIndex)
             {
-                ref var renderViewInfo = ref renderViewInfos[viewIndex];
+                using (context.CommandList.GraphicsDevice.UseOpenGLCreationContext ())
+                {
+                    ref var renderViewInfo = ref renderViewInfos[viewIndex];
 
-                // Upload data to texture
-                if (renderViewInfo.LightClusters != null && renderViewInfo.LightClusters.Length > 0)
-                {
-                    fixed (Int2* dataPtr = renderViewInfo.LightClusters)
-                        context.CommandList.UpdateSubresource(clusteredGroupRenderer.lightClusters, 0, new DataBox((IntPtr)dataPtr, sizeof(Int2) * renderViewInfo.ClusterCount.X, sizeof(Int2) * renderViewInfo.ClusterCount.X * renderViewInfo.ClusterCount.Y),
-                            new ResourceRegion(0, 0, 0, renderViewInfo.ClusterCount.X, renderViewInfo.ClusterCount.Y, ClusterSlices));
-                }
+                    // Upload data to texture
+                    if (renderViewInfo.LightClusters != null && renderViewInfo.LightClusters.Length > 0)
+                    {
+                        fixed (Int2* dataPtr = renderViewInfo.LightClusters)
+                            context.CommandList.UpdateSubresource(clusteredGroupRenderer.lightClusters, 0, new DataBox((IntPtr)dataPtr, sizeof(Int2) * renderViewInfo.ClusterCount.X, sizeof(Int2) * renderViewInfo.ClusterCount.X * renderViewInfo.ClusterCount.Y),
+                                new ResourceRegion(0, 0, 0, renderViewInfo.ClusterCount.X, renderViewInfo.ClusterCount.Y, ClusterSlices));
+                    }
 
-                // PointLights: Ensure size and update
-                if (renderViewInfo.PointLights.Count > 0)
-                {
-                    fixed (PointLightData* pointLightsPtr = renderViewInfo.PointLights.Items)
-                        context.CommandList.UpdateSubresource(clusteredGroupRenderer.pointLightsBuffer, 0, new DataBox((IntPtr)pointLightsPtr, 0, 0), new ResourceRegion(0, 0, 0, renderViewInfo.PointLights.Count * sizeof(PointLightData), 1, 1));
-                }
-                // macOS doesn't like when we provide a null Buffer or if it is not sufficiently allocated.
-                // It would cause an inifite loop. So for now we just create one with one element but not initializing it.
-                else if (Platform.Type == PlatformType.macOS
-                    && (clusteredGroupRenderer.pointLightsBuffer == null || clusteredGroupRenderer.pointLightsBuffer.SizeInBytes < sizeof(PointLightData)))
-                {
-                    clusteredGroupRenderer.pointLightsBuffer?.Dispose();
-                    clusteredGroupRenderer.pointLightsBuffer = Buffer.New(context.GraphicsDevice, MathUtil.NextPowerOfTwo(sizeof(PointLightData)), 0, BufferFlags.ShaderResource, PixelFormat.R32G32B32A32_Float);
-                }
+                    // PointLights: Ensure size and update
+                    if (renderViewInfo.PointLights.Count > 0)
+                    {
+                        fixed (PointLightData* pointLightsPtr = renderViewInfo.PointLights.Items)
+                            context.CommandList.UpdateSubresource(clusteredGroupRenderer.pointLightsBuffer, 0, new DataBox((IntPtr)pointLightsPtr, 0, 0), new ResourceRegion(0, 0, 0, renderViewInfo.PointLights.Count * sizeof(PointLightData), 1, 1));
+                    }
+                    // macOS doesn't like when we provide a null Buffer or if it is not sufficiently allocated.
+                    // It would cause an inifite loop. So for now we just create one with one element but not initializing it.
+                    else if (Platform.Type == PlatformType.macOS
+                        && (clusteredGroupRenderer.pointLightsBuffer == null || clusteredGroupRenderer.pointLightsBuffer.SizeInBytes < sizeof(PointLightData)))
+                    {
+                        clusteredGroupRenderer.pointLightsBuffer?.Dispose();
+                        clusteredGroupRenderer.pointLightsBuffer = Buffer.New(context.GraphicsDevice, MathUtil.NextPowerOfTwo(sizeof(PointLightData)), 0, BufferFlags.ShaderResource, PixelFormat.R32G32B32A32_Float);
+                    }
 
-                // SpotLights: Ensure size and update
-                if (renderViewInfo.SpotLights.Count > 0)
-                {
-                    fixed (SpotLightData* spotLightsPtr = renderViewInfo.SpotLights.Items)
-                        context.CommandList.UpdateSubresource(clusteredGroupRenderer.spotLightsBuffer, 0, new DataBox((IntPtr)spotLightsPtr, 0, 0), new ResourceRegion(0, 0, 0, renderViewInfo.SpotLights.Count * sizeof(SpotLightData), 1, 1));
-                }
-                // See previous macOS comment.
-                else if (Platform.Type == PlatformType.macOS
-                    && (clusteredGroupRenderer.spotLightsBuffer == null || clusteredGroupRenderer.spotLightsBuffer.SizeInBytes < sizeof(SpotLightData)))
-                {
-                    clusteredGroupRenderer.spotLightsBuffer?.Dispose();
-                    clusteredGroupRenderer.spotLightsBuffer = Buffer.New(context.GraphicsDevice, MathUtil.NextPowerOfTwo(sizeof(SpotLightData)), 0, BufferFlags.ShaderResource, PixelFormat.R32G32B32A32_Float);
-                }
+                    // SpotLights: Ensure size and update
+                    if (renderViewInfo.SpotLights.Count > 0)
+                    {
+                        fixed (SpotLightData* spotLightsPtr = renderViewInfo.SpotLights.Items)
+                            context.CommandList.UpdateSubresource(clusteredGroupRenderer.spotLightsBuffer, 0, new DataBox((IntPtr)spotLightsPtr, 0, 0), new ResourceRegion(0, 0, 0, renderViewInfo.SpotLights.Count * sizeof(SpotLightData), 1, 1));
+                    }
+                    // See previous macOS comment.
+                    else if (Platform.Type == PlatformType.macOS
+                        && (clusteredGroupRenderer.spotLightsBuffer == null || clusteredGroupRenderer.spotLightsBuffer.SizeInBytes < sizeof(SpotLightData)))
+                    {
+                        clusteredGroupRenderer.spotLightsBuffer?.Dispose();
+                        clusteredGroupRenderer.spotLightsBuffer = Buffer.New(context.GraphicsDevice, MathUtil.NextPowerOfTwo(sizeof(SpotLightData)), 0, BufferFlags.ShaderResource, PixelFormat.R32G32B32A32_Float);
+                    }
 
-                // LightIndices: Ensure size and update
-                if (renderViewInfo.LightIndices.Count > 0)
-                {
-                    fixed (int* lightIndicesPtr = renderViewInfo.LightIndices.Items)
-                        context.CommandList.UpdateSubresource(clusteredGroupRenderer.lightIndicesBuffer, 0, new DataBox((IntPtr)lightIndicesPtr, 0, 0), new ResourceRegion(0, 0, 0, renderViewInfo.LightIndices.Count * sizeof(int), 1, 1));
-                }
-                // See previous macOS comment.
-                else if (Platform.Type == PlatformType.macOS
-                    && (clusteredGroupRenderer.lightIndicesBuffer == null || clusteredGroupRenderer.lightIndicesBuffer.SizeInBytes < sizeof(int)))
-                {
-                    clusteredGroupRenderer.lightIndicesBuffer?.Dispose();
-                    clusteredGroupRenderer.lightIndicesBuffer = Buffer.New(context.GraphicsDevice, MathUtil.NextPowerOfTwo(sizeof(int)), 0, BufferFlags.ShaderResource, PixelFormat.R32_UInt);
+                    // LightIndices: Ensure size and update
+                    if (renderViewInfo.LightIndices.Count > 0)
+                    {
+                        fixed (int* lightIndicesPtr = renderViewInfo.LightIndices.Items)
+                            context.CommandList.UpdateSubresource(clusteredGroupRenderer.lightIndicesBuffer, 0, new DataBox((IntPtr)lightIndicesPtr, 0, 0), new ResourceRegion(0, 0, 0, renderViewInfo.LightIndices.Count * sizeof(int), 1, 1));
+                    }
+                    // See previous macOS comment.
+                    else if (Platform.Type == PlatformType.macOS
+                        && (clusteredGroupRenderer.lightIndicesBuffer == null || clusteredGroupRenderer.lightIndicesBuffer.SizeInBytes < sizeof(int)))
+                    {
+                        clusteredGroupRenderer.lightIndicesBuffer?.Dispose();
+                        clusteredGroupRenderer.lightIndicesBuffer = Buffer.New(context.GraphicsDevice, MathUtil.NextPowerOfTwo(sizeof(int)), 0, BufferFlags.ShaderResource, PixelFormat.R32_UInt);
+                    }
                 }
             }
 

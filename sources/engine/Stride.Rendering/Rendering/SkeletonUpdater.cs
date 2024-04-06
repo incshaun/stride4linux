@@ -64,7 +64,10 @@ namespace Stride.Rendering
                 UpdateLocalMatrix(ref nodeTransformations[index]);
             }
 
-            nodeTransformations[0].Flags &= ~ModelNodeFlags.EnableTransform;
+            if (nodeTransformations.Length > 0)
+            {
+              nodeTransformations[0].Flags &= ~ModelNodeFlags.EnableTransform;
+            }
         }
 
         /// <summary>

@@ -79,7 +79,10 @@ namespace Stride.Rendering.Compositing
             {
                 var clearOptions = DepthStencilClearOptions.DepthBuffer | DepthStencilClearOptions.Stencil;
 
-                commandList.Clear(depthStencil, clearOptions, Depth, Stencil);
+                using (GraphicsDevice.UseOpenGLCreationContext ())
+                {
+                    commandList.Clear(depthStencil, clearOptions, Depth, Stencil);
+                }
             }
 
             if (ClearFlags == ClearRendererFlags.ColorAndDepth || ClearFlags == ClearRendererFlags.ColorOnly)
@@ -88,7 +91,10 @@ namespace Stride.Rendering.Compositing
                 {
                     var renderTarget = commandList.RenderTargets[index];
                     var color = index == 0 ? Color.ToColorSpace(drawContext.GraphicsDevice.ColorSpace) : Color4.Black;
-                    commandList.Clear(renderTarget, color);
+                    using (GraphicsDevice.UseOpenGLCreationContext ())
+                    {
+                        commandList.Clear(renderTarget, color);
+                    }
                 }
             }
         }

@@ -100,54 +100,57 @@ namespace Stride.Graphics
         {
             var GL = commandList.GL;
 
-            if (commandList.DepthStencilBoundState.DepthBufferEnable != state.DepthBufferEnable)
+            using (commandList.GraphicsDevice.UseOpenGLCreationContext())
             {
-                commandList.DepthStencilBoundState.DepthBufferEnable = state.DepthBufferEnable;
+                if (commandList.DepthStencilBoundState.DepthBufferEnable != state.DepthBufferEnable)
+                {
+                    commandList.DepthStencilBoundState.DepthBufferEnable = state.DepthBufferEnable;
 
-                if (state.DepthBufferEnable)
-                    GL.Enable(EnableCap.DepthTest);
-                else
-                    GL.Disable(EnableCap.DepthTest);
-            }
+                    if (state.DepthBufferEnable)
+                        GL.Enable(EnableCap.DepthTest);
+                    else
+                        GL.Disable(EnableCap.DepthTest);
+                }
 
-            if (state.DepthBufferEnable && commandList.DepthStencilBoundState.DepthFunction != state.DepthFunction)
-            {
-                commandList.DepthStencilBoundState.DepthFunction = state.DepthFunction;
-                GL.DepthFunc(state.DepthFunction);
-            }
+                if (state.DepthBufferEnable && commandList.DepthStencilBoundState.DepthFunction != state.DepthFunction)
+                {
+                    commandList.DepthStencilBoundState.DepthFunction = state.DepthFunction;
+                    GL.DepthFunc(state.DepthFunction);
+                }
 
-            if (commandList.DepthStencilBoundState.DepthBufferWriteEnable != state.DepthBufferWriteEnable)
-            {
-                commandList.DepthStencilBoundState.DepthBufferWriteEnable = state.DepthBufferWriteEnable;
-                GL.DepthMask(state.DepthBufferWriteEnable);
-            }
+                if (commandList.DepthStencilBoundState.DepthBufferWriteEnable != state.DepthBufferWriteEnable)
+                {
+                    commandList.DepthStencilBoundState.DepthBufferWriteEnable = state.DepthBufferWriteEnable;
+                    GL.DepthMask(state.DepthBufferWriteEnable);
+                }
 
-            if (commandList.DepthStencilBoundState.StencilEnable != state.StencilEnable)
-            {
-                commandList.DepthStencilBoundState.StencilEnable = state.StencilEnable;
+                if (commandList.DepthStencilBoundState.StencilEnable != state.StencilEnable)
+                {
+                    commandList.DepthStencilBoundState.StencilEnable = state.StencilEnable;
 
-                if (state.StencilEnable)
-                    GL.Enable(EnableCap.StencilTest);
-                else
-                    GL.Disable(EnableCap.StencilTest);
-            }
+                    if (state.StencilEnable)
+                        GL.Enable(EnableCap.StencilTest);
+                    else
+                        GL.Disable(EnableCap.StencilTest);
+                }
 
-            if (state.StencilEnable && commandList.DepthStencilBoundState.StencilWriteMask != state.StencilWriteMask)
-            {
-                commandList.DepthStencilBoundState.StencilWriteMask = state.StencilWriteMask;
-                GL.StencilMask(state.StencilWriteMask);
-            }
+                if (state.StencilEnable && commandList.DepthStencilBoundState.StencilWriteMask != state.StencilWriteMask)
+                {
+                    commandList.DepthStencilBoundState.StencilWriteMask = state.StencilWriteMask;
+                    GL.StencilMask(state.StencilWriteMask);
+                }
 
-            // TODO: Properly handle stencil reference
-            if (state.StencilEnable && (commandList.DepthStencilBoundState.Faces != state.Faces || commandList.NewStencilReference != commandList.BoundStencilReference))
-            {
-                commandList.DepthStencilBoundState.Faces = state.Faces;
-                commandList.BoundStencilReference = commandList.NewStencilReference;
+                // TODO: Properly handle stencil reference
+                if (state.StencilEnable && (commandList.DepthStencilBoundState.Faces != state.Faces || commandList.NewStencilReference != commandList.BoundStencilReference))
+                {
+                    commandList.DepthStencilBoundState.Faces = state.Faces;
+                    commandList.BoundStencilReference = commandList.NewStencilReference;
 
-                GL.StencilFuncSeparate(GLEnum.Front, state.Faces.FrontFaceStencilFunction, commandList.BoundStencilReference, state.StencilWriteMask); // set both faces
-                GL.StencilFuncSeparate(GLEnum.Back, state.Faces.BackFaceStencilFunction, commandList.BoundStencilReference, state.StencilWriteMask); // override back face
-                GL.StencilOpSeparate(GLEnum.Front, state.Faces.FrontFaceDepthFailOp, state.Faces.FrontFaceFailOp, state.Faces.FrontFacePassOp);
-                GL.StencilOpSeparate(GLEnum.Back, state.Faces.BackFaceDepthFailOp, state.Faces.BackFaceFailOp, state.Faces.BackFacePassOp);
+                    GL.StencilFuncSeparate(GLEnum.Front, state.Faces.FrontFaceStencilFunction, commandList.BoundStencilReference, state.StencilWriteMask); // set both faces
+                    GL.StencilFuncSeparate(GLEnum.Back, state.Faces.BackFaceStencilFunction, commandList.BoundStencilReference, state.StencilWriteMask); // override back face
+                    GL.StencilOpSeparate(GLEnum.Front, state.Faces.FrontFaceDepthFailOp, state.Faces.FrontFaceFailOp, state.Faces.FrontFacePassOp);
+                    GL.StencilOpSeparate(GLEnum.Back, state.Faces.BackFaceDepthFailOp, state.Faces.BackFaceFailOp, state.Faces.BackFacePassOp);
+                }
             }
         }
     }
