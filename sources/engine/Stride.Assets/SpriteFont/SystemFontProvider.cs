@@ -61,9 +61,8 @@ namespace Stride.Assets.SpriteFont
             if (typeface == null)
             {
                 result?.Error($"Cannot find system font '{FontName}'. Make sure it is installed on this machine.");
-                var font = new SKFont ();
                 OriginalFontName = FontName;
-                FontName = font.Typeface.FamilyName;
+                FontName = SKFontManager.Default.GetFamilyName (0);
                 result?.Error($"Falling back to system font '{FontName}' from {OriginalFontName}. .");
             }
 
