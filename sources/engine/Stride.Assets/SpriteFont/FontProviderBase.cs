@@ -19,7 +19,7 @@ namespace Stride.Assets.SpriteFont
         /// Gets the associated <see cref="FontFace"/>
         /// </summary>
         /// <returns><see cref="FontFace"/> from the specified source or <c>null</c> if not found</returns>
-        public abstract SKFont GetFontFace();
+        public abstract SKFont GetFontFace(AssetCompilerResult result = null);
 
         /// <summary>
         /// Gets the actual file path to the font file

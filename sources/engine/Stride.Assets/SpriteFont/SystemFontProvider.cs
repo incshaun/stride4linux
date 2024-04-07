@@ -2,12 +2,14 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System.Linq;
-using SharpDX.DirectWrite;
+// using SharpDX.DirectWrite;
 using Stride.Core.Assets.Compiler;
 using Stride.Core;
 using Stride.Core.Diagnostics;
 using Stride.Assets.SpriteFont.Compiler;
 using Stride.Graphics.Font;
+
+using SkiaSharp;
 
 namespace Stride.Assets.SpriteFont
 {
@@ -39,6 +41,8 @@ namespace Stride.Assets.SpriteFont
         [Display("Font Name")]
         public string FontName { get; set; }
 
+        private string OriginalFontName; // Sometimes a font may have to be substituted, if the original is not installed.
+
         /// <summary>
         /// Gets or sets the style of the font. A combination of 'regular', 'bold', 'italic'. Default is 'regular'.
         /// </summary>
@@ -50,60 +54,36 @@ namespace Stride.Assets.SpriteFont
         public override Stride.Graphics.Font.FontStyle Style { get; set; } = Graphics.Font.FontStyle.Regular;
 
         /// <inheritdoc/>
-        public override FontFace GetFontFace()
+        public override SKFont GetFontFace(AssetCompilerResult result = null)
         {
-            var factory = new Factory();
-
-            SharpDX.DirectWrite.Font font;
-            using (var fontCollection = factory.GetSystemFontCollection(false))
+            var fontFamilies = SKFontManager.Default.FontFamilies;
+            var typeface = SKFontManager.Default.MatchFamily (FontName);
+            if (typeface == null)
             {
-                int index;
-                if (!fontCollection.FindFamilyName(FontName, out index))
-                {
-                    // Lets try to import System.Drawing for old system bitmap fonts (like MS Sans Serif)
-                    throw new FontNotFoundException(FontName);
-                }
-
-                using (var fontFamily = fontCollection.GetFontFamily(index))
-                {
-                    var weight = Style.IsBold() ? FontWeight.Bold : FontWeight.Regular;
-                    var style = Style.IsItalic() ? SharpDX.DirectWrite.FontStyle.Italic : SharpDX.DirectWrite.FontStyle.Normal;
-                    font = fontFamily.GetFirstMatchingFont(weight, FontStretch.Normal, style);
-                }
+                result?.Error($"Cannot find system font '{FontName}'. Make sure it is installed on this machine.");
+                var font = new SKFont ();
+                OriginalFontName = FontName;
+                FontName = font.Typeface.FamilyName;
+                result?.Error($"Falling back to system font '{FontName}' from {OriginalFontName}. .");
             }
 
-            return new FontFace(font);
+            var weight = Style.IsBold() ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal;
+            var style = Style.IsItalic() ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright;
+            typeface = SKTypeface.FromFamilyName (FontName, weight, SKFontStyleWidth.Normal ,style);
+
+            if (typeface == null)
+            {
+                result?.Error($"Cannot find style '{Style}' for font family {FontName}. Make sure it is installed on this machine.");
+                return null;
+            }
+
+            return typeface.ToFont ();
         }
 
         public override string GetFontPath(AssetCompilerResult result = null)
         {
-            using (var factory = new Factory())
-            {
-                Font font;
-
-                using (var fontCollection = factory.GetSystemFontCollection(false))
-                {
-                    int index;
-                    if (!fontCollection.FindFamilyName(FontName, out index))
-                    {
-                        result?.Error($"Cannot find system font '{FontName}'. Make sure it is installed on this machine.");
-                        return null;
-                    }
-
-                    using (var fontFamily = fontCollection.GetFontFamily(index))
-                    {
-                        var weight = Style.IsBold() ? FontWeight.Bold : FontWeight.Regular;
-                        var style = Style.IsItalic() ? SharpDX.DirectWrite.FontStyle.Italic : SharpDX.DirectWrite.FontStyle.Normal;
-                        font = fontFamily.GetFirstMatchingFont(weight, FontStretch.Normal, style);
-                        if (font == null)
-                        {
-                            result?.Error($"Cannot find style '{Style}' for font family {FontName}. Make sure it is installed on this machine.");
-                            return null;
-                        }
-                    }
-                }
-
-                var fontFace = new FontFace(font);
+            SKFont font = GetFontFace ();
+/*              var fontFace = new FontFace(font);
 
                 // get the font path on the hard drive
                 var file = fontFace.GetFiles().First();
@@ -111,7 +91,8 @@ namespace Stride.Assets.SpriteFont
                 var originalLoader = (FontFileLoaderNative)file.Loader;
                 var loader = originalLoader.QueryInterface<LocalFontFileLoader>();
                 return loader.GetFilePath(referenceKey);
-            }
+            }*/
+            return ""; // path not relevant here, return empty string.
         }
 
         /// <inheritdoc/>
