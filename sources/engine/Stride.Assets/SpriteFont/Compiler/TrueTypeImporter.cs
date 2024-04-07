@@ -25,16 +25,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using SharpDX.Direct2D1;
+using SkiaSharp;
 using Stride.Graphics.Font;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {
     using System.Drawing;
     using System.Drawing.Imaging;
-    using SharpDX.DirectWrite;
-    using SharpDX.Mathematics.Interop;
-    using Factory = SharpDX.DirectWrite.Factory;
 
     // This code was originally taken from DirectXTk but rewritten with DirectWrite
     // for more accuracy in font rendering
@@ -49,8 +46,6 @@ namespace Stride.Assets.SpriteFont.Compiler
 
         public void Import(SpriteFontAsset options, List<char> characters)
         {
-            var factory = new Factory();
-
             var fontFace = options.FontSource.GetFontFace();
             
             var fontMetrics = fontFace.Metrics;
@@ -70,51 +65,38 @@ namespace Stride.Assets.SpriteFont.Compiler
             //
             // So we are first applying a factor to the line gap:
             //     NewLineGap = LineGap * LineGapFactor
-            var lineGap = fontMetrics.LineGap * options.LineGapFactor;
+            var lineGap = fontMetrics.Leading * options.LineGapFactor;
 
             // Store the font height.
-            LineSpacing = (float)(lineGap + fontMetrics.Ascent + fontMetrics.Descent) / fontMetrics.DesignUnitsPerEm * fontSize;
+            float fontMetricsDesignUnitsPerEm = 1.0f;
+            LineSpacing = (float)(lineGap - fontMetrics.Ascent + fontMetrics.Descent) / fontMetricsDesignUnitsPerEm * fontSize;
 
             // And then the baseline is also changed in order to allow the linegap to be distributed between the top and the 
             // bottom of the font:
-            //     BaseLine = NewLineGap * LineGapBaseLineFactor
-            BaseLine = (float)(lineGap * options.LineGapBaseLineFactor + fontMetrics.Ascent) / fontMetrics.DesignUnitsPerEm * fontSize;
+            BaseLine = (float)(lineGap * options.LineGapBaseLineFactor - fontMetrics.Ascent) / fontMetricsDesignUnitsPerEm * fontSize;
 
             // Rasterize each character in turn.
             foreach (var character in characters)
-                glyphList.Add(ImportGlyph(factory, fontFace, character, fontMetrics, fontSize, options.FontType.AntiAlias));
+                glyphList.Add(ImportGlyph(fontFace, character, fontMetrics, fontSize, options.FontType.AntiAlias));
 
             Glyphs = glyphList;
-
-            factory.Dispose();
         }
         
-        private Glyph ImportGlyph(Factory factory, FontFace fontFace, char character, FontMetrics fontMetrics, float fontSize, FontAntiAliasMode antiAliasMode)
+        private Glyph ImportGlyph(SKFont fontFace, char character, SKFontMetrics fontMetrics, float fontSize, FontAntiAliasMode antiAliasMode)
         {
-            var indices = fontFace.GetGlyphIndices(new int[] { character });
+            SKPaint textPaint = new SKPaint { Color = SKColors.White, TextSize = fontSize, TextAlign = SKTextAlign.Center };
+            SKRect rect = new SKRect ();
+            textPaint.MeasureText ("" + character, ref rect);
+            int width = (int) rect.Width;
+            int height = (int) rect.Height;
 
-            var metrics = fontFace.GetDesignGlyphMetrics(indices, false);
-            var metric = metrics[0];
+            int yOffset = (int) (fontSize * ((rect.Top + rect.Bottom) / 22.0f));
+            yOffset = (int) (-4 * fontSize) + (int) (rect.Top - ((rect.Top + rect.Bottom) / 2) / 2.0f); // not sure why the -4, fits text onto gizmo camera, will have to explore further.
 
-            var width = (float)(metric.AdvanceWidth - metric.LeftSideBearing - metric.RightSideBearing) / fontMetrics.DesignUnitsPerEm * fontSize;
-            var height = (float)(metric.AdvanceHeight - metric.TopSideBearing - metric.BottomSideBearing) / fontMetrics.DesignUnitsPerEm * fontSize;
+            var advanceWidth = 2 + (int) textPaint.GetGlyphWidths ("" + character)[0];
 
-            var xOffset = (float)metric.LeftSideBearing / fontMetrics.DesignUnitsPerEm * fontSize;
-            var yOffset = (float)(metric.TopSideBearing - metric.VerticalOriginY) / fontMetrics.DesignUnitsPerEm * fontSize;
-
-            var advanceWidth = (float)metric.AdvanceWidth / fontMetrics.DesignUnitsPerEm * fontSize;
-            //var advanceHeight = (float)metric.AdvanceHeight / fontMetrics.DesignUnitsPerEm * fontSize;
-
-            var pixelWidth = (int)Math.Ceiling(width + 4);
-            var pixelHeight = (int)Math.Ceiling(height + 4);
-
-            var matrix = new RawMatrix3x2
-            {
-                M11 = 1,
-                M22 = 1,
-                M31 = -MathF.Floor(xOffset) + 1,
-                M32 = -MathF.Floor(yOffset) + 1
-            };
+            var pixelWidth = width + 10;
+            var pixelHeight = height + 10;
 
             Bitmap bitmap;
             if (char.IsWhiteSpace(character))
@@ -123,86 +105,28 @@ namespace Stride.Assets.SpriteFont.Compiler
             }
             else
             {
-                var glyphRun = new GlyphRun
+                bitmap = new Bitmap(pixelWidth, pixelHeight, PixelFormat.Format32bppArgb);
+                SKBitmap texture =  new SKBitmap (pixelWidth, pixelHeight);
+                SKCanvas bitmapCanvas = new SKCanvas(texture);
+                bitmapCanvas.Clear(new SKColor(1, 1, 1)); // Bug in skiasharp seems to not clear if using perfect black.
+                bitmapCanvas.DrawText("" + character, pixelWidth / 2, (pixelHeight - (rect.Bottom + rect.Top)) / 2, textPaint);
+                for (int y = 0; y < pixelHeight; y++)
                 {
-                    FontFace = fontFace,
-                    Advances = new[] { MathF.Ceiling(advanceWidth) },
-                    FontSize = fontSize,
-                    BidiLevel = 0,
-                    Indices = indices,
-                    IsSideways = false,
-                    Offsets = new[] { new GlyphOffset() }
-                };
-
-
-                RenderingMode renderingMode;
-                if (antiAliasMode != FontAntiAliasMode.Aliased)
-                {
-                    var rtParams = new RenderingParams(factory);
-                    renderingMode = fontFace.GetRecommendedRenderingMode(fontSize, 1.0f, MeasuringMode.Natural, rtParams);
-                    rtParams.Dispose();
-                }
-                else
-                {
-                    renderingMode = RenderingMode.Aliased;
-                }
-
-                using (var runAnalysis = new GlyphRunAnalysis(factory,
-                    glyphRun,
-                    1.0f,
-                    matrix,
-                    renderingMode,
-                    MeasuringMode.Natural,
-                    0.0f,
-                    0.0f))
-                {
-
-                    var bounds = new RawRectangle(0, 0, pixelWidth, pixelHeight);
-                    bitmap = new Bitmap(pixelWidth, pixelHeight, PixelFormat.Format32bppArgb);
-
-                    if (renderingMode == RenderingMode.Aliased)
+                    for (int x = 0; x < pixelWidth; x++)
                     {
+                        SKColor col = texture.GetPixel (x, y);
+                        var color = Color.FromArgb(col.Red, col.Green, col.Blue);
 
-                        var texture = new byte[pixelWidth * pixelHeight];
-                        runAnalysis.CreateAlphaTexture(TextureType.Aliased1x1, bounds, texture, texture.Length);
-                        for (int y = 0; y < pixelHeight; y++)
-                        {
-                            for (int x = 0; x < pixelWidth; x++)
-                            {
-                                int pixelX = y * pixelWidth + x;
-                                var grey = texture[pixelX];
-                                var color = Color.FromArgb(grey, grey, grey);
-
-                                bitmap.SetPixel(x, y, color);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var texture = new byte[pixelWidth * pixelHeight * 3];
-                        runAnalysis.CreateAlphaTexture(TextureType.Cleartype3x1, bounds, texture, texture.Length);
-                        for (int y = 0; y < pixelHeight; y++)
-                        {
-                            for (int x = 0; x < pixelWidth; x++)
-                            {
-                                int pixelX = (y * pixelWidth + x) * 3;
-                                var red = LinearToGamma(texture[pixelX]);
-                                var green = LinearToGamma(texture[pixelX + 1]);
-                                var blue = LinearToGamma(texture[pixelX + 2]);
-                                var color = Color.FromArgb(red, green, blue);
-
-                                bitmap.SetPixel(x, y, color);
-                            }
-                        }
+                        bitmap.SetPixel(x, y, color);
                     }
                 }
             }
 
             var glyph = new Glyph(character, bitmap)
             {
-                XOffset = -matrix.M31,
+                XOffset = 0,
                 XAdvance = advanceWidth,
-                YOffset = -matrix.M32,
+                YOffset = yOffset,
             };
             return glyph;
         }
