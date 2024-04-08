@@ -33,7 +33,12 @@
     <ProjectReference Include="../../presentation/Stride.Core.Translation.Presentation/Stride.Core.Translation.Presentation.csproj" />
     <ProjectReference Include="../../presentation/Stride.Core.Translation.Presentation.Avalonia/Stride.Core.Translation.Presentation.Avalonia.csproj" />
     <ProjectReference Include="../Stride.Core.Assets.Editor/Stride.Core.Assets.Editor.csproj" />
-    <AvaloniaResource Include="Resources\**" />
+    <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/**" />
+    <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Icons/plus2_math-24.png" Link="Resources/Icons/plus2_math-24.png" />
+    <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Icons/import-24.png" Link="Resources/Icons/import-24.png" />
+    <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Icons/edit-24.png" Link="Resources/Icons/edit-24.png" />
+    <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Icons/reimport-24.png" Link="Resources/Icons/reimport-24.png" />
+    <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Icons/teapot-24.png" Link="Resources/Icons/teapot-24.png" />
   </ItemGroup>
 
   <Import Project="$(StrideSdkTargets)" />
