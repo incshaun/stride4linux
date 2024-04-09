@@ -21,8 +21,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
         /// <summary>
         /// Identifies the <see cref="MinimumLevel"/> dependency property.
         /// </summary>
-        public static DependencyProperty MinimumLevelProperty = DependencyProperty.Register("MinimumLevel", typeof(LogMessageType),
-            typeof(ActivateOnLogBehavior<T>), new FrameworkPropertyMetadata(LogMessageType.Debug));
+        public static DependencyProperty MinimumLevelProperty = DependencyProperty.Register("MinimumLevel", typeof(LogMessageType), typeof(ActivateOnLogBehavior<T>), new FrameworkPropertyMetadata(LogMessageType.Debug));
 
         /// <summary>
         /// Gets or sets the minimum level of message to receive in order to trigger activation of the associated control.

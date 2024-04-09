@@ -24,7 +24,7 @@
   <Window.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
-        <ResourceInclude Source="/Theme.AvalonDock.axaml" />
+<!--         <ResourceInclude Source="/Theme.AvalonDock.axaml" /> -->
         <ResourceInclude Source="/Stride.Core.Assets.Editor;component/View/CommonResources.axaml" />
       </ResourceDictionary.MergedDictionaries>
       <DataTemplate x:Key="AvalonDock_GameStudio_TitleTemplate">
@@ -513,13 +513,13 @@
                         </ItemsControl>
                       </StackPanel>
                       <!-- TODO: SearchText -->
-                      <sd:TreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values}" AllowDrop="True" IsVirtualizing="False">
-                        <sd:TreeView.Resources>
+                      <sd:ATreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values}" AllowDrop="True" IsVirtualizing="False">
+                        <sd:ATreeView.Resources>
                           <ContextMenu x:Key="ContextMenu">
                             <MenuItem Header="{sd:Localize Folder, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
                             <MenuItem Header="{sd:Localize Create folder, Context=Menu}" Command="{Binding Session.NewDirectoryCommand}" CommandParameter="{Binding Session.ActiveAssetView.SelectedLocations}" Icon="{sd:Image {StaticResource ImageNewFolder}}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
 
-                            <MenuItem Header="{sd:Localize Package, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" Visibility="{sd:MultiBinding {Binding Session.IsUpdatePackageEnabled}, {Binding Session.AddExistingProjectCommand.IsEnabled}, {Binding Session.AddDependencyCommand.IsEnabled}, {Binding Session.SetCurrentProjectCommand.IsEnabled}, Converter={sd:MultiChained {sd:OrMultiConverter}, {sd:VisibleOrCollapsed}}}"/>
+<!--                            <MenuItem Header="{sd:Localize Package, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" Visibility="{sd:MultiBinding {Binding Session.IsUpdatePackageEnabled}, {Binding Session.AddExistingProjectCommand.IsEnabled}, {Binding Session.AddDependencyCommand.IsEnabled}, {Binding Session.SetCurrentProjectCommand.IsEnabled}, Converter={sd:MultiChained {sd:OrMultiConverter}, {sd:VisibleOrCollapsed}}}"/>-->
                             <MenuItem Header="{sd:Localize Update package, Context=Menu}" ItemsSource="{Binding Session.UpdatePackageViewModel.Templates}" Icon="{sd:Image {StaticResource ImageAddNewProject}}" IsVisible="{Binding Session.IsUpdatePackageEnabled}">
                               <MenuItem.ItemContainerStyle>
                                 <ControlTheme x:Key="{x:Type MenuItem}" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}" >
@@ -545,7 +545,7 @@
                             <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand}" CommandParameter="{Binding}" Icon="{sd:Image {StaticResource ImageStartupProject}}" IsVisible="{Binding Session.SetCurrentProjectCommand.IsEnabled}"/>
                             <MenuItem Header="{sd:Localize Package properties, Context=Menu}" Command="{Binding Session.ActivatePackagePropertiesCommand}" Icon="{sd:Image {StaticResource ImagePackageProperties}}" IsVisible="{Binding Session.ActivatePackagePropertiesCommand.IsEnabled}"/>
 
-                            <MenuItem Header="{sd:Localize Solution, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" Visibility="{sd:MultiBinding {Binding Session.NewPackageCommand.IsEnabled}, {Binding Session.AddExistingPackageCommand.IsEnabled}, {Binding Session.OpenInIDECommand.IsEnabled}, Converter={sd:MultiChained {sd:OrMultiConverter}, {sd:VisibleOrCollapsed}}}"/>
+<!--                            <MenuItem Header="{sd:Localize Solution, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" Visibility="{sd:MultiBinding {Binding Session.NewPackageCommand.IsEnabled}, {Binding Session.AddExistingPackageCommand.IsEnabled}, {Binding Session.OpenInIDECommand.IsEnabled}, Converter={sd:MultiChained {sd:OrMultiConverter}, {sd:VisibleOrCollapsed}}}"/>-->
                             <MenuItem Header="{sd:Localize New project..., Context=Menu}" Command="{Binding Session.NewProjectCommand}" Icon="{sd:Image {StaticResource ImageAddNewPackage}}" IsVisible="{Binding Session.NewProjectCommand.IsEnabled}"/>
                             <MenuItem Header="{sd:Localize Add existing project..., Context=Menu}" Command="{Binding Session.AddExistingProjectCommand}" Icon="{sd:Image {StaticResource ImageAddExistingProject}}" IsVisible="{Binding Session.AddExistingProjectCommand.IsEnabled}"/>
                             <MenuItem Header="{sd:Localize Open in IDE, Context=Menu}" Command="{Binding Session.OpenInIDECommand}" Icon="{sd:Image {StaticResource ImageVisualStudio}}" IsVisible="{Binding Session.OpenInIDECommand.IsEnabled}"/>
@@ -564,7 +564,7 @@
                             <MenuItem Header="{sd:Localize Show in Explorer, Context=Menu}" Command="{Binding Session.ExploreCommand}" CommandParameter="{Binding}" Icon="{sd:Image {StaticResource ImageExplore}}" IsVisible="{Binding Session.ExploreCommand.IsEnabled}"/>
 
                           </ContextMenu>
-                        </sd:TreeView.Resources>
+                        </sd:ATreeView.Resources>
                         <i:Interaction.Behaviors>
                           <sd:DragOverAutoScrollBehavior/>
                           <sd:TreeViewAutoExpandBehavior/>
@@ -575,7 +575,7 @@
                           <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding Session.ActiveAssetView.PasteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
                           <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding Session.DeleteSelectedSolutionItemsCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
                         </i:Interaction.Behaviors>
-                        <sd:TreeView.ItemContainerStyle>
+                        <sd:ATreeView.ItemContainerStyle>
                           <ControlTheme x:Key="{x:Type sd:TreeViewItem}" TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
                             <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={sd:AssetToExpandedAtInitialization}}"/>
                              
@@ -588,13 +588,13 @@
                               </Setter.Value>
                             </Setter>
                           </ControlTheme>
-                        </sd:TreeView.ItemContainerStyle>
-                        <sd:TreeView.ItemTemplate>
+                        </sd:ATreeView.ItemContainerStyle>
+                        <sd:ATreeView.ItemTemplate>
                           <TreeDataTemplate ItemsSource="{Binding Content}" ItemTemplateSelector="{StaticResource SolutionTreeViewTemplate}">
                             <TextBlock Text="{Binding Name}"/>
                           </TreeDataTemplate>
-                        </sd:TreeView.ItemTemplate>
-                      </sd:TreeView>
+                        </sd:ATreeView.ItemTemplate>
+                      </sd:ATreeView>
                     </DockPanel>
                   </Document>
                 </DocumentDock>
@@ -697,7 +697,7 @@
                 </Document>
               </DocumentDock>
             </ProportionalDock>
-            <DocumentDockGroup Orientation="Vertical" DockWidth="400">
+            <DocumentDock Orientation="Vertical" DockWidth="400">
               <DocumentDock DockHeight="2*">
                 <!-- PROPERTY GRID -->
                 <Document AutoHideMinWidth="400" ContentId="PropertyGrid" Title="{Binding Source={sd:Localize Property grid, Context=View}}"
@@ -795,11 +795,11 @@
                                        ItemsSource="{Binding Session.ActiveProperties.ViewModel.RootNode.Children}"
                                        IsVisible="{Binding Session.ActiveProperties.CanDisplayProperties}">
                       <sd:PropertyView.Resources>
-                        <RoutedUICommand x:Key="ReplaceCommand" Text="Replace">
+<!--                        <RoutedUICommand x:Key="ReplaceCommand" Text="Replace">
                           <RoutedUICommand.InputGestures>
                             <KeyGesture>Ctrl+Shift+V</KeyGesture>
                           </RoutedUICommand.InputGestures>
-                        </RoutedUICommand>
+                        </RoutedUICommand>-->
                       </sd:PropertyView.Resources>
                       <sd:PropertyView.ItemContainerStyle>
                         <ControlTheme BasedOn="{StaticResource {x:Type sd:PropertyViewItem}}" TargetType="sd:PropertyViewItem">
@@ -931,7 +931,7 @@
                   </Grid>
                 </Document>
               </DocumentDock>
-              <DocumentDockGroup DockHeight="1*">
+              <DocumentDock DockHeight="1*">
                 <DocumentDock>
                   <!-- ASSET PREVIEW -->
                   <Document AutoHideMinWidth="400" ContentId="AssetPreview" Title="{Binding Source={sd:Localize Asset preview, Context=View}}"
@@ -968,13 +968,13 @@
                     </ListBox>
                   </Document>
                 </DocumentDock>
-              </DocumentDockGroup>
-            </DocumentDockGroup>
+              </DocumentDock>
+            </DocumentDock>
           </ProportionalDock>
         </RootDock>
       </DockControl>
-      <StatusBar Grid.Row="2" Background="{StaticResource StatusBarBackgroundBrush}" IsVisible="{Binding Session, Converter={sd:ObjectToBool}}">
-        <StatusBar.Resources>
+      <ItemsControl Grid.Row="2" Background="{StaticResource StatusBarBackgroundBrush}" IsVisible="{Binding Session, Converter={sd:ObjectToBool}}">
+        <ItemsControl.Resources>
           <ControlTheme x:Key="{x:Type TextBlock}" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}"/>
           </ControlTheme>
@@ -982,8 +982,8 @@
             <Setter Property="Background" Value="{StaticResource SelectedTextBrush}"/>
             <Setter Property="Opacity" Value="0.25"/>
           </ControlTheme>
-        </StatusBar.Resources>
-        <StatusBar.ItemsPanel>
+        </ItemsControl.Resources>
+        <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <Grid>
               <Grid.ColumnDefinitions>
@@ -996,28 +996,28 @@
               </Grid.ColumnDefinitions>
             </Grid>
           </ItemsPanelTemplate>
-        </StatusBar.ItemsPanel>
-        <StatusBarItem Grid.Column="0">
+        </ItemsControl.ItemsPanel>
+        <ListBoxItem Grid.Column="0">
           <TextBlock Margin="5,0" Text="{Binding Status.CurrentStatus}"/>
-        </StatusBarItem>
+        </ListBoxItem>
         <Separator Grid.Column="1" Theme="{StaticResource StatusBarSeparatorStyle}"/>
-        <StatusBarItem Grid.Column="2">
+        <ListBoxItem Grid.Column="2">
           <TextBlock>
             <Run Text="{sd:Localize {}{0} item, Plural={}{0} items, Count={Binding Session.ActiveAssetView.FilteredContent.Count, Mode=OneWay}, IsStringFormat=True, Context=StatusBar}"/>
             <Run Text="{sd:Localize ({0} selected), Plural=({0} selected), Count={Binding Session.ActiveAssetView.SelectedContent.Count, Mode=OneWay}, IsStringFormat=True, Context=StatusBar}"/>
           </TextBlock>
-        </StatusBarItem>
+        </ListBoxItem>
         <Separator Grid.Column="3" Theme="{StaticResource StatusBarSeparatorStyle}"/>
-        <StatusBarItem Grid.Column="4" HorizontalContentAlignment="Right">
+        <ListBoxItem Grid.Column="4" HorizontalContentAlignment="Right">
           <TextBlock Margin="5,0" Text="{Binding Status.CurrentJob.Message}"/>
-        </StatusBarItem>
-        <StatusBarItem Grid.Column="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+        </ListBoxItem>
+        <ListBoxItem Grid.Column="5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
           <ProgressBar IsVisible="{Binding Status.CurrentJob, Converter={sd:ObjectToBool}}"
                        IsIndeterminate="{Binding Status.CurrentJob.IsIndeterminate}" Maximum="{Binding Status.CurrentJob.Total}"
                        Value="{Binding Status.CurrentJob.Current}">
           </ProgressBar>
-        </StatusBarItem>
-      </StatusBar>
+        </ListBoxItem>
+      </ItemsControl>
     </Grid>
   </Grid>
 </Window>

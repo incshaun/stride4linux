@@ -10,7 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-
+using Avalonia.Input;
+using Avalonia.Controls.ApplicationLifetimes;
 
 using Avalonia.Threading;
 using Stride.Core.Assets;
@@ -27,11 +28,11 @@ using Stride.Core.Presentation.Interop;
 using Stride.Core.Presentation.Services;
 using Stride.Core.Presentation.Windows;
 using Stride.Core.Translation;
-using AvalonDock.Layout;
-using Stride.GameStudio.ViewModels;
-using Stride.GameStudio.Helpers;
-using Stride.GameStudio.AssetsEditors;
-using Stride.GameStudio.Layout;
+// using AvalonDock.Layout;
+using Stride.GameStudio.Avalonia.ViewModels;
+using Stride.GameStudio.Avalonia.Helpers;
+using Stride.GameStudio.Avalonia.AssetsEditors;
+using Stride.GameStudio.Avalonia.Layout;
 
 #if DEBUG
 using Stride.Assets.Presentation.Test;
@@ -39,12 +40,12 @@ using Stride.Assets.Presentation.Test;
 using Avalonia.Interactivity;
 using System.Windows.Input;
 
-namespace Stride.GameStudio.View
+namespace Stride.GameStudio.Avalonia.View
 {
     /// <summary>
     /// Interaction logic for GameStudioWindow.xaml
     /// </summary>
-    public partial class GameStudioWindow : IAsyncClosableWindow
+    public partial class GameStudioWindow : Window //IAsyncClosableWindow
     {
         private DebugWindow debugWindow;
         private bool forceClose;
@@ -75,7 +76,7 @@ namespace Stride.GameStudio.View
             EditorSettings.ResetEditorLayout.Command = new AnonymousTaskCommand(editor.ServiceProvider, ResetAllLayouts);
 
             InitializeComponent();
-            Application.Current.Activated += (s, e) => editor.ServiceProvider.Get<IEditorDialogService>().ShowDelayedNotifications();
+            Application.TryGetFeature<IActivatableLifetime>().Activated += (s, e) => editor.ServiceProvider.Get<IEditorDialogService>().ShowDelayedNotifications();
             Loaded += GameStudioLoaded;
 
             OpenMetricsProjectSession(editor);
@@ -87,10 +88,10 @@ namespace Stride.GameStudio.View
             if (assets.Count > 0)
             {
                 var message = Tr._p("Message", "To reset the layout, Game Studio needs to close and re-open all asset and document editors. You won't lose unsaved changes.");
-                var buttons = DialogHelper.CreateButtons(new[] { "Reset layout", "Cancel" }, 1, 2);
-                var result = await Editor.ServiceProvider.Get<IDialogService>().MessageBoxAsync(message, buttons);
-                if (result != 1)
-                    return;
+//                 var buttons = DialogHelper.CreateButtons(new[] { "Reset layout", "Cancel" }, 1, 2);
+//                 var result = await Editor.ServiceProvider.Get<IDialogService>().MessageBoxAsync(message, buttons);
+//                 if (result != 1)
+//                     return;
             }
 
             // Close all editors
@@ -176,7 +177,7 @@ namespace Stride.GameStudio.View
             return closingTask.Task;
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosing(WindowClosingEventArgs e)
         {
             base.OnClosing(e);
             if (forceClose)
@@ -465,17 +466,17 @@ namespace Stride.GameStudio.View
             System.Diagnostics.Debugger.Break();
         }
 
-        private void EditorWindowPreviewMouseDown(object sender, System.Windows.Input.PointerEventArgs e)
+        private void EditorWindowPreviewMouseDown(object sender, PointerEventArgs e)
         {
             ((EditorViewModel)DataContext).Status.DiscardStatus();
         }
 
-        protected override void OnStateChanged(EventArgs e)
-        {
-            base.OnStateChanged(e);
-            // To handle window changing screen
-            AdjustMaxSizeWithTaskbar();
-        }
+//         protected override void OnStateChanged(EventArgs e)
+//         {
+//             base.OnStateChanged(e);
+//             // To handle window changing screen
+//             AdjustMaxSizeWithTaskbar();
+//         }
 
         void AdjustMaxSizeWithTaskbar()
         {

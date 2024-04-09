@@ -1,0 +1,149 @@
+// Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
+// Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Reactive;
+
+using Avalonia.Xaml.Interactivity;
+using Stride.Core.Annotations;
+using Stride.Core.Extensions;
+using Avalonia.Interactivity;
+using System;
+
+namespace Stride.Core.Presentation.Core
+{
+    public class DependencyPropertyWatcher //: IAttachedObject
+    {
+        private readonly List<Tuple<AvaloniaProperty, EventHandler>> handlers = new List<Tuple<AvaloniaProperty, EventHandler>>();
+//         private readonly Dictionary<AvaloniaProperty, DependencyPropertyDescriptor> descriptors = new Dictionary<AvaloniaProperty, DependencyPropertyDescriptor>();
+        private readonly Dictionary<AvaloniaProperty, IDisposable> observers = new Dictionary<AvaloniaProperty, IDisposable>();
+        private Control frameworkElement;
+
+        private bool handlerRegistered;
+
+        public DependencyPropertyWatcher()
+        {
+        }
+
+        public DependencyPropertyWatcher([NotNull] Control attachTo)
+        {
+            Attach(attachTo);
+        }
+
+        public AvaloniaObject AssociatedObject => frameworkElement;
+
+        public void Attach([NotNull] AvaloniaObject dependencyObject)
+        {
+            if (dependencyObject == null) throw new ArgumentNullException(nameof(dependencyObject));
+            if (ReferenceEquals(dependencyObject, frameworkElement))
+                return;
+
+            if (frameworkElement != null)
+                throw new InvalidOperationException("A dependency object is already attached to this instance of DependencyPropertyWatcher.");
+            frameworkElement = dependencyObject as Control;
+
+            if (frameworkElement == null)
+                throw new ArgumentException("The dependency object to attach to the DependencyPropertyWatcher must be a FrameworkElement.");
+
+            frameworkElement.Loaded += ElementLoaded;
+            frameworkElement.Unloaded += ElementUnloaded;
+            AttachHandlers();
+        }
+
+        public void Detach()
+        {
+            frameworkElement.Loaded -= ElementLoaded;
+            frameworkElement.Unloaded -= ElementUnloaded;
+            DetachHandlers();
+            handlers.Clear();
+            frameworkElement = null;
+        }
+
+        public void RegisterValueChangedHandler(AvaloniaProperty property, EventHandler handler)
+        {
+            handlers.Add(Tuple.Create(property, handler));
+            if (handlerRegistered)
+            {
+                AttachHandler(property, handler);
+            }
+        }
+
+        public void UnregisterValueChangedHander(AvaloniaProperty property, EventHandler handler)
+        {
+            handlers.RemoveWhere(x => x.Item1 == property && x.Item2 == handler);
+            if (handlerRegistered)
+            {
+                DetachHandler(property, handler);
+            }
+        }
+
+        private void AttachHandlers()
+        {
+            if (!handlerRegistered)
+            {
+                foreach (var handler in handlers)
+                {
+                    AttachHandler(handler.Item1, handler.Item2);
+                }
+                handlerRegistered = true;
+            }
+        }
+
+        private void DetachHandlers()
+        {
+            if (handlerRegistered)
+            {
+                foreach (var handler in handlers)
+                {
+                    DetachHandler(handler.Item1, handler.Item2);
+                }
+                handlerRegistered = false;
+            }
+        }
+
+        private void AttachHandler([NotNull] AvaloniaProperty property, [NotNull] EventHandler handler)
+        {
+            if (property == null) throw new ArgumentNullException(nameof(property));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            if (frameworkElement == null) throw new InvalidOperationException("A dependency object must be attached in order to register a handler.");
+
+//             DependencyPropertyDescriptor descriptor;
+//             if (!descriptors.TryGetValue(property, out descriptor))
+//             {
+//                 descriptor = DependencyPropertyDescriptor.FromProperty(property, AssociatedObject.GetType());
+//                 descriptors.Add(property, descriptor);
+//             }
+//             descriptor.AddValueChanged(AssociatedObject, handler);
+            var observer = new AnonymousObserver<AvaloniaPropertyChangedEventArgs>(e => handler.Invoke (property, e));
+            observers[property] = property.Changed.Subscribe (observer);
+        }
+
+        private void DetachHandler([NotNull] AvaloniaProperty property, [NotNull] EventHandler handler)
+        {
+            if (property == null) throw new ArgumentNullException(nameof(property));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            if (frameworkElement == null) throw new InvalidOperationException("A dependency object must be attached in order to unregister a handler.");
+
+//             DependencyPropertyDescriptor descriptor;
+//             if (!descriptors.TryGetValue(property, out descriptor))
+//             {
+//                 throw new InvalidOperationException("No handler was previously registered for this dependency property.");
+//             }
+//             descriptor.RemoveValueChanged(AssociatedObject, handler);
+            observers[property].Dispose ();
+        }
+
+        private void ElementLoaded(object sender, RoutedEventArgs e)
+        {
+            AttachHandlers();
+        }
+
+        private void ElementUnloaded(object sender, RoutedEventArgs e)
+        {
+            DetachHandlers();
+        }
+    }
+}

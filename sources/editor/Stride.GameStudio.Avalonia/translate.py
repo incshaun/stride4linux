@@ -129,6 +129,14 @@ def translateHeaders (contents):
     headers += "using Avalonia.Controls.Presenters;\n"
   if re.findall ("ICommand", contents):
     headers += "using System.Windows.Input;\n"
+  if re.findall ("OnLostKeyboardFocus", contents):
+    headers += "using Avalonia.Interactivity;\n"
+  if re.findall ("DependsOn", contents):
+    headers += "using Avalonia.Metadata;\n"
+  if re.findall ("FlowDirection", contents):
+    headers += "using Avalonia.Media;\n"
+  if re.findall ("DragEventArgs", contents):
+    headers += "using Avalonia.Media;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
@@ -250,6 +258,7 @@ def translateNames (contents):
   contents = re.sub ("!(.*?)\.FindVisualChildOfType\<(.*?)\>\(\)", r'!global::Avalonia.VisualTree.VisualExtensions.FindDescendantOfType<\2>(\1)', contents)
   contents = re.sub ("= (.*?)\.FindVisualChildrenOfType\<(.*?)\>\(\)", r'= global::Avalonia.VisualTree.VisualExtensions.GetVisualChildren(\1).Where (x => x is \2).Select (x => (\2) x)', contents)
   contents = re.sub ("\?\? (.*?)\.FindVisualParentOfType\<(.*?)\>\(\);", r'?? global::Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<\2>((Visual) \1);', contents)
+  contents = re.sub ("\(([a-zA-Z]*?)\.FindVisualParentOfType\<(.*?)\>\(\),", r'(global::Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<\2>((Visual) \1),', contents)
   contents = re.sub ("LogicalTreeHelper\.GetChildren", r'LogicalExtensions.GetLogicalChildren', contents)
   contents = re.sub ("LogicalTreeHelper\.GetParent", r'LogicalExtensions.GetLogicalParent', contents)
   contents = re.sub ("VisualTreeHelper\.GetParent", r'global::Avalonia.VisualTree.VisualExtensions.GetVisualParent', contents)
@@ -318,11 +327,14 @@ def translateNames (contents):
   contents = re.sub ("using TextDocument = ICSharpCode.AvalonEdit.Document.TextDocument;", "using TextDocument = AvaloniaEdit.Document.TextDocument;", contents)
   
   contents = re.sub ("Dispatcher.CurrentDispatcher.BeginInvoke", "Dispatcher.UIThread.InvokeAsync", contents)
+  contents = re.sub ("Dispatcher.BeginInvoke(DispatcherPriority.Input, (.*?));", r'Dispatcher.UIThread.InvokeAsync(\1, DispatcherPriority.Input);', contents)
 
   contents = re.sub ("ModifierKeys\.Windows", "KeyModifiers.Meta", contents)
   contents = re.sub ("ModifierKeys", "KeyModifiers", contents)
   contents = re.sub ("\.PreviewKeyDown \+=", ".KeyDown +=", contents)
   contents = re.sub ("\.PreviewKeyUp \+=", ".KeyUp +=", contents)
+
+  contents = re.sub ("Visibility != Visibility\.Visible", r'!IsVisible', contents)
   
   return contents
 
@@ -395,6 +407,10 @@ def translateProperties (contents):
     classname = match[5];
   contents = re.sub (pat, r"public static StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T6G", contents)
 
+  # 1 argument to FrameworkPropertyMetadata, seems to be callback, not readonly, not callback
+  pat = re.compile ("public static DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\((.*?)\)\);")
+  contents = re.sub (pat, r"public static StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T6P", contents)
+
   # 1 argument to FrameworkPropertyMetadata
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T6", contents)
@@ -412,6 +428,18 @@ def translateProperties (contents):
       affectsmeasure += ", "
     affectsmeasure += match[0]
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T8C", contents)
+
+  # 2 argument to FrameworkPropertyMetadata, second null
+  pat = re.compile ("public static DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), null\)\);")
+  contents = re.sub (pat, r"public static StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T8K", contents)
+
+  # 2 argument to FrameworkPropertyMetadata, not readonly
+  pat = re.compile ("public static DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);")
+  for match in re.findall (pat, contents):
+    #print (match)
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
+    classname = match[5];
+  contents = re.sub (pat, r"public static StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T8N", contents)
 
   # 2 argument to FrameworkPropertyMetadata
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);")
@@ -635,6 +663,7 @@ def translateProperties (contents):
   contents = re.sub (pat, r"public static readonly RoutedEvent \1 = RoutedEvent.Register<\7, RoutedEventArgs>(\4, RoutingStrategies.\5); // T21", contents)
 
   contents = re.sub ("protected override void OnItemsChanged\(object sender, ItemsChangedEventArgs args\)", "protected override void OnItemsChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)", contents)
+  contents = re.sub ("protected override void OnItemsChanged\(NotifyCollectionChangedEventArgs e\)", "FIXME protected void OnItemsViewCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) // Add to constructor: Items.CollectionChanged += OnItemsViewCollectionChanged;", contents)
   contents = re.sub ("protected override void OnItemsSourceChanged\(IEnumerable oldValue, IEnumerable newValue\)", "protected override void OnItemsSourceChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)", contents)
   
   # Scrolling.
@@ -922,6 +951,7 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrCollapsed}}\"", r'IsVisible="{Binding \1"', contents)
   contents = re.sub ("Visibility=\"{Binding Converter={sd:Chained {sd:MatchType}, {sd:VisibleOrCollapsed}, Parameter1={x:Type svm:SceneRootViewModel}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type svm:SceneRootViewModel}, FallbackValue=false}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:VisibleOrCollapsed}, ConverterParameter={sd:False}}\"", r'IsVisible="{Binding \1}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:NumericToBool}, {sd:VisibleOrCollapsed}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1, Converter={sd:NumericToBool}, FallbackValue=false}"', contents)
 
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -938,8 +968,8 @@ def translateTags (contents):
 
   # ContentSource  
   contents = re.sub ("<ContentPresenter ContentSource=\"Content\"/>", r'<ContentPresenter ContentTemplate="{Binding Content}"/>', contents)
-  contents = re.sub ("ContentSource=\"(.*?)\"", r'ContentTemplate="\1"', contents)
-  contents = re.sub ("ContentTemplateSelector=\"(.*?)\"", r'ContentTemplate="\1"', contents)
+  #contents = re.sub ("ContentSource=\"(.*?)\"", r'ContentTemplate="\1"', contents)
+  #contents = re.sub ("ContentTemplateSelector=\"(.*?)\"", r'ContentTemplate="\1"', contents)
   
 
   # SnapToDevicePixels, AllowsTransparency. Elements that don't seem to have an equivalent.
@@ -963,6 +993,23 @@ def translateTags (contents):
 
   # xmlsn:i
   contents = re.sub ("xmlns:i=\"http://schemas.microsoft.com/xaml/behaviors\"", "xmlns:i=\"clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity\"", contents)
+  contents = re.sub ("xmlns:vm=\"clr-namespace:Stride.GameStudio.ViewModels\"", "xmlns:vm=\"clr-namespace:Stride.GameStudio.Avalonia.ViewModels\"", contents)
+  contents = re.sub ("xmlns:strings=\"clr-namespace:Stride.GameStudio.Resources.Strings\"", "xmlns:strings=\"clr-namespace:Stride.GameStudio.Avalonia.Resources.Strings\"", contents)
+  contents = re.sub ("xmlns:gl=\"clr-namespace:Stride.GameStudio.Layout.Behaviors\"", "xmlns:gl=\"clr-namespace:Stride.GameStudio.Avalonia.Layout.Behaviors\"", contents)
+  contents = re.sub ("xmlns:gh=\"clr-namespace:Stride.GameStudio.Helpers\"", "xmlns:gh=\"clr-namespace:Stride.GameStudio.Avalonia.Helpers\"", contents)
+  contents = re.sub ("xmlns:xcad=\"https://github.com/Dirkster99/AvalonDock\"", "", contents)
+  contents = re.sub ("x:Class=\"Stride.GameStudio.View.GameStudioWindow\"", "x:Class=\"Stride.GameStudio.Avalonia.View.GameStudioWindow\"", contents)
+  
+  # dock
+  contents = regex.sub (regex.compile ("<xcad:DockingManager (.*?)>", regex.DOTALL), r'<DockControl \1 InitializeLayout="True" InitializeFactory="True">\n\t<DockControl.Factory>\n\t\t<Factory />\n\t</DockControl.Factory>', contents)
+  contents = re.sub ("xcad:LayoutRoot", "RootDock", contents)
+  contents = re.sub ("xcad:LayoutPanel", "ProportionalDock", contents)
+  contents = re.sub ("xcad:LayoutAnchorablePane", "DocumentDock", contents)
+  contents = re.sub ("xcad:LayoutAnchorable", "Document", contents)
+  contents = re.sub ("<xcad:LayoutDocumentPane>", "", contents)
+  contents = re.sub ("</xcad:LayoutDocumentPane>", "", contents)
+  contents = re.sub ("</xcad:DockingManager>", "</DockControl>", contents)
+  contents = regex.sub (regex.compile ("gh:AvalonDockHelper.IsVisible=\".*?\"", regex.DOTALL), "", contents)
   
   contents = re.sub ("Value=\"{sd:False}\"", 'Value="false"', contents)
   
@@ -1374,7 +1421,24 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptTextEditor.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/GameEditor/Services/EditorGameRecoveryService.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/GameEngineHost.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/GameEngineHost.cs")
+#translateCS ("editor/Stride.GameStudio/View/GameStudioWindow.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/MenuItemCloseWindowBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/SessionExplorerHelper.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TreeViewItem.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/TreeViewElementFinder.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/DragOverAutoScrollBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/TreeViewAutoExpandBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/TreeViewDragDropBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AssetToExpandedAtInitialization.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/TreeViewStopEditOnLostFocusBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/ActivateOnLogBehavior.cs")
+#translateCS ("/tmp/a.Wpf/LayoutAnchorableActivateOnLogBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/PropertyViewFilteringBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ItemsControlCollectionViewBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/DependencyPropertyWatcher.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/PropertyViewDragDropBehavior.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/PropertyViewAutoExpandNodesBehavior.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1406,6 +1470,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/GameEngineHost.
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/Resources/ThemeScriptEditor.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml")
+#translateXAML ("editor/Stride.GameStudio/View/GameStudioWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

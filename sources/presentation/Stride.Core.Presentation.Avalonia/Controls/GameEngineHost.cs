@@ -21,7 +21,6 @@ using Avalonia.VisualTree;
 
 using Avalonia.Platform;
 using Avalonia.Controls.Platform;
-using Avalonia.Native;
 
 namespace Stride.Core.Presentation.Controls
 {

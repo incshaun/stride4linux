@@ -13,9 +13,9 @@ namespace Stride.GameStudio.Avalonia.Layout.Behaviors
     {
         protected override void Activate()
         {
-            AssociatedObject.Show();
-            AssociatedObject.IsSelected = true;
-            AssociatedObject.IsActive = true;       // This ensures this 'tab' is the selected one in a tab group
+//             AssociatedObject.Show();
+//             AssociatedObject.IsSelected = true;
+//             AssociatedObject.IsActive = true;       // This ensures this 'tab' is the selected one in a tab group
         }
     }
 }

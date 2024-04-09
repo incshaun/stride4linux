@@ -445,7 +445,7 @@
               </sd:ATreeView.DataTemplates>	
             <sd:ATreeView.ItemContainerTheme>
               
-              <ControlTheme  TargetType="{x:Type sd:ATreeViewItem}" BasedOn="{StaticResource {x:Type sd:ATreeViewItem}}" >
+              <ControlTheme  TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}" >
 	<Design.DataContext>
 		<ehvm:EntityHierarchyItemViewModel />
 	</Design.DataContext>
