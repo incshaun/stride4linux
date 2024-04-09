@@ -1,0 +1,67 @@
+// Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
+// Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
+using System.Collections.Specialized;
+using System.Linq;
+using Avalonia;
+using Avalonia.Controls;
+
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
+using Stride.Core.Diagnostics;
+using Stride.Core.Presentation.Behaviors;
+
+namespace Stride.Core.Assets.Editor.View.Behaviors
+{
+    /// <summary>
+    /// The base class for a behavior that allows to activate the associated dependency object when an observable collection of <see cref="ILogMessage"/>
+    /// receives a new message which has an equal or greater level comparing to the <see cref="MinimumLevel"/> of this behavior.
+    /// </summary>
+    /// <typeparam name="T">The type of dependency object associated to this behavior.</typeparam>
+    public abstract class ActivateOnLogBehavior<T> : ActivateOnCollectionChangedBehavior<T> where T : AvaloniaObject
+    {
+        private bool selectionDone;
+
+        /// <summary>
+        /// Identifies the <see cref="MinimumLevel"/> dependency property.
+        /// </summary>
+        public static StyledProperty<LogMessageType> MinimumLevelProperty = StyledProperty<LogMessageType>.Register<ActivateOnLogBehavior<T>, LogMessageType>("MinimumLevel", LogMessageType.Debug); // T6P
+
+        /// <summary>
+        /// Gets or sets the minimum level of message to receive in order to trigger activation of the associated control.
+        /// </summary>
+        public LogMessageType MinimumLevel
+        {
+            get { return (LogMessageType)GetValue(MinimumLevelProperty); }
+            set { SetValue(MinimumLevelProperty, value); }
+        }
+
+        protected override bool MatchChange(NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                selectionDone = false;
+            }
+            if (e.Action == NotifyCollectionChangedAction.Add && !selectionDone)
+            {
+                if (e.NewItems.OfType<ILogMessage>().Any(x => x.IsAtLeast(MinimumLevel)))
+                {
+                    selectionDone = true;
+                }
+            }
+            return selectionDone;
+        }
+    }
+
+    /// <summary>
+    /// An implementation of the <see cref="ActivateOnLogBehavior{T}"/> for the <see cref="TabItem"/> control.
+    /// </summary>
+    public class TabItemActivateOnLogBehavior : ActivateOnLogBehavior<TabItem>
+    {
+        protected override void Activate()
+        {
+            AssociatedObject.IsSelected = true;
+        }
+    }
+
+}
