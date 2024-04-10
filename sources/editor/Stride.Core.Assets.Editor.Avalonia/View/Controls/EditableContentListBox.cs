@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
+using System.Windows.Input;
 using System.Linq;
 using System.Reflection;
 using Avalonia;
@@ -16,6 +17,7 @@ using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Interactivity;
 using Avalonia.Data;
 using Avalonia.Controls.Templates;
+using Stride.Core.Presentation.Commands;
 
 namespace Stride.Core.Assets.Editor.View.Controls
 {
@@ -29,11 +31,12 @@ namespace Stride.Core.Assets.Editor.View.Controls
 
         public static readonly StyledProperty<IDataTemplate> EditItemTemplateSelectorProperty = StyledProperty<IDataTemplate>.Register<EditableContentListBox, IDataTemplate>("EditItemTemplateSelector"); // T1
 
-        public static ICommandSource BeginEditCommand { get; private set; }
+        public static ICommand BeginEditCommand { get; private set; }
 
         static EditableContentListBox()
         {
             //
+            BeginEditCommand = new RoutedCommand<EditableContentListBox>(OnBeginEditCommand);
 //             BeginEditCommand = new ICommandSource("BeginEditCommand", typeof(EditableContentListBox), new InputGestureCollection(new[] { new KeyGesture(Key.F2) }));
 //             CommandManager.RegisterClassCommandBinding(typeof(EditableContentListBox), new CommandBinding(BeginEditCommand, OnBeginEditCommand));
         }
@@ -115,7 +118,7 @@ namespace Stride.Core.Assets.Editor.View.Controls
             selectedContainer.IsEditing = false;
         }
 
-        private static void OnBeginEditCommand(object sender, RoutedEventArgs e)
+        private static void OnBeginEditCommand(EditableContentListBox sender)
         {
             var listBox = (EditableContentListBox)sender;
             listBox.BeginEdit();

@@ -182,7 +182,14 @@ def translateNames (contents):
   #contents = re.sub ("Command\.CanExecuteChanged \+\=", "Command.Command.CanExecuteChanged +=", contents) # provisional.
   #contents = re.sub ("\.CanExecute\(", ".Command.CanExecute(", contents) # provisional.
   #contents = re.sub ("\.Execute\(", ".Command.Execute(", contents) # provisional.
-  
+
+  # Convert:
+  #          public static RoutedCommand CollapseAllFolders { get; } = new RoutedCommand(nameof(CollapseAllFolders), typeof(TreeView));
+  #          private static void OnCollapseAllFolders(object sender, RoutedEventArgs e)
+  # to:
+  #          public static RoutedCommand<TreeView> CollapseAllFolders { get; } = new RoutedCommand<TreeView>(OnCollapseAllFolders);
+  #          private static void OnCollapseAllFolders(TreeView sender)
+
   
   contents = re.sub ("static DependencyProperty", "static AvaloniaProperty", contents) # provisional.
   contents = re.sub ("DependencyProperty property", "AvaloniaProperty property", contents) # provisional.
@@ -959,6 +966,7 @@ def translateTags (contents):
   contents = re.sub ("<ToolTipService\.ToolTip>", r'<ToolTip.Tip>', contents)
   contents = re.sub ("</ToolTipService\.ToolTip>", r'</ToolTip.Tip>', contents)
   contents = re.sub ("ToolTipService.ShowOnDisabled=\"True\"", r'', contents)
+  contents = re.sub ("ToolTipService.IsEnabled", r'ToolTip.IsEnabled', contents)
 
   # x:Reference. Better solution pending.
   contents = re.sub ("{x:Reference (.*?)}", r'{Binding ElementName=\1}', contents)

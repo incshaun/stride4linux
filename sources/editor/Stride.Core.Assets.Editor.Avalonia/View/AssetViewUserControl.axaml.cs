@@ -13,6 +13,7 @@ using Stride.Core.Assets.Editor.View.Controls;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Presentation.Collections;
 using Stride.Core.Presentation.Extensions;
+using Stride.Core.Presentation.Commands;
 
 using Avalonia.Interactivity;
 
@@ -110,6 +111,7 @@ namespace Stride.Core.Assets.Editor.View
 			AssetCollectionProperty.Changed.AddClassHandler<AssetViewUserControl>(AssetCollectionChanged);
 			AssetContextMenuProperty.Changed.AddClassHandler<AssetViewUserControl>(OnAssetContextMenuChanged);
 
+            BeginEditCommand = new RoutedCommand<AssetViewUserControl>(CanBeginEditCommand);
 //             BeginEditCommand = new ICommand(nameof(BeginEditCommand), typeof(AssetViewUserControl));
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), new CommandBinding(BeginEditCommand, BeginEdit, CanBeginEditCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(AssetViewUserControl), new InputBinding(BeginEditCommand, new KeyGesture(Key.F2)));
@@ -316,10 +318,11 @@ namespace Stride.Core.Assets.Editor.View
             return !asset?.IsLocked ?? true;
         }
 
-        private static void CanBeginEditCommand(object sender, RoutedEventArgs e)
+        private static void CanBeginEditCommand(AssetViewUserControl sender)
         {
             var control = (AssetViewUserControl)sender;
 //             e.CanExecute = control.CanBeginEdit();
+            control.CanBeginEdit();
         }
 
         private static void BeginEdit(object sender, RoutedEventArgs e)

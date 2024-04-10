@@ -468,7 +468,7 @@ namespace Stride.GameStudio.Avalonia.View
             System.Diagnostics.Debugger.Break();
         }
 
-        private void EditorWindowPreviewMouseDown(object sender, PointerEventArgs e)
+        private void EditorWindowPreviewMouseDown(object sender, PointerPressedEventArgs e)
         {
             ((EditorViewModel)DataContext).Status.DiscardStatus();
         }

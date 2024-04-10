@@ -6,9 +6,11 @@ using Avalonia.Controls;
 
 using Avalonia.Input;
 using Avalonia.Threading;
+using Stride.Core.Presentation.Commands;
+using Stride.Core.Assets.Editor;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Annotations;
-using TreeView = Stride.Core.Presentation.Controls.TreeView;
+using TreeView = Stride.Core.Presentation.Controls.ATreeView;
 using TreeViewItem = Stride.Core.Presentation.Controls.TreeViewItem;
 using Stride.Core.Presentation.ViewModels;
 using Avalonia.Interactivity;
@@ -19,18 +21,19 @@ namespace Stride.Core.Assets.Editor.View
     {
         static SessionExplorerHelper()
         {
-            CommandManager.RegisterClassCommandBinding(typeof(TreeView), new CommandBinding(ExpandAssetFolders, OnExpandAssetsFolders));
-            CommandManager.RegisterClassCommandBinding(typeof(TreeView), new CommandBinding(ExpandAllFolders, OnExpandAllFolders));
-            CommandManager.RegisterClassCommandBinding(typeof(TreeView), new CommandBinding(CollapseAllFolders, OnCollapseAllFolders));
+//             CommandManager.RegisterClassCommandBinding(typeof(TreeView), new CommandBinding(ExpandAssetFolders, OnExpandAssetsFolders));
+//             CommandManager.RegisterClassCommandBinding(typeof(TreeView), new CommandBinding(ExpandAllFolders, OnExpandAllFolders));
+//             CommandManager.RegisterClassCommandBinding(typeof(TreeView), new CommandBinding(CollapseAllFolders, OnCollapseAllFolders));
         }
 
-        public static RoutedCommand ExpandAssetFolders { get; } = new RoutedCommand(nameof(ExpandAssetFolders), typeof(TreeView));
+        public static RoutedCommand<TreeView> ExpandAssetFolders { get; } = new RoutedCommand<TreeView>(OnExpandAssetsFolders);
 
-        public static RoutedCommand ExpandAllFolders { get; } = new RoutedCommand(nameof(ExpandAllFolders), typeof(TreeView));
+        public static RoutedCommand<TreeView> ExpandAllFolders { get; } = new RoutedCommand<TreeView>(OnExpandAllFolders);
 
-        public static RoutedCommand CollapseAllFolders { get; } = new RoutedCommand(nameof(CollapseAllFolders), typeof(TreeView));
+        public static RoutedCommand<TreeView> CollapseAllFolders { get; } = new RoutedCommand<TreeView>(OnCollapseAllFolders);
 
-        private static void OnExpandAssetsFolders(object sender, RoutedEventArgs e)
+//         private static void OnExpandAssetsFolders(object sender, RoutedEventArgs e)
+        private static void OnExpandAssetsFolders(TreeView sender)
         {
             var treeView = (TreeView)sender;
             foreach (PackageCategoryViewModel category in treeView.Items)
@@ -39,7 +42,7 @@ namespace Stride.Core.Assets.Editor.View
             }
         }
 
-        private static void OnExpandAllFolders(object sender, RoutedEventArgs e)
+        private static void OnExpandAllFolders(TreeView sender)
         {
             var treeView = (TreeView)sender;
             foreach (PackageCategoryViewModel category in treeView.Items)
@@ -48,7 +51,7 @@ namespace Stride.Core.Assets.Editor.View
             }
         }
 
-        private static void OnCollapseAllFolders(object sender, RoutedEventArgs e)
+        private static void OnCollapseAllFolders(TreeView sender)
         {
             var treeView = (TreeView)sender;
             for (var i = 0; i < treeView.Items.Count; i++)
@@ -66,7 +69,7 @@ namespace Stride.Core.Assets.Editor.View
                 }
             }
             // Reset scrolling to the top element
-            (treeView.ItemContainerGenerator.ContainerFromIndex(0) as FrameworkElement)?.BringIntoView();
+            (treeView.ItemContainerGenerator.ContainerFromIndex(0) as Control)?.BringIntoView();
         }
 
         private static void CollapseRecursively([NotNull] TreeViewItem item)
@@ -84,7 +87,7 @@ namespace Stride.Core.Assets.Editor.View
 
         private static void ExpandPackageCategory([NotNull] TreeView treeView, PackageCategoryViewModel category, bool assetsOnly)
         {
-            treeView.Dispatcher.BeginInvoke(new Action(() =>
+            Dispatcher.UIThread.InvokeAsync(new Action(() =>
             {
                 var item = treeView.GetTreeViewItemFor(category);
                 if (item == null)
@@ -101,7 +104,7 @@ namespace Stride.Core.Assets.Editor.View
 
         private static void ExpandPackage([NotNull] TreeView treeView, PackageViewModel package, bool assetsOnly)
         {
-            treeView.Dispatcher.BeginInvoke(new Action(() =>
+            Dispatcher.UIThread.InvokeAsync(new Action(() =>
             {
                 var item = treeView.GetTreeViewItemFor(package);
                 if (item == null)
@@ -125,7 +128,7 @@ namespace Stride.Core.Assets.Editor.View
 
         private static void ExpandDirectories([NotNull] TreeView treeView, DirectoryBaseViewModel directory)
         {
-            treeView.Dispatcher.BeginInvoke(new Action(() =>
+            Dispatcher.UIThread.InvokeAsync(new Action(() =>
             {
                 var item = treeView.GetTreeViewItemFor(directory);
                 if (item == null)
@@ -148,7 +151,7 @@ namespace Stride.Core.Assets.Editor.View
             }
             else
             {
-                treeView.Dispatcher.BeginInvoke(new Action(() =>
+                Dispatcher.UIThread.InvokeAsync(new Action(() =>
                 {
                     var item = treeView.GetTreeViewItemFor(viewModel);
                     if (item == null)

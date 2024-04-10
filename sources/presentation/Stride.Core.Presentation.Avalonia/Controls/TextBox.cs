@@ -13,6 +13,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 
+using Stride.Core.Presentation.Commands;
+using System.Windows.Input;
 
 namespace Stride.Core.Presentation.Controls
 {
@@ -49,11 +51,13 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Clears the current <see cref="Avalonia.Controls.TextBox.Text"/> of a text box.
         /// </summary>
-        public static ICommandSource ClearTextCommand { get; }
+        public static ICommand ClearTextCommand { get; }
         
         static TextBox()
 		{
 			UseTimedValidationProperty.Changed.AddClassHandler<TextBox>(OnUseTimedValidationPropertyChanged);
+
+            ClearTextCommand = new RoutedCommand<TextBox>(OnClearTextCommand);
 
 //             DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(typeof(TextBox)));
 //             ClearTextCommand = new ICommandSource("ClearTextCommand", typeof(Avalonia.Controls.TextBox));
@@ -139,7 +143,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private static void OnClearTextCommand(object sender, RoutedEventArgs e)
+        private static void OnClearTextCommand(TextBox sender)
         {
             var textBox = sender as TextBox;
             textBox?.Clear();

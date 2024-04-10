@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Stride.Core.Assets.Editor
+namespace Stride.Core.Presentation.Commands
 {
     public class RoutedCommand<T> : RoutedCommand, ICommand
     {
