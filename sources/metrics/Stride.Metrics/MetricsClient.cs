@@ -114,7 +114,7 @@ namespace Stride.Metrics
 //                 Guid.TryParse(disableIdStr, out specialGuid);
 //             }
 // 
-//             scheduledTasks = new BlockingCollection<Action>();
+            scheduledTasks = new BlockingCollection<Action>();
 //             httpClient = new HttpClient {BaseAddress = new Uri(endpointUrl)};
 //             this.appId = appId;
 // 
