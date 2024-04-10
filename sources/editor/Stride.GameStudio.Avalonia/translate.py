@@ -1438,7 +1438,8 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ItemsControlCollectionViewBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/DependencyPropertyWatcher.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/PropertyViewDragDropBehavior.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/PropertyViewAutoExpandNodesBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/PropertyViewAutoExpandNodesBehavior.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/WindowHelper.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")

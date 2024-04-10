@@ -19,6 +19,10 @@ namespace Stride.GameStudio.Avalonia
 //         public static SettingsKey<int> WindowHeight = new SettingsKey<int>("Internal/WindowHeight", SettingsContainer, (int)SystemParameters.WorkArea.Height);
 //         public static SettingsKey<int> WorkAreaWidth = new SettingsKey<int>("Internal/WorkAreaWidth", SettingsContainer, (int)SystemParameters.WorkArea.Width);
 //         public static SettingsKey<int> WorkAreaHeight = new SettingsKey<int>("Internal/WorkAreaHeight", SettingsContainer, (int)SystemParameters.WorkArea.Height);
+        public static SettingsKey<int> WindowWidth = new SettingsKey<int>("Internal/WindowWidth", SettingsContainer, 1200);
+        public static SettingsKey<int> WindowHeight = new SettingsKey<int>("Internal/WindowHeight", SettingsContainer, 1000);
+        public static SettingsKey<int> WorkAreaWidth = new SettingsKey<int>("Internal/WorkAreaWidth", SettingsContainer, 1200);
+        public static SettingsKey<int> WorkAreaHeight = new SettingsKey<int>("Internal/WorkAreaHeight", SettingsContainer, 1000);
         public static SettingsKey<bool> SessionExplorerPanelVisible = new SettingsKey<bool>("Internal/SessionExplorerPanelVisible", SettingsContainer, true);
         public static SettingsKey<bool> AssetViewPanelVisible = new SettingsKey<bool>("Internal/AssetViewPanelVisible", SettingsContainer, true);
         public static SettingsKey<bool> ReferencesPanelVisible = new SettingsKey<bool>("Internal/ReferencesPanelVisible", SettingsContainer, true);

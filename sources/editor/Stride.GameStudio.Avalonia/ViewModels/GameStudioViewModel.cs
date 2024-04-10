@@ -28,7 +28,7 @@ namespace Stride.GameStudio.Avalonia.ViewModels
     public class GameStudioViewModel : EditorViewModel
     {
         private PreviewViewModel preview;
-//         private DebuggingViewModel debugging;
+        private DebuggingViewModel debugging;
         private string restartArguments;
         private readonly List<IDEInfo> availableIDEs;
 
@@ -51,9 +51,9 @@ namespace Stride.GameStudio.Avalonia.ViewModels
 
         public StrideAssetsViewModel StrideAssets => StrideAssetsViewModel.Instance;
 
-//         public PreviewViewModel Preview { get => preview; set => SetValue(ref preview, value); }
+        public PreviewViewModel Preview { get => preview; set => SetValue(ref preview, value); }
 
-//         public DebuggingViewModel Debugging { get => debugging; set => SetValue(ref debugging, value); }
+        public DebuggingViewModel Debugging { get => debugging; set => SetValue(ref debugging, value); }
 
         [NotNull]
         public IReadOnlyList<IDEInfo> AvailableIDEs => availableIDEs;
@@ -108,7 +108,7 @@ namespace Stride.GameStudio.Avalonia.ViewModels
         /// <inheritdoc/>
         public override void Destroy()
         {
- //           Preview?.Destroy();
+            Preview?.Destroy();
             base.Destroy();
         }
 

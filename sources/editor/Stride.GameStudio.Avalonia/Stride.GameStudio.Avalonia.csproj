@@ -1,6 +1,6 @@
 <Project>
 <!--   <Import Project="..\Stride.PrivacyPolicy\Stride.PrivacyPolicy.projitems" Label="Shared" Condition="Exists('..\Stride.PrivacyPolicy\Stride.PrivacyPolicy.projitems')" /> -->
-<!--   <Import Project="..\..\shared\Stride.Core.ShellHelper\Stride.Core.ShellHelper.projitems" Label="Shared" /> -->
+  <Import Project="..\..\shared\Stride.Core.ShellHelper\Stride.Core.ShellHelper.projitems" Label="Shared" />
 <!--  <Import Project="..\Stride.Editor.CrashReport\Stride.Editor.CrashReport.projitems" Label="Shared" />-->
   <Import Project="..\..\targets\Stride.props" />
   <PropertyGroup>
@@ -43,6 +43,7 @@
 <!--     <PackageReference Include="Stride.Metrics" /> -->
 <!--     <PackageReference Include="Stride.CrashReport" /> -->
     <PackageReference Include="Mono.Cecil" />
+    <PackageReference Include="QuickGraph" />
     <Reference Include="Stride.Core.AssemblyProcessor">
       <HintPath Condition="$(TargetFramework.StartsWith('net8'))">..\..\..\deps\AssemblyProcessor\netstandard2.0\Stride.Core.AssemblyProcessor.dll</HintPath>
     </Reference>

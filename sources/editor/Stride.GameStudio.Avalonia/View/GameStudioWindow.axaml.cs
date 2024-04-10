@@ -76,7 +76,8 @@ namespace Stride.GameStudio.Avalonia.View
             EditorSettings.ResetEditorLayout.Command = new AnonymousTaskCommand(editor.ServiceProvider, ResetAllLayouts);
 
             InitializeComponent();
-            Application.TryGetFeature<IActivatableLifetime>().Activated += (s, e) => editor.ServiceProvider.Get<IEditorDialogService>().ShowDelayedNotifications();
+// FIXME: when avalonia version updates.            
+//            Application.Current.TryGetFeature<IActivatableLifetime>().Activated += (s, e) => editor.ServiceProvider.Get<IEditorDialogService>().ShowDelayedNotifications();
             Loaded += GameStudioLoaded;
 
             OpenMetricsProjectSession(editor);
@@ -197,13 +198,13 @@ namespace Stride.GameStudio.Avalonia.View
             // We listen to the events here instead of via xaml because DockingLayoutManager essentially breaks
             // the entire docking control and OnEventCommandBehavior.CommandParameter binding would not
             // get restored properly, due to not being able to rebind to a control.
-            assetPreviewAnchorable.IsSelectedChanged += OnAssetPreviewAnchorable_IsSelectedChanged;
+//             assetPreviewAnchorable.IsSelectedChanged += OnAssetPreviewAnchorable_IsSelectedChanged;
             UpdateAssetPreviewAnchorable(assetPreviewAnchorable);
         }
 
         internal void UnregisterAssetPreview(LayoutAnchorable assetPreviewAnchorable)
         {
-            assetPreviewAnchorable.IsSelectedChanged -= OnAssetPreviewAnchorable_IsSelectedChanged;
+//             assetPreviewAnchorable.IsSelectedChanged -= OnAssetPreviewAnchorable_IsSelectedChanged;
         }
 
         private void OnAssetPreviewAnchorable_IsSelectedChanged(object sender, EventArgs e)
@@ -216,7 +217,7 @@ namespace Stride.GameStudio.Avalonia.View
 
         private void UpdateAssetPreviewAnchorable(LayoutAnchorable anchorable)
         {
-            (Editor as GameStudioViewModel)?.Preview?.RenderPreviewCommand?.Execute(anchorable.IsSelected);
+//             (Editor as GameStudioViewModel)?.Preview?.RenderPreviewCommand?.Execute(anchorable.IsSelected);
         }
 
         private void InitializeWindowSize()
@@ -266,17 +267,17 @@ namespace Stride.GameStudio.Avalonia.View
                 // Listen to clipboard
                 ClipboardMonitor.RegisterListener(this);
                 // Notify start
-                Program.NotifyGameStudioStarted();
+//                 Program.NotifyGameStudioStarted();
 
                 Editor.Session.PluginsInitialized();
 
-                foreach (var window in Application.Current.Windows.Cast<Window>().Where(x => !Equals(x, this)))
-                {
-                    var childHwnd = new WindowInteropHelper(window).Handle;
-                    var parentHwnd = new WindowInteropHelper(this).Handle;
-                    var handleRef = new HandleRef(window, childHwnd);
-                    NativeHelper.SetWindowLong(handleRef, NativeHelper.WindowLongType.HwndParent, parentHwnd);
-                }
+//                 foreach (var window in Application.Current.Windows.Cast<Window>().Where(x => !Equals(x, this)))
+//                 {
+//                     var childHwnd = new WindowInteropHelper(window).Handle;
+//                     var parentHwnd = new WindowInteropHelper(this).Handle;
+//                     var handleRef = new HandleRef(window, childHwnd);
+//                     NativeHelper.SetWindowLong(handleRef, NativeHelper.WindowLongType.HwndParent, parentHwnd);
+//                 }
             }
         }
 
@@ -313,8 +314,9 @@ namespace Stride.GameStudio.Avalonia.View
                 // Save state
                 GameStudioInternalSettings.WorkAreaWidth.SetValue((int)workArea.Width);
                 GameStudioInternalSettings.WorkAreaHeight.SetValue((int)workArea.Height);
-                GameStudioInternalSettings.WindowWidth.SetValue((int)Math.Max(320, (WindowState == WindowState.Maximized ? RestoreBounds.Width : ActualWidth)));
-                GameStudioInternalSettings.WindowHeight.SetValue((int)Math.Max(240, (WindowState == WindowState.Maximized ? RestoreBounds.Height : ActualHeight)));
+                var RestoreBounds = this.Bounds;
+                GameStudioInternalSettings.WindowWidth.SetValue((int)Math.Max(320, (WindowState == WindowState.Maximized ? RestoreBounds.Width : Width)));
+                GameStudioInternalSettings.WindowHeight.SetValue((int)Math.Max(240, (WindowState == WindowState.Maximized ? RestoreBounds.Height : Height)));
                 GameStudioInternalSettings.WindowMaximized.SetValue(WindowState == WindowState.Maximized);
 
                 // Write the settings file
@@ -326,7 +328,7 @@ namespace Stride.GameStudio.Avalonia.View
 
                 closingTask?.SetResult(true);
                 // Shutdown after all other operations have completed
-                await Application.Current.Dispatcher.InvokeAsync(Application.Current.Shutdown, DispatcherPriority.ContextIdle);
+                Dispatcher.UIThread.InvokeShutdown ();
             }
             finally
             {
@@ -411,9 +413,9 @@ namespace Stride.GameStudio.Avalonia.View
         {
             if (debugWindow == null)
             {
-                debugWindow = new DebugWindow();
-                debugWindow.Show();
-                debugWindow.Closed += (s, e) => debugWindow = null;
+//                 debugWindow = new DebugWindow();
+//                 debugWindow.Show();
+//                 debugWindow.Closed += (s, e) => debugWindow = null;
             }
         }
 
