@@ -169,7 +169,7 @@ namespace Stride.Core
         }
 
         /// <summary>
-        /// UnLoad a specific native dynamic library loaded previously by <see cref="LoadLibrary" />.
+        /// UnLoad a specific native dynamic library loaded previously by <see cref="PreloadLibrary" />.
         /// </summary>
         /// <param name="libraryName">Name of the library to unload.</param>
         public static void UnLoad(string libraryName)
@@ -188,7 +188,7 @@ namespace Stride.Core
         }
 
         /// <summary>
-        /// UnLoad all native dynamic library loaded previously by <see cref="LoadLibrary"/>.
+        /// UnLoad all native dynamic library loaded previously by <see cref="PreloadLibrary"/>.
         /// </summary>
         public static void UnLoadAll()
         {
