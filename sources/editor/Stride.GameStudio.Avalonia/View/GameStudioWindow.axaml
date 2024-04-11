@@ -474,13 +474,17 @@
 		<Factory />
 	</DockControl.Factory>
         <RootDock x:Name="Root" Id="Root" IsCollapsable="False" DefaultDockable="{Binding #MainLayout}">
+          
           <ProportionalDock Orientation="Horizontal" x:Name="MainLayout" Id="MainLayout">
+            
             <ProportionalDock Orientation="Vertical">
               
               <DocumentDock x:Name="AssetEditorPane" Id="AssetEditorPane" CanCreateDocument="True">
                       <Document x:Name="AssetEditor" Id="AssetEditor" Title="AssetEditorPlaceholder" x:DataType="Document">
                       </Document>
               </DocumentDock>
+            
+              <ProportionalDockSplitter />
               
               <ProportionalDock Orientation="Horizontal">
                 <DocumentDock x:Name="SolutionExplorerPane" Id="SolutionExplorerPane" CanCreateDocument="True">
@@ -639,7 +643,6 @@
                   </Document>
                 </DocumentDock>
                 
-              </ProportionalDock>
                 <DocumentDock x:Name="AssetViewPane" Id="AssetViewPane" CanCreateDocument="True">
                   <!-- ASSET VIEW -->
                   <Document Title="{Binding Source={sd:Localize Asset view, Context=View}}"
@@ -664,6 +667,10 @@
                     </i:Interaction.Behaviors>
                   </Document>
                 </DocumentDock>
+
+                </ProportionalDock>
+
+              <ProportionalDockSplitter />
                 
               <DocumentDock x:Name="ReferencesPane" Id="ReferencesPane" CanCreateDocument="True">
 <!--               <DocumentDock DockHeight="200"> -->
@@ -752,6 +759,9 @@
                 </Document>
               </DocumentDock>
             </ProportionalDock>
+            
+            <ProportionalDockSplitter />
+            
             <ProportionalDock Orientation="Vertical" >
 <!--             <DocumentDock Orientation="Vertical" DockWidth="400"> -->
               <DocumentDock x:Name="PropertyGridPane" Id="PropertyGridPane" CanCreateDocument="True">
@@ -1009,9 +1019,14 @@
                   </Grid>
                 </Document>
               </DocumentDock>
+
+              <ProportionalDockSplitter />
+                              
               <ProportionalDock >
+                
 <!--               <DocumentDock DockHeight="1*"> -->
                 <DocumentDock x:Name="AssetPreviewPane" Id="AssetPreviewPane" CanCreateDocument="True">
+                  
                   <!-- ASSET PREVIEW -->
                   <Document Title="{Binding Source={sd:Localize Asset preview, Context=View}}"
                                          >

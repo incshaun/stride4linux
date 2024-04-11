@@ -29,6 +29,11 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor
             StreamDescriptor = streamDescriptor;
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+        
         /// <summary>
         /// Gets the name.
         /// </summary>
