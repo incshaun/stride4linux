@@ -1159,7 +1159,7 @@ def translateTags (contents):
   contents = re.sub (re.compile ("<CollectionViewSource ([^/]*?)/>", re.DOTALL), "", contents) 
   contents = re.sub (re.compile ("VirtualizingPanel\.IsVirtualizing=\"True\"", re.DOTALL), "", contents) 
   contents = re.sub (re.compile ("VirtualizingPanel\.VirtualizationMode=\"Recycling\"", re.DOTALL), "", contents) 
-  contents = re.sub (re.compile ("IsChecked=\"(.*?)\"", re.DOTALL), "", contents)  # hopefully in new avalonia
+  #contents = re.sub (re.compile ("IsChecked=\"(.*?)\"", re.DOTALL), "", contents)  # hopefully in new avalonia # valid for togglebuttons.
   contents = re.sub (re.compile ("IsCheckable=\"False\"", re.DOTALL), "", contents)  # hopefully in new avalonia
   contents = re.sub (re.compile ("SelectionMode=\"Extended\"", re.DOTALL), "", contents)  # hopefully in new avalonia
   contents = re.sub (re.compile ("<KeyBinding(.*?)/>", re.DOTALL), "", contents)  # temporary
@@ -1447,7 +1447,8 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/DependencyPropertyWatcher.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/PropertyViewDragDropBehavior.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/PropertyViewAutoExpandNodesBehavior.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/WindowHelper.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/WindowHelper.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VirtualizingTreePanel.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1460,7 +1461,6 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/WindowHelper.
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/ImageDictionary.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/WorkProgressWindow.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/generic.xaml")
-
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/DefaultPropertyTemplateProviders.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/SettingsWindow.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetViewUserControl.xaml")

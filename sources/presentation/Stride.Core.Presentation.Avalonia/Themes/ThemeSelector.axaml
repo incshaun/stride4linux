@@ -313,4 +313,50 @@
   </ControlTheme>
 
   <!--  EDITORS  -->
+
+  <SolidColorBrush x:Key="TagBackgroundBrush" Color="#FF708090"/>
+
+  <ControlTheme x:Key="TagToolBarStyle" TargetType="{x:Type ItemsControl}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ItemsControl}">
+          <DockPanel >
+            <Grid DockPanel.Dock="Right" x:Name="OverflowGrid">
+<!--               <ToggleButton Margin="2" IsVisible="{TemplateBinding HasOverflowItems}" x:Name="OverflowButton" ClickMode="Press"  Background="{StaticResource TagBackgroundBrush}" Padding="2,0"> -->
+              <ToggleButton Margin="2" IsVisible="true" x:Name="OverflowButton" ClickMode="Press"  Background="{StaticResource TagBackgroundBrush}" Padding="2,0">
+                <ToggleButton.Template>
+                  <ControlTemplate>
+                    <Border Background="{StaticResource TagBackgroundBrush}">
+                      <TextBlock Margin="2,0" Text="…"/>
+                    </Border>
+                  </ControlTemplate>
+                </ToggleButton.Template>
+              </ToggleButton>
+              <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" x:Name="PopupPlacementTarget"/>
+              <Popup Focusable="false"  IsOpen="{Binding IsOverflowOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Left" PlacementTarget="{Binding ElementName=PopupPlacementTarget}"  >
+                <Border BorderThickness="1,1,1,1" Background="{DynamicResource DropdownButtonBackgroundBrush}" BorderBrush="{DynamicResource DropdownButtonBackgroundBrush}">
+<!--                  <ToolBarOverflowPanel Focusable="true"  FocusVisualTheme="{x:Null}" Margin="2" x:Name="PART_ToolBarOverflowPanel" WrapWidth="200"  KeyboardNavigation.TabNavigation="Cycle"/>-->
+                  <Panel Focusable="true"  Margin="2" x:Name="PART_ToolBarOverflowPanel" KeyboardNavigation.TabNavigation="Cycle"/>
+                </Border>
+              </Popup>
+            </Grid>
+            <Border Margin="0,0,2,0" x:Name="MainPanelBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+              <Panel  Margin="0,0,2,0" x:Name="PART_ToolBarPanel" Background="Transparent"/>
+<!--               <ToolBarPanel  Margin="0,0,2,0" x:Name="PART_ToolBarPanel" IsItemsHost="true" Background="Transparent"/> -->
+            </Border>
+          </DockPanel>
+          <!-- <ControlTemplate.Triggers>
+            <Trigger Property="HasOverflowItems" Value="False">
+              <Setter Property="Margin" TargetName="MainPanelBorder" Value="0"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+              <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+            </Trigger>
+          </ControlTemplate.Triggers> -->
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </ControlTheme>
+  
+  
 </ResourceDictionary>

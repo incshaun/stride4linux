@@ -31,7 +31,7 @@ namespace Stride.GameStudio.Avalonia.Layout
     internal class DockingLayoutManager
     {
         private readonly MRUAdditionalDataCollection mruDataCollection = new MRUAdditionalDataCollection(InternalSettings.LoadProfileCopy, GameStudioInternalSettings.MostRecentlyUsedSessionsData, InternalSettings.WriteFile);
-        private readonly AGameStudioWindow gameStudioWindow;
+        private readonly GameStudioWindow gameStudioWindow;
         private readonly SessionViewModel session;
         private bool isInEditorLayout;
 
@@ -57,7 +57,7 @@ namespace Stride.GameStudio.Avalonia.Layout
         /// </summary>
         /// <param name="gameStudioWindow">The Game Studio window that contains the docking layout.</param>
         /// <param name="session">The session opened in the Game Studio.</param>
-        public DockingLayoutManager(AGameStudioWindow gameStudioWindow, SessionViewModel session)
+        public DockingLayoutManager(GameStudioWindow gameStudioWindow, SessionViewModel session)
         {
             this.gameStudioWindow = gameStudioWindow ?? throw new ArgumentNullException(nameof(gameStudioWindow));
             this.session = session ?? throw new ArgumentNullException(nameof(session));

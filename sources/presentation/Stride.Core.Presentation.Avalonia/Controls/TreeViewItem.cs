@@ -34,6 +34,8 @@ namespace Stride.Core.Presentation.Controls
     /// </summary>
     public class TreeViewItem : ExpandableItemsControl
     {
+        protected override Type StyleKeyOverride { get { return typeof(TreeViewItem); } }
+        
         internal double ItemTopInTreeSystem; // for virtualization purposes
         internal int HierachyLevel;// for virtualization purposes
 
@@ -107,7 +109,7 @@ namespace Stride.Core.Presentation.Controls
         {
             get
             {
-                if (!IsVisible)
+                if (!base.IsVisible)
                     return false;
                 var currentItem = ParentTreeViewItem;
                 while (currentItem != null)

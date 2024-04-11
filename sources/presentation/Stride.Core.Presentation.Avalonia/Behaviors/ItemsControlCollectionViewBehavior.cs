@@ -75,7 +75,7 @@ namespace Stride.Core.Presentation.Behaviors
                             collectionView.GroupDescriptions.Add(groupDescription);
                         }
                     }
-                    if (collectionView.CanFilter)
+                    if (collectionView.CanFilter && (FilterPredicate != null))
                     {
                         collectionView.Filter = new Func<object, bool>(FilterPredicate);
                     }

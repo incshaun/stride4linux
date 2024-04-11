@@ -154,7 +154,7 @@ namespace Stride.Core.Presentation.Controls
 
         // It seems we need to manage containers explicitly in Avalonia. This
         // list keeps containers organized by index.
-        private List<ATreeViewItem> containers = new List<ATreeViewItem> ();
+        private List<TreeViewItem> containers = new List<TreeViewItem> ();
 
         private const double ScrollLineDelta = 16.0;
         private readonly SizesCache cachedSizes;
@@ -198,7 +198,7 @@ namespace Stride.Core.Presentation.Controls
 
 
             //var itemsControl = ItemsControl.GetItemsOwner(this);
-            var treeViewItem = itemsControl as ATreeViewItem;
+            var treeViewItem = itemsControl as TreeViewItem;
             var treeView = itemsControl as ATreeView ?? treeViewItem.ParentTreeView;
 
             //var treeView = ((Control) itemsControl).Parent as ATreeView ?? treeViewItem.ParentTreeView;
@@ -352,8 +352,8 @@ namespace Stride.Core.Presentation.Controls
                 {
                     // Get or create the child
                     bool newlyRealized;
-                    //var child = ((ItemsControl)itemsControl).GenerateNext(out newlyRealized) as ATreeViewItem;
-                    ATreeViewItem child;
+                    //var child = ((ItemsControl)itemsControl).GenerateNext(out newlyRealized) as TreeViewItem;
+                    TreeViewItem child;
 
                     var item = ((ItemsControl)itemsControl).Items[i];
                     var index = i;
@@ -366,16 +366,16 @@ namespace Stride.Core.Presentation.Controls
                     {
                         var container = generator.CreateContainer(item, index, recycleKey);
 
-                        ((ATreeViewItem)container).ParentTreeView = treeView ?? treeViewItem.ParentTreeView;
-                        ((ATreeViewItem)container).ParentTreeViewItem = (ATreeViewItem)this.GetVisualAncestors().OfType<ATreeViewItem>().FirstOrDefault ();
+                        ((TreeViewItem)container).ParentTreeView = treeView ?? treeViewItem.ParentTreeView;
+ // ****                       ((TreeViewItem)container).ParentTreeViewItem = (TreeViewItem)this.GetVisualAncestors().OfType<TreeViewItem>().FirstOrDefault ();
                         //container.SetValue(RecycleKeyProperty, recycleKey);
                         generator.PrepareItemContainer(container, item, index);
-                        AddOrInsertItemToInternalChildren(i, (ATreeViewItem)container);
-                        containers.Insert(index, (ATreeViewItem) container);
+                        AddOrInsertItemToInternalChildren(i, (TreeViewItem)container);
+                        containers.Insert(index, (TreeViewItem) container);
                         //  AddInternalChild(container);
                         generator.ItemContainerPrepared(container, item, index);
 
-                        child = (ATreeViewItem) container;
+                        child = (TreeViewItem) container;
                     }
                     else
                     {
@@ -400,7 +400,7 @@ namespace Stride.Core.Presentation.Controls
                                                {
                                                    // Get or create the child
                                                    bool newlyRealized;
-                                                   var child = generator.GenerateNext(out newlyRealized) as ATreeViewItem;
+                                                   var child = generator.GenerateNext(out newlyRealized) as TreeViewItem;
                                                    if (newlyRealized)
                                                    {
                                                        // Figure out if we need to insert the child at the end or somewhere in the middle
@@ -432,7 +432,7 @@ namespace Stride.Core.Presentation.Controls
             return Extent;
         }
 
-        private static void InvalidateMeasure([NotNull] ATreeViewItem child)
+        private static void InvalidateMeasure([NotNull] TreeViewItem child)
         {
 /*            var itemsPresenter = child.Template.FindName("itemsPresenter", child) as Visual;
             if (itemsPresenter != null)
@@ -493,7 +493,7 @@ namespace Stride.Core.Presentation.Controls
 
             //            var itemsControl = ItemsControl.GetItemsOwner(this);
             var itemsControl = Avalonia.VisualTree.VisualExtensions.GetVisualParent (this).TemplatedParent;
-            var treeViewItem = itemsControl as ATreeViewItem;
+            var treeViewItem = itemsControl as TreeViewItem;
             var treeView = itemsControl as ATreeView ?? treeViewItem.ParentTreeView;
             var generator = ItemContainerGenerator;
 
@@ -505,7 +505,7 @@ namespace Stride.Core.Presentation.Controls
                 //Debug("Arrange-" + itemsControl.DataContext);
    /*             for (var i = 0; i < itemsControl.Items.Count; i++)
                 {
-                    var child = itemsControl.ItemContainerGenerator.ContainerFromIndex(i) as ATreeViewItem;
+                    var child = itemsControl.ItemContainerGenerator.ContainerFromIndex(i) as TreeViewItem;
                     var childHierarchyLevel = 0;
                     if (child != null) childHierarchyLevel = child.HierachyLevel;
 
@@ -557,7 +557,7 @@ namespace Stride.Core.Presentation.Controls
             return finalSize;
         }
 
-        private void AddOrInsertItemToInternalChildren(int itemGeneratorIndex, [NotNull] ATreeViewItem child)
+        private void AddOrInsertItemToInternalChildren(int itemGeneratorIndex, [NotNull] TreeViewItem child)
         {
             if (itemGeneratorIndex >= Children.Count)
             {
@@ -674,7 +674,7 @@ namespace Stride.Core.Presentation.Controls
  /*           var itemsControl = ItemsControl.GetItemsOwner(this);
             if (GetScrollUnit(itemsControl) == ScrollUnit.Item)
             {
-                var treeViewItem = itemsControl as ATreeViewItem;
+                var treeViewItem = itemsControl as TreeViewItem;
                 var treeView = itemsControl as ATreeView ?? treeViewItem?.ParentTreeView;
                 if (treeView != null)
                 {
@@ -701,7 +701,7 @@ namespace Stride.Core.Presentation.Controls
         }
 
 /*        [Conditional("DEBUGVIRTUALIZATION")]
-        private void Debug(ATreeViewItem item, [NotNull] string message)
+        private void Debug(TreeViewItem item, [NotNull] string message)
         {
             if (item != null)
             {
@@ -798,7 +798,7 @@ namespace Stride.Core.Presentation.Controls
                 return Rect.Empty;
             }
 
-            var treeViewItem = visual as ATreeViewItem;
+            var treeViewItem = visual as TreeViewItem;
             FrameworkElement element;
             if (treeViewItem != null)
             {

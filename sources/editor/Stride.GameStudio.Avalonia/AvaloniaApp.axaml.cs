@@ -55,6 +55,12 @@ public partial class AvaloniaApp : Application
 
     public override void Initialize()
     {
+//         Console.WriteLine ("Loading");
+//         var i = new Importer.FBX.MeshConverter(null);
+//         var b = i.Convert ("/mountpoints/bigA/tmp/VRSandbox/Resources/Models/MaterialModel.fbx", "Models/MaterialModel", new Dictionary <String, int> () { { "MaterialA", 0}, {"MaterialB", 1 }});
+//         Console.WriteLine ("Out: " + b);
+//         System.Environment.Exit(1);
+        
         Console.WriteLine ("Initializing App");
         AvaloniaXamlLoader.Load(this);
     }
@@ -104,7 +110,7 @@ public partial class AvaloniaApp : Application
             Console.WriteLine ("Opening project");
         await editor.OpenSession(new Stride.Core.IO.UFile("/mountpoints/bigA/tmp/VRSandbox/VRSandbox.sln"));
         Console.WriteLine ("Project open: " + editor.Session);
-        var mainWindowX = new AGameStudioWindow(editor);
+        var mainWindowX = new GameStudioWindow(editor);
         mainWindowX.Show();
                             Console.WriteLine ("Showing GameStudioWindow");
 
@@ -162,7 +168,7 @@ public partial class AvaloniaApp : Application
         if (editor.Session != null)
         {
             // If a session was correctly loaded, show the main window
-            var mainWindow = new AGameStudioWindow(editor);
+            var mainWindow = new GameStudioWindow(editor);
             //System.Windows.Application.Current.MainWindow = mainWindow;
             //WindowManager.ShowMainWindow(mainWindow);
             mainWindow.Show();

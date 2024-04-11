@@ -4,11 +4,14 @@ using System;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 
 using Avalonia.Input;
 using Avalonia.Xaml.Interactivity;
 using Stride.Core.Annotations;
 using Stride.Core.Presentation.Services;
+
+using System.Windows.Input;
 
 namespace Stride.Core.Presentation.Behaviors
 {
@@ -26,7 +29,7 @@ namespace Stride.Core.Presentation.Behaviors
         /// <summary>
         /// Identifies the <see cref="Command"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<ICommandSource> CommandProperty = StyledProperty<ICommandSource>.Register<CloseWindowBehavior<T>, ICommandSource>("Command", null);
+        public static readonly StyledProperty<ICommand> CommandProperty = StyledProperty<ICommand>.Register<CloseWindowBehavior<T>, ICommand>("Command", null);
 
         /// <summary>
         /// Identifies the <see cref="CommandParameter"/> dependency property.
@@ -41,7 +44,7 @@ namespace Stride.Core.Presentation.Behaviors
         /// <summary>
         /// Gets or sets the command to execute before closing the window.
         /// </summary>
-        public ICommandSource Command { get { return (ICommandSource)GetValue(CommandProperty); } set { SetValue(CommandProperty, value); } }
+        public ICommand Command { get { return (ICommand)GetValue(CommandProperty); } set { SetValue(CommandProperty, value); } }
 
         /// <summary>
         /// Gets or sets the parameter of the command to execute before closing the window.
@@ -54,23 +57,23 @@ namespace Stride.Core.Presentation.Behaviors
             base.OnAttached();
             if (Command != null)
             {
-                AssociatedObject.SetCurrentValue(Control.IsEnabledProperty, Command.Command.CanExecute(CommandParameter));
+                AssociatedObject.SetCurrentValue(Control.IsEnabledProperty, Command.CanExecute(CommandParameter));
             }
         }
 
         private static void CommandChanged([NotNull] AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
             var behavior = (ButtonCloseWindowBehavior)d;
-            var oldCommand = e.OldValue  as ICommandSource;
-            var newCommand = e.NewValue  as ICommandSource;
+            var oldCommand = e.OldValue  as ICommand;
+            var newCommand = e.NewValue  as ICommand;
 
             if (oldCommand != null)
             {
-                oldCommand.Command.CanExecuteChanged -= behavior.CommandCanExecuteChanged;
+                oldCommand.CanExecuteChanged -= behavior.CommandCanExecuteChanged;
             }
             if (newCommand != null)
             {
-                newCommand.Command.CanExecuteChanged += behavior.CommandCanExecuteChanged;
+                newCommand.CanExecuteChanged += behavior.CommandCanExecuteChanged;
             }
         }
 
@@ -79,13 +82,13 @@ namespace Stride.Core.Presentation.Behaviors
             var behavior = (ButtonCloseWindowBehavior)d;
             if (behavior.Command != null)
             {
-                behavior.AssociatedObject.SetCurrentValue(Control.IsEnabledProperty, behavior.Command.Command.CanExecute(behavior.CommandParameter));
+                behavior.AssociatedObject.SetCurrentValue(Control.IsEnabledProperty, behavior.Command.CanExecute(behavior.CommandParameter));
             }
         }
 
         private void CommandCanExecuteChanged(object sender, EventArgs e)
         {
-            AssociatedObject.SetCurrentValue(Control.IsEnabledProperty, Command.Command.CanExecute(CommandParameter));
+            AssociatedObject.SetCurrentValue(Control.IsEnabledProperty, Command.CanExecute(CommandParameter));
         }
 
         /// <summary>
@@ -93,12 +96,21 @@ namespace Stride.Core.Presentation.Behaviors
         /// </summary>
         protected void Close()
         {
-            if (Command != null && Command.Command.CanExecute(CommandParameter))
+            if (Command != null && Command.CanExecute(CommandParameter))
             {
-                Command.Command.Execute(CommandParameter);
+                Command.Execute(CommandParameter);
             }
 
             var window = TopLevel.GetTopLevel(AssociatedObject as Control) as Window;
+            if (window == null)
+            {
+                // might have a menu item, which returns a popuproot.
+                var popup = TopLevel.GetTopLevel(AssociatedObject as Control) as PopupRoot;
+                if (popup != null)
+                {
+                    window = TopLevel.GetTopLevel(popup.ParentTopLevel) as Window;
+                }
+            }
             if (window == null) throw new InvalidOperationException("The button attached to this behavior is not in a window");
 
             bool dialogResultUpdated = false;

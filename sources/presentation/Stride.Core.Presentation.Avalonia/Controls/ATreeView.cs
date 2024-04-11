@@ -95,7 +95,7 @@ namespace Stride.Core.Presentation.Controls
         private bool mouseDown;
         private bool scrollViewerReentrency;
         private object lastShiftRoot;
-        private ATreeViewItem editedItem;
+        private TreeViewItem editedItem;
         private ScrollViewer scroller;
 
         public bool HasItems => (ItemCount > 0);
@@ -192,7 +192,7 @@ namespace Stride.Core.Presentation.Controls
             if (IsVirtualizing)
                 throw new InvalidOperationException("BringItemToView cannot be used when the tree view is virtualizing.");
 
-            ATreeViewItem container = null;
+            TreeViewItem container = null;
 
             var path = new List<object> { item };
             var parent = getParent(item);
@@ -205,9 +205,9 @@ namespace Stride.Core.Presentation.Controls
 /*            for (var i = path.Count - 1; i >= 0; --i)
             {
                 if (container != null)
-                    container = (ATreeViewItem)container.ItemContainerGenerator.ContainerFromItem(path[i]);
+                    container = (TreeViewItem)container.ItemContainerGenerator.ContainerFromItem(path[i]);
                 else
-                    container = (ATreeViewItem)ItemContainerGenerator.ContainerFromItem(path[i]);
+                    container = (TreeViewItem)ItemContainerGenerator.ContainerFromItem(path[i]);
 
                 if (container == null)
                     continue;
@@ -245,7 +245,7 @@ namespace Stride.Core.Presentation.Controls
             return true;
         }
 
-        internal virtual void SelectFromUiAutomation([NotNull] ATreeViewItem item)
+        internal virtual void SelectFromUiAutomation([NotNull] TreeViewItem item)
         {
             SelectSingleItem(item);
             item.ForceFocus();
@@ -267,7 +267,7 @@ namespace Stride.Core.Presentation.Controls
 
         internal virtual void SelectPreviousFromKey()
         {
-            var items = ATreeViewElementFinder.FindAll(this, true).ToList();
+            var items = TreeViewElementFinder.FindAll(this, true).ToList();
             var item = GetFocusedItem();
             if (item == null) return;
             item = GetPreviousItem(item, items);
@@ -285,7 +285,7 @@ namespace Stride.Core.Presentation.Controls
         internal virtual void SelectNextFromKey()
         {
             var item = GetFocusedItem();
-            item = ATreeViewElementFinder.FindNext(item, true);
+            item = TreeViewElementFinder.FindNext(item, true);
             if (item == null) return;
 
             // if ctrl is pressed just focus it, so it can be selected by space. Otherwise select it.
@@ -305,7 +305,7 @@ namespace Stride.Core.Presentation.Controls
             item.ForceFocus();
         }
 
-        internal virtual void SelectFromProperty([NotNull] ATreeViewItem item, bool isSelected)
+        internal virtual void SelectFromProperty([NotNull] TreeViewItem item, bool isSelected)
         {
             // we do not check if selection is allowed, because selecting on that way is no user action.
             // Hopefully the programmer knows what he does...
@@ -322,7 +322,7 @@ namespace Stride.Core.Presentation.Controls
 
         internal virtual void SelectFirst()
         {
-            var item = ATreeViewElementFinder.FindFirst(this, true);
+            var item = TreeViewElementFinder.FindFirst(this, true);
             if (item == null)
                 return;
 
@@ -332,7 +332,7 @@ namespace Stride.Core.Presentation.Controls
 
         internal virtual void SelectLast()
         {
-            var item = ATreeViewElementFinder.FindLast(this, true);
+            var item = TreeViewElementFinder.FindLast(this, true);
             if (item == null)
                 return;
 
@@ -404,7 +404,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        internal void StartEditing([NotNull] ATreeViewItem item)
+        internal void StartEditing([NotNull] TreeViewItem item)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
             StopEditing();
@@ -423,18 +423,18 @@ namespace Stride.Core.Presentation.Controls
             stoppingEdition = false;
         }
 
-        internal IEnumerable<ATreeViewItem> GetChildren(ATreeViewItem item)
+        internal IEnumerable<TreeViewItem> GetChildren(TreeViewItem item)
         {
             if (item == null) yield break;
             for (var i = 0; i < item.Items.Count; i++)
             {
-                var child = item.ItemContainerGenerator.ContainerFromIndex(i) as ATreeViewItem;
+                var child = item.ItemContainerGenerator.ContainerFromIndex(i) as TreeViewItem;
                 if (child != null) yield return child;
             }
         }
 
         [CanBeNull]
-        internal ATreeViewItem GetNextItem([NotNull] ATreeViewItem item, [ItemNotNull, NotNull]  List<ATreeViewItem> items)
+        internal TreeViewItem GetNextItem([NotNull] TreeViewItem item, [ItemNotNull, NotNull]  List<TreeViewItem> items)
         {
             var indexOfCurrent = items.IndexOf(item);
 
@@ -450,9 +450,9 @@ namespace Stride.Core.Presentation.Controls
         }
 
         [NotNull]
-        internal IEnumerable<ATreeViewItem> GetNodesToSelectBetween([NotNull] ATreeViewItem firstNode, [NotNull] ATreeViewItem lastNode)
+        internal IEnumerable<TreeViewItem> GetNodesToSelectBetween([NotNull] TreeViewItem firstNode, [NotNull] TreeViewItem lastNode)
         {
-            var allNodes = ATreeViewElementFinder.FindAll(this, false).ToList();
+            var allNodes = TreeViewElementFinder.FindAll(this, false).ToList();
             var firstIndex = allNodes.IndexOf(firstNode);
             var lastIndex = allNodes.IndexOf(lastNode);
 
@@ -468,11 +468,11 @@ namespace Stride.Core.Presentation.Controls
                    "Last node index " + lastIndex + " greater or equal than count " + allNodes.Count + ".");
             }
 
-            var nodesToSelect = new List<ATreeViewItem>();
+            var nodesToSelect = new List<TreeViewItem>();
 
             if (lastIndex == firstIndex)
             {
-                return new List<ATreeViewItem> { firstNode };
+                return new List<TreeViewItem> { firstNode };
             }
 
             if (lastIndex > firstIndex)
@@ -505,21 +505,21 @@ namespace Stride.Core.Presentation.Controls
         {
             base.PrepareContainerForItemOverride(element, item, index);
             //Send down the IsVirtualizing property if it's set on this element.
-            ATreeViewItem.IsVirtualizingPropagationHelper(this, element);
-//            ((ATreeViewItem)element).ItemsSource = ((Stride.Core.Assets.Editor.ViewModelCategoryViewModel)item).Content;
-            RaiseEvent(new TreeViewItemEventArgs(PrepareItemEvent, this, (ATreeViewItem)element, item));
+            TreeViewItem.IsVirtualizingPropagationHelper(this, element);
+//            ((TreeViewItem)element).ItemsSource = ((Stride.Core.Assets.Editor.ViewModelCategoryViewModel)item).Content;
+            RaiseEvent(new TreeViewItemEventArgs(PrepareItemEvent, this, (TreeViewItem)element, item));
         }
 
         /// <inheritdoc />
         protected override void ClearContainerForItemOverride(Control element)
 //        protected override void ClearContainerForItemOverride(AvaloniaObject element, object item)
         {
-            RaiseEvent(new TreeViewItemEventArgs(ClearItemEvent, this, (ATreeViewItem)element, null));
+            RaiseEvent(new TreeViewItemEventArgs(ClearItemEvent, this, (TreeViewItem)element, null));
             base.ClearContainerForItemOverride(element);
         }
 
         [CanBeNull]
-        internal ATreeViewItem GetPreviousItem([NotNull] ATreeViewItem item, [ItemNotNull, NotNull]  List<ATreeViewItem> items)
+        internal TreeViewItem GetPreviousItem([NotNull] TreeViewItem item, [ItemNotNull, NotNull]  List<TreeViewItem> items)
         {
             var indexOfCurrent = items.IndexOf(item);
             for (var i = indexOfCurrent - 1; i >= 0; i--)
@@ -534,20 +534,20 @@ namespace Stride.Core.Presentation.Controls
         }
 
         [CanBeNull]
-        public ATreeViewItem GetTreeViewItemFor(object item)
+        public TreeViewItem GetTreeViewItemFor(object item)
         {
-            return ATreeViewElementFinder.FindAll(this, false).FirstOrDefault(treeViewItem => item == treeViewItem.DataContext);
+            return TreeViewElementFinder.FindAll(this, false).FirstOrDefault(treeViewItem => item == treeViewItem.DataContext);
         }
 
         [ItemNotNull]
-        internal IEnumerable<ATreeViewItem> GetTreeViewItemsFor(IEnumerable objects)
+        internal IEnumerable<TreeViewItem> GetTreeViewItemsFor(IEnumerable objects)
         {
             if (objects == null)
             {
                 yield break;
             }
             var items = objects.Cast<object>().ToList();
-            foreach (var treeViewItem in ATreeViewElementFinder.FindAll(this, false))
+            foreach (var treeViewItem in TreeViewElementFinder.FindAll(this, false))
             {
                 if (items.Contains(treeViewItem.DataContext))
                 {
@@ -562,19 +562,19 @@ namespace Stride.Core.Presentation.Controls
         protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
         ///protected override AvaloniaObject GetContainerForItemOverride()
         {
-            return new ATreeViewItem();
+            return new TreeViewItem();
         }
    
         
         protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
         {
-            return NeedsContainer<ATreeViewItem>(item, out recycleKey);
+            return NeedsContainer<TreeViewItem>(item, out recycleKey);
         }
 
         /// <inheritdoc />
         //   protected override bool IsItemItsOwnContainerOverride(object item)
         //        {
-        //            return item is ATreeViewItem;
+        //            return item is TreeViewItem;
         //        }
 
         private static void OnSelectedItemPropertyChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
@@ -705,7 +705,7 @@ namespace Stride.Core.Presentation.Controls
 
                     break;
                 case NotifyCollectionChangedAction.Reset:
-                    foreach (var item in ATreeViewElementFinder.FindAll(this, false))
+                    foreach (var item in TreeViewElementFinder.FindAll(this, false))
                     {
                         if (item.IsSelected)
                         {
@@ -744,7 +744,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        protected void SelectSingleItem([NotNull] ATreeViewItem item)
+        protected void SelectSingleItem([NotNull] TreeViewItem item)
         {
             // selection with SHIFT is not working in virtualized mode. Thats because the Items are not visible.
             // Therefore the children cannot be found/selected.
@@ -765,13 +765,13 @@ namespace Stride.Core.Presentation.Controls
         }
 
         [CanBeNull]
-        protected ATreeViewItem GetFocusedItem()
+        protected TreeViewItem GetFocusedItem()
         {
-            return ATreeViewElementFinder.FindAll(this, false).FirstOrDefault(x => x.IsFocused);
+            return TreeViewElementFinder.FindAll(this, false).FirstOrDefault(x => x.IsFocused);
         }
 
         [CanBeNull]
-        protected ATreeViewItem GetTreeViewItemUnderMouse(Point positionRelativeToTree)
+        protected TreeViewItem GetTreeViewItemUnderMouse(Point positionRelativeToTree)
         {
             var hitTestResult = this.InputHitTest (positionRelativeToTree);
             if (hitTestResult == null)
@@ -784,7 +784,7 @@ namespace Stride.Core.Presentation.Controls
                 if (child == null)
                     return null;
 
-                var treeViewItem = child as ATreeViewItem;
+                var treeViewItem = child as TreeViewItem;
                 if (treeViewItem != null)
                 {
                     return treeViewItem.IsVisible ? treeViewItem : null;
@@ -799,7 +799,7 @@ namespace Stride.Core.Presentation.Controls
             return null;
         }
 
-        private void ToggleItem([NotNull] ATreeViewItem item)
+        private void ToggleItem([NotNull] TreeViewItem item)
         {
             if (item.DataContext == null)
                 return;
@@ -858,7 +858,7 @@ namespace Stride.Core.Presentation.Controls
                 lastShiftRoot = itemsToSelect.LastOrDefault();*/
         }
         
-        private void SelectWithShift([NotNull] ATreeViewItem item)
+        private void SelectWithShift([NotNull] TreeViewItem item)
         {
             object firstSelectedItem;
             if (lastShiftRoot != null)

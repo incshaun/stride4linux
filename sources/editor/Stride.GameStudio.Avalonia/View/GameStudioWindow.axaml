@@ -104,7 +104,7 @@
           </MenuItem.ItemContainerTheme>
           <MenuItem.Template>
             <ControlTemplate>
-              <StackPanel IsItemsHost="True" />
+              <StackPanel />
             </ControlTemplate>
           </MenuItem.Template>
         </MenuItem>
@@ -194,7 +194,7 @@
             </MenuItem.ItemContainerTheme>
             <MenuItem.Template>
               <ControlTemplate>
-                <StackPanel IsItemsHost="True"/>
+                <StackPanel />
               </ControlTemplate>
             </MenuItem.Template>
           </MenuItem>
@@ -473,11 +473,17 @@
 	<DockControl.Factory>
 		<Factory />
 	</DockControl.Factory>
-        <RootDock>
-          <ProportionalDock Orientation="Horizontal">
+        <RootDock x:Name="Root" Id="Root" IsCollapsable="False" DefaultDockable="{Binding #MainLayout}">
+          <ProportionalDock Orientation="Horizontal" x:Name="MainLayout" Id="MainLayout">
             <ProportionalDock Orientation="Vertical">
+              
+              <DocumentDock x:Name="AssetEditorPane" Id="AssetEditorPane" CanCreateDocument="True">
+                      <Document x:Name="AssetEditor" Id="AssetEditor" Title="AssetEditorPlaceholder" x:DataType="Document">
+                      </Document>
+              </DocumentDock>
+              
               <ProportionalDock Orientation="Horizontal">
-                <DocumentDock >
+                <DocumentDock x:Name="SolutionExplorerPane" Id="SolutionExplorerPane" CanCreateDocument="True">
 <!--                 <DocumentDock DockWidth="300"> -->
                   <!-- SOLUTION EXPLORER -->
                   <Document Title="{Binding Source={sd:Localize Solution explorer, Context=View}}"
@@ -495,47 +501,47 @@
 	</ItemsControl.ItemsPanel>
                           <Button Command="{Binding Session.NewProjectCommand}"
                             ToolTip.Tip="{sd:Localize Create a project..., Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImageAddNewPackage}" />
+                            <Image Source="{StaticResource ImageAddNewPackage}" Stretch="None" />
                           </Button>
                           <Button Command="{Binding Session.NewDirectoryCommand}" CommandParameter="{Binding SelectedItems, ElementName=DirectoryTreeView}"
                             ToolTip.Tip="{sd:Localize Create a folder, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImageNewFolder}" />
+                            <Image Source="{StaticResource ImageNewFolder}" Stretch="None" />
                           </Button>
                           <Separator/>
                           <Button Command="{Binding Session.ActivatePackagePropertiesCommand}"
                             ToolTip.Tip="{sd:Localize Display the properties of the selected package in the property grid, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImagePackageProperties}" />
+                            <Image Source="{StaticResource ImagePackageProperties}" Stretch="None" />
                           </Button>
                           <Button Command="{Binding Session.RenameDirectoryOrPackageCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" CommandParameter="{Binding SelectedItems, ElementName=DirectoryTreeView}"
                             ToolTip.Tip="{sd:Localize Rename the selected folder or package, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImageRename}" />
+                            <Image Source="{StaticResource ImageRename}" Stretch="None" />
                           </Button>
                           <Button Command="{Binding Session.DeleteSelectedSolutionItemsCommand}"
                             ToolTip.Tip="{sd:Localize Delete the selected items, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImageDelete}" />
+                            <Image Source="{StaticResource ImageDelete}" Stretch="None" />
                           </Button>
                           <Separator/>
 <!--                          <Button Command="{x:Static sd:SessionExplorerHelper.ExpandAssetFolders}" CommandTarget="{Binding ElementName=DirectoryTreeView}"
                             ToolTip.Tip="{sd:Localize Expand all asset folders, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImageExpandAssetFolders}" />
+                            <Image Source="{StaticResource ImageExpandAssetFolders}" Stretch="None" />
                           </Button>
                           <Button Command="{x:Static sd:SessionExplorerHelper.ExpandAllFolders}" CommandTarget="{Binding ElementName=DirectoryTreeView}"
                             ToolTip.Tip="{sd:Localize Expand all, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImageExpandAllFolders}" />
+                            <Image Source="{StaticResource ImageExpandAllFolders}" Stretch="None" />
                           </Button>
                           <Button Command="{x:Static sd:SessionExplorerHelper.CollapseAllFolders}" CommandTarget="{Binding ElementName=DirectoryTreeView}"
                             ToolTip.Tip="{sd:Localize Collapse all, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImageCollapseAllFolders}" />
+                            <Image Source="{StaticResource ImageCollapseAllFolders}" Stretch="None" />
                           </Button>-->
                           <Separator/>
                           <Button Command="{Binding Session.ExploreCommand}" CommandParameter="{Binding SelectedItems, ElementName=DirectoryTreeView}"
                             ToolTip.Tip="{sd:Localize Show in Explorer, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
-                            <Image Source="{StaticResource ImageExplore}" />
+                            <Image Source="{StaticResource ImageExplore}" Stretch="None" />
                           </Button>
                         </ItemsControl>
                       </StackPanel>
                       <!-- TODO: SearchText -->
-                      <sd:ATreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values}" IsVirtualizing="False">
+                      <sd:ATreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values, Source={x:Static vm:GameStudioViewModel.GameStudio}}" IsVirtualizing="False">
                         <sd:ATreeView.Resources>
                           <ContextMenu x:Key="ContextMenu">
                             <MenuItem Header="{sd:Localize Folder, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
@@ -591,7 +597,7 @@
                           <sd:DragOverAutoScrollBehavior/>
                           <sd:TreeViewAutoExpandBehavior/>
                           <sd:TreeViewDragDropBehavior DragVisualTemplate="{StaticResource DragVisualTemplate}"/>
-                          <sd:TreeViewBindableSelectedItemsBehavior SelectedItems="{Binding Session.ActiveAssetView.SelectedLocations}"/>
+                          <sd:TreeViewBindableSelectedItemsBehavior SelectedItems="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
 <!--                          <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Cut" Command="{Binding Session.ActiveAssetView.CutLocationsCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
                           <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" Command="{Binding Session.ActiveAssetView.CopyLocationsCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
                           <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding Session.ActiveAssetView.PasteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
@@ -599,9 +605,9 @@
                         </i:Interaction.Behaviors>
                         <sd:ATreeView.ItemContainerTheme>
                           <ControlTheme TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
-                            <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={sd:AssetToExpandedAtInitialization}}"/>
+<!--                             <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={sd:AssetToExpandedAtInitialization}}"/> -->
                              
-                            <Setter Property="TemplateSelectorEdit" Value="{StaticResource SolutionTreeViewEditTemplate}"/>
+<!--                             <Setter Property="TemplateSelectorEdit" Value="{StaticResource SolutionTreeViewEditTemplate}"/> -->
                             <Setter Property="sd:Interaction.Behaviors">
                               <Setter.Value>
                                 <sd:BehaviorCollection>
@@ -611,24 +617,40 @@
                             </Setter>
                           </ControlTheme>
                         </sd:ATreeView.ItemContainerTheme>
-                        <sd:ATreeView.ItemTemplate>
+                        <sd:ATreeView.DataTemplates>
+
+                                <StaticResource ResourceKey="AssetMountPointTemplate"></StaticResource>
+                                <StaticResource ResourceKey="DirectoryTemplate"></StaticResource>
+                                <StaticResource ResourceKey="DependencyCategoryTemplate"></StaticResource>
+                                <StaticResource ResourceKey="ProjectTemplate"></StaticResource>
+                                <StaticResource ResourceKey="ProjectCodeTemplate"></StaticResource>
+                                <StaticResource ResourceKey="PackageReferenceTemplate"></StaticResource>
+                                <StaticResource ResourceKey="PackageTemplate"></StaticResource>
+
+                        </sd:ATreeView.DataTemplates>                        
+<!--                        <sd:ATreeView.ItemTemplate>
                           <TreeDataTemplate ItemsSource="{Binding Content}" >
-<!--                           <TreeDataTemplate ItemsSource="{Binding Content}" ItemTemplateSelector="{StaticResource SolutionTreeViewTemplate}"> -->
+                          <TreeDataTemplate ItemsSource="{Binding Content}" ItemTemplateSelector="{StaticResource SolutionTreeViewTemplate}">
                             <TextBlock Text="{Binding Name}"/>
                           </TreeDataTemplate>
-                        </sd:ATreeView.ItemTemplate>
+                        </sd:ATreeView.ItemTemplate>-->
                       </sd:ATreeView>
                     </DockPanel>
                   </Document>
                 </DocumentDock>
                 
+              </ProportionalDock>
+                <DocumentDock x:Name="AssetViewPane" Id="AssetViewPane" CanCreateDocument="True">
                   <!-- ASSET VIEW -->
                   <Document Title="{Binding Source={sd:Localize Asset view, Context=View}}"
                                            >
 <!--                  <Document AutoHideMinWidth="300" ContentId="AssetView" Title="{Binding Source={sd:Localize Asset view, Context=View}}"
                                            >-->
-                    <sd:AssetViewUserControl AssetCollection="{Binding Session.ActiveAssetView}" AssetContextMenu="{StaticResource AssetContextMenu}"
-                                           AssetDoubleClick="{Binding Session.EditSelectedContentCommand}">
+<!--                    <sd:AssetViewUserControl AssetCollection="{Binding Session.ActiveAssetView}" AssetContextMenu="{StaticResource AssetContextMenu}"
+                                           AssetDoubleClick="{Binding Session.EditSelectedContentCommand}">-->
+                      <sd:AssetViewUserControl AssetCollection="{Binding Session.ActiveAssetView, Source={x:Static vm:GameStudioViewModel.GameStudio}}" AssetContextMenu="{StaticResource AssetContextMenu}"
+                      AssetDoubleClick="{Binding Session.EditSelectedContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}">
+                      
                       <i:Interaction.Behaviors>
 <!--                        <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Cut" Command="{Binding Session.ActiveAssetView.CutContentCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
                         <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" Command="{Binding Session.ActiveAssetView.CopyContentCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
@@ -638,12 +660,12 @@
                       </i:Interaction.Behaviors>
                     </sd:AssetViewUserControl>
                     <i:Interaction.Behaviors>
-                      <gl:LayoutAnchorableActivateOnLocationChangedBehavior Collection="{Binding Session.ActiveAssetView.SelectedLocations}" />
+                      <gl:LayoutAnchorableActivateOnLocationChangedBehavior Collection="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}" />
                     </i:Interaction.Behaviors>
                   </Document>
+                </DocumentDock>
                 
-              </ProportionalDock>
-              <DocumentDock >
+              <DocumentDock x:Name="ReferencesPane" Id="ReferencesPane" CanCreateDocument="True">
 <!--               <DocumentDock DockHeight="200"> -->
                 <!-- REFERENCES -->
                 <Document Title="{Binding Source={sd:Localize References, Context=View}}"
@@ -681,7 +703,7 @@
 <!--                <Document AutoHideMinHeight="200" ContentId="AssetLog"
                                        Title="{sd:Localize Asset error ({0}), Plural=Asset errors ({0}), Count={Binding Session.AssetLog.ErrorCount, Source={x:Static vm:GameStudioViewModel.GameStudio}}, IsStringFormat=True, Context=View}"
                                        >-->
-                  <sd:GridLogViewer LogMessages="{Binding Session.AssetLog.FilteredMessages}" Session="{Binding Session}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="False"/>
+                  <sd:GridLogViewer LogMessages="{Binding Session.AssetLog.FilteredMessages, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Session="{Binding Session, Source={x:Static vm:GameStudioViewModel.GameStudio}}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="False"/>
                 </Document>
                 <!-- BUILD LOG -->
                 <Document Title="{Binding Debugging.OutputTitle, Source={x:Static vm:GameStudioViewModel.GameStudio}}"
@@ -730,9 +752,9 @@
                 </Document>
               </DocumentDock>
             </ProportionalDock>
-            <DocumentDock  >
+            <ProportionalDock Orientation="Vertical" >
 <!--             <DocumentDock Orientation="Vertical" DockWidth="400"> -->
-              <DocumentDock >
+              <DocumentDock x:Name="PropertyGridPane" Id="PropertyGridPane" CanCreateDocument="True">
 <!--               <DocumentDock DockHeight="2*"> -->
                 <!-- PROPERTY GRID -->
                 <Document Title="{Binding Source={sd:Localize Property grid, Context=View}}"
@@ -835,8 +857,8 @@
                     <TextBlock Grid.Row="4" Text="{Binding Session.ActiveProperties.FallbackMessage}" HorizontalAlignment="Center" VerticalAlignment="Center"
                            IsVisible="{Binding Session.ActiveProperties.CanDisplayProperties, Converter={sd:InvertBool}}"/>
                     <sd:PropertyView x:Name="AssetPropertyView" Grid.Row="4"
-                                       ItemsSource="{Binding Session.ActiveProperties.ViewModel.RootNode.Children}"
-                                       IsVisible="{Binding Session.ActiveProperties.CanDisplayProperties}">
+                                       ItemsSource="{Binding Session.ActiveProperties.ViewModel.RootNode.Children, Source={x:Static vm:GameStudioViewModel.GameStudio}}"
+                                       IsVisible="{Binding Session.ActiveProperties.CanDisplayProperties, Source={x:Static vm:GameStudioViewModel.GameStudio}}">
                       <sd:PropertyView.Resources>
 <!--                        <RoutedUICommand x:Key="ReplaceCommand" Text="Replace">
                           <RoutedUICommand.InputGestures>
@@ -987,9 +1009,9 @@
                   </Grid>
                 </Document>
               </DocumentDock>
-              <DocumentDock >
+              <ProportionalDock >
 <!--               <DocumentDock DockHeight="1*"> -->
-                <DocumentDock>
+                <DocumentDock x:Name="AssetPreviewPane" Id="AssetPreviewPane" CanCreateDocument="True">
                   <!-- ASSET PREVIEW -->
                   <Document Title="{Binding Source={sd:Localize Asset preview, Context=View}}"
                                          >
@@ -1030,8 +1052,8 @@
                     </ListBox>
                   </Document>
                 </DocumentDock>
-              </DocumentDock>
-            </DocumentDock>
+              </ProportionalDock>
+            </ProportionalDock>
           </ProportionalDock>
         </RootDock>
       </DockControl>
