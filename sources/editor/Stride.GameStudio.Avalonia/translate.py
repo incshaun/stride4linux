@@ -974,6 +974,9 @@ def translateTags (contents):
   # Case sensitive ok.
   contents = re.sub ("DialogResult=\"Ok\"", r'DialogResult="Ok"', contents)
 
+  # isitemshost - only read access.
+  contents = re.sub ("IsItemsHost=\"True\"", r'', contents)
+
   # ContentSource  
   contents = re.sub ("<ContentPresenter ContentSource=\"Content\"/>", r'<ContentPresenter ContentTemplate="{Binding Content}"/>', contents)
   #contents = re.sub ("ContentSource=\"(.*?)\"", r'ContentTemplate="\1"', contents)
@@ -1449,7 +1452,15 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/PropertyViewAutoExpandNodesBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/WindowHelper.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VirtualizingTreePanel.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/SettingsCategoryToExpandedAtInitialization.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/SettingsCategoryToExpandedAtInitialization.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/ShaderClassNodeMixinReferenceTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/SkeletonModelPropertyTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/SpriteFontFontNamePropertyTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/ScriptVariableReferenceTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/TemplateProviders/ScriptTextEditorTemplateProvider.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/BindScriptTextEditorWorkspaceProjectIdBehavior.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/UIEditor/Views/ThicknessEditor.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/VisualScriptEditor/Converters/AvailableVariableReferenceValueConverter.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -1481,6 +1492,13 @@ translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/Settings
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/EntityHierarchyEditor/Views/EntityHierarchyEditorView.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/ScriptEditorView.xaml")
 #translateXAML ("editor/Stride.GameStudio/View/GameStudioWindow.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/MaterialPropertyTemplates.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/SkeletonPropertyTemplates.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/SpriteFontPropertyTemplates.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/UIPropertyTemplates.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/GraphicsCompositorTemplates.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/VisualScriptingTemplates.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/VisualScriptEditor/Views/GraphTemplates.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

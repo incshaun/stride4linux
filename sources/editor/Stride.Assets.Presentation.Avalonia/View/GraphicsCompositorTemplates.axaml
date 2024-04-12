@@ -1,0 +1,11 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+                    xmlns:rendering="clr-namespace:Stride.Rendering;assembly=Stride.Engine"
+                    xmlns:sd="http://schemas.stride3d.net/xaml/presentation">
+
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="avares://Stride.Core.Assets.Editor.Avalonia/View/DefaultPropertyTemplateProviders.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

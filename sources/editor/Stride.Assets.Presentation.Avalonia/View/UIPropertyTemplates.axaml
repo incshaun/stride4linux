@@ -1,0 +1,100 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="clr-namespace:Stride.UI;assembly=Stride.UI"
+                    xmlns:views="clr-namespace:Stride.Assets.Presentation.AssetEditors.UIEditor.Views"
+                    xmlns:sd="http://schemas.stride3d.net/xaml/presentation">
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="avares://Stride.Core.Assets.Editor.Avalonia/View/DefaultPropertyTemplateProviders.axaml" />
+    <ResourceInclude Source="ImageDictionary.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+          <ControlTheme x:Key="views:ThicknessEditor" TargetType="views:ThicknessEditor">
+          <Setter Property="Focusable" Value="False" />
+          <Setter Property="Template">
+            <Setter.Value>
+              <ControlTemplate TargetType="views:ThicknessEditor">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                  </Grid.RowDefinitions>
+
+                  <!-- Left -->
+                  <Image Grid.Row="0" Grid.Column="0" ToolTip.Tip="Left" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"
+                         Source="{StaticResource ImageThicknessLeft}" />
+                  <sd:NumericTextBox Grid.Row="0" Grid.Column="1" TextAlignment="Center" SelectAllOnFocus="True"
+                                       Value="{Binding Left, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       DecimalPlaces="{Binding DecimalPlaces, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                  <!-- Right -->
+                  <Image Grid.Row="0" Grid.Column="2" ToolTip.Tip="Right" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"
+                         Source="{StaticResource ImageThicknessRight}" />
+                  <sd:NumericTextBox Grid.Row="0" Grid.Column="3" TextAlignment="Center" SelectAllOnFocus="True"
+                                       Value="{Binding Right, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       DecimalPlaces="{Binding DecimalPlaces, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                  <!-- Top -->
+                  <Image Grid.Row="1" Grid.Column="0" ToolTip.Tip="Top" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"
+                         Source="{StaticResource ImageThicknessUp}" />
+                  <sd:NumericTextBox Grid.Row="1" Grid.Column="1" TextAlignment="Center" SelectAllOnFocus="True"
+                                       Value="{Binding Top, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       DecimalPlaces="{Binding DecimalPlaces, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                  <!-- Bottom -->
+                  <Image Grid.Row="1" Grid.Column="2" ToolTip.Tip="Bottom" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"
+                         Source="{StaticResource ImageThicknessDown}" />
+                  <sd:NumericTextBox Grid.Row="1" Grid.Column="3" TextAlignment="Center" SelectAllOnFocus="True"
+                                       Value="{Binding Bottom, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       DecimalPlaces="{Binding DecimalPlaces, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                  <!-- Back -->
+                  <Image Grid.Row="2" Grid.Column="0" ToolTip.Tip="Back" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"
+                         Source="{StaticResource ImageThicknessBack}" />
+                  <sd:NumericTextBox Grid.Row="2" Grid.Column="1" TextAlignment="Center" SelectAllOnFocus="True"
+                                       Value="{Binding Back, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       DecimalPlaces="{Binding DecimalPlaces, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                  <!-- Front -->
+                  <Image Grid.Row="2" Grid.Column="2" ToolTip.Tip="Front" Width="16" Height="16" RenderOptions.BitmapInterpolationMode="LowQuality"
+                         Source="{StaticResource ImageThicknessFront}" />
+                  <sd:NumericTextBox Grid.Row="2" Grid.Column="3" TextAlignment="Center" SelectAllOnFocus="True"
+                                       Value="{Binding Front, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                       DecimalPlaces="{Binding DecimalPlaces, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                </Grid>
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </ControlTheme>
+
+
+  <sd:TypeMatchTemplateProvider x:Key="StripDefinitionTemplateProvider" Type="{x:Type ui:StripDefinition}" sd:PropertyViewHelper.TemplateCategory="PropertyEditor">
+	<sd:TypeMatchTemplateProvider.Template>
+		<DataTemplate>
+	
+      <UniformGrid Rows="1">
+        <ContentPresenter Content="{Binding SizeValue}" ContentTemplate="{x:Static sd:PropertyViewHelper.EditorProviders}" />
+        <ContentPresenter Content="{Binding Type_}" ContentTemplate="{x:Static sd:PropertyViewHelper.EditorProviders}" />
+<!--        <ContentPresenter Content="{Binding SizeValue}" ContentTemplateSelector="{x:Static sd:PropertyViewHelper.EditorProviders}" />
+        <ContentPresenter Content="{Binding Type_}" ContentTemplateSelector="{x:Static sd:PropertyViewHelper.EditorProviders}" />-->
+      </UniformGrid>
+    </DataTemplate>
+</sd:TypeMatchTemplateProvider.Template>
+</sd:TypeMatchTemplateProvider>
+
+  <sd:TypeMatchTemplateProvider x:Key="ThicknessTemplateProvider" Type="{x:Type ui:Thickness}" sd:PropertyViewHelper.TemplateCategory="PropertyEditor">
+<!-- 	<sd:TypeMatchTemplateProvider.Template> -->
+<!-- 		<DataTemplate> -->
+	
+<!--      <DataTemplate.Resources>
+      </DataTemplate.Resources>-->
+<!--       <views:ThicknessEditor Value="{Binding NodeValue}" DecimalPlaces="3" /> -->
+<!--     </DataTemplate> -->
+<!-- </sd:TypeMatchTemplateProvider.Template> -->
+</sd:TypeMatchTemplateProvider>
+
+</ResourceDictionary>
+
+
+

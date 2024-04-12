@@ -932,7 +932,8 @@
                                                                                        {Binding HasBase, Converter={sd:InvertBool}},
                                                                                        Converter={sd:MultiChained {sd:OrMultiConverter}, {sd:VisibleOrCollapsed}}}"/>-->
                                     </Border>
-                                    <Expander x:Name="propertyExpander" IsExpanded="{TemplateBinding IsExpanded}" Theme="{StaticResource PropertyExpanderStyle}">
+<!--                                     <Expander x:Name="propertyExpander" IsExpanded="{TemplateBinding IsExpanded}" Theme="{StaticResource PropertyExpanderStyle}"> -->
+                                    <Expander x:Name="propertyExpander" IsExpanded="{TemplateBinding IsExpanded}">
                                       <StackPanel>
                                         <ItemsPresenter Name="ItemsHost"/>
                                         <Border Background="{TemplateBinding Background}">

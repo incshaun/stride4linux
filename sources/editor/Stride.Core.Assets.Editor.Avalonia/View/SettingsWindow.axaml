@@ -8,7 +8,7 @@
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:edvw="clr-namespace:Stride.Core.Assets.Editor.View"
-                  xmlns:viewModels="clr-namespace:Stride.Core.Assets.Editor.Settings.ViewModels"
+                  xmlns:viewModels="clr-namespace:Stride.Core.Assets.Editor.Settings.ViewModels;assembly=Stride.Core.Assets.Editor"
                   xmlns:viewModels1="clr-namespace:Stride.Core.Presentation.Quantum.ViewModels;assembly=Stride.Core.Presentation.Quantum"
                   mc:Ignorable="d" 
                   
@@ -47,11 +47,11 @@
 <!--             <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={valueConverters:SettingsCategoryToExpandedAtInitialization}}"/> -->
           </ControlTheme>
         </sd:ATreeView.ItemContainerTheme>
-        <sd:ATreeView.ItemTemplate>
-          <TreeDataTemplate ItemsSource="{Binding SubCategories}">
+        <sd:ATreeView.DataTemplates>
+          <TreeDataTemplate DataType="{x:Type viewModels:SettingsCategoryViewModel}" ItemsSource="{Binding SubCategories}">
             <TextBlock Text="{Binding Name}"/>
           </TreeDataTemplate>
-        </sd:ATreeView.ItemTemplate>
+        </sd:ATreeView.DataTemplates>
       </sd:ATreeView>
 
       <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
@@ -63,7 +63,7 @@
             <Setter Property="HeaderTemplate">
               <Setter.Value>
                 <TreeDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels1:NodeViewModel">
-                  <ContentPresenter Content="{Binding}" />
+                  <ContentPresenter Content="{Binding}" ContentTemplate="{x:Static edvw:PropertyViewHelper.HeaderProviders}" />
 <!--                   <ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.HeaderProviders}"/> -->
                 </TreeDataTemplate>
               </Setter.Value>
@@ -79,10 +79,11 @@
 <!--                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}"  Name="PART_Header" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"  />-->
                       </Border>
                       <Border DockPanel.Dock="Bottom" Background="{TemplateBinding Background}">
-                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}"  Name="PART_Footer"  />
+                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{x:Static edvw:PropertyViewHelper.FooterProviders}" Name="PART_Footer"  />
 <!--                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.FooterProviders}" Name="PART_Footer" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"  />-->
                       </Border>
-                      <Expander x:Name="propertyExpander" IsExpanded="{TemplateBinding IsExpanded}" Theme="{StaticResource PropertyExpanderStyle}">
+<!--                       <Expander x:Name="propertyExpander" IsExpanded="{TemplateBinding IsExpanded}" Theme="{StaticResource PropertyExpanderStyle}"> -->
+                      <Expander x:Name="propertyExpander" IsExpanded="{TemplateBinding IsExpanded}" >
                         <ItemsPresenter Name="ItemsHost"/>
                       </Expander>
                     </DockPanel>

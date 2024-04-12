@@ -94,7 +94,7 @@
           <MenuItem.Template>
             <ControlTemplate>
               <Border Background="Transparent">
-                <StackPanel IsItemsHost="True"/>
+                <StackPanel />
               </Border>
             </ControlTemplate>
           </MenuItem.Template>
@@ -144,7 +144,7 @@
           <MenuItem.Template>
             <ControlTemplate>
               <Border Background="Transparent">
-                <StackPanel IsItemsHost="True"/>
+                <StackPanel />
               </Border>
             </ControlTemplate>
           </MenuItem.Template>
@@ -231,7 +231,7 @@
                   <MenuItem.Template>
                     <ControlTemplate>
                       <Border Background="Transparent">
-                        <StackPanel IsItemsHost="True"/>
+                        <StackPanel />
                       </Border>
                     </ControlTemplate>
                   </MenuItem.Template>
@@ -262,7 +262,7 @@
 	<Design.DataContext>
 		<ehvm:EntityHierarchyItemViewModel />
 	</Design.DataContext>
-                <Setter Property="Margin" Value="4,0"/>
+                <Setter Property="Margin" Value="40,0"/>
                 <Setter Property="Text" Value="{Binding Name}"/>
                 <!-- <ControlTheme.Triggers>
                   <DataTrigger Binding="{Binding Owner.IsLoaded, Mode=OneWay}" Value="false">
@@ -847,7 +847,7 @@
                 <MenuItem.Template>
                   <ControlTemplate>
                     <Border Background="Transparent">
-                      <StackPanel IsItemsHost="True"/>
+                      <StackPanel />
                     </Border>
                   </ControlTemplate>
                 </MenuItem.Template>

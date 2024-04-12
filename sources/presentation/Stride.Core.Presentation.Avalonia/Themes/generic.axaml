@@ -67,7 +67,7 @@
     <Setter Property="ItemsPanel">
       <Setter.Value>
         <ItemsPanelTemplate>
-          <StackPanel IsItemsHost="True" />
+          <StackPanel  />
         </ItemsPanelTemplate>
       </Setter.Value>
     </Setter>
@@ -98,7 +98,7 @@
   <ControlTheme x:Key="{x:Type ctrl:PropertyViewItem}" TargetType="ctrl:PropertyViewItem">
     <Setter Property="Increment" Value="15" />
 <!--     <Setter Property="HorizontalContentAlignment" Value="Stretch" /> -->
-    <!--<Setter Property="Template">
+    <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ctrl:PropertyViewItem">
           <Border BorderThickness="{TemplateBinding Border.BorderThickness}"
@@ -111,9 +111,9 @@
               <ToggleButton  ClickMode="Press" Name="Expander">
                 <ToggleButton.Theme>
                   <ControlTheme TargetType="ToggleButton">
-                    <Style.Resources>
+                    <ControlTheme.Resources>
                       <ResourceDictionary />
-                    </Style.Resources>
+                    </ControlTheme.Resources>
                     <Setter Property="Focusable" Value="False" />
                     <Setter Property="Width" Value="16" />
                     <Setter Property="Height" Value="16" />
@@ -130,7 +130,7 @@
                               </Path.RenderTransform>
                             </Path>
                           </Border>
-                          --><!-- <ControlTemplate.Triggers>
+                          <!-- <ControlTemplate.Triggers>
                             <Trigger Property="UIElement.IsMouseOver" Value="True">
                               <Setter TargetName="ExpandPath" Property="Shape.Stroke" Value="#FF1BBBFA" />
                               <Setter TargetName="ExpandPath" Property="Shape.Fill" Value="#00FFFFFF" />
@@ -144,7 +144,7 @@
                               <Setter TargetName="ExpandPath" Property="Shape.Fill" Value="#FF595959" />
                               <Setter TargetName="ExpandPath" Property="Shape.Stroke" Value="#FF262626" />
                             </Trigger>
-                          </ControlTemplate.Triggers> --><!--
+                          </ControlTemplate.Triggers> -->
                         </ControlTemplate>
                       </Setter.Value>
                     </Setter>
@@ -159,7 +159,7 @@
                 <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}"
                                   ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
                                   
-                                  ContentTemplate="Header" Name="PART_Header"
+                                  Name="PART_Header"
                                   HorizontalAlignment="{TemplateBinding ContentControl.HorizontalContentAlignment}"
                                    />
                 <Expander x:Name="propertyExpander" Grid.Row="1" IsExpanded="{TemplateBinding IsExpanded}"
@@ -171,7 +171,7 @@
           </Border>
         </ControlTemplate>
       </Setter.Value>
-    </Setter>-->
+    </Setter>
   </ControlTheme>
 
   <ControlTheme x:Key="DefaultTextBoxStyle" TargetType="ctrl:TextBox" BasedOn="{StaticResource {x:Type TextBox}}">

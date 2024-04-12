@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+                    xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+                    xmlns:tp="clr-namespace:Stride.Assets.Presentation.TemplateProviders"
+                    xmlns:scriptEditor="clr-namespace:Stride.Assets.Presentation.AssetEditors.ScriptEditor">
+
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="avares://Stride.Core.Assets.Editor.Avalonia/View/DefaultPropertyTemplateProviders.axaml" />
+    <ResourceInclude Source="avares://Stride.Assets.Presentation.Avalonia/View/ImageDictionary.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+  <tp:ScriptTextEditorTemplateProvider x:Key="ScriptTextEditorTemplateProvider" OverrideRule="All" sd:PropertyViewHelper.TemplateCategory="PropertyHeader">
+	<tp:ScriptTextEditorTemplateProvider.Template>
+		<DataTemplate>
+	
+      <scriptEditor:ScriptTextEditor VerticalAlignment="Stretch" Text="{Binding NodeValue}" MinHeight="280">
+        <i:Interaction.Behaviors>
+          <scriptEditor:BindScriptTextEditorWorkspaceProjectIdBehavior Package="{Binding Root.OwnerAsset.Directory.Package}"/>
+        </i:Interaction.Behaviors>
+      </scriptEditor:ScriptTextEditor>
+    </DataTemplate>
+</tp:ScriptTextEditorTemplateProvider.Template>
+</tp:ScriptTextEditorTemplateProvider>
+</ResourceDictionary>

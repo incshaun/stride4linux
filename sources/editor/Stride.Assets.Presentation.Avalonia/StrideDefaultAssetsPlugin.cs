@@ -127,14 +127,27 @@ namespace Stride.Assets.Presentation
             uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/EntityPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
             entityPropertyTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
             
-//             materialPropertyTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/MaterialPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-//             skeletonTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/SkeletonPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-//             spriteFontTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/SpriteFontPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-//             uiTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/UIPropertyTemplates.xaml", UriKind.RelativeOrAbsolute));
-//             graphicsCompositorTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/GraphicsCompositorTemplates.xaml", UriKind.RelativeOrAbsolute));
-//             visualScriptingTemplateDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/View/VisualScriptingTemplates.xaml", UriKind.RelativeOrAbsolute));
-//             visualScriptingGraphTemplatesDictionary = (ResourceDictionary)Application.LoadComponent(new Uri("/Stride.Assets.Presentation;component/AssetEditors/VisualScriptEditor/Views/GraphTemplates.xaml", UriKind.RelativeOrAbsolute));
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/MaterialPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
+            materialPropertyTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
 
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/SkeletonPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
+            skeletonTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+            
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/SpriteFontPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
+            spriteFontTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+            
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/UIPropertyTemplates.axaml", UriKind.RelativeOrAbsolute);
+            uiTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+            
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/GraphicsCompositorTemplates.axaml", UriKind.RelativeOrAbsolute);
+            graphicsCompositorTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+            
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/View/VisualScriptingTemplates.axaml", UriKind.RelativeOrAbsolute);
+            visualScriptingTemplateDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+            
+            uri = new Uri("avares://Stride.Assets.Presentation.Avalonia/AssetEditors/VisualScriptEditor/Views/GraphTemplates.axaml", UriKind.RelativeOrAbsolute);
+            visualScriptingGraphTemplatesDictionary = (ResourceDictionary) (new ResourceInclude (uri) {  Source = uri }).Loaded;
+            
             // Make Visual Script colors available to StaticResourceConverter
             global::Avalonia.Application.Current.Resources.MergedDictionaries.Add(imageDictionary);
 
@@ -181,13 +194,13 @@ namespace Stride.Assets.Presentation
             RegisterResourceDictionary(imageDictionary);
             RegisterResourceDictionary(animationPropertyTemplateDictionary);
             RegisterResourceDictionary(entityPropertyTemplateDictionary);
-  /*          RegisterResourceDictionary(materialPropertyTemplateDictionary);
+            RegisterResourceDictionary(materialPropertyTemplateDictionary);
             RegisterResourceDictionary(skeletonTemplateDictionary);
             RegisterResourceDictionary(spriteFontTemplateDictionary);
             RegisterResourceDictionary(uiTemplateDictionary);
             RegisterResourceDictionary(graphicsCompositorTemplateDictionary);
             RegisterResourceDictionary(visualScriptingTemplateDictionary);
-            RegisterResourceDictionary(visualScriptingGraphTemplatesDictionary);*/
+            RegisterResourceDictionary(visualScriptingGraphTemplatesDictionary);
             RegisterComponentOrders(logger);
         }
 

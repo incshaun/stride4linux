@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+                    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+                    xmlns:converters="clr-namespace:Stride.Assets.Presentation.AssetEditors.VisualScriptEditor.Converters"
+                    xmlns:templateProviders="clr-namespace:Stride.Assets.Presentation.TemplateProviders">
+
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceInclude Source="avares://Stride.Core.Assets.Editor.Avalonia/View/DefaultPropertyTemplateProviders.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+  <templateProviders:ScriptVariableReferenceTemplateProvider x:Key="ScriptVariableReferenceTemplateProvider" OverrideRule="Most" sd:PropertyViewHelper.TemplateCategory="PropertyEditor">
+    <templateProviders:ScriptVariableReferenceTemplateProvider.Template>
+            <DataTemplate>
+    
+      <sd:FilteringComboBox  SortMemberPath="Name" Text="{Binding NodeValue}"  Sort="{x:Null}" OpenDropDownOnFocus="True" ItemsSource="{sd:MultiBinding {Binding Root.OwnerBlock.Method.Editor.SemanticModel}, {Binding Root.OwnerBlock.Method}, Converter={converters:AvailableVariableReferenceValueConverter}}">
+        <i:Interaction.Behaviors>
+          <sd:ReferenceHostDragDropBehavior UsePreviewEvents="True" />
+        </i:Interaction.Behaviors>
+        <sd:FilteringComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock>
+              <Run Text="{Binding Kind, Mode=OneWay}"/>
+              <Run Text="{Binding Name, Mode=OneWay}" FontWeight="Bold"/>
+              <Run Text="{Binding Type, Mode=OneWay, Converter={sd:FormatString}, ConverterParameter=({0})}" Foreground="Gray"/>
+            </TextBlock>
+          </DataTemplate>
+        </sd:FilteringComboBox.ItemTemplate>
+      </sd:FilteringComboBox>
+            </DataTemplate>
+    </templateProviders:ScriptVariableReferenceTemplateProvider.Template>
+  </templateProviders:ScriptVariableReferenceTemplateProvider>
+</ResourceDictionary>
