@@ -33,10 +33,10 @@
 
 		<StyleInclude Source="avares://Dock.Avalonia/Themes/DockFluentTheme.axaml" />
 
-		<Style Selector="TextBlock">
+<!--		<Style Selector="TextBlock">
 			<Setter Property="HorizontalAlignment" Value="Center" />
 			<Setter Property="VerticalAlignment" Value="Center" />
-		</Style>
+		</Style>-->
 
 		<Style Selector="idc|DockControl">
 			<Setter Property="(ids:DockProperties.ControlRecycling)" Value="{StaticResource ControlRecyclingKey}" />

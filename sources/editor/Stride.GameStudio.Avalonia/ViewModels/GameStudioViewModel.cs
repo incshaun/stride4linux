@@ -37,7 +37,7 @@ namespace Stride.GameStudio.Avalonia.ViewModels
         {
            Panels = new EditionPanelViewModel(ServiceProvider);
             availableIDEs = new List<IDEInfo> { VisualStudioVersions.DefaultIDE };
-//            availableIDEs.AddRange(VisualStudioVersions.AvailableVisualStudioInstances);
+            availableIDEs.AddRange(VisualStudioVersions.AvailableVisualStudioInstances);
             NewSessionCommand = new AnonymousCommand(serviceProvider, RestartAndCreateNewSession);
             OpenAboutPageCommand = new AnonymousCommand(serviceProvider, OpenAboutPage);
             OpenSessionCommand = new AnonymousTaskCommand<UFile>(serviceProvider, RestartAndOpenSession);

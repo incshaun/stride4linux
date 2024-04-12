@@ -338,7 +338,8 @@ public partial class AvaloniaApp : Application
             mainWindow.Activated += doDialog;
             //await startupWindow.ShowDialog(mainWindow);
 
-            mainWindow.Show();
+            WindowManager.ShowMainWindow(mainWindow);
+//             mainWindow.Show();
         }
 
         base.OnFrameworkInitializationCompleted();

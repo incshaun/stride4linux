@@ -1448,7 +1448,8 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/PropertyViewDragDropBehavior.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/PropertyViewAutoExpandNodesBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Extensions/WindowHelper.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VirtualizingTreePanel.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/VirtualizingTreePanel.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/SettingsCategoryToExpandedAtInitialization.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")

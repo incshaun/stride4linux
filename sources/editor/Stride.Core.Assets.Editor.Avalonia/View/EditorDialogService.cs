@@ -92,15 +92,15 @@ namespace Stride.Core.Assets.Editor.View
 // 
         public void ShowSettingsWindow(IViewModelServiceProvider serviceProvider)
         {
-//             if (settingsWindow == null)
-//             {
-//                 settingsWindow = new SettingsWindow(serviceProvider);
-//                 settingsWindow.Closed += (sender, e) => settingsWindow = null;
-//             }
-// 
-//             settingsWindow.ShowModal().Forget();
+            if (settingsWindow == null)
+            {
+                settingsWindow = new SettingsWindow(serviceProvider);
+                settingsWindow.Closed += (sender, e) => settingsWindow = null;
+            }
+
+            settingsWindow.ShowModal().Forget();
         }
-// 
+
         public INewProjectDialog CreateNewProjectDialog(SessionViewModel session)
         {
 //             var newPackageWindow = new NewProjectWindow();

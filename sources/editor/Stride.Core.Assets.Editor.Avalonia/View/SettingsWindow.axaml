@@ -20,7 +20,7 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </sd:ModalWindow.Resources>
-<!--  <DockPanel>
+  <DockPanel>
     <UniformGrid Rows="1" DockPanel.Dock="Bottom" Margin="20" HorizontalAlignment="Right">
       <Button Margin="10,0,0,0" Padding="20,4" Content="{sd:Localize Save and close, Context=Button}">
         <i:Interaction.Behaviors>
@@ -41,30 +41,31 @@
         <ColumnDefinition Width="2*"/>
       </Grid.ColumnDefinitions>
 
-      <sd:TreeView Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" SelectionMode="Single">
-        <sd:TreeView.ItemContainerStyle>
-          <ControlTheme x:Key="{x:Type sd:TreeViewItem}" TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
-            <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={valueConverters:SettingsCategoryToExpandedAtInitialization}}"/>
+      <sd:ATreeView Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" SelectionMode="Single">
+        <sd:ATreeView.ItemContainerTheme>
+          <ControlTheme TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
+<!--             <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={valueConverters:SettingsCategoryToExpandedAtInitialization}}"/> -->
           </ControlTheme>
-        </sd:TreeView.ItemContainerStyle>
-        <sd:TreeView.ItemTemplate>
-          <HierarchicalDataTemplate ItemsSource="{Binding SubCategories}">
+        </sd:ATreeView.ItemContainerTheme>
+        <sd:ATreeView.ItemTemplate>
+          <TreeDataTemplate ItemsSource="{Binding SubCategories}">
             <TextBlock Text="{Binding Name}"/>
-          </HierarchicalDataTemplate>
-        </sd:TreeView.ItemTemplate>
-      </sd:TreeView>
+          </TreeDataTemplate>
+        </sd:ATreeView.ItemTemplate>
+      </sd:ATreeView>
 
       <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
 
       <sd:PropertyView NameColumnSize="310" Grid.Column="2" ItemsSource="{Binding ViewModel.RootNode.Children}" BorderThickness="1" Background="{DynamicResource BackgroundBrush}" Padding="5">
-        <sd:PropertyView.ItemContainerStyle>
+        <sd:PropertyView.ItemContainerTheme>
           <ControlTheme BasedOn="{StaticResource {x:Type sd:PropertyViewItem}}" TargetType="sd:PropertyViewItem">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="HeaderTemplate">
               <Setter.Value>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels1:NodeViewModel">
-                  <ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.HeaderProviders}"/>
-                </HierarchicalDataTemplate>
+                <TreeDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="viewModels1:NodeViewModel">
+                  <ContentPresenter Content="{Binding}" />
+<!--                   <ContentPresenter Content="{Binding}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.HeaderProviders}"/> -->
+                </TreeDataTemplate>
               </Setter.Value>
             </Setter>
             <Setter Property="Template">
@@ -74,10 +75,12 @@
                                             IsVisible="{Binding IsVisible}" >
                     <DockPanel>
                       <Border DockPanel.Dock="Top" Background="{TemplateBinding Background}">
-                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}"  Name="PART_Header" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"  />
+                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{TemplateBinding HeaderTemplate}"  Name="PART_Header"   />
+<!--                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}"  Name="PART_Header" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"  />-->
                       </Border>
                       <Border DockPanel.Dock="Bottom" Background="{TemplateBinding Background}">
-                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.FooterProviders}" Name="PART_Footer" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"  />
+                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}"  Name="PART_Footer"  />
+<!--                        <ContentPresenter Content="{TemplateBinding HeaderedContentControl.Header}" ContentTemplateSelector="{x:Static edvw:PropertyViewHelper.FooterProviders}" Name="PART_Footer" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"  />-->
                       </Border>
                       <Expander x:Name="propertyExpander" IsExpanded="{TemplateBinding IsExpanded}" Theme="{StaticResource PropertyExpanderStyle}">
                         <ItemsPresenter Name="ItemsHost"/>
@@ -88,11 +91,11 @@
               </Setter.Value>
             </Setter>
           </ControlTheme>
-        </sd:PropertyView.ItemContainerStyle>
+        </sd:PropertyView.ItemContainerTheme>
         <i:Interaction.Behaviors>
           <behaviors:PropertyViewAutoExpandNodesBehavior ViewModel="{Binding ViewModel, Mode=OneWay}"/>
         </i:Interaction.Behaviors>
       </sd:PropertyView>
     </Grid>
-  </DockPanel>-->
+  </DockPanel>
 </sd:ModalWindow>

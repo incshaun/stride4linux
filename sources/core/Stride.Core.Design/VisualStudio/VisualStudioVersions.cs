@@ -29,10 +29,13 @@ namespace Stride.Core.VisualStudio
             IsComplete = isComplete;
 
             var idePath = Path.Combine(InstallationPath, "Common7", "IDE");
-            DevenvPath = Path.Combine(idePath, "devenv.exe");
-            if (!File.Exists(DevenvPath))
+            if (DevenvPath == null)
             {
-                DevenvPath = null;
+                DevenvPath = Path.Combine(idePath, "devenv.exe");
+                if (!File.Exists(DevenvPath))
+                {
+                    DevenvPath = null;
+                }
             }
 
             VsixInstallerPath = Path.Combine(idePath, "VSIXInstaller.exe");
@@ -59,7 +62,7 @@ namespace Stride.Core.VisualStudio
         /// <summary>
         /// The path to the development environment executable of this IDE, or <c>null</c>.
         /// </summary>
-        public string DevenvPath { get; }
+        public string DevenvPath { get; set; }
 
         /// <summary>The root installation path of this IDE.</summary>
         /// <remarks>Can be empty but not <c>null</c>./remarks>
@@ -114,7 +117,8 @@ namespace Stride.Core.VisualStudio
             // Visual Studio 16.0 (2019) and later
             try
             {
-                var setupInstancesEnum = new SetupConfiguration().EnumAllInstances();
+                var setupConfig = new SetupConfiguration();
+                var setupInstancesEnum = setupConfig.EnumAllInstances();
                 setupInstancesEnum.Reset();
                 var inst = new ISetupInstance[1];
 
@@ -190,6 +194,21 @@ namespace Stride.Core.VisualStudio
             catch (COMException comException) when (comException.HResult == REGDB_E_CLASSNOTREG)
             {
                 // COM is not registered. Assuming no instances are installed.
+            }
+            catch (ArgumentNullException e)
+            {
+                // Under Linux, won't even construct the SetupConfiguration.
+                // For the moment, assume Visual Studio Code is the IDE, and in a default location.
+                var ideInfo = new IDEInfo(new Version (99, 99), "Visual Studio Code", "/usr/bin/code", "setupInstance2.GetInstanceId()", true);
+
+                ideInfo.DevenvPath = "/usr/bin/code";
+//                 // Fill packages
+//                 foreach (var package in setupInstance2.GetPackages())
+//                 {
+//                     ideInfo.PackageVersions[package.GetId()] = package.GetVersion();
+//                 }
+
+                ideInfos.Add(ideInfo);
             }
             return ideInfos;
         }

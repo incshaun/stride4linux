@@ -10,6 +10,7 @@ using Stride.Core.Assets.Editor.Settings.ViewModels;
 using Stride.Core.Presentation.Quantum;
 using Stride.Core.Presentation.Quantum.ViewModels;
 using Stride.Core.Presentation.ViewModels;
+using Stride.Core.Presentation.Controls;
 
 namespace Stride.Core.Assets.Editor.View
 {
@@ -47,7 +48,7 @@ namespace Stride.Core.Assets.Editor.View
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class SettingsWindow : StyledElement
+    public partial class SettingsWindow : ModalWindow
     {
         public SettingsWindow(IViewModelServiceProvider serviceProvider)
         {
