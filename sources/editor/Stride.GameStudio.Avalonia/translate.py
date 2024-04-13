@@ -137,9 +137,14 @@ def translateHeaders (contents):
     headers += "using Avalonia.Media;\n"
   if re.findall ("DragEventArgs", contents):
     headers += "using Avalonia.Media;\n"
+  if re.findall (" Style ", contents):
+    headers += "using Avalonia.Styling;\n"
+  if re.findall ("PropertyPath", contents):
+    headers += "using Avalonia.Data.Core;\n"
 
   contents = re.sub ("using System.Windows.Controls.Primitives;", "using Avalonia.Controls.Primitives;", contents)
   contents = re.sub ("using System.Windows.Controls;", "using Avalonia;\nusing Avalonia.Controls;\nusing Avalonia.Controls.Metadata;", contents)
+  contents = re.sub ("using System.Windows.Shapes;", "using Avalonia.Controls.Shapes;", contents)
   contents = re.sub ("using System.Windows.Data;", "using Avalonia.Data;\nusing Avalonia.Data.Converters;", contents)
   contents = re.sub ("using System.Windows.Markup;", "using Avalonia.Markup.Xaml;", contents)
   contents = re.sub ("using System.Windows.Threading;", "using Avalonia.Threading;", contents)
@@ -191,8 +196,10 @@ def translateNames (contents):
   #          private static void OnCollapseAllFolders(TreeView sender)
 
   
+  #contents = re.sub ("RoutedDependencyPropertyChangedEventHandler", "PropertyChangedEventHandler", contents) # provisional.
   contents = re.sub ("static DependencyProperty", "static AvaloniaProperty", contents) # provisional.
   contents = re.sub ("DependencyProperty property", "AvaloniaProperty property", contents) # provisional.
+  contents = re.sub ("DependencyProperty dependencyProperty", "AvaloniaProperty dependencyProperty", contents) # provisional.
   contents = re.sub ("\(DependencyProperty\)", "(AvaloniaProperty)", contents)
   contents = re.sub ("<DependencyProperty>", "<AvaloniaProperty>", contents)
   contents = re.sub (" DependencyProperty ", " AvaloniaProperty ", contents)
@@ -205,8 +212,8 @@ def translateNames (contents):
   contents = re.sub ("ExecutedRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub ("CanExecuteRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
-  contents = re.sub ("DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
-  contents = re.sub ("DependencyPropertyChangedEventArgs args", "AvaloniaPropertyChangedEventArgs args", contents)
+  contents = re.sub (" DependencyPropertyChangedEventArgs e", "AvaloniaPropertyChangedEventArgs e", contents)
+  contents = re.sub (" DependencyPropertyChangedEventArgs args", "AvaloniaPropertyChangedEventArgs args", contents)
   contents = re.sub ("private void OnValueChanged\(object sender, RoutedPropertyChangedEventArgs<double> e\)", "private void OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)", contents)
   contents = re.sub ("\(RoutedEventHandler\)", "(EventHandler)", contents)
   
@@ -234,6 +241,7 @@ def translateNames (contents):
   contents = re.sub ("private FrameworkElement", "private Control", contents)
   contents = re.sub ("UIElement\.", "Control.", contents) 
   contents = re.sub (" UIElement ", " Control ", contents) 
+  contents = re.sub ("<UIElement>", "<Control>", contents) 
   contents = re.sub (": UIElement", ": Control", contents)
   contents = re.sub ("as UIElement", "as Control", contents)
   contents = re.sub ("\(UIElement\)", "(Control)", contents)
@@ -248,6 +256,7 @@ def translateNames (contents):
   contents = re.sub ("Cursors.ScrollAll", "new Cursor(StandardCursorType.SizeAll)", contents) # no equivalent.
 
   contents = re.sub (" ImageSource ", " IImage ", contents)
+  contents = re.sub ("\(ImageSource\)", "(IImage)", contents)
   contents = re.sub (" ImageSource;", " IImage;", contents)
   contents = re.sub ("<ImageSource>", "<IImage>", contents)
   contents = re.sub (" ImageSource>", " IImage>", contents)
@@ -284,6 +293,7 @@ def translateNames (contents):
   # RichTextBox - provisional fix.
   contents = re.sub ("RichTextBox", r"Avalonia.Controls.TextBox", contents)
   contents = re.sub ("new FlowDocument\(new Paragraph\(\)\)", r'new string("")', contents)
+  contents = re.sub ("FlowDocumentScrollViewer", r"ScrollViewer", contents)
   contents = re.sub ("FlowDocument", r"string", contents)
   contents = re.sub ("TextBox\.Document", r"TextBox.Text", contents)
 
@@ -305,6 +315,8 @@ def translateNames (contents):
   contents = re.sub ("RaiseEvent\(new (.*?)\((.*?)ClearItemEvent, (.*?), item\)\);", r"RaiseEvent(new \1(\2ClearItemEvent, \3, null));", contents)
 
   contents = re.sub (": HeaderedItemsControl", ": Avalonia.Controls.TreeViewItem", contents)
+
+  contents = re.sub ("protected override void OnRender\(DrawingContext localDrawingContext\)", "public override void Render(DrawingContext localDrawingContext)", contents)
   
   contents = re.sub (", IAttachedObject", "", contents)
   contents = re.sub ("Microsoft\.Xaml\.Behaviors\.Interaction\.GetBehaviors", "Avalonia.Xaml.Interactivity.Interaction.GetBehaviors", contents)
@@ -366,6 +378,14 @@ def translateProperties (contents):
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\(([^,\)]*?)\)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7(\8)); // T2A", contents)
 
+  # 1 argument to PropertyMetadata, first is function call.
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)Changed\)\);")
+  for match in re.findall (pat, contents):
+    print (match)
+    commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[6] + "Changed);\n"
+    classname = match[5];
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T4A", contents)
+
   # Without handler.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?)\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T2", contents)
@@ -425,6 +445,14 @@ def translateProperties (contents):
   # 2 arguments to FrameworkPropertyMetadata, second being a bind TwoWay
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), FrameworkPropertyMetadataOptions\.BindsTwoWayByDefault\)\);")
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7, defaultBindingMode : BindingMode.TwoWay); // T7", contents)
+
+  # 2 arguments to FrameworkPropertyMetadata, second being a affects render, initial value 2 parameters
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(new ([^,\)]*?)\(([^,\)]*?),([^,\)]*?)\), FrameworkPropertyMetadataOptions\.AffectsRender\)\);")
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, new \7(\8, \9)); // T7A", contents)
+
+  # 2 arguments to FrameworkPropertyMetadata, second being a affects render, initial value 1 parameter
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(new ([^,\)]*?)\(([^,\)]*?)\), FrameworkPropertyMetadataOptions\.AffectsRender\)\);")
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, new \7(\8)); // T7B", contents)
 
   # 2 argument to FrameworkPropertyMetadata, one is affects measure.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), FrameworkPropertyMetadataOptions.AffectsMeasure\)\);")
@@ -518,6 +546,30 @@ def translateProperties (contents):
 
   
   # Direct properties
+
+  # property metadata, no arguments.
+  pat = re.compile ("private static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(nameof\((.*?)\), typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(\)\);", re.DOTALL)
+  # set up backing variables.
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      vpat = "public " + match[4] + " " + match[3] + " { get { return \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\); } set { SetValue\(" + match[0] + ", value\); } }"
+      vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      classname = match[5];
+      #print (match, vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+    contents = re.sub (pat, r"private static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4); // T10H1", contents)
+
+  pat = re.compile ("private static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(\)\);", re.DOTALL)
+  # set up backing variables.
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      vpat = "public " + match[4] + " " + match[3] + " { get { return \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\); } set { SetValue\(" + match[0] + ", value\); } }"
+      vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      classname = match[5];
+      print (match, vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+    contents = re.sub (pat, r"private static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4); // T10H2", contents)
+
   
   pat = re.compile ("private static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
   # set up backing variables.
@@ -527,7 +579,7 @@ def translateProperties (contents):
       vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
       commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[7] + ");\n"
       classname = match[5];
-      print (match, vpat, vsub)
+      #print (match, vpat, vsub)
       contents = re.sub (vpat, vsub, contents)
     contents = re.sub (pat, r"private static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4); // T10H", contents)
   
@@ -698,19 +750,32 @@ def translateProperties (contents):
 
   pat = re.compile ("protected override void OnMouseLeftButtonDown\(MouseButtonEventArgs e\)") # no call to base.
   contents = re.sub (pat, r"protected override void OnPointerPressed(PointerPressedEventArgs e)", contents)
+  pat = re.compile ("protected override void OnMouseRightButtonDown\(MouseButtonEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected override void OnPointerPressed(PointerPressedEventArgs e) // Right", contents)
   pat = re.compile ("base.OnMouseLeftButtonDown\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
 
   pat = re.compile ("protected override void OnMouseLeftButtonUp\(MouseButtonEventArgs e\)") # no call to base.
   contents = re.sub (pat, r"protected override void OnPointerReleased(PointerReleasedEventArgs e)", contents)
+  pat = re.compile ("protected override void OnMouseRightButtonUp\(MouseButtonEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected override void OnPointerReleased(PointerReleasedEventArgs e) // Right", contents)
   pat = re.compile ("base.OnMouseLeftButtonUp\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerReleased(e);", contents)
 
   pat = re.compile ("protected override void OnMouseMove\(PointerEventArgs e\)") # no call to base.
   contents = re.sub (pat, r"protected override void OnPointerMoved(PointerEventArgs e)", contents)
+  pat = re.compile ("protected override void OnMouseMove\(MouseEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected override void OnPointerMoved(PointerEventArgs e)", contents)
 
   pat = re.compile ("protected override void OnMouseUp\(PointerEventArgs e\)") # no call to base.
   contents = re.sub (pat, r"protected override void OnPointerReleased(PointerReleasedEventArgs e)", contents)
+  pat = re.compile ("protected override void OnMouseUp\(MouseButtonEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected override void OnPointerReleased(PointerReleasedEventArgs e)", contents)
+
+  pat = re.compile ("protected override void OnMouseWheel\(MouseWheelEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected override void OnPointerWheelChanged(PointerWheelEventArgs e)", contents)
+  pat = re.compile ("base.OnMouseWheel\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnPointerWheelChanged(e);", contents)
 
   pat = re.compile ("\(object sender, MouseEventArgs e\)") # just the call to base.
   contents = re.sub (pat, r"(object sender, PointerEventArgs e)", contents)
@@ -747,6 +812,9 @@ def translateProperties (contents):
   contents = re.sub (pat, r"base.OnApplyTemplate(e);", contents)
   if re.findall ("OnApplyTemplate", contents):
     contents = re.sub (": Control", r": TemplatedControl", contents)
+
+  contents = re.sub ("DependencyPropertyKey ", "StyledProperty<double> ", contents)
+
   
   return contents
 
@@ -847,6 +915,7 @@ def translateConstants (contents):
   contents = re.sub ("xmlns:viewModel=\"clr-namespace:Stride.Core.Assets.Editor.ViewModel\"", "xmlns:viewModel=\"clr-namespace:Stride.Core.Assets.Editor.ViewModel;assembly=Stride.Core.Assets.Editor\"", contents)
   contents = re.sub ("xmlns:assetCommands=\"clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands\"", "xmlns:assetCommands=\"clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands;assembly=Stride.Core.Assets.Editor\"", contents)
   contents = re.sub ("xmlns:strings=\"clr-namespace:Stride.Core.Assets.Editor.Resources.Strings\"", "xmlns:strings=\"clr-namespace:Stride.Core.Assets.Editor.Avalonia.Resources.Strings\"", contents)
+  contents = re.sub ("xmlns:ctrl=\"clr-namespace:Stride.Core.Presentation.Controls\"", "xmlns:ctrl=\"clr-namespace:Stride.Core.Presentation.Controls;assembly=Stride.Core.Presentation.Avalonia\"", contents)
   return contents
 
 # flag any nested comments, and break up the --, which causes compliance issues.
@@ -955,7 +1024,7 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:ObjectToBool}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), FallbackValue={sd:Collapsed}, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrHidden}}}\"", r'IsVisible="{Binding \1, FallbackValue=false, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}, {sd:VisibleOrHidden}}, Mode=OneWay}\"", r'IsVisible="{Binding \1, Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}, Mode=OneWay}"', contents)
-  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrCollapsed}}\"", r'IsVisible="{Binding \1"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrCollapsed}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"{Binding Converter={sd:Chained {sd:MatchType}, {sd:VisibleOrCollapsed}, Parameter1={x:Type svm:SceneRootViewModel}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type svm:SceneRootViewModel}, FallbackValue=false}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:VisibleOrCollapsed}, ConverterParameter={sd:False}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:NumericToBool}, {sd:VisibleOrCollapsed}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1, Converter={sd:NumericToBool}, FallbackValue=false}"', contents)
@@ -1000,7 +1069,7 @@ def translateTags (contents):
   contents = re.sub ("mc:Ignorable=\"d\" d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r'mc:Ignorable="d"\2>\n\t<Design.DataContext>\n\t\t<\1 />\n\t</Design.DataContext>', contents)
   contents = re.sub ("d:DesignWidth=\"300\" d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r'd:DesignWidth="300" >\n\t<Design.DataContext>\n\t\t<\1 />\n\t</Design.DataContext>', contents)
   contents = re.sub ("<Setter([^>]*?) d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r' <Setter\1>\n\t<Design.DataContext>\n\t\t<\2 />\n\t</Design.DataContext>\n\t</Setter>', contents)
-  contents = re.sub (" d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r' >\n\t<Design.DataContext>\n\t\t<\1 />\n\t</Design.DataContext>', contents)
+  contents = re.sub (" d:DataContext=\"{d:DesignInstance ([^}]*?)}\"([^>]*?)>", r'\2>\n\t<Design.DataContext>\n\t\t<\1 />\n\t</Design.DataContext>', contents)
 
   # xmlsn:i
   contents = re.sub ("xmlns:i=\"http://schemas.microsoft.com/xaml/behaviors\"", "xmlns:i=\"clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity\"", contents)
@@ -1010,7 +1079,10 @@ def translateTags (contents):
   contents = re.sub ("xmlns:gh=\"clr-namespace:Stride.GameStudio.Helpers\"", "xmlns:gh=\"clr-namespace:Stride.GameStudio.Avalonia.Helpers\"", contents)
   contents = re.sub ("xmlns:xcad=\"https://github.com/Dirkster99/AvalonDock\"", "", contents)
   contents = re.sub ("x:Class=\"Stride.GameStudio.View.GameStudioWindow\"", "x:Class=\"Stride.GameStudio.Avalonia.View.GameStudioWindow\"", contents)
+  contents = re.sub ("x:Class=\"Stride.Core.Presentation.Themes.ThemeSelector\"", "", contents)
   
+
+
   # dock
   contents = regex.sub (regex.compile ("<xcad:DockingManager (.*?)>", regex.DOTALL), r'<DockControl \1 InitializeLayout="True" InitializeFactory="True">\n\t<DockControl.Factory>\n\t\t<Factory />\n\t</DockControl.Factory>', contents)
   contents = re.sub ("xcad:LayoutRoot", "RootDock", contents)
@@ -1035,6 +1107,7 @@ def translateTags (contents):
 
   # SystemColors
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ActiveCaptionTextBrushKey\}\}", r'{StaticResource ActiveCaptionTextBrushKey}', contents) # one line style  
+  contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ControlTextBrushKey\}\}", r'{StaticResource ControlTextBrushKey}', contents) # one line style  
   
   # Styles become various forms of Theme.
   contents = re.sub ("\<Style TargetType=\"([^\"].*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1"\2></ControlTheme>', contents) # one line style
@@ -1059,10 +1132,30 @@ def translateTags (contents):
 
   contents = re.sub ("ToolBarTray.IsLocked=\"True\"", r'', contents)
 
+  # buttonbase
+  contents = re.sub ("{x:Type ButtonBase}", "{x:Type Button}", contents)
+
   
   # Ensure all controlthemes have x:Key
   pat = re.compile ("<ControlTheme TargetType=\"(.*?)\" (.*?)>")
-  contents = re.sub (pat, r'<ControlTheme x:Key="\1" TargetType="\1" \2>', contents)
+  # screen matches.
+  contents = pat.sub (lambda match: match.group () if "x:Key" in match.group () else r'<ControlTheme x:Key="' + match.group(1) + r'" TargetType="' + match.group(1) + r'" ' + match.group(2) + r' >', contents)
+  
+  # Flow document
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type FlowDocument}\">(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)x:Key=\"{x:Static local:XamlMarkdown(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type PasswordBox}(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type RichTextBox}(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type GroupBox}(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"{x:Static GridView(.*?)</ControlTheme>", regex.DOTALL), r"", contents)  # maybe replace with datagrid?
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"{x:Type GridView(.*?)</ControlTheme>", regex.DOTALL), r"", contents)  # maybe replace with datagrid?
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type ListView(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type ToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"TagToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type StatusBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type IFrameworkInputElement(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = re.sub ("<BorderGapMaskConverter x:Key=\"BorderGapMaskConverter\" />", "", contents)
+  contents = re.sub ("<EventSetter Event=\"Loaded\" Handler=\"Image_Loaded\" />", "", contents)
   
   # Triggers. These will probably have to be managed by hand. Just comment them out.
   contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
@@ -1115,6 +1208,9 @@ def translateTags (contents):
   contents = re.sub (re.compile ("</AdornerDecorator>", re.DOTALL), "</StackPanel>", contents)
   contents = re.sub (re.compile ("<sd:ContainTextAdornerBehavior />", re.DOTALL), "", contents)
   
+  # Tab panel.
+  contents = re.sub ("<TabPanel", r'<Panel', contents)
+  contents = re.sub ("</TabPanel", r'</Panel', contents)
   
   # Templates.
   
@@ -1461,10 +1557,19 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/ScriptEditor/BindScriptTextEditorWorkspaceProjectIdBehavior.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/UIEditor/Views/ThicknessEditor.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/VisualScriptEditor/Converters/AvailableVariableReferenceValueConverter.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Windows/MessageDialogBase.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/MarkdownTextBlock.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Commands/UtilityCommands.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Windows/MessageBox.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Windows/CheckedMessageBox.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/CanvasView/TrackerControl.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/SelectionRectangleBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ScaleBar.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/UnitSystem.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
-#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
+translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")

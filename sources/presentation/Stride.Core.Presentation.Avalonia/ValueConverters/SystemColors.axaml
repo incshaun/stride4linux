@@ -10,5 +10,6 @@
 
   <Color x:Key="ActiveCaptionColor">#FF00FFFF</Color>
   <SolidColorBrush x:Key="ActiveCaptionTextBrushKey" Color="#F5F5F5" />
+  <SolidColorBrush x:Key="ControlTextBrushKey" Color="#F5F5F5" />
   
 </ResourceDictionary>
