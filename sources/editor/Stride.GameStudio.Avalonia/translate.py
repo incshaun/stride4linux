@@ -989,6 +989,9 @@ def translateTags (contents):
   contents = re.sub ("<ToolBar.ItemTemplate>", r'<ItemsControl.ItemTemplate>', contents)
   contents = re.sub ("</ToolBar.ItemTemplate>", r'</ItemsControl.ItemTemplate>', contents)
   
+  contents = re.sub (re.compile ("<ItemsControl([^>]*?)Header=\"(.*?)\"([^>]*?)>(.*?)</ItemsControl>", re.DOTALL), r'<HeaderedItemsControl\1Header="\2"\3>\4</HeaderedItemsControl>', contents)
+  
+  
   # Bitmap image
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"pack://application:,,,/Stride.Core.Presentation.Wpf;component/Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"\.\./Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
@@ -1011,10 +1014,10 @@ def translateTags (contents):
   contents = re.sub ("Stretch=\"None\" Width", r'Width', contents) 
   
   # As many versions of the visibility property, given that we're translating 3 states, to boolean.
-  contents = re.sub ("Visibility=\"\{Binding (.*), Converter=\{sd:VisibleOrCollapsed\}\}\"", r'IsVisible="{Binding \1}"', contents)
-  contents = re.sub ("Visibility=\"Hidden\"", r'IsVisible="false"', contents)
-  contents = re.sub ("Visibility=\"Collapsed\"", r'IsVisible="false"', contents)
-  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:InvertBool}}"', contents)
+  contents = re.sub (" Visibility=\"\{Binding (.*), Converter=\{sd:VisibleOrCollapsed\}\}\"", r' IsVisible="{Binding \1}"', contents)
+  contents = re.sub (" Visibility=\"Hidden\"", r' IsVisible="false"', contents)
+  contents = re.sub (" Visibility=\"Collapsed\"", r' IsVisible="false"', contents)
+  contents = re.sub (" Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r' IsVisible="{Binding \1, Converter={sd:InvertBool}}"', contents)
   
   contents = re.sub ("Visibility=\"{TemplateBinding (.*?), Converter={cvt:VisibleOrCollapsed}}\"", r'IsVisible="{TemplateBinding \1}"', contents)
   contents = re.sub ("Visibility=\"{TemplateBinding (.*?), Converter={cvt:Chained {cvt:InvertBool}, {cvt:VisibleOrCollapsed}}}\"", r'IsVisible="{TemplateBinding \1, Converter={cvt:InvertBool}}"', contents)
@@ -1042,8 +1045,11 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:Chained {cvt:IsEqual}, {cvt:InvertBool}, {cvt:VisibleOrCollapsed}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}\"", r'IsVisible="{Binding \1, Converter={cvt:Chained {cvt:IsEqual}, {cvt:InvertBool}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrHidden},FallbackValue={me:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrCollapsed}, FallbackValue={me:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
+  contents = re.sub ("Visibility=\"Visible\"", r'IsVisible="true"', contents)
+  contents = re.sub ("Visibility=\"{TemplateBinding ([a-zA-Z]*?)}\"", r'IsVisible="{TemplateBinding \1}"', contents)
 
   # Tooltip
+  contents = re.sub ("ToolTipService.ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
   contents = re.sub ("Property=\"ToolTip\"", r'Property="ToolTip.Tip"', contents)
   contents = re.sub ("<ToolTipService\.ToolTip>", r'<ToolTip.Tip>', contents)
@@ -1061,10 +1067,16 @@ def translateTags (contents):
   contents = re.sub ("IsItemsHost=\"True\"", r'', contents)
 
   # ContentSource  
-  contents = re.sub ("<ContentPresenter ContentSource=\"Content\"/>", r'<ContentPresenter ContentTemplate="{Binding Content}"/>', contents)
+  contents = re.sub ("<ContentPresenter([^>]*?)ContentSource=\"(.*?)\"([^>]*?)/>", r'<ContentPresenter\1ContentTemplate="{Binding \2}"\3/>', contents)
+  contents = re.sub ("<ContentPresenter([^>]*?)ContentTemplate=\"(.*?)\"([^>]*?)ContentSource=\"(.*?)\"([^>]*?)>", r'<ContentPresenter\1ContentTemplate="\2"\3\5>', contents)
+  contents = re.sub ("<ContentPresenter([^>]*?)ContentSource=\"(.*?)\"([^>]*?)>", r'<ContentPresenter\1ContentTemplate="{Binding \2}"\3>', contents)
   #contents = re.sub ("ContentSource=\"(.*?)\"", r'ContentTemplate="\1"', contents)
   #contents = re.sub ("ContentTemplateSelector=\"(.*?)\"", r'ContentTemplate="\1"', contents)
-  
+  # ContentTemplateSelector will probably have to be manually managed in the short term.
+  contents = re.sub (re.compile ("<ContentPresenter([^>]*?)ContentTemplate=\"([^>]*?)\"([^>]*?)ContentTemplateSelector=\"([^>]*?)\"([^>]*?)/>", re.DOTALL), r'<ContentPresenter\1ContentTemplate="\4"\3\5/>\n\t<!-- <ContentPresenter\1ContentTemplate="\2"\3ContentTemplateSelector="\4"\5/> -->', contents)
+  contents = re.sub (re.compile ("<ContentPresenter([^>]*?)ContentTemplate=\"([^>]*?)\"([^>]*?)ContentTemplateSelector=\"([^>]*?)\"([^>]*?)>", re.DOTALL), r'<ContentPresenter\1ContentTemplate="\4"\3\5>\n\t<!-- <ContentPresenter\1ContentTemplate="\2"\3ContentTemplateSelector="\4"\5> -->', contents)
+  contents = re.sub (re.compile ("<ToggleButton([^>]*?)ContentTemplate=\"([^>]*?)\"([^>]*?)ContentTemplateSelector=\"([^>]*?)\"([^>]*?)/>", re.DOTALL), r'<ToggleButton\1ContentTemplate="\4"\3\5/>\n\t<!-- <ToggleButton\1ContentTemplate="\2"\3ContentTemplateSelector="\4"\5/> -->', contents)
+
 
   # SnapToDevicePixels, AllowsTransparency. Elements that don't seem to have an equivalent.
   contents = re.sub ("SnapsToDevicePixels=\"(.*?)\"", "", contents)
@@ -1168,6 +1180,33 @@ def translateTags (contents):
   # RichTextBox
   contents = re.sub ("<RichTextBox", r"<TextBox", contents)
   contents = re.sub ("</RichTextBox", r"</TextBox", contents)
+
+  # textbox
+  contents = re.sub ("<TextBox([^>]*?)HorizontalScrollBarVisibility=\"Auto\"([^>]*?)>", r"<TextBox\1\2>", contents)
+  contents = re.sub ("<TextBox([^>]*?)VerticalScrollBarVisibility=\"Auto\"([^>]*?)>", r"<TextBox\1\2>", contents)
+
+  # inputbindings
+  contents = re.sub ("<Button.InputBindings>", r"", contents)
+  contents = re.sub ("</Button.InputBindings>", r"", contents)
+  
+  # menuitem
+  contents = re.sub ("{x:Static MenuItem.SeparatorStyleKey}", r"MenuItem.SeparatorStyleKey", contents)
+  contents = re.sub ("{x:Static MenuItem.TopLevelHeaderTemplateKey}", r"MenuItem.TopLevelHeaderTemplateKey", contents)
+  contents = re.sub ("{x:Static MenuItem.TopLevelItemTemplateKey}", r"MenuItem.TopLevelItemTemplateKey", contents)
+  contents = re.sub ("{x:Static ItemsControl.ButtonStyleKey}", r"ItemsControl.ButtonStyleKey", contents)
+  contents = re.sub ("{x:Static ItemsControl.CheckBoxStyleKey}", r"ItemsControl.CheckBoxStyleKey", contents)
+  contents = re.sub ("{x:Static ItemsControl.RadioButtonStyleKey}", r"ItemsControl.RadioButtonStyleKey", contents)
+  contents = re.sub ("{x:Static ItemsControl.ToggleButtonStyleKey}", r"ItemsControl.ToggleButtonStyleKey", contents)
+  contents = re.sub ("{x:Static ItemsControl.ComboBoxStyleKey}", r"ItemsControl.ComboBoxStyleKey", contents)
+  contents = re.sub ("{x:Static ItemsControl.MenuStyleKey}", r"ItemsControl.MenuStyleKey", contents)
+  contents = re.sub ("{x:Static ItemsControl.TextBoxStyleKey}", r"ItemsControl.TextBoxStyleKey", contents)
+  contents = re.sub ("{x:Static ItemsControl.SeparatorStyleKey}", r"ItemsControl.SeparatorStyleKey", contents)
+  
+  # togglebutton
+  contents = re.sub ("FocusVisualTheme=\"(.*?)\"", r"", contents)
+  
+  contents = re.sub ("FocusManager\.IsFocusScope=\"True\"", "", contents)
+
   
   # Flow document
   contents = re.sub ("FlowDocumentScrollViewer", r"ScrollViewer", contents)
@@ -1181,8 +1220,15 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"{x:Static GridView(.*?)</ControlTheme>", regex.DOTALL), r"", contents)  # maybe replace with datagrid?
   contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"{x:Type GridView(.*?)</ControlTheme>", regex.DOTALL), r"", contents)  # maybe replace with datagrid?
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type ListView(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"Hyperlink(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type ToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"TagToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"NuclearButtonFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"RadioButtonFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"CheckBoxFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"ExpanderHeaderFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"ButtonFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"ListViewItemFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
 
   contents = regex.sub (regex.compile ("<ControlTemplate x:Key=\"CheckBoxTemplate(.*?)</ControlTemplate>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTemplate x:Key=\"RadioButtonTemplate(.*?)</ControlTemplate>", regex.DOTALL), r"", contents) # maybe add support later?
@@ -1211,6 +1257,17 @@ def translateTags (contents):
   # Drawing brush
   contents = re.sub ("<DrawingBrush Viewport=\"(.*?)\"", "<DrawingBrush", contents)
   contents = re.sub ("ViewportUnits=\"(.*?)\"", "", contents)
+  contents = re.sub ("MappingMode=\"Absolute\"", "", contents)
+  contents = re.sub ("Viewbox=\"(.*?)\"", "", contents)
+  contents = re.sub ("ViewboxUnits=\"(.*?)\"", "", contents)
+  contents = re.sub ("Viewport=\"(.*?)\"", "", contents)
+  contents = re.sub ("StrokeLineJoin=", "StrokeJoin=", contents)
+
+  # x:Name
+  contents = re.sub (re.compile ("<TranslateTransform([^>]*?)x:Name=\"(.*?)\"([^>]*?)/>", re.DOTALL), r"<TranslateTransform\1\3/>", contents)
+  contents = re.sub (re.compile ("<ColumnDefinition([^>]*?)x:Name=\"(.*?)\"([^>]*?)/>", re.DOTALL), r"<ColumnDefinition\1\3/>", contents)
+  contents = re.sub (re.compile ("<RowDefinition([^>]*?)x:Name=\"(.*?)\"([^>]*?)/>", re.DOTALL), r"<RowDefinition\1\3/>", contents)
+
   
   # Gestures
   contents = re.sub ("InputGestureText=", "InputGesture=", contents)
@@ -1219,6 +1276,12 @@ def translateTags (contents):
   # Grid
   contents = re.sub ("MinWidth=\"{TemplateBinding ActualWidth}\"", "", contents)
   contents = re.sub ("view:DataGridEx", "DataGrid", contents)
+  
+  contents = re.sub ("Grid.LayoutTransform", "LayoutTransformControl", contents)
+  contents = re.sub ("ContentPresenter.LayoutTransform", "LayoutTransformControl", contents)
+  contents = re.sub ("TabPanel.LayoutTransform", "LayoutTransformControl", contents)
+  contents = re.sub ("Border.LayoutTransform", "LayoutTransformControl", contents)
+  
 
   # Control
   contents = re.sub ("Control.HorizontalContentAlignment}", "ContentControl.HorizontalContentAlignment}", contents)
@@ -1249,9 +1312,20 @@ def translateTags (contents):
   contents = re.sub ("<TabPanel", r'<Panel', contents)
   contents = re.sub ("</TabPanel", r'</Panel', contents)
   
+  # Track
+  contents = re.sub ("Track\.IncreaseRepeatButton", r'Track.IncreaseButton', contents)
+  contents = re.sub ("Track\.DecreaseRepeatButton", r'Track.DecreaseButton', contents)
+  
   # Templates.
   
   # Sometimes replace .Resources with .DataTemplates
+  #contents = re.sub (re.compile ("<ControlTemplate([^>]*?)>([^<]*?)<ControlTemplate.Resources>([^<]*?)<ControlTheme(.*?)</ControlTheme>([^<]*?)</ControlTemplate.Resources>(.*?)</ControlTheme>", re.DOTALL), r'<ControlTemplate\1>\2<ControlTheme\4</ControlTheme>\6</ControlTheme>', contents)
+  contents = re.sub ("<ControlTemplate\.Resources>", r'', contents)
+  contents = re.sub ("</ControlTemplate\.Resources>", r'', contents)
+  contents = re.sub ("<Style\.Resources>", r'', contents)
+  contents = re.sub ("</Style\.Resources>", r'', contents)
+  
+  
   
   # Tricky rule - templates need to have a template tag added around them, if they don't already have.
   pat = re.compile ("<([^>]*?) ([^>]*?)>[ \n]*?<DataTemplate/>[ \n]*?</(.*?)>", re.DOTALL)

@@ -37,6 +37,7 @@ namespace Stride.Core.Presentation.Behaviors
         /// Resource Key for the default SelectionRectangleStyle.
         /// </summary>
 //         public static ResourceKey DefaultRectangleStyleKey { get; } = new ComponentResourceKey(typeof(SelectionRectangleBehavior), nameof(DefaultRectangleStyleKey));
+        public static object DefaultRectangleStyleKey { get; }
 
         public Canvas Canvas { get { return (Canvas)GetValue(CanvasProperty); } set { SetValue(CanvasProperty, value); } }
 
