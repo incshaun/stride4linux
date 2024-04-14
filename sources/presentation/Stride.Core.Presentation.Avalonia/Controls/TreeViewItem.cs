@@ -25,7 +25,7 @@ using Avalonia.Interactivity;
 using Avalonia.Metadata;
 using Avalonia.Media;
 
-using TreeView = Stride.Core.Presentation.Controls.ATreeView;
+using TreeView = Stride.Core.Presentation.Controls.TreeView;
 
 namespace Stride.Core.Presentation.Controls
 {

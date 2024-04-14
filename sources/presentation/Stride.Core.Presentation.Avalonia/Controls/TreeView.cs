@@ -34,9 +34,9 @@ namespace Stride.Core.Presentation.Controls
     /// Represents a control that displays hierarchical data in a tree structure that has items that can expand and collapse.
     /// </summary>
     [TemplatePart(Name = ScrollViewerPartName, Type = typeof(ScrollViewer))]
-    public class ATreeView : Avalonia.Controls.TreeView
+    public class TreeView : Avalonia.Controls.TreeView
     {
-        protected override Type StyleKeyOverride { get { return typeof(ATreeView); } }
+        protected override Type StyleKeyOverride { get { return typeof(TreeView); } }
 
         /// <summary>
         /// The name of the <see cref="ScrollViewer"/> contained in this <see cref="TreeView"/>.
@@ -47,34 +47,34 @@ namespace Stride.Core.Presentation.Controls
         /// Identifies the <see cref="SelectedItem"/> dependency property.
         /// </summary>
         public static StyledProperty<object> SelectedItemProperty =
-            StyledProperty<object>.Register<ATreeView, object>(nameof(SelectedItem), null);
+            StyledProperty<object>.Register<TreeView, object>(nameof(SelectedItem), null);
         /// <summary>
         /// Identifies the <see cref="SelectedItems"/> dependency property.
         /// </summary>
         public static StyledProperty<IList> SelectedItemsProperty =
-            StyledProperty<IList>.Register<ATreeView, IList>(nameof(SelectedItems), null);
+            StyledProperty<IList>.Register<TreeView, IList>(nameof(SelectedItems), null);
         /// <summary>
         /// Identifes the <see cref="SelectionMode"/> dependency property.
         /// </summary>
         public static StyledProperty<SelectionMode> SelectionModeProperty =
-            StyledProperty<SelectionMode>.Register<ATreeView, SelectionMode>(nameof(SelectionMode), SelectionMode.Multiple);
+            StyledProperty<SelectionMode>.Register<TreeView, SelectionMode>(nameof(SelectionMode), SelectionMode.Multiple);
         /// <summary>
         /// Identifies the <see cref="IsVirtualizing"/> dependency property.
         /// </summary>
         public static readonly StyledProperty<bool> IsVirtualizingProperty =
-            StyledProperty<bool>.Register<ATreeView, bool>(nameof(IsVirtualizing), false);
+            StyledProperty<bool>.Register<TreeView, bool>(nameof(IsVirtualizing), false);
         /// <summary>
         /// Identifies the <see cref="PrepareItem"/> routed event.
         /// This attached routed event may be raised by the PropertyGrid itself or by a PropertyItemBase containing sub-items.
         /// </summary>
         public static readonly RoutedEvent PrepareItemEvent =
-            RoutedEvent.Register<ATreeView, TreeViewItemEventArgs>("PrepareItem", RoutingStrategies.Bubble);
+            RoutedEvent.Register<TreeView, TreeViewItemEventArgs>("PrepareItem", RoutingStrategies.Bubble);
         /// <summary>
         /// Identifies the <see cref="ClearItem"/> routed event.
         /// This attached routed event may be raised by the PropertyGrid itself or by a PropertyItemBase containing sub items.
         /// </summary>
         public static readonly RoutedEvent ClearItemEvent =
-            RoutedEvent.Register<ATreeView, TreeViewItemEventArgs>("ClearItem", RoutingStrategies.Bubble);
+            RoutedEvent.Register<TreeView, TreeViewItemEventArgs>("ClearItem", RoutingStrategies.Bubble);
 
         /// <summary>
         /// Indicates whether the Control key is currently down.
@@ -100,15 +100,15 @@ namespace Stride.Core.Presentation.Controls
 
         public bool HasItems => (ItemCount > 0);
 
-        static ATreeView()
+        static TreeView()
         {
-            SelectedItemProperty.Changed.AddClassHandler<ATreeView>(OnSelectedItemPropertyChanged);
-            SelectedItemsProperty.Changed.AddClassHandler<ATreeView>(OnSelectedItemsPropertyChanged);
-            SelectionModeProperty.Changed.AddClassHandler<ATreeView>(OnSelectionModeChanged);
+            SelectedItemProperty.Changed.AddClassHandler<TreeView>(OnSelectedItemPropertyChanged);
+            SelectedItemsProperty.Changed.AddClassHandler<TreeView>(OnSelectedItemsPropertyChanged);
+            SelectionModeProperty.Changed.AddClassHandler<TreeView>(OnSelectionModeChanged);
 
    /*         var vPanel = new Func<IServiceProvider?, TemplateResult<Control>?>((sp) => new TemplateResult<Control>(new AVirtualizingTreePanel(), (NameScope) sp?.GetService(typeof (INameScope))));
             var vPanelTemplate = new ItemsPanelTemplate { Content = vPanel };
-            ItemsPanelProperty.OverrideMetadata<ATreeView>(new StyledPropertyMetadata<ITemplate<Panel>>(vPanelTemplate));
+            ItemsPanelProperty.OverrideMetadata<TreeView>(new StyledPropertyMetadata<ITemplate<Panel>>(vPanelTemplate));
      */  
 
   /*          FuncTemplate<Panel?> vvPanel =
@@ -116,7 +116,7 @@ namespace Stride.Core.Presentation.Controls
             FuncTemplate<Panel?> vvvPanel =
             new(() => new WrapPanel { Orientation = Avalonia.Layout.Orientation.Horizontal });
 
-               ItemsPanelProperty.OverrideDefaultValue<ATreeView>(vvPanel);*/
+               ItemsPanelProperty.OverrideDefaultValue<TreeView>(vvPanel);*/
 
             /*           DefaultStyleKeyProperty.OverrideMetadata(typeof(TreeView), new FrameworkPropertyMetadata(typeof(TreeView)));
 
@@ -133,7 +133,7 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeView"/> class.
         /// </summary>
-        public ATreeView()
+        public TreeView()
         {
             SelectedItems = new NonGenericObservableListWrapper<object>(new ObservableList<object>());
 
@@ -579,7 +579,7 @@ namespace Stride.Core.Presentation.Controls
 
         private static void OnSelectedItemPropertyChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
-            var treeView = (ATreeView)d;
+            var treeView = (TreeView)d;
             if (treeView.updatingSelection)
                 return;
 
@@ -616,7 +616,7 @@ namespace Stride.Core.Presentation.Controls
 
         private static void OnSelectedItemsPropertyChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
-            var treeView = (ATreeView)d;
+            var treeView = (TreeView)d;
             if (e.OldValue != null)
             {
                 var collection = e.OldValue as INotifyCollectionChanged;
@@ -649,7 +649,7 @@ namespace Stride.Core.Presentation.Controls
                     break;
 
                 case SelectionMode.Multiple:
-                    var treeView = (ATreeView)d;
+                    var treeView = (TreeView)d;
                     var selectedItem = treeView.SelectedItem;
                     treeView.updatingSelection = true;
                     for (var i = treeView.SelectedItems.Count - 1; i >= 0; --i)
@@ -790,7 +790,7 @@ namespace Stride.Core.Presentation.Controls
                     return treeViewItem.IsVisible ? treeViewItem : null;
                 }
 
-                if (child is ATreeView)
+                if (child is TreeView)
                     return null;
 
                 child =child.Parent as Control;

@@ -242,6 +242,7 @@ def translateNames (contents):
   contents = re.sub ("UIElement\.", "Control.", contents) 
   contents = re.sub (" UIElement ", " Control ", contents) 
   contents = re.sub ("<UIElement>", "<Control>", contents) 
+  contents = re.sub ("\(UIElement ", "(Control ", contents) 
   contents = re.sub (": UIElement", ": Control", contents)
   contents = re.sub ("as UIElement", "as Control", contents)
   contents = re.sub ("\(UIElement\)", "(Control)", contents)
@@ -622,6 +623,10 @@ def translateProperties (contents):
     contents = re.sub (pat, r'public static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>("\4", o => o.\4); // T11', contents)
   
   # Attached Properties
+  pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\)\);", re.DOTALL)
+  contents = re.sub (pat, r"public static readonly AttachedProperty<\5> \1 = AvaloniaProperty<\5>.RegisterAttached<\6, Control, \5>(\4); // T12A", contents)
+  
+  
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.RegisterAttached\((.*?), typeof\((.*?)\), typeof\((.*?)\), new UIPropertyMetadata\(([^,\)]*?), ([^,\)]*?)\)\);", re.DOTALL)
   if (re.findall (pat, contents)):
     for match in re.findall (pat, contents):
@@ -1010,6 +1015,9 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"Hidden\"", r'IsVisible="false"', contents)
   contents = re.sub ("Visibility=\"Collapsed\"", r'IsVisible="false"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:InvertBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:InvertBool}}"', contents)
+  
+  contents = re.sub ("Visibility=\"{TemplateBinding (.*?), Converter={cvt:VisibleOrCollapsed}}\"", r'IsVisible="{TemplateBinding \1}"', contents)
+  contents = re.sub ("Visibility=\"{TemplateBinding (.*?), Converter={cvt:Chained {cvt:InvertBool}, {cvt:VisibleOrCollapsed}}}\"", r'IsVisible="{TemplateBinding \1, Converter={cvt:InvertBool}}"', contents)
 
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrHidden}}}\"", r'IsVisible="{Binding \1, Converter={sd:ObjectToBool}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:NumericToBool}, {sd:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={sd:NumericToBool}}"', contents)
@@ -1028,6 +1036,12 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding Converter={sd:Chained {sd:MatchType}, {sd:VisibleOrCollapsed}, Parameter1={x:Type svm:SceneRootViewModel}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type svm:SceneRootViewModel}, FallbackValue=false}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:VisibleOrCollapsed}, ConverterParameter={sd:False}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:NumericToBool}, {sd:VisibleOrCollapsed}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1, Converter={sd:NumericToBool}, FallbackValue=false}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:Chained {cvt:ObjectToBool}, {cvt:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={cvt:ObjectToBool}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrHidden}, FallbackValue={me:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:Chained {cvt:IsEqual}, {cvt:VisibleOrCollapsed}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}\"", r'IsVisible="{Binding \1, Converter={cvt:IsEqual}, ConverterParameter={me:Int {x:Static ctrl:VectorEditingMode.Length}}, RelativeSource={RelativeSource Mode=TemplatedParent}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:Chained {cvt:IsEqual}, {cvt:InvertBool}, {cvt:VisibleOrCollapsed}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}\"", r'IsVisible="{Binding \1, Converter={cvt:Chained {cvt:IsEqual}, {cvt:InvertBool}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrHidden},FallbackValue={me:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrCollapsed}, FallbackValue={me:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
 
   # Tooltip
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -1121,6 +1135,9 @@ def translateTags (contents):
   contents = re.sub ("ItemsControl\.ItemContainerStyle", r'ItemsControl.ItemContainerTheme', contents) # one line style
 
   contents = re.sub ("FrameworkElement\.Resources", r'Control.Resources', contents) # one line style
+  contents = re.sub ("<FrameworkElement", r'<Control', contents) # one line style
+  contents = re.sub ("<FrameworkElement", r'<Control', contents) # one line style
+  contents = re.sub ("</FrameworkElement", r'</Control', contents) # one line style
 
   # FIXME: require TargetType.
   pat = regex.compile ("<Style(\s[^>]*)*>(((?R)|.)*?)<\/Style>", regex.DOTALL)
@@ -1141,7 +1158,21 @@ def translateTags (contents):
   # screen matches.
   contents = pat.sub (lambda match: match.group () if "x:Key" in match.group () else r'<ControlTheme x:Key="' + match.group(1) + r'" TargetType="' + match.group(1) + r'" ' + match.group(2) + r' >', contents)
   
+  # Systemparameters - to local file, in presentation.windows.
+  contents = re.sub (" SystemParameters\.", r" wnd:SystemParameters.", contents)
+  
+  # transformcollection
+  contents = re.sub ("<TransformCollection>", r"", contents)
+  contents = re.sub ("</TransformCollection>", r"", contents)
+  
+  # RichTextBox
+  contents = re.sub ("<RichTextBox", r"<TextBox", contents)
+  contents = re.sub ("</RichTextBox", r"</TextBox", contents)
+  
   # Flow document
+  contents = re.sub ("FlowDocumentScrollViewer", r"ScrollViewer", contents)
+  contents = re.sub ("<GroupBox", r"<HeaderedContentControl", contents)
+  contents = re.sub ("</GroupBox", r"</HeaderedContentControl", contents)
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type FlowDocument}\">(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)x:Key=\"{x:Static local:XamlMarkdown(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type PasswordBox}(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
@@ -1152,10 +1183,16 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type ListView(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type ToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"TagToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+
+  contents = regex.sub (regex.compile ("<ControlTemplate x:Key=\"CheckBoxTemplate(.*?)</ControlTemplate>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("<ControlTemplate x:Key=\"RadioButtonTemplate(.*?)</ControlTemplate>", regex.DOTALL), r"", contents) # maybe add support later?
+
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type StatusBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type IFrameworkInputElement(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = re.sub ("<BorderGapMaskConverter x:Key=\"BorderGapMaskConverter\" />", "", contents)
   contents = re.sub ("<EventSetter Event=\"Loaded\" Handler=\"Image_Loaded\" />", "", contents)
+  contents = re.sub ("<MouseBinding(.*?)/>", "", contents)
+  contents = regex.sub (regex.compile ("<ItemContainerTemplate(.*?)</ItemContainerTemplate>", regex.DOTALL), r"", contents)
   
   # Triggers. These will probably have to be managed by hand. Just comment them out.
   contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
@@ -1566,6 +1603,12 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/SelectionRectangleBehavior.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/ScaleBar.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/UnitSystem.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Commands/SystemCommand.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Commands/SystemCommands.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/ResizeBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/KeyValueGrid.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/IntExtension.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Commands/ControlCommands.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")

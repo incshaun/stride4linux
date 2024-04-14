@@ -199,9 +199,9 @@ namespace Stride.Core.Presentation.Controls
 
             //var itemsControl = ItemsControl.GetItemsOwner(this);
             var treeViewItem = itemsControl as TreeViewItem;
-            var treeView = itemsControl as ATreeView ?? treeViewItem.ParentTreeView;
+            var treeView = itemsControl as TreeView ?? treeViewItem.ParentTreeView;
 
-            //var treeView = ((Control) itemsControl).Parent as ATreeView ?? treeViewItem.ParentTreeView;
+            //var treeView = ((Control) itemsControl).Parent as TreeView ?? treeViewItem.ParentTreeView;
                        //Debug(treeViewItem, "Measuring");
                        double maxWidth = 0;
                        double currentYinItemSystem = 0;
@@ -494,7 +494,7 @@ namespace Stride.Core.Presentation.Controls
             //            var itemsControl = ItemsControl.GetItemsOwner(this);
             var itemsControl = Avalonia.VisualTree.VisualExtensions.GetVisualParent (this).TemplatedParent;
             var treeViewItem = itemsControl as TreeViewItem;
-            var treeView = itemsControl as ATreeView ?? treeViewItem.ParentTreeView;
+            var treeView = itemsControl as TreeView ?? treeViewItem.ParentTreeView;
             var generator = ItemContainerGenerator;
 
             //Extent = finalSize;
@@ -625,14 +625,14 @@ namespace Stride.Core.Presentation.Controls
         /// containers. If no container is cached, returns zero. 
         /// One case it fails is, if all cached items are bigger
         /// than the estimated items. This leads to jumping scrollbars. The effect is not that bad, if many items will be visualized.</remarks>
-        private double GetCachedOrEstimatedHeight(ATreeView tree, int level)
+        private double GetCachedOrEstimatedHeight(TreeView tree, int level)
         {
             if (cachedSizes.ContainsItems(0)) return cachedSizes.GetEstimate(0);
 
             return tree.CachedSizes.GetEstimate(level);
         }
 
-        private void RegisterHeight([NotNull] ATreeView tree, int level, double size)
+        private void RegisterHeight([NotNull] TreeView tree, int level, double size)
         {
             cachedSizes.AddOrChange(0, size);
             tree.CachedSizes.AddOrChange(level, size);
@@ -675,7 +675,7 @@ namespace Stride.Core.Presentation.Controls
             if (GetScrollUnit(itemsControl) == ScrollUnit.Item)
             {
                 var treeViewItem = itemsControl as TreeViewItem;
-                var treeView = itemsControl as ATreeView ?? treeViewItem?.ParentTreeView;
+                var treeView = itemsControl as TreeView ?? treeViewItem?.ParentTreeView;
                 if (treeView != null)
                 {
                     if (treeView.IsVirtualizing)
