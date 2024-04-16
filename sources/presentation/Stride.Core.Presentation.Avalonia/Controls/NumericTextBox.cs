@@ -23,6 +23,8 @@ using Avalonia.Controls.Primitives;
 using System;
 using Avalonia.Data;
 
+using System.Windows.Input;
+
 namespace Stride.Core.Presentation.Controls
 {
     /// <summary>
@@ -146,27 +148,27 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Increases the current value with the value of the <see cref="LargeChange"/> property.
         /// </summary>
-        public static ICommandSource LargeIncreaseCommand { get; }
+        public static ICommand LargeIncreaseCommand { get; }
 
         /// <summary>
         /// Increases the current value with the value of the <see cref="SmallChange"/> property.
         /// </summary>
-        public static ICommandSource SmallIncreaseCommand { get; }
+        public static ICommand SmallIncreaseCommand { get; }
 
         /// <summary>
         /// Decreases the current value with the value of the <see cref="LargeChange"/> property.
         /// </summary>
-        public static ICommandSource LargeDecreaseCommand { get; }
+        public static ICommand LargeDecreaseCommand { get; }
 
         /// <summary>
         /// Decreases the current value with the value of the <see cref="SmallChange"/> property.
         /// </summary>
-        public static ICommandSource SmallDecreaseCommand { get; }
+        public static ICommand SmallDecreaseCommand { get; }
 
         /// <summary>
         /// Resets the current value to zero.
         /// </summary>
-        public static ICommandSource ResetValueCommand { get; }
+        public static ICommand ResetValueCommand { get; }
 
         static NumericTextBox()
 		{
@@ -184,25 +186,25 @@ namespace Stride.Core.Presentation.Controls
 
             // Since the NumericTextBox is not focusable itself, we have to bind the commands to the inner text box of the control.
             // The handlers will then find the parent that is a NumericTextBox and process the command on this control if it is found.
-//             LargeIncreaseCommand = new ICommandSource("LargeIncreaseCommand", typeof(Avalonia.Controls.TextBox));
+//             LargeIncreaseCommand = new ICommand("LargeIncreaseCommand", typeof(Avalonia.Controls.TextBox));
 //             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(LargeIncreaseCommand, OnLargeIncreaseCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeIncreaseCommand, new KeyGesture(Key.PageUp)));
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeIncreaseCommand, new KeyGesture(Key.Up, ModifierKeys.Shift)));
 // 
-//             LargeDecreaseCommand = new ICommandSource("LargeDecreaseCommand", typeof(Avalonia.Controls.TextBox));
+//             LargeDecreaseCommand = new ICommand("LargeDecreaseCommand", typeof(Avalonia.Controls.TextBox));
 //             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(LargeDecreaseCommand, OnLargeDecreaseCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeDecreaseCommand, new KeyGesture(Key.PageDown)));
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeDecreaseCommand, new KeyGesture(Key.Down, ModifierKeys.Shift)));
 // 
-//             SmallIncreaseCommand = new ICommandSource("SmallIncreaseCommand", typeof(Avalonia.Controls.TextBox));
+//             SmallIncreaseCommand = new ICommand("SmallIncreaseCommand", typeof(Avalonia.Controls.TextBox));
 //             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(SmallIncreaseCommand, OnSmallIncreaseCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(SmallIncreaseCommand, new KeyGesture(Key.Up)));
 // 
-//             SmallDecreaseCommand = new ICommandSource("SmallDecreaseCommand", typeof(Avalonia.Controls.TextBox));
+//             SmallDecreaseCommand = new ICommand("SmallDecreaseCommand", typeof(Avalonia.Controls.TextBox));
 //             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(SmallDecreaseCommand, OnSmallDecreaseCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(SmallDecreaseCommand, new KeyGesture(Key.Down)));
 // 
-//             ResetValueCommand = new ICommandSource("ResetValueCommand", typeof(Avalonia.Controls.TextBox));
+//             ResetValueCommand = new ICommand("ResetValueCommand", typeof(Avalonia.Controls.TextBox));
 //             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(ResetValueCommand, OnResetValueCommand));
         }
 

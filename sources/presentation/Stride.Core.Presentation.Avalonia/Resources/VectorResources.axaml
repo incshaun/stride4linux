@@ -1,0 +1,59 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <DrawingImage x:Key="VectorCloseWindow">
+    <DrawingImage.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#1E1E1E" Geometry="F0 M12,12z M0,0z M1.1,2.8L5.3,7 1.1,11.2 1.81,11.91 6.01,7.71 10.21,11.91 10.92,11.2 6.72,7 10.92,2.8 10.21,2.09 6.01,6.29 1.81,2.09z" />
+      </DrawingGroup>
+    </DrawingImage.Drawing>
+  </DrawingImage>
+
+  <DrawingImage x:Key="VectorMaximizeWindow">
+    <DrawingImage.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#1E1E1E" Geometry="F1 M12,12z M0,0z M1,2L1,12 11,12 11,2 1,2z M2,3L10,3 10,11 2,11 2,3z" />
+      </DrawingGroup>
+    </DrawingImage.Drawing>
+  </DrawingImage>
+
+  <DrawingImage x:Key="VectorMinimizeWindow">
+    <DrawingImage.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#1E1E1E" Geometry="F1 M12,12z M0,0z M1,6L11,6 11,7 1,7z" />
+      </DrawingGroup>
+    </DrawingImage.Drawing>
+  </DrawingImage>
+
+  <DrawingImage x:Key="VectorRestoreWindow">
+    <DrawingImage.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#1E1E1E" Geometry="F1 M12,12z M0,0z M3,2L3,4 1,4 1,12 9,12 9,10 11,10 11,2z M4,3L10,3 10,9 9,9 9,4 4,4z M2,5L8,5 8,11 2,11z" />
+      </DrawingGroup>
+    </DrawingImage.Drawing>
+  </DrawingImage>
+
+  <DrawingImage x:Key="VectorPin">
+    <DrawingImage.Drawing>
+      <DrawingGroup>
+        <GeometryDrawing Brush="#00ffffff" Geometry="M16 16H0V0h16v16z" />
+        <GeometryDrawing Brush="#f6f6f6" Geometry="M12 8h1v3h-3v4H7v-4H4V8h1V1h7v7z" />
+        <GeometryDrawing Brush="#424242" Geometry="M11 9V2H6v7H5v1h3v4h1v-4h3V9h-1zM9 8H7V3h2v5z" />
+        <GeometryDrawing Brush="#f0eff1" Geometry="M9 8H7V3h2v5z" />
+      </DrawingGroup>
+    </DrawingImage.Drawing>
+  </DrawingImage>
+
+  <DrawingImage x:Key="VectorGlyphDown">
+    <DrawingImage.Drawing>
+      <DrawingGroup>
+        <DrawingGroup.Children>
+          <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+          <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M1.5859,5L14.4139,5 7.9999,11.414z" />
+          <GeometryDrawing Brush="#FF424242" Geometry="F1M8,10L4,6 12,6z" />
+        </DrawingGroup.Children>
+      </DrawingGroup>
+    </DrawingImage.Drawing>
+  </DrawingImage>
+
+</ResourceDictionary>

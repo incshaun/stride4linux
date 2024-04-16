@@ -10,7 +10,7 @@ using Stride.Core.Presentation.Commands;
 using Stride.Core.Assets.Editor;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Annotations;
-using TreeView = Stride.Core.Presentation.Controls.ATreeView;
+using TreeView = Stride.Core.Presentation.Controls.TreeView;
 using TreeViewItem = Stride.Core.Presentation.Controls.TreeViewItem;
 using Stride.Core.Presentation.ViewModels;
 using Avalonia.Interactivity;

@@ -253,9 +253,9 @@
           </ItemsControl>
         </StackPanel>
         <Grid>
-          <sd:ATreeView x:Name="HierarchyTreeView" ItemsSource="{Binding HierarchyRoot, Mode=OneWay, Converter={sd:Yield}}" 
+          <sd:TreeView x:Name="HierarchyTreeView" ItemsSource="{Binding HierarchyRoot, Mode=OneWay, Converter={sd:Yield}}" 
                          BorderBrush="Black" BorderThickness="0,1,0,0">
-            <sd:ATreeView.Resources>
+            <sd:TreeView.Resources>
               <SolidColorBrush x:Key="UnloadedColor" Color="Gray" />
               <!-- Name style -->
               <ControlTheme x:Key="NameStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}" >
@@ -336,15 +336,15 @@
               </ControlTheme>
               <!-- Default template -->
               
-            </sd:ATreeView.Resources>
-            <sd:ATreeView.ItemsPanel>
+            </sd:TreeView.Resources>
+            <sd:TreeView.ItemsPanel>
               <ItemsPanelTemplate>
                 <sd:AVirtualizingTreePanel Background="Transparent" DataContext="{sd:PriorityBinding {Binding ActiveRoot, Converter={sd:NullToUnset}, Mode=OneWay}, {Binding HierarchyRoot, Mode=OneWay}}"
                                             ContextMenu="{StaticResource TreeViewContextMenu}"/>
               </ItemsPanelTemplate>
-            </sd:ATreeView.ItemsPanel>
+            </sd:TreeView.ItemsPanel>
               
-                <sd:ATreeView.DataTemplates>
+                <sd:TreeView.DataTemplates>
               <TreeDataTemplate DataType="{x:Type ehvm:EntityHierarchyItemViewModel}" ItemsSource="{Binding Children}">
                 <TextBlock Theme="{StaticResource NameStyle}"/>
               </TreeDataTemplate>
@@ -442,8 +442,8 @@
                   </StackPanel>
                 </DockPanel>
               </TreeDataTemplate>
-              </sd:ATreeView.DataTemplates>	
-            <sd:ATreeView.ItemContainerTheme>
+              </sd:TreeView.DataTemplates>	
+            <sd:TreeView.ItemContainerTheme>
               
               <ControlTheme  TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}" >
 	<Design.DataContext>
@@ -476,11 +476,11 @@
                   </Setter.Value>
                 </Setter>
               </ControlTheme>
-            </sd:ATreeView.ItemContainerTheme>
+            </sd:TreeView.ItemContainerTheme>
             <i:Interaction.Behaviors>
 
             </i:Interaction.Behaviors>
-          </sd:ATreeView>
+          </sd:TreeView>
         </Grid>
       </DockPanel>
 

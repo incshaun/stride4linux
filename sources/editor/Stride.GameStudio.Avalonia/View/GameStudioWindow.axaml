@@ -545,8 +545,8 @@
                         </ItemsControl>
                       </StackPanel>
                       <!-- TODO: SearchText -->
-                      <sd:ATreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values, Source={x:Static vm:GameStudioViewModel.GameStudio}}" IsVirtualizing="False" ContextMenu="{StaticResource ContextMenu}">
-                        <sd:ATreeView.Resources>
+                      <sd:TreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values, Source={x:Static vm:GameStudioViewModel.GameStudio}}" IsVirtualizing="False" ContextMenu="{StaticResource ContextMenu}">
+                        <sd:TreeView.Resources>
                           <ContextMenu x:Key="ContextMenu">
                             <MenuItem Header="{sd:Localize Folder, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
                             <MenuItem Header="{sd:Localize Create folder, Context=Menu}" Command="{Binding Session.NewDirectoryCommand}" CommandParameter="{Binding Session.ActiveAssetView.SelectedLocations}" Icon="{sd:Image {StaticResource ImageNewFolder}}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled}"/>
@@ -596,7 +596,7 @@
                             <MenuItem Header="{sd:Localize Show in Explorer, Context=Menu}" Command="{Binding Session.ExploreCommand}" CommandParameter="{Binding}" Icon="{sd:Image {StaticResource ImageExplore}}" IsVisible="{Binding Session.ExploreCommand.IsEnabled}"/>
 
                           </ContextMenu>
-                        </sd:ATreeView.Resources>
+                        </sd:TreeView.Resources>
                         <i:Interaction.Behaviors>
                           <sd:DragOverAutoScrollBehavior/>
                           <sd:TreeViewAutoExpandBehavior/>
@@ -607,7 +607,7 @@
                           <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding Session.ActiveAssetView.PasteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
                           <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding Session.DeleteSelectedSolutionItemsCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
                         </i:Interaction.Behaviors>
-                        <sd:ATreeView.ItemContainerTheme>
+                        <sd:TreeView.ItemContainerTheme>
                           <ControlTheme TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
 <!--                             <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={sd:AssetToExpandedAtInitialization}}"/> -->
                              
@@ -620,8 +620,8 @@
                               </Setter.Value>
                             </Setter>
                           </ControlTheme>
-                        </sd:ATreeView.ItemContainerTheme>
-                        <sd:ATreeView.DataTemplates>
+                        </sd:TreeView.ItemContainerTheme>
+                        <sd:TreeView.DataTemplates>
 
                                 <StaticResource ResourceKey="AssetMountPointTemplate"></StaticResource>
                                 <StaticResource ResourceKey="DirectoryTemplate"></StaticResource>
@@ -631,14 +631,14 @@
                                 <StaticResource ResourceKey="PackageReferenceTemplate"></StaticResource>
                                 <StaticResource ResourceKey="PackageTemplate"></StaticResource>
 
-                        </sd:ATreeView.DataTemplates>                        
-<!--                        <sd:ATreeView.ItemTemplate>
+                        </sd:TreeView.DataTemplates>                        
+<!--                        <sd:TreeView.ItemTemplate>
                           <TreeDataTemplate ItemsSource="{Binding Content}" >
                           <TreeDataTemplate ItemsSource="{Binding Content}" ItemTemplateSelector="{StaticResource SolutionTreeViewTemplate}">
                             <TextBlock Text="{Binding Name}"/>
                           </TreeDataTemplate>
-                        </sd:ATreeView.ItemTemplate>-->
-                      </sd:ATreeView>
+                        </sd:TreeView.ItemTemplate>-->
+                      </sd:TreeView>
                     </DockPanel>
                   </Document>
                 </DocumentDock>

@@ -113,7 +113,7 @@ namespace Stride.Core.Presentation.Controls
         
         public Rect LineExtents { get { return (Rect)GetValue(LineExtentsProperty); }  set { SetValue(LineExtentsProperty, value); } }
 
-        public Brush LineStroke { get { return (Brush)GetValue(LineStrokeProperty); }  set { SetValue(LineStrokeProperty, value); } }
+        public IBrush LineStroke { get { return (IBrush)GetValue(LineStrokeProperty); }  set { SetValue(LineStrokeProperty, value); } }
 
         public Thickness LineThickness { get { return (Thickness)GetValue(LineThicknessProperty); } set { SetValue(LineThicknessProperty, value); } }
 

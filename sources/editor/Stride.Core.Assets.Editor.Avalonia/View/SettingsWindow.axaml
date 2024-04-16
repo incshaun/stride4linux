@@ -41,18 +41,18 @@
         <ColumnDefinition Width="2*"/>
       </Grid.ColumnDefinitions>
 
-      <sd:ATreeView Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" SelectionMode="Single">
-        <sd:ATreeView.ItemContainerTheme>
+      <sd:TreeView Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" SelectionMode="Single">
+        <sd:TreeView.ItemContainerTheme>
           <ControlTheme TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
 <!--             <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, Converter={valueConverters:SettingsCategoryToExpandedAtInitialization}}"/> -->
           </ControlTheme>
-        </sd:ATreeView.ItemContainerTheme>
-        <sd:ATreeView.DataTemplates>
+        </sd:TreeView.ItemContainerTheme>
+        <sd:TreeView.DataTemplates>
           <TreeDataTemplate DataType="{x:Type viewModels:SettingsCategoryViewModel}" ItemsSource="{Binding SubCategories}">
             <TextBlock Text="{Binding Name}"/>
           </TreeDataTemplate>
-        </sd:ATreeView.DataTemplates>
-      </sd:ATreeView>
+        </sd:TreeView.DataTemplates>
+      </sd:TreeView>
 
       <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
 
