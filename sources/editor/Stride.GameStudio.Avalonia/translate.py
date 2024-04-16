@@ -921,6 +921,10 @@ def translateConstants (contents):
   contents = re.sub ("xmlns:assetCommands=\"clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands\"", "xmlns:assetCommands=\"clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands;assembly=Stride.Core.Assets.Editor\"", contents)
   contents = re.sub ("xmlns:strings=\"clr-namespace:Stride.Core.Assets.Editor.Resources.Strings\"", "xmlns:strings=\"clr-namespace:Stride.Core.Assets.Editor.Avalonia.Resources.Strings\"", contents)
   contents = re.sub ("xmlns:ctrl=\"clr-namespace:Stride.Core.Presentation.Controls\"", "xmlns:ctrl=\"clr-namespace:Stride.Core.Presentation.Controls;assembly=Stride.Core.Presentation.Avalonia\"", contents)
+  contents = re.sub ("xmlns:cvt=\"clr-namespace:Stride.Core.Presentation.ValueConverters\"", "xmlns:cvt=\"clr-namespace:Stride.Core.Presentation.ValueConverters;assembly=Stride.Core.Presentation.Avalonia\"", contents)
+  contents = re.sub ("xmlns:behaviors=\"clr-namespace:Stride.Core.Presentation.Behaviors\"", "xmlns:behaviors=\"clr-namespace:Stride.Core.Presentation.Behaviors;assembly=Stride.Core.Presentation.Avalonia\"", contents)
+  contents = re.sub ("xmlns:themes=\"clr-namespace:Stride.Core.Presentation.Themes\"", "xmlns:themes=\"clr-namespace:Stride.Core.Presentation.Themes;assembly=Stride.Core.Presentation.Avalonia\"", contents)
+  contents = re.sub ("xmlns:me=\"clr-namespace:Stride.Core.Presentation.MarkupExtensions\"", "xmlns:me=\"clr-namespace:Stride.Core.Presentation.MarkupExtensions;assembly=Stride.Core.Presentation.Avalonia\"", contents)
   return contents
 
 # flag any nested comments, and break up the --, which causes compliance issues.
@@ -973,6 +977,9 @@ def translateTags (contents):
   
   # Currently don't have a way to deal with PopupAnimation.
   contents = re.sub ("PopupAnimation=\".*\"", "", contents)
+  
+  # Part names.
+  contents = re.sub ("x:Name=\"Popup\"", 'x:Name="PART_Popup"', contents)
   
   # Toolbar
   contents = re.sub ("<ToolBarTray ([^>]*?)>", r'<StackPanel Orientation="Horizontal" \1>', contents)
@@ -1080,6 +1087,8 @@ def translateTags (contents):
   contents = re.sub (re.compile ("<ContentPresenter([^>]*?)ContentTemplate=\"([^>]*?)\"([^>]*?)ContentTemplateSelector=\"([^>]*?)\"([^>/]*?)>", re.DOTALL), r'<ContentPresenter\1ContentTemplate="\2"\3\5>\n\t<!-- <ContentPresenter\1ContentTemplate="\2"\3ContentTemplateSelector="\4"\5> -->', contents) # just the start tag
   contents = re.sub (re.compile ("<ToggleButton([^>]*?)ContentTemplate=\"([^>]*?)\"([^>]*?)ContentTemplateSelector=\"([^>]*?)\"([^>]*?)/>", re.DOTALL), r'<ToggleButton\1ContentTemplate="\2"\3\5/>\n\t<!-- <ToggleButton\1ContentTemplate="\2"\3ContentTemplateSelector="\4"\5/> -->', contents)
 
+  contents = regex.sub (regex.compile ("<ContentPresenter (((?!Content=).)*)>", regex.DOTALL), r'<ContentPresenter Content="{TemplateBinding Content}" \1>', contents) # have to force a content value?
+
 
   # SnapToDevicePixels, AllowsTransparency. Elements that don't seem to have an equivalent.
   contents = re.sub ("SnapsToDevicePixels=\"(.*?)\"", "", contents)
@@ -1131,7 +1140,7 @@ def translateTags (contents):
   # ResourceDictionary with source.
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\" /\>", r'<ResourceInclude Source="\1.axaml" />', contents)
   contents = re.sub ("\<ResourceDictionary Source=\"(.*).xaml\"/\>", r'<ResourceInclude Source="\1.axaml" />', contents)
-  contents = re.sub ("<ResourceInclude Source=\"pack://application:,,,/Stride.Core.Presentation.Wpf;component/Resources/VectorResources.axaml\" />", r'<ResourceInclude Source="avares://Stride.Core.Presentation.Avalonia/Resources/VectorResources.axaml" />', contents)
+  contents = re.sub ("<ResourceInclude Source=\"pack://application:,,,/Stride.Core.Presentation.Wpf;component/Resources/VectorResources.axaml\" />", r'<ResourceInclude Source="avares://Stride.Core.Presentation.Avalonia/Resources/VectorResources.axaml" />\n\t<ResourceInclude Source="../ValueConverters/SystemColors.axaml" />', contents)
 
   # Dropshadowbitmap
   contents = re.sub ("<DropShadowBitmapEffect (.*?)/>", r'<DropShadowEffect \1/>', contents) # one line style
@@ -1232,6 +1241,11 @@ def translateTags (contents):
   contents = re.sub ("{x:Static ItemsControl.MenuStyleKey}", r"ItemsControl.MenuStyleKey", contents)
   contents = re.sub ("{x:Static ItemsControl.TextBoxStyleKey}", r"ItemsControl.TextBoxStyleKey", contents)
   contents = re.sub ("{x:Static ItemsControl.SeparatorStyleKey}", r"ItemsControl.SeparatorStyleKey", contents)
+
+  contents = re.sub ("Overrides/ExpressionDarkTheme.xaml", r"Overrides/ExpressionDarkTheme.axaml", contents)
+  contents = re.sub ("Overrides/EOverrides/DarkSteelTheme.xaml", r"Overrides/DarkSteelTheme.axaml", contents)
+  contents = re.sub ("Overrides/DividedTheme.xaml", r"Overrides/DividedTheme.axaml", contents)
+  contents = re.sub ("Overrides/LightSteelBlueTheme.xaml", r"Overrides/LightSteelBlueTheme.axaml", contents)
   
   
   # Flow document
@@ -1248,7 +1262,7 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type ListView(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"Hyperlink(.*?)</ControlTheme>", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type ToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
-  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"TagToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
+  #contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"TagToolBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"NuclearButtonFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"RadioButtonFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"CheckBoxFocusVisual(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
@@ -1269,6 +1283,12 @@ def translateTags (contents):
   contents = re.sub ("<MouseBinding(.*?)/>", "", contents)
   contents = regex.sub (regex.compile ("<ItemContainerTemplate(.*?)</ItemContainerTemplate>", regex.DOTALL), r"", contents)
 
+  contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"TagToolBarStyle\" TargetType=\"{x:Type ToolBar}\">", regex.DOTALL), r'<ControlTheme x:Key="TagToolBarStyle" TargetType="{x:Type ItemsControl}">', contents) 
+  contents = regex.sub (regex.compile ("<ControlTemplate TargetType=\"{x:Type ToolBar}\">", regex.DOTALL), r'<ControlTemplate TargetType="{x:Type ItemsControl}">', contents) 
+  contents = regex.sub ("<ToolBarOverflowPanel(.*?)x:Name=\"PART_ToolBarOverflowPanel\"(.*?)/>", r'', contents) 
+  contents = regex.sub ("<ToolBarPanel(.*?)x:Name=\"PART_ToolBarPanel\"(.*?)/>", r'', contents) 
+  contents = regex.sub (regex.compile ("<ToggleButton([^>]*?)IsVisible=\"{TemplateBinding HasOverflowItems}\" x:Name=\"OverflowButton\"([^>]*?)>(.*?)</ToggleButton>", regex.DOTALL), r'', contents) 
+
   # togglebutton
   contents = re.sub ("FocusVisualTheme=\"(.*?)\"", r"", contents)
   
@@ -1284,6 +1304,7 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)>(\s*?)<ControlTheme x:Key=\"(.*?)\"(.*?)</ControlTheme>(.*?)</ControlTheme>", regex.DOTALL), r"<ControlTemplate\1>\2<ControlTheme \4</ControlTheme>\5</ControlTheme>", contents)
   contents = regex.sub (regex.compile ("\.Theme>(\s*?)<ControlTheme x:Key=\"(.*?)\" TargetType=", regex.DOTALL), r".Theme>\1<ControlTheme TargetType=", contents)
   
+  contents = re.sub ("<ControlTheme x:Key=\"TextBlock\"", '<ControlTheme x:Key="{x:Type TextBlock}"', contents)
   
   # Triggers. These will probably have to be managed by hand. Just comment them out.
   contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
@@ -1446,6 +1467,11 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("Height=\"Auto\"", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("Width=\"Auto\"", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("x:Shared=\"False\"", regex.DOTALL), r"", contents)
+
+  # Force a textpresenter into textbox.
+  contents = re.sub (re.compile ("<ControlTemplate x:Key=\"TextBoxTemplate\" TargetType=\"{x:Type TextBox}\">(\s*?)<Grid>", re.DOTALL), r'<ControlTemplate x:Key="TextBoxTemplate" TargetType="{x:Type TextBox}">\1<Grid>\n\t\t<TextPresenter x:Name="PART_TextPresenter" />', contents)
+  
+
   
   return contents
 

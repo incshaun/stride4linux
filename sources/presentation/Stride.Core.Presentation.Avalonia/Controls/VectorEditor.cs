@@ -49,6 +49,6 @@ namespace Stride.Core.Presentation.Controls
         /// Resource Key for the ToggleButtonStyle.
         /// </summary>
 //         public static ComponentResourceKey ToggleButtonStyleKey { get; } = new ComponentResourceKey(typeof(VectorEditorResources), nameof(ToggleButtonStyleKey));
-        public static object ToggleButtonStyleKey { get; }
+        public static object ToggleButtonStyleKey { get; } = new object ();
     }
 }

@@ -333,7 +333,7 @@
         <!-- TOOLBAR ROW DEFINITION-->
         <RowDefinition Height="Auto"/>
         <!-- DOCKING ROW DEFINITION -->
-        <RowDefinition Height="*"/>
+        <RowDefinition Height="1000"/>
         <!-- STATUS BAR ROW DEFINITION-->
         <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
