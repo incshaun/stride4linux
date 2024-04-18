@@ -925,6 +925,10 @@ def translateConstants (contents):
   contents = re.sub ("xmlns:behaviors=\"clr-namespace:Stride.Core.Presentation.Behaviors\"", "xmlns:behaviors=\"clr-namespace:Stride.Core.Presentation.Behaviors;assembly=Stride.Core.Presentation.Avalonia\"", contents)
   contents = re.sub ("xmlns:themes=\"clr-namespace:Stride.Core.Presentation.Themes\"", "xmlns:themes=\"clr-namespace:Stride.Core.Presentation.Themes;assembly=Stride.Core.Presentation.Avalonia\"", contents)
   contents = re.sub ("xmlns:me=\"clr-namespace:Stride.Core.Presentation.MarkupExtensions\"", "xmlns:me=\"clr-namespace:Stride.Core.Presentation.MarkupExtensions;assembly=Stride.Core.Presentation.Avalonia\"", contents)
+  contents = re.sub ("xmlns:wnd=\"clr-namespace:Stride.Core.Presentation.Windows\"", "xmlns:wnd=\"clr-namespace:Stride.Core.Presentation.Windows;assembly=Stride.Core.Presentation.Avalonia\"", contents)
+  contents = re.sub ("xmlns:commands=\"clr-namespace:Stride.Core.Presentation.Controls.Commands\"", "xmlns:commands=\"clr-namespace:Stride.Core.Presentation.Controls.Commands;assembly=Stride.Core.Presentation.Avalonia\"", contents)
+  contents = re.sub ("xmlns:interactivity=\"clr-namespace:Stride.Core.Presentation.Interactivity\"", "xmlns:interactivity=\"clr-namespace:Stride.Core.Presentation.Interactivity;assembly=Stride.Core.Presentation.Avalonia\"", contents)
+  contents = re.sub ("xmlns:cmd=\"clr-namespace:Stride.Core.Presentation.Commands\"", "xmlns:cmd=\"clr-namespace:Stride.Core.Presentation.Commands;assembly=Stride.Core.Presentation.Avalonia\"", contents)
   return contents
 
 # flag any nested comments, and break up the --, which causes compliance issues.
@@ -1087,7 +1091,6 @@ def translateTags (contents):
   contents = re.sub (re.compile ("<ContentPresenter([^>]*?)ContentTemplate=\"([^>]*?)\"([^>]*?)ContentTemplateSelector=\"([^>]*?)\"([^>/]*?)>", re.DOTALL), r'<ContentPresenter\1ContentTemplate="\2"\3\5>\n\t<!-- <ContentPresenter\1ContentTemplate="\2"\3ContentTemplateSelector="\4"\5> -->', contents) # just the start tag
   contents = re.sub (re.compile ("<ToggleButton([^>]*?)ContentTemplate=\"([^>]*?)\"([^>]*?)ContentTemplateSelector=\"([^>]*?)\"([^>]*?)/>", re.DOTALL), r'<ToggleButton\1ContentTemplate="\2"\3\5/>\n\t<!-- <ToggleButton\1ContentTemplate="\2"\3ContentTemplateSelector="\4"\5/> -->', contents)
 
-  contents = regex.sub (regex.compile ("<ContentPresenter (((?!Content=).)*)>", regex.DOTALL), r'<ContentPresenter Content="{TemplateBinding Content}" \1>', contents) # have to force a content value?
 
 
   # SnapToDevicePixels, AllowsTransparency. Elements that don't seem to have an equivalent.
@@ -1243,7 +1246,7 @@ def translateTags (contents):
   contents = re.sub ("{x:Static ItemsControl.SeparatorStyleKey}", r"ItemsControl.SeparatorStyleKey", contents)
 
   contents = re.sub ("Overrides/ExpressionDarkTheme.xaml", r"Overrides/ExpressionDarkTheme.axaml", contents)
-  contents = re.sub ("Overrides/EOverrides/DarkSteelTheme.xaml", r"Overrides/DarkSteelTheme.axaml", contents)
+  contents = re.sub ("Overrides/Overrides/DarkSteelTheme.xaml", r"Overrides/DarkSteelTheme.axaml", contents)
   contents = re.sub ("Overrides/DividedTheme.xaml", r"Overrides/DividedTheme.axaml", contents)
   contents = re.sub ("Overrides/LightSteelBlueTheme.xaml", r"Overrides/LightSteelBlueTheme.axaml", contents)
   
@@ -1471,8 +1474,42 @@ def translateTags (contents):
   # Force a textpresenter into textbox.
   contents = re.sub (re.compile ("<ControlTemplate x:Key=\"TextBoxTemplate\" TargetType=\"{x:Type TextBox}\">(\s*?)<Grid>", re.DOTALL), r'<ControlTemplate x:Key="TextBoxTemplate" TargetType="{x:Type TextBox}">\1<Grid>\n\t\t<TextPresenter x:Name="PART_TextPresenter" />', contents)
   
+  # fix avalonia specific additions.
+  contents = re.sub ("<ControlTheme x:Key=\"{x:Type Menu}\" TargetType=\"{x:Type Menu}\" >", '<ControlTheme x:Key="{x:Type Menu}" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">', contents)
 
+  contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type Button}\"(((?!</ControlTemplate>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type Button}"\2<ContentPresenter Content="{TemplateBinding Content}" \4>\6</ControlTemplate>', contents) # have to force a content value in buttons?
   
+  contents = regex.sub ("<ContentPresenter(.*?)x:Name=\"HeaderHost\"(.*?)>", r'<ContentPresenter Content="{TemplateBinding Header}"\1x:Name="HeaderHost"\2>', contents) 
+
+  contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ListBoxItem}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ListBoxItem}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTheme>', contents) 
+
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ScrollBar}\" TargetType=\"{x:Type ScrollBar}\" >", r'<ControlTheme x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}" >', contents) 
+  
+  contents = regex.sub ("<RowDefinition(\s*?)/>", r'<RowDefinition Height="Auto" />', contents) 
+  contents = regex.sub ("<ColumnDefinition(\s*?)/>", r'<ColumnDefinition Width="Auto" />', contents) 
+  
+  contents = regex.sub ("<ItemsPresenter  Margin=\"0,0,1,0\"/>", r'<ItemsPresenter  Margin="0,0,1,0" ItemsPanel="{TemplateBinding ItemsPanel}"/>', contents) 
+  contents = regex.sub ("<Track (((?!Value=).)*?)>", r'<Track \1 Value="{TemplateBinding Value, Mode=TwoWay}">', contents) 
+  
+#<Style Selector="^[Orientation=Horizontal]">
+        #<Setter Property="Height" Value="18" />
+        #<Setter Property="Template" Value="{StaticResource HorizontalScrollBarControlTemplate}" />
+    #</Style>
+    #<Style Selector="^[Orientation=Vertical]">
+        #<Setter Property="Width" Value="18" />
+        #<Setter Property="Template" Value="{StaticResource VerticalScrollBarControlTemplate}" />
+    #</Style>
+    #<!-- <ControlTheme.Triggers>
+      #<Trigger Property="Orientation" Value="Horizontal">
+        #<Setter Property="Height" Value="18" />
+        #<Setter Property="Template" Value="{StaticResource HorizontalScrollBarControlTemplate}" />
+      #</Trigger>
+      #<Trigger Property="Orientation" Value="Vertical">
+        #<Setter Property="Width" Value="18" />
+        #<Setter Property="Template" Value="{StaticResource VerticalScrollBarControlTemplate}" />
+      #</Trigger>
+    #</Style\.Triggers> -->  
+    
   return contents
 
 def translateXAML (sourceFile):
