@@ -178,25 +178,27 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ctrl:TextBox">
-<!--          <mwt:ListBoxChrome Background="{TemplateBinding Panel.Background}"
+          <ListBox Background="{TemplateBinding Panel.Background}"
                              BorderBrush="{TemplateBinding Border.BorderBrush}"
                              BorderThickness="{TemplateBinding Border.BorderThickness}"
-                             RenderMouseOver="{TemplateBinding UIElement.IsMouseOver}"
-                             RenderFocused="{TemplateBinding UIElement.IsKeyboardFocusWithin}" Name="Bd"
+                             
+                             Name="Bd"
                              >
             <Grid Focusable="False">
               <ScrollViewer x:Name="PART_ContentHost" 
                             Padding="{TemplateBinding Padding}"
-                            Visibility="{TemplateBinding IsFocused}" />
+                            IsVisible="{TemplateBinding IsFocused}">
+                <TextPresenter x:Name="PART_TextPresenter" />
+              </ScrollViewer>
               <ContentControl x:Name="Watermark" Content="{TemplateBinding WatermarkContent}"
                               ContentTemplate="{TemplateBinding WatermarkContentTemplate}" VerticalAlignment="Center"
                               Margin="6,2,2,2" Focusable="False" />
-              <TextBlock x:Name="PART_TrimmedText" Text="{TemplateBinding TrimmedText}" Cursor="IBeam" Margin="3,1"
+              <TextBlock x:Name="PART_TrimmedText" Text="{TemplateBinding Text}" Cursor="IBeam" Margin="3,1"
                          Focusable="False"
-                         Visibility="{TemplateBinding IsFocused, Converter={cvt:Chained {cvt:InvertBool}, {cvt:VisibleOrCollapsed}}}"
+                         IsVisible="{TemplateBinding IsFocused, Converter={cvt:InvertBool}}"
                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
             </Grid>
-          </mwt:ListBoxChrome>-->
+          </ListBox>
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="HasText" Value="True">
               <Setter TargetName="Watermark" Property="Visibility" Value="Hidden" />

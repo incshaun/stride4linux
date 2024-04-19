@@ -1313,8 +1313,8 @@ def translateTags (contents):
   contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<DataTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<i:Interaction\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
-  contents = re.sub (re.compile ("\<Style\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1\.Triggers> -->", contents)
-  contents = re.sub (re.compile ("\<Rectangle\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <Rectangle.Triggers>\1\.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<Style\.Triggers>(.*?)</Style\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1</ControlTheme.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<Rectangle\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <Rectangle.Triggers>\1.Triggers> -->", contents)
   
   # Fix nested comments.
   contents = removeNestedComments (contents)
@@ -1473,15 +1473,21 @@ def translateTags (contents):
 
   # Force a textpresenter into textbox.
   contents = re.sub (re.compile ("<ControlTemplate x:Key=\"TextBoxTemplate\" TargetType=\"{x:Type TextBox}\">(\s*?)<Grid>", re.DOTALL), r'<ControlTemplate x:Key="TextBoxTemplate" TargetType="{x:Type TextBox}">\1<Grid>\n\t\t<TextPresenter x:Name="PART_TextPresenter" />', contents)
+  contents = re.sub (re.compile ("<ControlTheme x:Key=\"ctrl:TextBox\" TargetType=\"ctrl:TextBox\"(.*?)<ScrollViewer(.*?)/>", re.DOTALL), r'<ControlTheme x:Key="ctrl:TextBox" TargetType="ctrl:TextBox"\1<ScrollViewer\2>\n\t\t<TextPresenter x:Name="PART_TextPresenter" />\n\t</ScrollViewer>', contents)
+  contents = re.sub (re.compile ("<ControlTheme x:Key=\"ctrl:NumericTextBox\" TargetType=\"ctrl:NumericTextBox\"(.*?)<ScrollViewer(.*?)/>", re.DOTALL), r'<ControlTheme x:Key="ctrl:NumericTextBox" TargetType="ctrl:NumericTextBox"\1<ScrollViewer\2>\n\t\t<TextPresenter x:Name="PART_TextPresenter" />\n\t</ScrollViewer>', contents)
   
   # fix avalonia specific additions.
   contents = re.sub ("<ControlTheme x:Key=\"{x:Type Menu}\" TargetType=\"{x:Type Menu}\" >", '<ControlTheme x:Key="{x:Type Menu}" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">', contents)
 
-  contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type Button}\"(((?!</ControlTemplate>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type Button}"\2<ContentPresenter Content="{TemplateBinding Content}" \4>\6</ControlTemplate>', contents) # have to force a content value in buttons?
+  contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type Button}\"(((?!</ControlTemplate>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type Button}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTemplate>', contents) # have to force a content value in buttons?
+  
+  contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type ToggleButton}\"(((?!</ControlTemplate>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type Button}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTemplate>', contents) # have to force a content value in buttons?
   
   contents = regex.sub ("<ContentPresenter(.*?)x:Name=\"HeaderHost\"(.*?)>", r'<ContentPresenter Content="{TemplateBinding Header}"\1x:Name="HeaderHost"\2>', contents) 
 
   contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ListBoxItem}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ListBoxItem}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTheme>', contents) 
+
+  contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ToolTip}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ToolTip}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTheme>', contents) 
 
   contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ScrollBar}\" TargetType=\"{x:Type ScrollBar}\" >", r'<ControlTheme x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}" >', contents) 
   
@@ -1490,6 +1496,35 @@ def translateTags (contents):
   
   contents = regex.sub ("<ItemsPresenter  Margin=\"0,0,1,0\"/>", r'<ItemsPresenter  Margin="0,0,1,0" ItemsPanel="{TemplateBinding ItemsPanel}"/>', contents) 
   contents = regex.sub ("<Track (((?!Value=).)*?)>", r'<Track \1 Value="{TemplateBinding Value, Mode=TwoWay}">', contents) 
+
+  contents = regex.sub ("<RepeatButton(.*?)x:Name=\"DecreaseRepeat\"(.*?)>", r'<RepeatButton\1x:Name="PART_LineUpButton"\2>', contents) 
+  contents = regex.sub ("<RepeatButton(.*?)x:Name=\"IncreaseRepeat\"(.*?)>", r'<RepeatButton\1x:Name="PART_LineDownButton"\2>', contents) 
+  contents = regex.sub ("<RepeatButton(.*?)x:Name=\"PageUp\"(.*?)>", r'<RepeatButton\1x:Name="PART_PageUpButton"\2>', contents) 
+  contents = regex.sub ("<RepeatButton(.*?)x:Name=\"PageDown\"(.*?)>", r'<RepeatButton\1x:Name="PART_PageDownButton"\2>', contents) 
+
+#  contents = regex.sub ("DragCursor=\"/Stride.Core.Presentation.Wpf;component/Resources/Cursors/CursorDrag.cur\"", r'DragCursor="avares://Stride.Core.Presentation.Avalonia/Resources/Cursors/CursorDrag.cur"', contents) 
+  contents = regex.sub ("DragCursor=\"/Stride.Core.Presentation.Wpf;component/Resources/Cursors/CursorDrag.cur\"", r'', contents) # see previous line, not supported yet.
+
+  contents = regex.sub ("x:Key=\"ItemsControl.ButtonStyleKey\"", r'x:Key="ItemsControlButtonStyleKey"', contents) 
+
+  contents = regex.sub ("x:Key=\"ctrl:TextBox\"", r'x:Key="{x:Type ctrl:TextBox}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:NumericTextBox\"", r'x:Key="{x:Type ctrl:NumericTextBox}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:TimeSpanEditor\"", r'x:Key="{x:Type ctrl:TimeSpanEditor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:DateTimeEditor\"", r'x:Key="{x:Type ctrl:DateTimeEditor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:Vector2Editor\"", r'x:Key="{x:Type ctrl:Vector2Editor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:Vector3Editor\"", r'x:Key="{x:Type ctrl:Vector3Editor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:Vector4Editor\"", r'x:Key="{x:Type ctrl:Vector4Editor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:Int2Editor\"", r'x:Key="{x:Type ctrl:Int2Editor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:Int3Editor\"", r'x:Key="{x:Type ctrl:Int3Editor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:Int4Editor\"", r'x:Key="{x:Type ctrl:Int4Editor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:RectangleFEditor\"", r'x:Key="{x:Type ctrl:RectangleFEditor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:RectangleEditor\"", r'x:Key="{x:Type ctrl:RectangleEditor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:RotationEditor\"", r'x:Key="{x:Type ctrl:RotationEditor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:MatrixEditor\"", r'x:Key="{x:Type ctrl:MatrixEditor}"', contents) 
+  contents = regex.sub ("x:Key=\"ctrl:TextLogViewer\"", r'x:Key="{x:Type ctrl:TextLogViewer}"', contents) 
+
+
+  contents = regex.sub (regex.compile ("<!-- <ControlTheme\.Triggers>(\s*?)<Trigger Property=\"Orientation\" Value=\"Horizontal\">(\s*?)<Setter Property=\"Height\" Value=\"18\" />(\s*?)<Setter Property=\"Template\" Value=\"{StaticResource HorizontalScrollBarControlTemplate}\" />(\s*?)</Trigger>(\s*?)<Trigger Property=\"Orientation\" Value=\"Vertical\">(\s*?)<Setter Property=\"Width\" Value=\"18\" />(\s*?)<Setter Property=\"Template\" Value=\"{StaticResource VerticalScrollBarControlTemplate}\" />(\s*?)</Trigger>(\s*?)</ControlTheme\.Triggers> -->", regex.DOTALL), r'<Style Selector="^[Orientation=Horizontal]">\n<Setter Property="Height" Value="18" />\n<Setter Property="Template" Value="{StaticResource HorizontalScrollBarControlTemplate}" />\n</Style>\n<Style Selector="^[Orientation=Vertical]">\n<Setter Property="Width" Value="18" />\n<Setter Property="Template" Value="{StaticResource VerticalScrollBarControlTemplate}" />\n</Style>', contents) 
   
 #<Style Selector="^[Orientation=Horizontal]">
         #<Setter Property="Height" Value="18" />

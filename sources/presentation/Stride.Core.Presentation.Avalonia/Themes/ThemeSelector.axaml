@@ -79,7 +79,7 @@
   <ControlTemplate x:Key="MainWindowButtonTemplate" TargetType="{x:Type Button}">
     <Grid>
       <Border x:Name="Background" Background="{TemplateBinding Background}"/>
-      <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+      <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
     </Grid>
     <!-- <ControlTemplate.Triggers>
       --><!-- Active --><!--
@@ -317,7 +317,7 @@
       <Trigger Property="IsEnabled" Value="False">
         <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
       </Trigger>
-    </Style\.Triggers> -->
+    </ControlTheme.Triggers> -->
   </ControlTheme>
 
   
@@ -635,7 +635,7 @@
                         Background="{DynamicResource WindowBackgroundBrush}"
                         BorderBrush="{DynamicResource SolidBorderBrush}"
                         CornerRadius="3">
-            <ContentPresenter Margin="4" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="4" HorizontalAlignment="Left" VerticalAlignment="Top" />
           </Border>
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="HasDropShadow" Value="true">
@@ -701,12 +701,12 @@
 
   
 
-  <ControlTemplate x:Key="SimpleToggleButtonTemplate" TargetType="{x:Type ToggleButton}">
+  <ControlTemplate x:Key="SimpleToggleButtonTemplate" TargetType="{x:Type Button}">
     <Grid x:Name="Grid">
       <Border x:Name="Background" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}"/>
       <Border x:Name="HoverBorder" Opacity="0" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Background="{DynamicResource ButtonHoverBackgroundBrush}" />
       <Border x:Name="PressedBorder" Opacity="0" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Background="{DynamicResource PressedBrush}" />
-      <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
+      <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
       <Border x:Name="FocusVisualElement" IsHitTestVisible="false" BorderBrush="{DynamicResource ButtonNormalBorder}" Margin="0" Opacity="1" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}" />
     </Grid>
     <!-- <ControlTemplate.Triggers>
@@ -755,7 +755,7 @@
       <Border x:Name="Background" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}"/>
       <Border x:Name="HoverBorder" Opacity="0" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}" Background="{DynamicResource ButtonHoverBackgroundBrush}"/>
       <Border x:Name="PressedBorder" Opacity="0" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}" Background="{DynamicResource PressedBrush}"/>
-      <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
+      <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
       <Border x:Name="FocusVisualElement" IsHitTestVisible="false" BorderBrush="{DynamicResource ButtonNormalBorder}" Margin="0" Opacity="1" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}"/>
     </Grid>
     <!-- <ControlTemplate.Triggers>
@@ -893,7 +893,7 @@
         <RowDefinition MaxHeight="17" />
       </Grid.RowDefinitions>
       <!-- Scroll Up Button -->
-      <RepeatButton Grid.Row="0" x:Name="DecreaseRepeat"  Theme="{DynamicResource {x:Type RepeatButton}}">
+      <RepeatButton Grid.Row="0" x:Name="PART_LineUpButton"  Theme="{DynamicResource {x:Type RepeatButton}}">
         <Grid Background="{DynamicResource ScrollBarArrowBackgroundBrush}">
           <Path x:Name="DecreaseArrow" Fill="{DynamicResource ScrollBarArrowGlyphBrush}" Data="F1 M17,17z M0,0z M8.5,6.5L13,11 4,11z"/>
         </Grid>
@@ -904,14 +904,14 @@
           <Thumb Theme="{DynamicResource VerticalScrollBarThumbStyle}"/>
         </Track.Thumb>
         <Track.IncreaseButton>
-          <RepeatButton x:Name="PageUp" Theme="{DynamicResource ScrollBarArrowRepeatButtonStyle}"  />
+          <RepeatButton x:Name="PART_PageUpButton" Theme="{DynamicResource ScrollBarArrowRepeatButtonStyle}"  />
         </Track.IncreaseButton>
         <Track.DecreaseButton>
-          <RepeatButton x:Name="PageDown" Theme="{DynamicResource ScrollBarArrowRepeatButtonStyle}"  />
+          <RepeatButton x:Name="PART_PageDownButton" Theme="{DynamicResource ScrollBarArrowRepeatButtonStyle}"  />
         </Track.DecreaseButton>
       </Track>
       <!-- Scroll Down Button -->
-      <RepeatButton Grid.Row="2" x:Name="IncreaseRepeat"  Theme="{DynamicResource {x:Type RepeatButton}}">
+      <RepeatButton Grid.Row="2" x:Name="PART_LineDownButton"  Theme="{DynamicResource {x:Type RepeatButton}}">
         <Grid Background="{DynamicResource ScrollBarArrowBackgroundBrush}">
           <Path x:Name="IncreaseArrow" Fill="{DynamicResource ScrollBarArrowGlyphBrush}" Data="F1 M17,17z M0,0z M8.5,10.5L4,6 13,6z"/>
         </Grid>
@@ -926,7 +926,7 @@
         <ColumnDefinition MaxWidth="17" />
       </Grid.ColumnDefinitions>
       <!-- Scroll Left Button -->
-      <RepeatButton Grid.Column="0" x:Name="DecreaseRepeat"  Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Theme="{DynamicResource {x:Type RepeatButton}}">
+      <RepeatButton Grid.Column="0" x:Name="PART_LineUpButton"  Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Theme="{DynamicResource {x:Type RepeatButton}}">
         <Grid Background="{DynamicResource ScrollBarArrowBackgroundBrush}">
           <Path x:Name="DecreaseArrow" Fill="{DynamicResource ScrollBarArrowGlyphBrush}" Data="F1 M17,17z M0,0z M6.5,8.5L11,4 11,13z"/>
         </Grid>
@@ -937,14 +937,14 @@
           <Thumb Theme="{DynamicResource HorizontalScrollBarThumbStyle}"/>
         </Track.Thumb>
         <Track.IncreaseButton>
-          <RepeatButton x:Name="PageUp" Theme="{DynamicResource ScrollBarArrowRepeatButtonStyleBrush}" />
+          <RepeatButton x:Name="PART_PageUpButton" Theme="{DynamicResource ScrollBarArrowRepeatButtonStyleBrush}" />
         </Track.IncreaseButton>
         <Track.DecreaseButton>
-          <RepeatButton x:Name="PageDown" Theme="{DynamicResource ScrollBarArrowRepeatButtonStyleBrush}" />
+          <RepeatButton x:Name="PART_PageDownButton" Theme="{DynamicResource ScrollBarArrowRepeatButtonStyleBrush}" />
         </Track.DecreaseButton>
       </Track>
       <!-- Scroll Right Button -->
-      <RepeatButton Grid.Column="2" x:Name="IncreaseRepeat"  Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Theme="{DynamicResource {x:Type RepeatButton}}">
+      <RepeatButton Grid.Column="2" x:Name="PART_LineDownButton"  Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Theme="{DynamicResource {x:Type RepeatButton}}">
         <Grid Background="{DynamicResource ScrollBarArrowBackgroundBrush}">
           <Path x:Name="IncreaseArrow" Fill="{DynamicResource ScrollBarArrowGlyphBrush}" Data="F1 M17,17z M0,0z M10.5,8.5L6,13 6,4z"/>
         </Grid>
@@ -956,16 +956,14 @@
     
     <Setter Property="Foreground" Value="{StaticResource ControlTextBrushKey}" />
     
-    <!-- <ControlTheme.Triggers>
-      <Trigger Property="Orientation" Value="Horizontal">
-        <Setter Property="Height" Value="18" />
-        <Setter Property="Template" Value="{StaticResource HorizontalScrollBarControlTemplate}" />
-      </Trigger>
-      <Trigger Property="Orientation" Value="Vertical">
-        <Setter Property="Width" Value="18" />
-        <Setter Property="Template" Value="{StaticResource VerticalScrollBarControlTemplate}" />
-      </Trigger>
-    </Style\.Triggers> -->
+    <Style Selector="^[Orientation=Horizontal]">
+<Setter Property="Height" Value="18" />
+<Setter Property="Template" Value="{StaticResource HorizontalScrollBarControlTemplate}" />
+</Style>
+<Style Selector="^[Orientation=Vertical]">
+<Setter Property="Width" Value="18" />
+<Setter Property="Template" Value="{StaticResource VerticalScrollBarControlTemplate}" />
+</Style>
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox">
@@ -1018,7 +1016,7 @@
                     <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Mode=OneWay}" Value="True">
                       <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}"/>
                     </DataTrigger>
-                  </Style\.Triggers> -->
+                  </ControlTheme.Triggers> -->
                 </ControlTheme>
               </ContentPresenter.Resources>
             </ContentPresenter>
@@ -1054,7 +1052,7 @@
           </Setter.Value>
         </Setter>
       </Trigger>
-    </Style\.Triggers> -->
+    </ControlTheme.Triggers> -->
   </ControlTheme>
 
   
@@ -1069,7 +1067,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type ToggleButton}">
+        <ControlTemplate TargetType="{x:Type Button}">
           
             
             
@@ -1108,7 +1106,7 @@
                     
 	</LayoutTransformControl.LayoutTransform>
                 
-	<ContentPresenter  HorizontalAlignment="Center" Margin="2,4,4,0" VerticalAlignment="Top" Grid.Row="1" RecognizesAccessKey="True">
+	<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"  HorizontalAlignment="Center" Margin="2,4,4,0" VerticalAlignment="Top" Grid.Row="1" RecognizesAccessKey="True">
 	</ContentPresenter>
 </LayoutTransformControl>
             </Grid>
@@ -1144,7 +1142,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type ToggleButton}">
+        <ControlTemplate TargetType="{x:Type Button}">
           
             
             
@@ -1175,7 +1173,7 @@
                 <Path IsVisible="false" HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center" Fill="{DynamicResource GlyphBrush}" Data="M 0 4 L 4 0 L 8 4 Z" />
               </Grid>
 	</LayoutTransformControl>
-              <ContentPresenter  HorizontalAlignment="Left" Margin="4,2,0,2" VerticalAlignment="Center" Grid.Column="1" RecognizesAccessKey="True" />
+              <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"  HorizontalAlignment="Left" Margin="4,2,0,2" VerticalAlignment="Center" Grid.Column="1" RecognizesAccessKey="True" />
             </Grid>
           </Border>
           <!-- <ControlTemplate.Triggers>
@@ -1209,7 +1207,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type ToggleButton}">
+        <ControlTemplate TargetType="{x:Type Button}">
           
             
             
@@ -1248,7 +1246,7 @@
                     
 	</LayoutTransformControl.LayoutTransform>
                 
-	<ContentPresenter  HorizontalAlignment="Center" Margin="4,4,2,0" VerticalAlignment="Top" Grid.Row="1" RecognizesAccessKey="True">
+	<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"  HorizontalAlignment="Center" Margin="4,4,2,0" VerticalAlignment="Top" Grid.Row="1" RecognizesAccessKey="True">
 	</ContentPresenter>
 </LayoutTransformControl>
             </Grid>
@@ -1385,13 +1383,15 @@
     <Setter Property="BorderBrush" Value="{DynamicResource NormalTextBorderBrush}"/>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:TextBox" TargetType="ctrl:TextBox" BasedOn="{StaticResource {x:Type TextBox}}" >
+  <ControlTheme x:Key="{x:Type ctrl:TextBox}" TargetType="ctrl:TextBox" BasedOn="{StaticResource {x:Type TextBox}}" >
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ctrl:TextBox">
           <Border BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
             <Grid>
-              <ScrollViewer x:Name="PART_ContentHost"  Padding="{TemplateBinding Padding}" IsVisible="{TemplateBinding IsFocused}"/>
+              <ScrollViewer x:Name="PART_ContentHost"  Padding="{TemplateBinding Padding}" IsVisible="{TemplateBinding IsFocused}">
+		<TextPresenter x:Name="PART_TextPresenter" />
+	</ScrollViewer>
               <ContentControl x:Name="Watermark" Content="{TemplateBinding WatermarkContent}" ContentTemplate="{TemplateBinding WatermarkContentTemplate}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="6,2,2,2" Focusable="False"/>
               <TextBlock x:Name="PART_TrimmedText" Text="{TemplateBinding Text}" Cursor="IBeam" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="3,2" Focusable="False" IsVisible="{TemplateBinding IsFocused, Converter={cvt:InvertBool}}"/>
             </Grid>
@@ -1416,7 +1416,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:NumericTextBox" TargetType="ctrl:NumericTextBox" BasedOn="{StaticResource {x:Type TextBox}}" >
+  <ControlTheme x:Key="{x:Type ctrl:NumericTextBox}" TargetType="ctrl:NumericTextBox" BasedOn="{StaticResource {x:Type TextBox}}" >
     <Setter Property="BorderThickness" Value="1,1,1,1"/>
     <Setter Property="Padding" Value="1,1,1,1"/>
     <Setter Property="SelectAllOnFocus" Value="True"/>
@@ -1438,7 +1438,9 @@
                 </RepeatButton>
               </UniformGrid>
               <Grid>
-                <ScrollViewer x:Name="PART_ContentHost"  Padding="{TemplateBinding Padding}"/>
+                <ScrollViewer x:Name="PART_ContentHost"  Padding="{TemplateBinding Padding}">
+		<TextPresenter x:Name="PART_TextPresenter" />
+	</ScrollViewer>
                 <ContentControl x:Name="Watermark" Content="{TemplateBinding WatermarkContent}" ContentTemplate="{TemplateBinding WatermarkContentTemplate}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="6,2,2,2" Focusable="False"/>
               </Grid>
             </DockPanel>
@@ -1467,13 +1469,13 @@
     <Setter Property="interactivity:Interaction.Behaviors">
       <Setter.Value>
         <interactivity:BehaviorCollection>
-          <behaviors:NumericTextBoxDragBehavior UsePreviewEvents="True" DragCursor="/Stride.Core.Presentation.Wpf;component/Resources/Cursors/CursorDrag.cur" />
+          <behaviors:NumericTextBoxDragBehavior UsePreviewEvents="True"  />
         </interactivity:BehaviorCollection>
       </Setter.Value>
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:TimeSpanEditor" TargetType="ctrl:TimeSpanEditor" >
+  <ControlTheme x:Key="{x:Type ctrl:TimeSpanEditor}" TargetType="ctrl:TimeSpanEditor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -1515,7 +1517,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:DateTimeEditor" TargetType="ctrl:DateTimeEditor" >
+  <ControlTheme x:Key="{x:Type ctrl:DateTimeEditor}" TargetType="ctrl:DateTimeEditor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -2177,7 +2179,7 @@
           </Setter.Value>
         </Setter>
       </Trigger>
-    </Style\.Triggers> -->
+    </ControlTheme.Triggers> -->
   </ControlTheme>
   <ControlTheme x:Key="NuclearSliderThumb" d:IsControlPart="True" TargetType="{x:Type Thumb}">
     
@@ -2444,7 +2446,7 @@
     <Setter Property="Padding" Value="1" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type ToggleButton}">
+        <ControlTemplate TargetType="{x:Type Button}">
           
             
             
@@ -2471,7 +2473,7 @@
               </Rectangle.Fill>
             </Rectangle>
 
-            <ContentPresenter  RecognizesAccessKey="True" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,4,4,4" />
+            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"  RecognizesAccessKey="True" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,4,4,4" />
           </Grid>
 
           <!-- <ControlTemplate.Triggers>
@@ -2518,7 +2520,7 @@
           </Setter.Value>
         </Setter>
       </Trigger>
-    </Style\.Triggers> -->
+    </ControlTheme.Triggers> -->
   </ControlTheme>
 
   
@@ -2555,7 +2557,7 @@
   
 
   <!--  TOOLBARS  -->
-  <ControlTheme x:Key="ItemsControl.ButtonStyleKey" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+  <ControlTheme x:Key="ItemsControlButtonStyleKey" TargetType="{x:Type Button}" BasedOn="{x:Null}">
     
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
@@ -2569,7 +2571,7 @@
       <Trigger Property="IsMouseOver" Value="True">
         <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonHoverBackground}"/>
       </Trigger>
-    </Style\.Triggers> -->
+    </ControlTheme.Triggers> -->
   </ControlTheme>
 
   <ControlTheme x:Key="ItemsControl.CheckBoxStyleKey" TargetType="{x:Type CheckBox}">
@@ -2598,7 +2600,7 @@
           </Setter.Value>
         </Setter>
       </Trigger>
-    </Style\.Triggers> -->
+    </ControlTheme.Triggers> -->
   </ControlTheme>
 
   <ControlTheme x:Key="ItemsControl.ToggleButtonStyleKey" TargetType="{x:Type ToggleButton}"
@@ -2614,7 +2616,7 @@
       <Trigger Property="IsChecked" Value="True">
         <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonPressedBackground}"/>
       </Trigger>
-    </Style\.Triggers> -->
+    </ControlTheme.Triggers> -->
   </ControlTheme>
 
   <ControlTheme x:Key="ItemsControl.ComboBoxStyleKey" TargetType="{x:Type ComboBox}">
@@ -2788,7 +2790,7 @@
       </Setter.Value>
     </Setter>
   </ControlTheme>
-  <ControlTemplate x:Key="PropertyGridExpander" TargetType="{x:Type ToggleButton}">
+  <ControlTemplate x:Key="PropertyGridExpander" TargetType="{x:Type Button}">
     <Grid  Background="Transparent" Focusable="False">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="14" />
@@ -2796,7 +2798,7 @@
       </Grid.ColumnDefinitions>
       <Path HorizontalAlignment="Center" x:Name="Up_Arrow" VerticalAlignment="Center" Fill="#FFD1D1D1" Data="M2,0L2,6 8,3z" Focusable="False"/>
       <Path IsVisible="false" HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center" Data="M0,0L3,6 6,0z" Fill="#FFD1D1D1" Focusable="False"/>
-      <ContentPresenter  HorizontalAlignment="Left" Margin="4,2,0,2" VerticalAlignment="Center" Grid.Column="1" RecognizesAccessKey="True" Focusable="False"/>
+      <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"  HorizontalAlignment="Left" Margin="4,2,0,2" VerticalAlignment="Center" Grid.Column="1" RecognizesAccessKey="True" Focusable="False"/>
     </Grid>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsChecked" Value="true">
@@ -2989,10 +2991,10 @@
       <Trigger Property="IsChecked" Value="{x:Null}">
         <Setter Property="Content" Value="{me:Image {StaticResource ImageLength}, 16, 16, NearestNeighbor}" />
       </Trigger>
-    </Style\.Triggers> -->
+    </ControlTheme.Triggers> -->
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:Vector2Editor" TargetType="ctrl:Vector2Editor" >
+  <ControlTheme x:Key="{x:Type ctrl:Vector2Editor}" TargetType="ctrl:Vector2Editor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3049,7 +3051,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:Vector3Editor" TargetType="ctrl:Vector3Editor" >
+  <ControlTheme x:Key="{x:Type ctrl:Vector3Editor}" TargetType="ctrl:Vector3Editor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3119,7 +3121,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:Vector4Editor" TargetType="ctrl:Vector4Editor" >
+  <ControlTheme x:Key="{x:Type ctrl:Vector4Editor}" TargetType="ctrl:Vector4Editor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3203,7 +3205,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:Int2Editor" TargetType="ctrl:Int2Editor" >
+  <ControlTheme x:Key="{x:Type ctrl:Int2Editor}" TargetType="ctrl:Int2Editor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3261,7 +3263,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:Int3Editor" TargetType="ctrl:Int3Editor" >
+  <ControlTheme x:Key="{x:Type ctrl:Int3Editor}" TargetType="ctrl:Int3Editor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3330,7 +3332,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:Int4Editor" TargetType="ctrl:Int4Editor" >
+  <ControlTheme x:Key="{x:Type ctrl:Int4Editor}" TargetType="ctrl:Int4Editor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3410,7 +3412,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:RectangleFEditor" TargetType="ctrl:RectangleFEditor" >
+  <ControlTheme x:Key="{x:Type ctrl:RectangleFEditor}" TargetType="ctrl:RectangleFEditor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3473,7 +3475,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:RectangleEditor" TargetType="ctrl:RectangleEditor" >
+  <ControlTheme x:Key="{x:Type ctrl:RectangleEditor}" TargetType="ctrl:RectangleEditor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3531,7 +3533,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:RotationEditor" TargetType="ctrl:RotationEditor" >
+  <ControlTheme x:Key="{x:Type ctrl:RotationEditor}" TargetType="ctrl:RotationEditor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3587,7 +3589,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:MatrixEditor" TargetType="ctrl:MatrixEditor" >
+  <ControlTheme x:Key="{x:Type ctrl:MatrixEditor}" TargetType="ctrl:MatrixEditor" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -3663,7 +3665,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="ctrl:TextLogViewer" TargetType="ctrl:TextLogViewer" BasedOn="{StaticResource DefaultLogViewerStyle}" >
+  <ControlTheme x:Key="{x:Type ctrl:TextLogViewer}" TargetType="ctrl:TextLogViewer" BasedOn="{StaticResource DefaultLogViewerStyle}" >
     <Setter Property="DebugBrush" Value="{StaticResource TextLogDebugBrush}"/>
     <Setter Property="VerboseBrush" Value="{StaticResource TextLogVerboseBrush}"/>
     <Setter Property="InfoBrush" Value="{StaticResource TextLogInfoBrush}"/>
@@ -3866,7 +3868,7 @@
                         <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ctrl:TreeViewItem}}, Mode=OneWay}" Value="True">
                           <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}"/>
                         </DataTrigger>
-                      </Style\.Triggers> -->
+                      </ControlTheme.Triggers> -->
                     </ControlTheme>
                   </ContentPresenter.Resources>
                 </ContentPresenter>
@@ -3916,7 +3918,7 @@
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type Button}">
           <Grid x:Name="Grid" Opacity="0.8">
-            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}"
+            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}"
                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
           </Grid>
           <!-- <ControlTemplate.Triggers>
