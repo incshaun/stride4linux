@@ -648,7 +648,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="{x:Type ContextMenu}" >
+  <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">
     
     
     <Setter Property="Grid.IsSharedSizeScope" Value="True"/>
@@ -701,7 +701,7 @@
 
   
 
-  <ControlTemplate x:Key="SimpleToggleButtonTemplate" TargetType="{x:Type Button}">
+  <ControlTemplate x:Key="SimpleToggleButtonTemplate" TargetType="{x:Type ToggleButton}">
     <Grid x:Name="Grid">
       <Border x:Name="Background" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}"/>
       <Border x:Name="HoverBorder" Opacity="0" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Background="{DynamicResource ButtonHoverBackgroundBrush}" />
@@ -1067,7 +1067,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type Button}">
+        <ControlTemplate TargetType="{x:Type ToggleButton}">
           
             
             
@@ -1142,7 +1142,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type Button}">
+        <ControlTemplate TargetType="{x:Type ToggleButton}">
           
             
             
@@ -1207,7 +1207,7 @@
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type Button}">
+        <ControlTemplate TargetType="{x:Type ToggleButton}">
           
             
             
@@ -1390,7 +1390,7 @@
           <Border BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
             <Grid>
               <ScrollViewer x:Name="PART_ContentHost"  Padding="{TemplateBinding Padding}" IsVisible="{TemplateBinding IsFocused}">
-		<TextPresenter x:Name="PART_TextPresenter" />
+		<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 	</ScrollViewer>
               <ContentControl x:Name="Watermark" Content="{TemplateBinding WatermarkContent}" ContentTemplate="{TemplateBinding WatermarkContentTemplate}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="6,2,2,2" Focusable="False"/>
               <TextBlock x:Name="PART_TrimmedText" Text="{TemplateBinding Text}" Cursor="IBeam" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="3,2" Focusable="False" IsVisible="{TemplateBinding IsFocused, Converter={cvt:InvertBool}}"/>
@@ -1439,7 +1439,7 @@
               </UniformGrid>
               <Grid>
                 <ScrollViewer x:Name="PART_ContentHost"  Padding="{TemplateBinding Padding}">
-		<TextPresenter x:Name="PART_TextPresenter" />
+		<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 	</ScrollViewer>
                 <ContentControl x:Name="Watermark" Content="{TemplateBinding WatermarkContent}" ContentTemplate="{TemplateBinding WatermarkContentTemplate}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="6,2,2,2" Focusable="False"/>
               </Grid>
@@ -1601,7 +1601,7 @@
       
     
     <Grid>
-		<TextPresenter x:Name="PART_TextPresenter" />
+		<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
       <Border x:Name="Border" Opacity="1" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
         <Grid>
           <Border BorderThickness="1">
@@ -2319,11 +2319,9 @@
   </ControlTemplate>
 
   <ControlTemplate x:Key="TreeExpanderToggleButton" TargetType="{x:Type ToggleButton}">
-    <Grid Background="Transparent">
-      <Path HorizontalAlignment="Center" x:Name="Up_Arrow" VerticalAlignment="Center" Fill="{StaticResource GlyphBrush}"
-                  Data="M 0 6 V 0 l 5 3 z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0"/>
-      <Path IsVisible="false" HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center" Fill="{StaticResource GlyphBrush}"
-                  Data="M 0 0 H 6 L 3 6 Z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0"/>
+<Grid Background="Transparent">
+<Path HorizontalAlignment="Center" x:Name="Up_Arrow" VerticalAlignment="Center" Fill="{StaticResource GlyphBrush}" Data="M 0 6 V 0 l 5 3 z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>
+<Path HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center" Fill="{StaticResource GlyphBrush}" Data="M 0 0 H 6 L 3 6 Z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
     </Grid>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsChecked" Value="true">
@@ -2446,7 +2444,7 @@
     <Setter Property="Padding" Value="1" />
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type Button}">
+        <ControlTemplate TargetType="{x:Type ToggleButton}">
           
             
             
@@ -2790,7 +2788,7 @@
       </Setter.Value>
     </Setter>
   </ControlTheme>
-  <ControlTemplate x:Key="PropertyGridExpander" TargetType="{x:Type Button}">
+  <ControlTemplate x:Key="PropertyGridExpander" TargetType="{x:Type ToggleButton}">
     <Grid  Background="Transparent" Focusable="False">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="14" />
@@ -2863,8 +2861,8 @@
                     Background="{x:Null}"
                     BorderBrush="{x:Null}"
                     BorderThickness="0" /> -->
-        <Border IsVisible="false" BorderThickness="1,0,1,1" x:Name="border" Margin="1,1,1,1" Focusable="False">
-          <ContentPresenter Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1,1,1,1" x:Name="ExpandSite" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" DockPanel.Dock="Bottom" />
+        <Border IsVisible="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"  BorderThickness="1,0,1,1" x:Name="border" Margin="1,1,1,1" Focusable="False">
+          <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1,1,1,1" x:Name="ExpandSite" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" DockPanel.Dock="Bottom" />
         </Border>
       </DockPanel>
     </Border>
