@@ -12,7 +12,7 @@
                     xmlns:io="clr-namespace:Stride.Core.IO;assembly=Stride.Core.Design"
                     xmlns:edvw="clr-namespace:Stride.Core.Assets.Editor.View"
                     xmlns:viewModel="clr-namespace:Stride.Core.Assets.Editor.ViewModel;assembly=Stride.Core.Assets.Editor"
-                    xmlns:adr="clr-namespace:Stride.Core.Presentation.Adorners;assembly=Stride.Core.Presentation.Wpf"
+                    xmlns:adr="clr-namespace:Stride.Core.Presentation.Adorners;assembly=Stride.Core.Presentation.Avalonia"
                     xmlns:qvm="clr-namespace:Stride.Core.Presentation.Quantum.ViewModels;assembly=Stride.Core.Presentation.Quantum"
                     xmlns:assetCommands="clr-namespace:Stride.Core.Assets.Editor.Quantum.NodePresenters.Commands;assembly=Stride.Core.Assets.Editor"
                     mc:Ignorable="d">
@@ -1581,7 +1581,7 @@
               <Image x:Name="ThumbnailImage" DataContext="{Binding NodeValue, Converter={cvt:ContentReferenceToAsset}}" Width="64" Height="64"
                      Source="{Binding ThumbnailData.Presenter, Mode=OneWay}"/>
               <i:Interaction.Behaviors>
-                <sd:OnEventCommandBehavior EventName="MouseLeftButtonDown" Command="{Binding FetchAsset}"/>
+                <sd:OnEventCommandBehavior EventName="PointerPressed" Command="{Binding FetchAsset}"/>
               </i:Interaction.Behaviors>
             </Border>
             <ProgressBar DataContext="{Binding NodeValue, Converter={cvt:ContentReferenceToAsset}}" Width="16" Height="4" IsIndeterminate="True"
@@ -1592,7 +1592,7 @@
                      DataContext="{Binding NodeValue, Converter={cvt:ContentReferenceToAsset}}"
                     />
               <i:Interaction.Behaviors>
-                <sd:OnEventCommandBehavior EventName="MouseLeftButtonDown" Command="{Binding PickupAsset}" CommandParameter="{Binding Type}"/>
+                <sd:OnEventCommandBehavior EventName="PointerPressed" Command="{Binding PickupAsset}" CommandParameter="{Binding Type}"/>
               </i:Interaction.Behaviors>
             </Border>
           </Grid>

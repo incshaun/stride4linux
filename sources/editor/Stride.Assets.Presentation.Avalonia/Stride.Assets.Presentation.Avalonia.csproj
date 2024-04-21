@@ -19,6 +19,18 @@
   <ItemGroup>
     <ProjectReference Include="../Stride.Assets.Presentation/Stride.Assets.Presentation.csproj" />    
     <ProjectReference Include="../Stride.Core.Assets.Editor.Avalonia/Stride.Core.Assets.Editor.Avalonia.csproj" />    
+    
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Components/*.png" />
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Gizmos/*.png" />
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Icons/*.png" />
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Icons/curve_fit-32.png" Link="Resources/Icons/curve_fit-32.png"/>
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Icons/curve_fit_height-32.png" Link="Resources/Icons/curve_fit_height-32.png"/>
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Icons/curve_fit_width-32.png" Link="Resources/Icons/curve_fit_width-32.png"/>
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Icons/skip_to_start-32.png" Link="Resources/Icons/skip_to_start-32.png"/>
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Icons/end-32.png" Link="Resources/Icons/end-32.png"/>
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Icons/play-32.png" Link="Resources/Icons/play-32.png"/>
+    <AvaloniaResource Include="../Stride.Assets.Presentation/Resources/Icons/play-32.png" Link="Resources/Icons/play-32.png"/>
+    
   </ItemGroup>
   <Import Project="$(StrideSdkTargets)" />
 </Project>

@@ -6,7 +6,7 @@ using System;
 // using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
-// using Stride.Core.Presentation.Controls;
+using Stride.Core.Presentation.Controls;
 using Stride.Core.Presentation.Extensions;
 using Stride.Core.Presentation.View;
 
@@ -83,18 +83,18 @@ namespace Stride.Core.Assets.Editor.View
             if (newValue == null)
                 return;
 
-  /*          var target = d as PropertyViewItem ?? d.FindVisualParentOfType<PropertyViewItem>();
-            target?.SetCurrentValue(property, newValue);*/
+            var target = d as PropertyViewItem ?? global::Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<PropertyViewItem>((Visual) d);
+            target?.SetCurrentValue(property, newValue);
         }
 
         private static void OnIncrementChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
-//             OnPropertyChanged(d, PropertyViewItem.IncrementProperty, e.NewValue);
+            OnPropertyChanged(d, PropertyViewItem.IncrementProperty, e.NewValue);
         }
 
         private static void OnIsExpandedChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
-//             OnPropertyChanged(d, PropertyViewItem.IsExpandedProperty, e.NewValue);
+            OnPropertyChanged(d, PropertyViewItem.IsExpandedProperty, e.NewValue);
         }
 
 /*        private static void OnToggleNestedProperties(object sender, ExecutedRoutedEventArgs e)

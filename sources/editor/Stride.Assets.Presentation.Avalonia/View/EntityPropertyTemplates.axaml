@@ -185,7 +185,7 @@
               <Image x:Name="ThumbnailImage" DataContext="{Binding NodeValue, Converter={sd:ContentReferenceToAsset}}" Width="64" Height="64"
                      Source="{Binding ThumbnailData.Presenter, Mode=OneWay}"/>
               <i:Interaction.Behaviors>
-                <sd:OnEventCommandBehavior EventName="MouseLeftButtonDown" Command="{Binding FetchAsset}"/>
+                <sd:OnEventCommandBehavior EventName="PointerPressed" Command="{Binding FetchAsset}"/>
               </i:Interaction.Behaviors>
             </Border>
             <!-- TODO: border order was reversed because thumbnail background is not transparent anymore -->
@@ -200,7 +200,7 @@
                      DataContext="{Binding NodeValue, Converter={sd:ContentReferenceToAsset}}"
                      IsVisible="{Binding Converter={sd:Chained {sd:ObjectToBool}, {sd:InvertBool}}, Mode=OneWay}"/>
               <i:Interaction.Behaviors>
-                <sd:OnEventCommandBehavior EventName="MouseLeftButtonDown" Command="{Binding PickupAsset}" CommandParameter="{Binding Type}"/>
+                <sd:OnEventCommandBehavior EventName="PointerPressed" Command="{Binding PickupAsset}" CommandParameter="{Binding Type}"/>
               </i:Interaction.Behaviors>
             </Border>
           </Grid>

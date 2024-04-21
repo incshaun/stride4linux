@@ -68,7 +68,7 @@
   <ImageBrush x:Key="ImageQuestionDialog" Source="/Resources/Images/question-32.png" />
   <ImageBrush x:Key="ImageWarningDialog" Source="/Resources/Images/warning-32.png" />
 
-  <ImageBrush x:Key="ImageAdvancedEditionVector" Source="/Resources/Images/gear--pencil.png" />
+  <ImageBrush x:Key="ImageAdvancedEditionVector" Source="/Resources/Images/gear-pencil.png" />
   <ImageBrush x:Key="ImagePickDateTime" Source="/Resources/Images/calendar--pencil.png" />
   <ImageBrush x:Key="ImageReset" Source="/Resources/Images/eraser.png" />
   <ImageBrush x:Key="ImageLocked" Source="/Resources/Images/lock.png" />
@@ -1533,7 +1533,7 @@
                           WatermarkContentTemplate="{Binding WatermarkContentTemplate, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
             <ToggleButton Grid.Column="1" Margin="2,0,0,0" x:Name="ToggleButtonPickDate" Width="16" Height="16" Background="Transparent" ToolTip.Tip="{sd:Localize Pick date and time, Context=ToolTip}"
                           ClickMode="Press" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-              <Image Width="16" Height="16" Margin="-1" Source="{StaticResource ImagePickDateTime}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImagePickDateTime}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </ToggleButton>
             <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" 
                    MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:DateTimeEditor}}" 
@@ -3236,7 +3236,7 @@
             </Border>
             <ToggleButton Grid.Column="4" Margin="2,0,0,0" x:Name="ToggleButtonAdvancedOptions" Width="16" Height="16" Background="Transparent" ToolTip.Tip="{sd:Localize Advanced options, Context=ToolTip}"
                                       ClickMode="Press" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-              <Image Width="16" Height="16" Margin="-1" Source="{StaticResource ImageAdvancedEditionVector}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImageAdvancedEditionVector}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </ToggleButton>
             <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" 
                                        MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int2Editor}}" 
@@ -3305,7 +3305,7 @@
             </Border>
             <ToggleButton Grid.Column="6" Margin="2,0,0,0" x:Name="ToggleButtonAdvancedOptions" Width="16" Height="16"
                                       Background="Transparent" ToolTip.Tip="{sd:Localize Advanced options, Context=ToolTip}" ClickMode="Press" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-              <Image Width="16" Height="16" Margin="-1" Source="{StaticResource ImageAdvancedEditionVector}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImageAdvancedEditionVector}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </ToggleButton>
             <Popup x:Name="PART_Popup" Placement="Bottom"  IsOpen="{TemplateBinding IsDropDownOpen}"
                                        MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int3Editor}}" 
@@ -3385,7 +3385,7 @@
             </Border>
             <ToggleButton Grid.Column="8" Margin="2,0,0,0" x:Name="ToggleButtonAdvancedOptions" Width="16" Height="16" Background="Transparent" ToolTip.Tip="{sd:Localize Advanced options, Context=ToolTip}"
                                       ClickMode="Press" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-              <Image Width="16" Height="16" Margin="-1" Source="{StaticResource ImageAdvancedEditionVector}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImageAdvancedEditionVector}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </ToggleButton>
             <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" 
                                        MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int4Editor}}" 
@@ -3579,7 +3579,7 @@
             <!-- TODO: this button is disabled to match the vector editor in term of style, remove it completely if the button are not restored -->
             <!--<Button Grid.Column="6" Margin="2,0,0,0" x:Name="ResetButton" Width="16" Height="16" Background="Transparent"
                     Command="{x:Static commands:ControlCommands.ResetValueCommand}" ToolTip.Tip="{sd:Localize Reset value, Context=ToolTip}">
-              <Image Width="16" Height="16" Margin="-1" Source="{StaticResource ImageReset}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
+              <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImageReset}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </Button>-->
           </Grid>
         </ControlTemplate>

@@ -1528,6 +1528,23 @@ def translateTags (contents):
   contents = regex.sub ("x:Key=\"ctrl:MatrixEditor\"", r'x:Key="{x:Type ctrl:MatrixEditor}"', contents) 
   contents = regex.sub ("x:Key=\"ctrl:TextLogViewer\"", r'x:Key="{x:Type ctrl:TextLogViewer}"', contents) 
 
+  contents = regex.sub ("<ImageBrush x:Key=\"ImageAdvancedEditionVector\" Source=\"/Resources/Images/gear--pencil.png\" />", r'<ImageBrush x:Key="ImageAdvancedEditionVector" Source="/Resources/Images/gear-pencil.png" />', contents) 
+  contents = regex.sub ("<ImageBrush x:Key=\"ImageAdvancedEditionVector\" Source=\"/Resources/Images/calendar--pencil.png\" />", r'<ImageBrush x:Key="ImageAdvancedEditionVector" Source="/Resources/Images/calendar-pencil.png" />', contents) 
+
+  contents = regex.sub ("Source=\"{StaticResource ImageAdvancedEditionVector}\"", r'Source="{Binding Source={StaticResource ImageAdvancedEditionVector}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageCloseWindow}\"", r'Source="{Binding Source={StaticResource ImageCloseWindow}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageMaximizeWindow}\"", r'Source="{Binding Source={StaticResource ImageMaximizeWindow}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageMinimizeWindow}\"", r'Source="{Binding Source={StaticResource ImageMinimizeWindow}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageRestoreWindow}\"", r'Source="{Binding Source={StaticResource ImageRestoreWindow}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageErrorDialog}\"", r'Source="{Binding Source={StaticResource ImageErrorDialog}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageInformationDialog}\"", r'Source="{Binding Source={StaticResource ImageInformationDialog}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageQuestionDialog}\"", r'Source="{Binding Source={StaticResource ImageQuestionDialog}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageWarningDialog}\"", r'Source="{Binding Source={StaticResource ImageWarningDialog}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImagePickDateTime}\"", r'Source="{Binding Source={StaticResource ImagePickDateTime}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageReset}\"", r'Source="{Binding Source={StaticResource ImageReset}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageLocked}\"", r'Source="{Binding Source={StaticResource ImageLocked}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageUnlocked}\"", r'Source="{Binding Source={StaticResource ImageUnlocked}, Path=Source}"', contents) 
+  contents = regex.sub ("Source=\"{StaticResource ImageLength}\"", r'Source="{Binding Source={StaticResource ImageLength}, Path=Source}"', contents) 
 
   contents = regex.sub (regex.compile ("<!-- <ControlTheme\.Triggers>(\s*?)<Trigger Property=\"Orientation\" Value=\"Horizontal\">(\s*?)<Setter Property=\"Height\" Value=\"18\" />(\s*?)<Setter Property=\"Template\" Value=\"{StaticResource HorizontalScrollBarControlTemplate}\" />(\s*?)</Trigger>(\s*?)<Trigger Property=\"Orientation\" Value=\"Vertical\">(\s*?)<Setter Property=\"Width\" Value=\"18\" />(\s*?)<Setter Property=\"Template\" Value=\"{StaticResource VerticalScrollBarControlTemplate}\" />(\s*?)</Trigger>(\s*?)</ControlTheme\.Triggers> -->", regex.DOTALL), r'<Style Selector="^[Orientation=Horizontal]">\n<Setter Property="Height" Value="18" />\n<Setter Property="Template" Value="{StaticResource HorizontalScrollBarControlTemplate}" />\n</Style>\n<Style Selector="^[Orientation=Vertical]">\n<Setter Property="Width" Value="18" />\n<Setter Property="Template" Value="{StaticResource VerticalScrollBarControlTemplate}" />\n</Style>', contents) 
 
