@@ -99,19 +99,31 @@ namespace Stride.Core.Presentation.Controls
             target.SetValue(WordSeparatorsProperty, value);
         }
 
-//         public static string ProcessTrimming([NotNull] Control control, string text, double availableWidth)
-//         {
-//             var trimming = GetTextTrimming(control);
-//             var source = GetTrimmingSource(control);
-//             var wordSeparators = GetWordSeparators(control);
-//             return ProcessTrimming(control, text, trimming, source, wordSeparators, availableWidth);
-//         }
-// 
-//         public static string ProcessTrimming([NotNull] Control control, string text, TextTrimming trimming, TrimmingSource source, string wordSeparators, double availableWidth)
-//         {
+        public static string ProcessTrimming([NotNull] Control control, string text, double availableWidth)
+        {
+            var trimming = GetTextTrimming(control);
+            var source = GetTrimmingSource(control);
+            var wordSeparators = GetWordSeparators(control);
+            return ProcessTrimming(control, text, trimming, source, wordSeparators, availableWidth);
+        }
+
+        public static string ProcessTrimming([NotNull] Control control, string text, TextTrimming trimming, TrimmingSource source, string wordSeparators, double availableWidth)
+        {
+            var typeface = Typeface.Default;
+            double fontSize = 10.0;
+            
+            if (control.GetType ().GetProperty ("FontFamily") != null)
+            {
+                typeface = new Typeface((FontFamily) control.GetType ().GetProperty("FontFamily").GetValue (control), (FontStyle) control.GetType ().GetProperty("FontStyle").GetValue (control), (FontWeight) control.GetType ().GetProperty("FontWeight").GetValue (control), (FontStretch) control.GetType ().GetProperty("FontStretch").GetValue (control));
+            }
+            if (control.GetType ().GetProperty ("FontSize") != null)
+            {
+                fontSize = (double) control.GetType ().GetProperty ("FontSize").GetValue (control);
+            }
+            
 //             var typeface = new Typeface(control.FontFamily, control.FontStyle, control.FontWeight, control.FontStretch);
-//             return ProcessTrimming(text, typeface, control.FontSize, trimming, source, wordSeparators, availableWidth);
-//         }
+            return ProcessTrimming(text, typeface, fontSize, trimming, source, wordSeparators, availableWidth);
+        }
 
         public static string ProcessTrimming([NotNull] TextBlock textBlock, string text, double availableWidth)
         {

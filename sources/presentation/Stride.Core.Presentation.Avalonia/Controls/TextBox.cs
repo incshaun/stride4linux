@@ -5,16 +5,18 @@ using System.ComponentModel;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Controls.Primitives;
 
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 
-using Stride.Core.Presentation.Commands;
+using Avalonia.Interactivity;
+using Avalonia.Controls.Primitives;
+using Avalonia.Media;
+using Avalonia.Controls.Metadata;
 using System.Windows.Input;
+using Stride.Core.Presentation.Commands;
 
 namespace Stride.Core.Presentation.Controls
 {
@@ -31,22 +33,17 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="UseTimedValidation"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<bool> UseTimedValidationProperty = StyledProperty<bool>.Register<TextBox, bool>("UseTimedValidation", false);
+        public static readonly StyledProperty<bool> UseTimedValidationProperty = StyledProperty<bool>.Register<TextBox, bool>("UseTimedValidation", false); // T5
 
         /// <summary>
         /// Identifies the <see cref="ValidationDelay"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<int> ValidationDelayProperty = StyledProperty<int>.Register<TextBox, int>("ValidationDelay", 500);
+        public static readonly StyledProperty<int> ValidationDelayProperty = StyledProperty<int>.Register<TextBox, int>("ValidationDelay", 500); // T2
         
         /// <summary>
         /// Identifies the <see cref="TrimmedText"/> dependency property.
         /// </summary>
-//         public static readonly DependencyPropertyKey TrimmedTextPropertyKey = DependencyProperty.RegisterReadOnly("TrimmedText", typeof(string), typeof(TextBox), new PropertyMetadata(""));
-
-        /// <summary>
-        /// Identifies the <see cref="TrimmedText"/> dependency property.
-        /// </summary>
-//         public static readonly DependencyProperty TrimmedTextProperty = TrimmedTextPropertyKey.DependencyProperty;
+        public static readonly DirectProperty<TextBox, string> TrimmedTextProperty = AvaloniaProperty.RegisterDirect<TextBox, string>("TrimmedText", o => o.TrimmedText); // T10H3
 
         /// <summary>
         /// Clears the current <see cref="Avalonia.Controls.TextBox.Text"/> of a text box.
@@ -57,11 +54,8 @@ namespace Stride.Core.Presentation.Controls
 		{
 			UseTimedValidationProperty.Changed.AddClassHandler<TextBox>(OnUseTimedValidationPropertyChanged);
 
-            ClearTextCommand = new RoutedCommand<TextBox>(OnClearTextCommand);
-
-//             DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBox), new FrameworkPropertyMetadata(typeof(TextBox)));
-//             ClearTextCommand = new ICommandSource("ClearTextCommand", typeof(Avalonia.Controls.TextBox));
-//             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(ClearTextCommand, OnClearTextCommand));
+            // FIXME  T31
+            ClearTextCommand = new RoutedCommand<Avalonia.Controls.TextBox>(OnClearTextCommand);
         }
 
         public TextBox()
@@ -85,16 +79,17 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Gets the trimmed text to display when the control does not have the focus, depending of the value of the <see cref="TextTrimming"/> property.
         /// </summary>
-//         public string TrimmedText { get { return (string)GetValue(TrimmedTextPropertyKey.DependencyProperty); } private set { SetValue(TrimmedTextPropertyKey, value); } }
+        private string _TrimmedText;
+		public string TrimmedText { get { return _TrimmedText; } private set { SetAndRaise(TrimmedTextProperty, ref _TrimmedText, value); } }
 
         /// <inheritdoc/>
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 		{
 			base.OnApplyTemplate(e);
 
-//             trimmedTextBlock = GetTemplateChild("PART_TrimmedText") as TextBlock;
-//             if (trimmedTextBlock == null)
-//                 throw new InvalidOperationException("A part named 'PART_TrimmedText' must be present in the ControlTemplate, and must be of type 'TextBlock'.");
+            trimmedTextBlock = e.NameScope.Find<TextBlock>("PART_TrimmedText");
+            if (trimmedTextBlock == null)
+                throw new InvalidOperationException("A part named 'PART_TrimmedText' must be present in the ControlTemplate, and must be of type 'TextBlock'.");
         }
 
         /// <summary>
@@ -102,7 +97,7 @@ namespace Stride.Core.Presentation.Controls
         /// </summary>
         /// <param name="oldValue">The old value of the <see cref="TextBox.Text"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="TextBox.Text"/> property.</param>
-        protected override void OnTextChanged(string oldValue, string newValue)
+        protected override void OnTextChanged(string newValue)
         {
             if (UseTimedValidation)
             {
@@ -116,11 +111,11 @@ namespace Stride.Core.Presentation.Controls
                 }
             }
             
-//             var availableWidth = ActualWidth;
-//             if (trimmedTextBlock != null)
-//                 availableWidth -= trimmedTextBlock.Margin.Left + trimmedTextBlock.Margin.Right;
-// 
-//             TrimmedText = Trimming.ProcessTrimming(this, Text, availableWidth);
+            var availableWidth = Width;
+            if (trimmedTextBlock != null)
+                availableWidth -= trimmedTextBlock.Margin.Left + trimmedTextBlock.Margin.Right;
+
+            TrimmedText = Trimming.ProcessTrimming(this, Text, availableWidth);
         }
 
         protected override Size ArrangeOverride(Size arrangeBounds)
@@ -130,11 +125,11 @@ namespace Stride.Core.Presentation.Controls
             if (trimmedTextBlock != null)
                 availableWidth -= trimmedTextBlock.Margin.Left + trimmedTextBlock.Margin.Right;
 
-//             TrimmedText = Trimming.ProcessTrimming(this, Text, availableWidth);
+            TrimmedText = Trimming.ProcessTrimming(this, Text, availableWidth);
             return arrangedSize;
         }
 
-        private static void OnUseTimedValidationPropertyChanged(AvaloniaObject sender, AvaloniaPropertyChangedEventArgs e)
+        private static void OnUseTimedValidationPropertyChanged(AvaloniaObject sender,AvaloniaPropertyChangedEventArgs e)
         {
             var txt = (TextBox)sender;
             if ((bool)e.NewValue)
@@ -143,7 +138,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private static void OnClearTextCommand(TextBox sender)
+        private static void OnClearTextCommand(Avalonia.Controls.TextBox sender)
         {
             var textBox = sender as TextBox;
             textBox?.Clear();

@@ -52,8 +52,8 @@ namespace Stride.Core.Assets.Editor.View
     {
         public SettingsWindow(IViewModelServiceProvider serviceProvider)
         {
-            InitializeComponent();
             DataContext = new SettingsViewModel(serviceProvider, EditorSettings.SettingsContainer.CurrentProfile);
+            InitializeComponent();
 //             Width = Math.Min(Width, SystemParameters.WorkArea.Width);
 //             Height = Math.Min(Height, SystemParameters.WorkArea.Height);
         }

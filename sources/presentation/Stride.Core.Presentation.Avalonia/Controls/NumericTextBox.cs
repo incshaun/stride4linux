@@ -22,8 +22,9 @@ using Avalonia.Interactivity;
 using Avalonia.Controls.Primitives;
 using System;
 using Avalonia.Data;
-
+using Avalonia.Controls.Metadata;
 using System.Windows.Input;
+using Stride.Core.Presentation.Commands;
 
 namespace Stride.Core.Presentation.Controls
 {
@@ -83,67 +84,67 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="Value"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<double?> ValueProperty = StyledProperty<double?>.Register<NumericTextBox, double?>(nameof(Value), 0.0);
+        public static readonly StyledProperty<double?> ValueProperty = StyledProperty<double?>.Register<NumericTextBox, double?>(nameof(Value), 0.0); // T9
 
         /// <summary>
         /// Identifies the <see cref="DecimalPlaces"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<int> DecimalPlacesProperty = StyledProperty<int>.Register<NumericTextBox, int>(nameof(DecimalPlaces), -1);
+        public static readonly StyledProperty<int> DecimalPlacesProperty = StyledProperty<int>.Register<NumericTextBox, int>(nameof(DecimalPlaces), -1); // T8
 
         /// <summary>
         /// Identifies the <see cref="Minimum"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<double> MinimumProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(Minimum), double.MinValue);
+        public static readonly StyledProperty<double> MinimumProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(Minimum), double.MinValue); // T8
 
         /// <summary>
         /// Identifies the <see cref="Maximum"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<double> MaximumProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(Maximum), double.MaxValue);
+        public static readonly StyledProperty<double> MaximumProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(Maximum), double.MaxValue); // T8
 
         /// <summary>
         /// Identifies the <see cref="ValueRatio"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<double> ValueRatioProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(ValueRatio), default(double));
+        public static readonly StyledProperty<double> ValueRatioProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(ValueRatio), default(double)); // T4
 
         /// <summary>
         /// Identifies the <see cref="LargeChange"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<double> LargeChangeProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(LargeChange), 10.0);
+        public static readonly StyledProperty<double> LargeChangeProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(LargeChange), 10.0); // T2
 
         /// <summary>
         /// Identifies the <see cref="SmallChange"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<double> SmallChangeProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(SmallChange), 1.0);
+        public static readonly StyledProperty<double> SmallChangeProperty = StyledProperty<double>.Register<NumericTextBox, double>(nameof(SmallChange), 1.0); // T2
 
         /// <summary>
         /// Identifies the <see cref="DisplayUpDownButtons"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<bool> DisplayUpDownButtonsProperty = StyledProperty<bool>.Register<NumericTextBox, bool>(nameof(DisplayUpDownButtons), true);
+        public static readonly StyledProperty<bool> DisplayUpDownButtonsProperty = StyledProperty<bool>.Register<NumericTextBox, bool>(nameof(DisplayUpDownButtons), true); // T2
 
         /// <summary>
         /// Identifies the <see cref="AllowMouseDrag"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<bool> AllowMouseDragProperty = StyledProperty<bool>.Register<NumericTextBox, bool>(nameof(AllowMouseDrag), true);
+        public static readonly StyledProperty<bool> AllowMouseDragProperty = StyledProperty<bool>.Register<NumericTextBox, bool>(nameof(AllowMouseDrag), true); // T2
 
         /// <summary>
         /// Identifies the <see cref="MouseValidationTrigger"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<MouseValidationTrigger> MouseValidationTriggerProperty = StyledProperty<MouseValidationTrigger>.Register<NumericTextBox, MouseValidationTrigger>(nameof(MouseValidationTrigger), MouseValidationTrigger.OnMouseUp);
+        public static readonly StyledProperty<MouseValidationTrigger> MouseValidationTriggerProperty = StyledProperty<MouseValidationTrigger>.Register<NumericTextBox, MouseValidationTrigger>(nameof(MouseValidationTrigger), MouseValidationTrigger.OnMouseUp); // T2
 
         /// <summary>
         /// Raised when the <see cref="Value"/> property has changed.
         /// </summary>
-        public static readonly RoutedEvent ValueChangedEvent = RoutedEvent.Register<NumericTextBox, RoutedEventArgs>("ValueChanged", RoutingStrategies.Bubble);
+        public static readonly RoutedEvent ValueChangedEvent = RoutedEvent.Register<NumericTextBox, RoutedEventArgs>("ValueChanged", RoutingStrategies.Bubble); // T21
 
         /// <summary>
         /// Raised when one of the repeat button is pressed.
         /// </summary>
-        public static readonly RoutedEvent RepeatButtonPressedEvent = RoutedEvent.Register<NumericTextBox, RoutedEventArgs>("RepeatButtonPressed", RoutingStrategies.Bubble);
+        public static readonly RoutedEvent RepeatButtonPressedEvent = RoutedEvent.Register<NumericTextBox, RoutedEventArgs>("RepeatButtonPressed", RoutingStrategies.Bubble); // T21
 
         /// <summary>
         /// Raised when one of the repeat button is released.
         /// </summary>
-        public static readonly RoutedEvent RepeatButtonReleasedEvent = RoutedEvent.Register<NumericTextBox, RoutedEventArgs>("RepeatButtonReleased", RoutingStrategies.Bubble);
+        public static readonly RoutedEvent RepeatButtonReleasedEvent = RoutedEvent.Register<NumericTextBox, RoutedEventArgs>("RepeatButtonReleased", RoutingStrategies.Bubble); // T21
 
         /// <summary>
         /// Increases the current value with the value of the <see cref="LargeChange"/> property.
@@ -178,34 +179,29 @@ namespace Stride.Core.Presentation.Controls
 			MaximumProperty.Changed.AddClassHandler<NumericTextBox>(OnMaximumPropertyChanged);
 			ValueProperty.Changed.AddClassHandler<NumericTextBox>(OnValuePropertyChanged);
 
-            
-//             HorizontalScrollBarVisibilityProperty.OverrideMetadata(typeof(NumericTextBox), new FrameworkPropertyMetadata(ScrollBarVisibility.Hidden, OnForbiddenPropertyChanged));
-//             VerticalScrollBarVisibilityProperty.OverrideMetadata(typeof(NumericTextBox), new FrameworkPropertyMetadata(ScrollBarVisibility.Hidden, OnForbiddenPropertyChanged));
-//             AcceptsReturnProperty.OverrideMetadata(typeof(NumericTextBox), new FrameworkPropertyMetadata(false, OnForbiddenPropertyChanged));
-//             AcceptsTabProperty.OverrideMetadata(typeof(NumericTextBox), new FrameworkPropertyMetadata(false, OnForbiddenPropertyChanged));
+            // FIXME  T31
+            ScrollViewer.HorizontalScrollBarVisibilityProperty.OverrideMetadata(typeof(NumericTextBox), new StyledPropertyMetadata<ScrollBarVisibility>(ScrollBarVisibility.Hidden, coerce: OnForbiddenPropertyChanged));
+            ScrollViewer.VerticalScrollBarVisibilityProperty.OverrideMetadata(typeof(NumericTextBox), new StyledPropertyMetadata<ScrollBarVisibility>(ScrollBarVisibility.Hidden, coerce: OnForbiddenPropertyChanged));
+            AcceptsReturnProperty.OverrideMetadata(typeof(NumericTextBox), new StyledPropertyMetadata<bool>(false, coerce: OnForbiddenPropertyChanged));
+            AcceptsTabProperty.OverrideMetadata(typeof(NumericTextBox), new StyledPropertyMetadata<bool>(false, coerce: OnForbiddenPropertyChanged));
 
             // Since the NumericTextBox is not focusable itself, we have to bind the commands to the inner text box of the control.
             // The handlers will then find the parent that is a NumericTextBox and process the command on this control if it is found.
-//             LargeIncreaseCommand = new ICommand("LargeIncreaseCommand", typeof(Avalonia.Controls.TextBox));
-//             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(LargeIncreaseCommand, OnLargeIncreaseCommand));
+            LargeIncreaseCommand = new RoutedCommand<Avalonia.Controls.TextBox>(OnLargeIncreaseCommand);
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeIncreaseCommand, new KeyGesture(Key.PageUp)));
-//             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeIncreaseCommand, new KeyGesture(Key.Up, ModifierKeys.Shift)));
-// 
-//             LargeDecreaseCommand = new ICommand("LargeDecreaseCommand", typeof(Avalonia.Controls.TextBox));
-//             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(LargeDecreaseCommand, OnLargeDecreaseCommand));
+//             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeIncreaseCommand, new KeyGesture(Key.Up, KeyModifiers.Shift)));
+
+            LargeDecreaseCommand = new RoutedCommand<Avalonia.Controls.TextBox>(OnLargeDecreaseCommand);
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeDecreaseCommand, new KeyGesture(Key.PageDown)));
-//             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeDecreaseCommand, new KeyGesture(Key.Down, ModifierKeys.Shift)));
-// 
-//             SmallIncreaseCommand = new ICommand("SmallIncreaseCommand", typeof(Avalonia.Controls.TextBox));
-//             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(SmallIncreaseCommand, OnSmallIncreaseCommand));
+//             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(LargeDecreaseCommand, new KeyGesture(Key.Down, KeyModifiers.Shift)));
+
+            SmallIncreaseCommand = new RoutedCommand<Avalonia.Controls.TextBox>(OnSmallIncreaseCommand);
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(SmallIncreaseCommand, new KeyGesture(Key.Up)));
-// 
-//             SmallDecreaseCommand = new ICommand("SmallDecreaseCommand", typeof(Avalonia.Controls.TextBox));
-//             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(SmallDecreaseCommand, OnSmallDecreaseCommand));
+
+            SmallDecreaseCommand = new RoutedCommand<Avalonia.Controls.TextBox>(OnSmallDecreaseCommand);
 //             CommandManager.RegisterClassInputBinding(typeof(Avalonia.Controls.TextBox), new InputBinding(SmallDecreaseCommand, new KeyGesture(Key.Down)));
-// 
-//             ResetValueCommand = new ICommand("ResetValueCommand", typeof(Avalonia.Controls.TextBox));
-//             CommandManager.RegisterClassCommandBinding(typeof(Avalonia.Controls.TextBox), new CommandBinding(ResetValueCommand, OnResetValueCommand));
+
+            ResetValueCommand = new RoutedCommand<Avalonia.Controls.TextBox>(OnResetValueCommand);
         }
 
         /// <summary>
@@ -291,10 +287,10 @@ namespace Stride.Core.Presentation.Controls
             if (contentHost == null)
                 throw new InvalidOperationException("A part named 'PART_ContentHost' must be present in the ControlTemplate, and must be of type 'ScrollViewer'.");
 
-//             var increasePressedWatcher = new DependencyPropertyWatcher(increaseButton);
-//             increasePressedWatcher.RegisterValueChangedHandler(ButtonBase.IsPressedProperty, RepeatButtonIsPressedChanged);
-//             var decreasePressedWatcher = new DependencyPropertyWatcher(decreaseButton);
-//             decreasePressedWatcher.RegisterValueChangedHandler(ButtonBase.IsPressedProperty, RepeatButtonIsPressedChanged);
+            var increasePressedWatcher = new DependencyPropertyWatcher(increaseButton);
+            increasePressedWatcher.RegisterValueChangedHandler(Button.IsPressedProperty, RepeatButtonIsPressedChanged);
+            var decreasePressedWatcher = new DependencyPropertyWatcher(decreaseButton);
+            decreasePressedWatcher.RegisterValueChangedHandler(Button.IsPressedProperty, RepeatButtonIsPressedChanged);
             var textValue = FormatValue(Value);
 
             SetCurrentValue(TextProperty, textValue);
@@ -418,7 +414,7 @@ namespace Stride.Core.Presentation.Controls
             SetCurrentValue(ValueRatioProperty, newValue.HasValue ? MathUtil.InverseLerp(Minimum, Maximum, newValue.Value) : 0.0);
             updatingValue = false;
 
-//             RaiseEvent(new RoutedPropertyChangedEventArgs<double?>(oldValue, newValue, ValueChangedEvent));
+//             RaiseEvent(new AvaloniaPropertyChangedEventArgs<double?>(oldValue, newValue, ValueChangedEvent));
             RaiseEvent(new RoutedEventArgs(ValueChangedEvent));
             OnValueChanged(oldValue, newValue);
         }
@@ -463,18 +459,18 @@ namespace Stride.Core.Presentation.Controls
             return false;
         }
 
-        private static void OnValuePropertyChanged(AvaloniaObject sender, AvaloniaPropertyChangedEventArgs e)
+        private static void OnValuePropertyChanged(AvaloniaObject sender,AvaloniaPropertyChangedEventArgs e)
         {
             ((NumericTextBox)sender).OnValuePropertyChanged((double?)e.OldValue, (double?)e.NewValue);
         }
 
-        private static void OnDecimalPlacesPropertyChanged(AvaloniaObject sender, AvaloniaPropertyChangedEventArgs e)
+        private static void OnDecimalPlacesPropertyChanged(AvaloniaObject sender,AvaloniaPropertyChangedEventArgs e)
         {
             var numericInput = (NumericTextBox)sender;
             numericInput.CoerceValue(ValueProperty);
         }
 
-        private static void OnMinimumPropertyChanged(AvaloniaObject sender, AvaloniaPropertyChangedEventArgs e)
+        private static void OnMinimumPropertyChanged(AvaloniaObject sender,AvaloniaPropertyChangedEventArgs e)
         {
             var numericInput = (NumericTextBox)sender;
             var needValidation = false;
@@ -500,7 +496,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private static void OnMaximumPropertyChanged(AvaloniaObject sender, AvaloniaPropertyChangedEventArgs e)
+        private static void OnMaximumPropertyChanged(AvaloniaObject sender,AvaloniaPropertyChangedEventArgs e)
         {
             var numericInput = (NumericTextBox)sender;
             var needValidation = false;
@@ -526,7 +522,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private static void ValueRatioChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
+        private static void ValueRatioChanged(AvaloniaObject d,AvaloniaPropertyChangedEventArgs e)
         {
             var control = (NumericTextBox)d;
             if (control != null && !control.updatingValue)
@@ -535,7 +531,7 @@ namespace Stride.Core.Presentation.Controls
 
         private static void UpdateValueCommand([NotNull] object sender, Func<NumericTextBox, double> getValue, bool validate = true)
         {
-            var control = sender as NumericTextBox ?? Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<NumericTextBox>((Visual) ((Avalonia.Controls.TextBox)sender));
+            var control = sender as NumericTextBox ?? global::Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<NumericTextBox>((Visual) ((Avalonia.Controls.TextBox)sender));
             if (control != null)
             {
                 var value = getValue(control);
@@ -546,32 +542,37 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private static void OnLargeIncreaseCommand([NotNull] object sender, RoutedEventArgs e)
+        private static void OnLargeIncreaseCommand([NotNull] Avalonia.Controls.TextBox sender)
         {
             UpdateValueCommand(sender, x => (x.Value ?? x.Minimum) + x.LargeChange);
         }
 
-        private static void OnLargeDecreaseCommand([NotNull] object sender, RoutedEventArgs e)
+        private static void OnLargeDecreaseCommand([NotNull] Avalonia.Controls.TextBox sender)
         {
             UpdateValueCommand(sender, x => (x.Value ?? x.Maximum) - x.LargeChange);
         }
 
-        private static void OnSmallIncreaseCommand([NotNull] object sender, RoutedEventArgs e)
+        private static void OnSmallIncreaseCommand([NotNull] Avalonia.Controls.TextBox sender)
         {
             UpdateValueCommand(sender, x => (x.Value ?? x.Minimum) + x.SmallChange);
         }
 
-        private static void OnSmallDecreaseCommand([NotNull] object sender, RoutedEventArgs e)
+        private static void OnSmallDecreaseCommand([NotNull] Avalonia.Controls.TextBox sender)
         {
             UpdateValueCommand(sender, x => (x.Value ?? x.Maximum) - x.SmallChange);
         }
 
-        private static void OnResetValueCommand([NotNull] object sender, RoutedEventArgs e)
+        private static void OnResetValueCommand([NotNull] Avalonia.Controls.TextBox sender)
         {
             UpdateValueCommand(sender, x => 0.0, false);
         }
 
-        private static void OnForbiddenPropertyChanged([NotNull] AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
+        private static ScrollBarVisibility OnForbiddenPropertyChanged([NotNull] AvaloniaObject d, ScrollBarVisibility v)
+        {
+            return v;
+        }
+        
+        private static bool OnForbiddenPropertyChanged([NotNull] AvaloniaObject d, bool v)
         {
 //             var metadata = e.Property.GetMetadata(d);
 //             if (!Equals(e.NewValue, metadata.DefaultValue))
@@ -579,6 +580,7 @@ namespace Stride.Core.Presentation.Controls
 //                 var message = $"The value of the property '{e.Property.Name}' cannot be different from the value '{metadata.DefaultValue}'";
 //                 throw new InvalidOperationException(message);
 //             }
+            return v;
         }
     }
 }

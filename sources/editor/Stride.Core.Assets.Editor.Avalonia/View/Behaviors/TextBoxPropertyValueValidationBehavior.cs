@@ -104,7 +104,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 
         private void OnValidating(object sender, CancelRoutedEventArgs e)
         {
-            adorner.State = HighlightAdornerState.Hidden;
+//             adorner.State = HighlightAdornerState.Hidden;
         }
 
         private void OnTextToSourceValueConversionFailed(object sender, RoutedEventArgs e)

@@ -157,6 +157,11 @@ def translateHeaders (contents):
   contents = re.sub ("using System.Windows.Interop;", "", contents)
   contents = re.sub ("using System.Windows;", "using Avalonia;\nusing Avalonia.Controls;\n", contents)
   contents = re.sub ("using System.Xaml;", "", contents)
+  
+  if re.findall ("RoutedCommand", contents):
+    headers += "using System.Windows.Input;\n"
+  
+  
   if len (headers) > 0:
     contents = re.sub ("\nnamespace", headers + "\nnamespace", contents)
   
@@ -195,6 +200,7 @@ def translateNames (contents):
   #          public static RoutedCommand<TreeView> CollapseAllFolders { get; } = new RoutedCommand<TreeView>(OnCollapseAllFolders);
   #          private static void OnCollapseAllFolders(TreeView sender)
 
+  contents = re.sub ("public static RoutedCommand ", "public static ICommand ", contents)
   
   #contents = re.sub ("RoutedDependencyPropertyChangedEventHandler", "PropertyChangedEventHandler", contents) # provisional.
   contents = re.sub ("static DependencyProperty", "static AvaloniaProperty", contents) # provisional.
@@ -560,6 +566,28 @@ def translateProperties (contents):
       contents = re.sub (vpat, vsub, contents)
     contents = re.sub (pat, r"private static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>(nameof (\4), o => o.\4); // T10H1", contents)
 
+  pat = re.compile ("public static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(\"\"\)\);", re.DOTALL)
+  # set up backing variables.
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      vpat = "public " + match[4] + " " + match[3] + " { get { return \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\); } private set { SetValue\(" + match[0] + ", value\); } }"
+      vsub = "private " + match[4] + " _" + match[3] + ";\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } private set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      classname = match[5];
+      #print (match, "\n", vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+    contents = re.sub (pat, r'public static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>("\4", o => o.\4); // T10H3', contents)
+
+  pat = re.compile ("private static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(BooleanBoxes.FalseBox\)\);", re.DOTALL)
+  # set up backing variables.
+  if (re.findall (pat, contents)):
+    for match in re.findall (pat, contents):
+      vpat = "public " + match[4] + " " + match[3] + " { get { return \(" + match[4] + "\)GetValue\(" + match[0] + ".DependencyProperty\); } private set { SetValue\(" + match[0] + ", value.Box\(\)\); } }"
+      vsub = "private " + match[4] + " _" + match[3] + " = false;\n\t\tpublic " + match[4] + " " + match[3] + " { get { return _" + match[3] + "; } private set { SetAndRaise(" + match[0] + ", ref _" + match[3] + ", value); } }"
+      classname = match[5];
+      print (match, "\n", vpat, vsub)
+      contents = re.sub (vpat, vsub, contents)
+    contents = re.sub (pat, r'private static readonly DirectProperty<\6, \5> \1 = AvaloniaProperty.RegisterDirect<\6, \5>("\4", o => o.\4); // T10H4', contents)
+
   pat = re.compile ("private static readonly DependencyPropertyKey (.*?)(\s*)\=(\s*)DependencyProperty.RegisterReadOnly\(\"(.*?)\", typeof\((.*?)\), typeof\((.*?)\), new PropertyMetadata\(\)\);", re.DOTALL)
   # set up backing variables.
   if (re.findall (pat, contents)):
@@ -796,6 +824,12 @@ def translateProperties (contents):
   contents = re.sub (pat, r"base.OnPointerWheelChanged(e);", contents)
   pat = re.compile ("base.OnPreviewMouseDown\(e\);") # just the call to base.
   contents = re.sub (pat, r"base.OnPointerPressed(e);", contents)
+
+  pat = re.compile ("protected override void OnPreviewKeyDown\(KeyEventArgs e\)") # no call to base.
+  contents = re.sub (pat, r"protected override void OnKeyDown(KeyEventArgs e)", contents)
+  pat = re.compile ("base.OnPreviewKeyDown\(e\);") # just the call to base.
+  contents = re.sub (pat, r"base.OnKeyDown(e);", contents)
+
   
   contents = re.sub ("MouseButtonEventArgs e", "PointerEventArgs e", contents)
   contents = re.sub ("MouseEventArgs e", "PointerEventArgs e", contents)
@@ -1224,7 +1258,7 @@ def translateTags (contents):
   contents = re.sub ("Padding=\"{TemplateBinding Control.Padding}\"", r"", contents)
   contents = re.sub ("Padding=\"0,3\"", r"", contents)
   contents = re.sub ("Margin=\"{TemplateBinding Control.Padding}\"", r"", contents)
-  contents = re.sub ("Text=\"{TemplateBinding TrimmedText}\"", r'Text="{TemplateBinding Text}"', contents)
+  #contents = re.sub ("Text=\"{TemplateBinding TrimmedText}\"", r'Text="{TemplateBinding Text}"', contents)
   contents = re.sub ("Text=\"{TemplateBinding MenuItem.InputGestureText}\"", r'Text="{TemplateBinding MenuItem.InputGesture}"', contents)
   contents = re.sub ("{TemplateBinding ActualHeight}", r'{TemplateBinding Height}', contents)
 
@@ -1743,7 +1777,7 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/TypeToResource.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/FocusManager.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CharInputBehavior.cs")
-#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/NumericTextBox.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/NumericTextBox.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToNull.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToString.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ValueConverterBase.cs")
@@ -1881,7 +1915,7 @@ def translateXAML (sourceFile):
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
-translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")

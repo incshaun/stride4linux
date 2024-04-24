@@ -40,7 +40,11 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
             public bool Match(object obj, string propertyName)
             {
                 var name = NodeViewModel.EscapeName(propertyName);
-                var value = datasource.GetChild(name) ?? datasource.GetCommand(name) ?? datasource.GetAssociatedData(name) ?? null;
+                if (!(obj is NodeViewModel))
+                    return false;
+                var source = (NodeViewModel) obj;
+//                var value = datasource.GetChild(name) ?? datasource.GetCommand(name) ?? datasource.GetAssociatedData(name) ?? null;
+                var value = source.GetChild(name) ?? source.GetCommand(name) ?? source.GetAssociatedData(name) ?? null;
                 return value != null;
             }
 
@@ -62,15 +66,17 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
                     }
                 }
 
-                private readonly WeakReference<object?> _reference;
+//                private readonly WeakReference<object?> _reference;
                 private readonly string propertyName;
                 private NodeViewModel datasource;
 
                 public AssociatedDataAccessor(WeakReference<object?> reference, string property, NodeViewModel source)
                 {
-                    _reference = reference;
+//                    _reference = reference;
                     propertyName = property;
-                    datasource = source;
+                    object? v;
+                    reference.TryGetTarget (out v);
+                    datasource = (NodeViewModel) v;
                 }
 
                 public override bool SetValue(object? value, BindingPriority priority)

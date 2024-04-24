@@ -378,9 +378,9 @@
         <TextBlock Margin="2,0" VerticalAlignment="Center" Text="{sd:Localize (Different values)}"
                   />
         <!-- Fallback when the value does not have an inline property -->
-<!--        <ContentControl x:Name="ContentControl" Content="{Binding {Binding InlinedProperty}, {Binding}}"
+        <ContentControl x:Name="ContentControl" Content="{sd:PriorityBinding {Binding InlinedProperty}, {Binding}}"
                         ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"
-                       />-->
+                       />
       </Grid>
     </DataTemplate>
 </pvdr:InlinedPropertyTemplateProvider.Template>
