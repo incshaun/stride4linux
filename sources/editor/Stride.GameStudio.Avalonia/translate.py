@@ -1501,12 +1501,22 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("Command=\"ScrollBar.PageLeftCommand\"", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("Command=\"Slider.IncreaseLarge\"", regex.DOTALL), r"", contents)
   contents = regex.sub (regex.compile ("Command=\"Slider.DecreaseLarge\"", regex.DOTALL), r"", contents)
-  contents = regex.sub (regex.compile ("Height=\"Auto\"", regex.DOTALL), r"", contents)
-  contents = regex.sub (regex.compile ("Width=\"Auto\"", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ContentPresenter([^>]*?)Height=\"Auto\"", regex.DOTALL), r"<ContentPresenter\1", contents)
+  contents = regex.sub (regex.compile ("<ContentPresenter([^>]*?)Width=\"Auto\"", regex.DOTALL), r"<ContentPresenter\1", contents)
+  contents = regex.sub (regex.compile ("<Path([^>]*?)Height=\"Auto\"", regex.DOTALL), r"<Path\1", contents)
+  contents = regex.sub (regex.compile ("<Path([^>]*?)Width=\"Auto\"", regex.DOTALL), r"<Path\1", contents)
+  contents = regex.sub (regex.compile ("<Panel([^>]*?)Height=\"Auto\"", regex.DOTALL), r"<Panel\1", contents)
+  contents = regex.sub (regex.compile ("<Panel([^>]*?)Width=\"Auto\"", regex.DOTALL), r"<Panel\1", contents)
+  contents = regex.sub (regex.compile ("<Border([^>]*?)Height=\"Auto\"", regex.DOTALL), r"<Border\1", contents)
+  contents = regex.sub (regex.compile ("<Border([^>]*?)Width=\"Auto\"", regex.DOTALL), r"<Border\1", contents)
+  contents = regex.sub (regex.compile ("<Grid([^>]*?)Height=\"Auto\"", regex.DOTALL), r"<Grid\1", contents)
+  contents = regex.sub (regex.compile ("<Grid([^>]*?)Width=\"Auto\"", regex.DOTALL), r"<Grid\1", contents)
+  contents = regex.sub (regex.compile ("<Rectangle([^>]*?)Height=\"Auto\"", regex.DOTALL), r"<Rectangle\1", contents)
+  contents = regex.sub (regex.compile ("<Rectangle([^>]*?)Width=\"Auto\"", regex.DOTALL), r"<Rectangle\1", contents)
   contents = regex.sub (regex.compile ("x:Shared=\"False\"", regex.DOTALL), r"", contents)
 
   # Force a textpresenter into textbox.
-  contents = re.sub (re.compile ("<ControlTemplate x:Key=\"TextBoxTemplate\" TargetType=\"{x:Type TextBox}\">(\s*?)<Grid>", re.DOTALL), r'<ControlTemplate x:Key="TextBoxTemplate" TargetType="{x:Type TextBox}">\1<Grid>\n\t\t<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>', contents)
+  contents = re.sub (re.compile ("<ControlTemplate x:Key=\"TextBoxTemplate\" TargetType=\"{x:Type TextBox}\">(.*?)<ScrollViewer (.*?)/>", re.DOTALL), r'<ControlTemplate x:Key="TextBoxTemplate" TargetType="{x:Type TextBox}">\1<ScrollViewer \2>\n\t\t<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>\n\t</ScrollViewer>', contents)
   contents = re.sub (re.compile ("<ControlTheme x:Key=\"ctrl:TextBox\" TargetType=\"ctrl:TextBox\"(.*?)<ScrollViewer(.*?)/>", re.DOTALL), r'<ControlTheme x:Key="ctrl:TextBox" TargetType="ctrl:TextBox"\1<ScrollViewer\2>\n\t\t<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>\n\t</ScrollViewer>', contents)
   contents = re.sub (re.compile ("<ControlTheme x:Key=\"ctrl:NumericTextBox\" TargetType=\"ctrl:NumericTextBox\"(.*?)<ScrollViewer(.*?)/>", re.DOTALL), r'<ControlTheme x:Key="ctrl:NumericTextBox" TargetType="ctrl:NumericTextBox"\1<ScrollViewer\2>\n\t\t<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>\n\t</ScrollViewer>', contents)
   
@@ -1528,10 +1538,19 @@ def translateTags (contents):
 
   contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ScrollBar}\" TargetType=\"{x:Type ScrollBar}\" >", r'<ControlTheme x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}" >', contents) 
 
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type TextBox}\" TargetType=\"{x:Type TextBox}\" >", r'<ControlTheme x:Key="{x:Type TextBox}" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}" >', contents) 
+
   contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ContextMenu}\" TargetType=\"{x:Type ContextMenu}\" >", r'<ControlTheme x:Key="{x:Type ContextMenu}" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">', contents) 
+
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ToggleButton}\" TargetType=\"{x:Type ToggleButton}\" >", r'<ControlTheme x:Key="{x:Type ToggleButton}" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">', contents) 
+
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ComboBox}\" TargetType=\"{x:Type ComboBox}\" >", r'<ControlTheme x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">', contents) 
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ComboBoxItem}\" TargetType=\"{x:Type ComboBoxItem}\" >", r'<ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource {x:Type ComboBoxItem}}">', contents) 
+  contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type ComboBox}\"(((?!</ControlTemplate>).)*)<StackPanel   />(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type ComboBox}"\2<ItemsPresenter Name="PART_ItemsPresenter" Margin="{DynamicResource ComboBoxDropdownContentMargin}" ItemsPanel="{TemplateBinding ItemsPanel}" />\4</ControlTemplate>', contents) 
   
   contents = regex.sub ("<RowDefinition(\s*?)/>", r'<RowDefinition Height="Auto" />', contents) 
   contents = regex.sub ("<ColumnDefinition(\s*?)/>", r'<ColumnDefinition Width="Auto" />', contents) 
+  contents = regex.sub ("<RowDefinition(.*?)MinHeight=\"{TemplateBinding MinHeight}\" />", r'<RowDefinition\1 />', contents) 
   
   contents = regex.sub ("<ItemsPresenter  Margin=\"0,0,1,0\"/>", r'<ItemsPresenter  Margin="0,0,1,0" ItemsPanel="{TemplateBinding ItemsPanel}"/>', contents) 
   contents = regex.sub ("<Track (((?!Value=).)*?)>", r'<Track \1 Value="{TemplateBinding Value, Mode=TwoWay}">', contents) 
@@ -1777,7 +1796,7 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/TypeToResource.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/FocusManager.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/CharInputBehavior.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/NumericTextBox.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/NumericTextBox.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToNull.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/DifferentValuesToString.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/ValueConverters/ValueConverterBase.cs")
@@ -1915,7 +1934,7 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/NumericTextBox.
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
-#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
+translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")

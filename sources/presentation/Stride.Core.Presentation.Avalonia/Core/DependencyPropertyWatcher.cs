@@ -117,7 +117,8 @@ namespace Stride.Core.Presentation.Core
 //                 descriptors.Add(property, descriptor);
 //             }
 //             descriptor.AddValueChanged(AssociatedObject, handler);
-            var observer = new AnonymousObserver<AvaloniaPropertyChangedEventArgs>(e => handler.Invoke (property, e));
+            var observer = new AnonymousObserver<AvaloniaPropertyChangedEventArgs>(e => handler.Invoke (AssociatedObject, e));
+//            var observer = new AnonymousObserver<AvaloniaPropertyChangedEventArgs>(e => handler.Invoke (property, e));
             observers[property] = property.Changed.Subscribe (observer);
         }
 

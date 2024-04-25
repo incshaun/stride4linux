@@ -92,7 +92,7 @@ namespace Stride.Assets.Presentation
             ProfileSettings.Add(new PackageSettingsEntry(GameUserSettings.Effect.EffectCompilation, TargetPackage.Executable));
             ProfileSettings.Add(new PackageSettingsEntry(GameUserSettings.Effect.RecordUsedEffects, TargetPackage.Executable));
 
-//             LoadDefaultTemplates();
+            LoadDefaultTemplates();
         }
 
         public static void LoadDefaultTemplates()

@@ -160,12 +160,56 @@ namespace Stride.Core.Presentation.View
             return result;
         }
 */
+//         private ITemplateProvider FindTemplateProvider([NotNull] object item, object container)
+//         {
+//             var usedProvidersForItem = usedProviders.GetOrCreateValue(item);
+// 
+//             var shouldClear = true;
+//             WeakReference lastContainer;
+//             // We check if this item has been templated recently.
+//             if (lastContainers.TryGetValue(item, out lastContainer) && lastContainer.IsAlive)
+//             {
+//                 // If so, check if the last container used is a parent of the container to use now.
+// //                 var parent = container.Parent;
+// //                 while (parent != null)
+// //                 {
+// //                     // If so, we are applying template recursively. We want don't want to use the same template
+// //                     // provider that the previous time, so we don't clear the list of providers already used.
+// //                     if (Equals(lastContainer.Target, parent))
+// //                     {
+//                         shouldClear = false;
+// //                         break;
+// //                     }
+// //                     parent = parent.Parent;
+// //                 }
+//             }
+//             // In any other case, we clear the list of used providers.
+//             if (shouldClear)
+//             {
+//                 usedProvidersForItem.Clear();
+//             }
+// 
+//             lastContainers.Remove(item);
+// 
+//             var availableSelectors = templateProviders.Where(x => x.Match(item));
+// 
+// //             var result = availableSelectors.FirstOrDefault(x => !usedProvidersForItem.Contains(x.Name));
+//             var result = availableSelectors.FirstOrDefault ();
+// 
+//             if (result != null)
+//             {
+//                 usedProvidersForItem.Add(result.Name);
+//                 lastContainers.Add(item, new WeakReference(container));
+//             }
+//             return result;
+//         }
+
         public bool Match(object? data)
         {
             var item = data;
             var usedProvidersForItem = usedProviders.GetOrCreateValue(item);
             var availableSelectors = templateProviders.Where(x => x.Match(item));
-
+ 
             var result = availableSelectors.FirstOrDefault(x => !usedProvidersForItem.Contains(x.Name));
             if (result != null)
             {
@@ -183,11 +227,18 @@ namespace Stride.Core.Presentation.View
             var item = param;
             var usedProvidersForItem = usedProviders.GetOrCreateValue(item);
             var availableSelectors = templateProviders.Where(x => x.Match(item));
-
+ 
             var result = availableSelectors.FirstOrDefault(x => !usedProvidersForItem.Contains(x.Name));
             if (result != null)
             {
                 usedProvidersForItem.Add(result.Name);
+                string name = "";
+                if (param.GetType ().GetProperty ("Name") != null)
+                {
+                    name = (string) param.GetType ().GetProperty ("Name").GetValue (param);
+                }
+                Console.WriteLine ("Built for: " + result.Name + " " + param + " - " + name + " " + templateProviders.Count);
+
                 return ((DataTemplate) result.Template).Build (param);
             }
             else

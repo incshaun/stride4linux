@@ -50,7 +50,7 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
 
             public IPropertyAccessor? Start(WeakReference<object?> reference, string propertyName)
             {
-                return new AssociatedDataAccessor(reference, propertyName, datasource);
+                return new AssociatedDataAccessor(reference, propertyName);
             }
             private class AssociatedDataAccessor : PropertyAccessorBase
             {
@@ -66,11 +66,10 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
                     }
                 }
 
-//                private readonly WeakReference<object?> _reference;
                 private readonly string propertyName;
                 private NodeViewModel datasource;
 
-                public AssociatedDataAccessor(WeakReference<object?> reference, string property, NodeViewModel source)
+                public AssociatedDataAccessor(WeakReference<object?> reference, string property)
                 {
 //                    _reference = reference;
                     propertyName = property;

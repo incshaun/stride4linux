@@ -386,7 +386,7 @@
         <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}"  x:Name="DropDown" >
           <Border x:Name="DropDownBorder" Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="3"/>
           <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Foreground="{StaticResource ActiveCaptionTextBrushKey}">
-            <StackPanel   />
+            <ItemsPresenter Name="PART_ItemsPresenter" Margin="{DynamicResource ComboBoxDropdownContentMargin}" ItemsPanel="{TemplateBinding ItemsPanel}" />
           </ScrollViewer>
         </Grid>
       </Popup>
@@ -417,14 +417,14 @@
     <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
   </ControlTemplate>
 
-  <ControlTheme x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}" >
+  <ControlTheme x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     
     <Setter Property="Background" Value="{DynamicResource ComboBoxBackground}"/>
     <Setter Property="Template" Value="{DynamicResource ComboBoxTemplate}" />
   </ControlTheme>
 
-  <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}" >
+  <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     
     <Setter Property="Template">
@@ -462,14 +462,14 @@
         <ControlTemplate TargetType="{x:Type ctrl:ColorPicker}">
           <Grid x:Name="RootLayout" VerticalAlignment="Top" TextElement.Foreground="{DynamicResource TextBrush}" Focusable="False">
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="{TemplateBinding InputColumnWidth}"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="LeftPaneLayout" Margin="2" VerticalAlignment="Top" Focusable="False">
               <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
               </Grid.RowDefinitions>
               <Canvas x:Name="PART_HuePickerRenderSurface" Width="{Binding PickupAreaSize.Width, RelativeSource={RelativeSource TemplatedParent}}"
                                     Height="{TemplateBinding StripsHeight}">
@@ -731,7 +731,7 @@
     </ControlTemplate.Triggers> -->
   </ControlTemplate>
 
-  <ControlTheme x:Key="{x:Type ToggleButton}" TargetType="{x:Type ToggleButton}" >
+  <ControlTheme x:Key="{x:Type ToggleButton}" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
     
     <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}" />
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
@@ -1373,7 +1373,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="{x:Type TextBox}" TargetType="{x:Type TextBox}" >
+  <ControlTheme x:Key="{x:Type TextBox}" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}" >
     <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
     
     
@@ -1393,7 +1393,7 @@
 		<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 	</ScrollViewer>
               <ContentControl x:Name="Watermark" Content="{TemplateBinding WatermarkContent}" ContentTemplate="{TemplateBinding WatermarkContentTemplate}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="6,2,2,2" Focusable="False"/>
-              <TextBlock x:Name="PART_TrimmedText" Text="{TemplateBinding Text}" Cursor="IBeam" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="3,2" Focusable="False" IsVisible="{TemplateBinding IsFocused, Converter={cvt:InvertBool}}"/>
+              <TextBlock x:Name="PART_TrimmedText" Text="{TemplateBinding TrimmedText}" Cursor="IBeam" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="3,2" Focusable="False" IsVisible="{TemplateBinding IsFocused, Converter={cvt:InvertBool}}"/>
             </Grid>
           </Border>
           <!-- <ControlTemplate.Triggers>
@@ -1483,13 +1483,13 @@
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="2*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="2*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="2*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="3*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <ctrl:NumericTextBox Value="{Binding Days, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:ToDouble}}" Grid.Column="0"
                                DecimalPlaces="0" DisplayUpDownButtons="False" SelectAllOnFocus="True" Margin="-1" TextAlignment="Right" Minimum="0"
@@ -1525,7 +1525,7 @@
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <ctrl:TextBox Grid.Column="0" IsReadOnly="True" SelectAllOnFocus="True" Margin="-1" TextAlignment="Left"
                           Text="{Binding Value, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:DateTimeToString}}"
@@ -1541,17 +1541,17 @@
               <Border  Background="{StaticResource BackgroundBrush}" BorderBrush="Black" BorderThickness="1">
                 <Grid>
                   <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                   </Grid.RowDefinitions>
                   <Grid Grid.Row="0" Margin="4">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="Auto"/>
                       <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="Auto"/>
                       <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <ctrl:NumericTextBox Value="{Binding Year, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:ToDouble}}" Grid.Column="0"
                                DecimalPlaces="0" DisplayUpDownButtons="False" SelectAllOnFocus="True" Margin="-1" TextAlignment="Right" Minimum="1" Maximum="9999"/>
@@ -1566,11 +1566,11 @@
                   <Grid Grid.Row="1" Margin="4">
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="Auto"/>
                       <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="Auto"/>
                       <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <ctrl:NumericTextBox Value="{Binding Hour, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={cvt:ToDouble}}" Grid.Column="0"
                                DecimalPlaces="0" DisplayUpDownButtons="False" SelectAllOnFocus="True" Margin="-1" TextAlignment="Right" Minimum="0" Maximum="23"/>
@@ -1601,11 +1601,12 @@
       
     
     <Grid>
-		<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
       <Border x:Name="Border" Opacity="1" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="3" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
         <Grid>
           <Border BorderThickness="1">
-            <ScrollViewer Margin="0" x:Name="PART_ContentHost" Theme="{DynamicResource NuclearScrollViewer}" />
+            <ScrollViewer Margin="0" x:Name="PART_ContentHost" Theme="{DynamicResource NuclearScrollViewer}" >
+		<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+	</ScrollViewer>
           </Border>
         </Grid>
       </Border>
@@ -1711,7 +1712,7 @@
     <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0,0,0,0" Margin="2">
       <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition MinWidth="17"  SharedSizeGroup="MenuItemIconColumnGroup" />
+          <ColumnDefinition MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource MenuHoverBrush}" Opacity="0" x:Name="HoverBorder"/>
@@ -1747,7 +1748,7 @@
     <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0,0,0,0" Margin="2">
       <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition MinWidth="17"  SharedSizeGroup="MenuItemIconColumnGroup" />
+          <ColumnDefinition MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource MenuHoverBrush}" Opacity="0" x:Name="HoverBorder"/>
@@ -1786,10 +1787,10 @@
           <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0,0,0,0" Margin="3,0">
             <Grid x:Name="Grid">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition  MinWidth="17"  SharedSizeGroup="MenuItemIconColumnGroup" />
-                <ColumnDefinition  SharedSizeGroup="MenuItemContentColumnGroup" />
+                <ColumnDefinition  MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemContentColumnGroup" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition  SharedSizeGroup="MenuItemIGTColumnGroup" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup" />
                 <ColumnDefinition  Width="14" />
               </Grid.ColumnDefinitions>
               <Border Grid.Column="0" Grid.ColumnSpan="5" Background="{DynamicResource MenuHoverBrush}" Opacity="0" x:Name="HoverBorder" />
@@ -1947,7 +1948,7 @@
               <ColumnDefinition  Width="0" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto"  />
               <RowDefinition Height="*"  />
             </Grid.RowDefinitions>
             <Border Background="{TemplateBinding Background}" x:Name="border">
@@ -2241,7 +2242,7 @@
           <Grid x:Name="GridRoot" Focusable="False">
             <Grid.RowDefinitions>
               <RowDefinition Height="Auto" />
-              <RowDefinition  MinHeight="{TemplateBinding MinHeight}" />
+              <RowDefinition Height="Auto"  />
               <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TickBar IsVisible="false" x:Name="TopTick" Height="4"  Placement="Top" Fill="{DynamicResource GlyphBrush}" />
@@ -2356,7 +2357,7 @@
           
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition MinWidth="19"  />
+              <ColumnDefinition MinWidth="19" Width="Auto" />
               <ColumnDefinition Width="Auto" />
               <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -2999,11 +3000,11 @@
         <ControlTemplate TargetType="ctrl:Vector2Editor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <!-- HACK: In the cvt:Chained converter, Parameter1 should be ctrl:VectorEditingMode.Length, but for some reason it doesn't compile. So we convert it first to an int. -->
             <Border Grid.Column="1" Grid.ColumnSpan="3" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource LengthBrush}" BorderThickness="1" BorderBrush="Transparent"
@@ -3056,13 +3057,13 @@
         <ControlTemplate TargetType="ctrl:Vector3Editor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <!-- HACK: In the cvt:Chained converter, Parameter1 should be ctrl:VectorEditingMode.Length, but for some reason it doesn't compile. So we convert it first to an int. -->
             <Border Grid.Column="1" Grid.ColumnSpan="5" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource LengthBrush}" BorderThickness="1" BorderBrush="Transparent"
@@ -3126,15 +3127,15 @@
         <ControlTemplate TargetType="ctrl:Vector4Editor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <!-- HACK: In the cvt:Chained converter, Parameter1 should be ctrl:VectorEditingMode.Length, but for some reason it doesn't compile. So we convert it first to an int. -->
             <Border Grid.Column="1" Grid.ColumnSpan="7" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource LengthBrush}" BorderThickness="1" BorderBrush="Transparent"
@@ -3210,11 +3211,11 @@
         <ControlTemplate TargetType="ctrl:Int2Editor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="1" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource RedBrush}" BorderThickness="1" BorderBrush="Transparent">
               <DockPanel>
@@ -3268,13 +3269,13 @@
         <ControlTemplate TargetType="ctrl:Int3Editor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="1" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource RedBrush}" BorderThickness="1" BorderBrush="Transparent">
               <DockPanel>
@@ -3337,15 +3338,15 @@
         <ControlTemplate TargetType="ctrl:Int4Editor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="1" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource RedBrush}" BorderThickness="1" BorderBrush="Transparent">
               <DockPanel>
@@ -3417,13 +3418,13 @@
         <ControlTemplate TargetType="ctrl:RectangleFEditor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="1" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource AlphaBrush}" BorderThickness="1" BorderBrush="Transparent">
@@ -3480,13 +3481,13 @@
         <ControlTemplate TargetType="ctrl:RectangleEditor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="1" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource AlphaBrush}" BorderThickness="1" BorderBrush="Transparent">
@@ -3538,13 +3539,13 @@
         <ControlTemplate TargetType="ctrl:RotationEditor">
           <Grid>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="1" CornerRadius="4" Margin="2,0,0,0" Background="{StaticResource RedBrush}" BorderThickness="1" BorderBrush="Transparent">
               <DockPanel>
