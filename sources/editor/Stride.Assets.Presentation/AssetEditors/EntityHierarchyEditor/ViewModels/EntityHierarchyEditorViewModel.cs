@@ -79,8 +79,8 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewMode
             BreakLinkToPrefabCommand = new AnonymousCommand(ServiceProvider, BreakLinkToPrefab);
             CreatePrefabFromSelectionCommand = new AnonymousCommand(ServiceProvider, CreatePrefabFromSelection);
             UpdateCommands();
-            debugPage = (IDebugPage) new DebugEntityHierarchyEditorUserControl(this);
-            EditorDebugTools.RegisterDebugPage(debugPage);
+//            debugPage = (IDebugPage) new DebugEntityHierarchyEditorUserControl(this);
+//            EditorDebugTools.RegisterDebugPage(debugPage);
 
             DependentProperties.Add(nameof(RootPart), [nameof(HierarchyRoot)]);
         }
@@ -157,6 +157,7 @@ namespace Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.ViewMode
 
         // TODO: turn private, create a service getter that accepts only IEditorGameViewModelService
         protected internal override EntityHierarchyEditorController Controller => (EntityHierarchyEditorController)base.Controller;
+        public EntityHierarchyEditorController EntityController => Controller;
 
         private IEditorGameMaterialHighlightViewModelService MaterialHighlight => Controller.GetService<IEditorGameMaterialHighlightViewModelService>();
 

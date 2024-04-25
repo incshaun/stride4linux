@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" ExcludeAssets="runtime" />
-    <PackageReference Include="SharpDX.Direct2D1" />
+<!--     <PackageReference Include="SharpDX.Direct2D1" /> -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
     <PackageReference Include="SSH.NET" />
@@ -43,6 +43,9 @@
     <PackageReference Include="System.Xml.XmlDocument" />
     <PackageReference Include="System.Xml.XPath" />
     <PackageReference Include="System.Xml.XPath.XDocument" />
+
+    <PackageReference Include="SkiaSharp" />
+    
     <Reference Include="VHACDSharp">
       <HintPath>..\..\..\deps\VHACD\VHACDSharp.dll</HintPath>
     </Reference>

@@ -3,13 +3,15 @@
 
 using System;
 using System.IO;
-using SharpDX.DirectWrite;
-using SharpDX.Mathematics.Interop;
+// using SharpDX.DirectWrite;
+// using SharpDX.Mathematics.Interop;
 using Stride.Core.Assets.Compiler;
 using Stride.Core;
 using Stride.Core.IO;
 using Stride.Assets.SpriteFont.Compiler;
 using Stride.Graphics.Font;
+
+using SkiaSharp;
 
 namespace Stride.Assets.SpriteFont
 {
@@ -29,7 +31,7 @@ namespace Stride.Assets.SpriteFont
         public UFile Source { get; set; } = new UFile("");
 
         /// <inheritdoc/>
-        public override FontFace GetFontFace()
+        public override SKFont GetFontFace(AssetCompilerResult result = null)
         {
             if (!File.Exists(Source))
             {
@@ -37,35 +39,36 @@ namespace Stride.Assets.SpriteFont
                 throw new FontNotFoundException(Source);
             }
 
-            var factory = new Factory();
-
-            using (var fontFile = new FontFile(factory, Source))
-            {
-                FontSimulations fontSimulations;
-                switch (Style)
-                {
-                    case Stride.Graphics.Font.FontStyle.Regular:
-                        fontSimulations = FontSimulations.None;
-                        break;
-                    case Stride.Graphics.Font.FontStyle.Bold:
-                        fontSimulations = FontSimulations.Bold;
-                        break;
-                    case Stride.Graphics.Font.FontStyle.Italic:
-                        fontSimulations = FontSimulations.Oblique;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                RawBool isSupported;
-                FontFileType fontType;
-                FontFaceType faceType;
-                int numberFaces;
-
-                fontFile.Analyze(out isSupported, out fontType, out faceType, out numberFaces);
-
-                return new FontFace(factory, faceType, new[] { fontFile }, 0, fontSimulations);
-            }
+//             var factory = new Factory();
+// 
+//             using (var fontFile = new FontFile(factory, Source))
+//             {
+//                 FontSimulations fontSimulations;
+//                 switch (Style)
+//                 {
+//                     case Stride.Graphics.Font.FontStyle.Regular:
+//                         fontSimulations = FontSimulations.None;
+//                         break;
+//                     case Stride.Graphics.Font.FontStyle.Bold:
+//                         fontSimulations = FontSimulations.Bold;
+//                         break;
+//                     case Stride.Graphics.Font.FontStyle.Italic:
+//                         fontSimulations = FontSimulations.Oblique;
+//                         break;
+//                     default:
+//                         throw new ArgumentOutOfRangeException();
+//                 }
+// 
+//                 RawBool isSupported;
+//                 FontFileType fontType;
+//                 FontFaceType faceType;
+//                 int numberFaces;
+// 
+//                 fontFile.Analyze(out isSupported, out fontType, out faceType, out numberFaces);
+// 
+//                 return new FontFace(factory, faceType, new[] { fontFile }, 0, fontSimulations);
+//             }
+            return new SKFont ();
         }
 
         /// <inheritdoc/>
