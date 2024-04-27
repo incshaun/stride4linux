@@ -9,11 +9,12 @@ using Stride.Core.Annotations;
 using Stride.Core.Presentation.Commands;
 
 using Avalonia.Interactivity;
+using System.Windows.Input;
 
 namespace Stride.Core.Presentation.Behaviors
 {
     /// <summary>
-    /// This command will bind a <see cref="ICommandBase"/> to a <see cref="ICommandSource"/>. It works just as a <see cref="CommandBinding"/> except that the bound
+    /// This command will bind a <see cref="ICommandBase"/> to a <see cref="RoutedCommand"/>. It works just as a <see cref="CommandBinding"/> except that the bound
     /// command is executed when the routed command is executed. The <b>CanExecute</b> handler also invoke the <b>CanExecute</b> method of the <see cref="ICommandBase"/>.
     /// </summary>
     public class CommandBindingBehavior : Behavior<Control>
@@ -38,9 +39,9 @@ namespace Stride.Core.Presentation.Behaviors
         /// </summary>
         public static readonly StyledProperty<bool> IsEnabledProperty = StyledProperty<bool>.Register<CommandBindingBehavior, bool>(nameof(IsEnabled), true); // T2
         /// <summary>
-        /// Identifies the <see cref="ICommandSource"/> dependency property.
+        /// Identifies the <see cref="RoutedCommand"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<ICommandSource> ICommandSourceProperty = StyledProperty<ICommandSource>.Register<CommandBindingBehavior, ICommandSource>(nameof(ICommandSource)); // T1
+        public static readonly StyledProperty<ICommand> RoutedCommandProperty = StyledProperty<ICommand>.Register<CommandBindingBehavior, ICommand>(nameof(RoutedCommand)); // T1
 
         /// <summary>
         /// Gets or sets the <see cref="ICommandBase"/> to bind.
@@ -59,14 +60,15 @@ namespace Stride.Core.Presentation.Behaviors
         public bool IsEnabled { get { return (bool)GetValue(IsEnabledProperty); } set { SetValue(IsEnabledProperty, value); } }
 
         /// <summary>
-        /// Gets or sets the <see cref="ICommandSource"/> to bind.
+        /// Gets or sets the <see cref="ICommand"/> to bind.
         /// </summary>
-        public ICommandSource ICommandSource { get { return (ICommandSource)GetValue(ICommandSourceProperty); } set { SetValue(ICommandSourceProperty, value); } }
+        public ICommand RoutedCommand { get { return (ICommand)GetValue(RoutedCommandProperty); } set { SetValue(RoutedCommandProperty, value); } }
 
         /// <inheritdoc/>
         protected override void OnAttached()
         {
-//             commandBinding = new CommandBinding(ICommandSource, (s, e) => OnExecuted(e), (s, e) => OnCanExecute(e));
+            ApplicationCommands.AddCommandBinding (RoutedCommand, (e) => OnExecuted(e), (e) => OnCanExecute(e));
+//             commandBinding = new CommandBinding(RountedCommand, (s, e) => OnExecuted(e), (s, e) => OnCanExecute(e));
 //             AssociatedObject.CommandBindings.Add(commandBinding);
         }
 
@@ -78,10 +80,9 @@ namespace Stride.Core.Presentation.Behaviors
 
         private static void CommandChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
-//             CommandManager.InvalidateRequerySuggested();
         }
 
-        private void OnCanExecute([NotNull] RoutedEventArgs canExecuteRoutedEventArgs)
+        private void OnCanExecute([NotNull] RoutedEventArgs? canExecuteRoutedEventArgs)
         {
             if (Command != null)
             {
@@ -102,12 +103,15 @@ namespace Stride.Core.Presentation.Behaviors
 //             }
         }
 
-        private void OnExecuted([NotNull] RoutedEventArgs executedRoutedEventArgs)
+        private void OnExecuted([NotNull] RoutedEventArgs? executedRoutedEventArgs)
         {
             if (Command != null && IsEnabled)
             {
-//                 Command.Command.Execute(executedRoutedEventArgs.Parameter);
-                executedRoutedEventArgs.Handled = true;
+                Command.Execute(executedRoutedEventArgs);
+                if (executedRoutedEventArgs != null)
+                {
+                  executedRoutedEventArgs.Handled = true;
+                }
             }
         }
     }

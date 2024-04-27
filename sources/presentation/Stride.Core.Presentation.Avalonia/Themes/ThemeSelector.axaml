@@ -1910,7 +1910,7 @@
       </Setter.Value>
     </Setter>
   </ControlTheme>
-  <ControlTheme x:Key="{x:Type TabControl}" TargetType="{x:Type TabControl}" >
+  <ControlTheme x:Key="{x:Type TabControl}" TargetType="{x:Type TabControl}" BasedOn="{StaticResource {x:Type TabControl}}" >
     <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
     <Setter Property="ItemsPanel">
       <Setter.Value>
@@ -2040,7 +2040,7 @@
       </Setter.Value>
     </Setter>
   </ControlTheme>
-  <ControlTheme x:Key="{x:Type TabItem}" d:IsControlPart="True" TargetType="{x:Type TabItem}" >
+  <ControlTheme x:Key="{x:Type TabItem}" d:IsControlPart="True" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}" >
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
     <Setter Property="Padding" Value="8,4" />
@@ -2082,7 +2082,7 @@
               </Border.Background>
             </Border>
             <Grid>
-              <ContentPresenter x:Name="ContentSite" RecognizesAccessKey="True" ContentTemplate="{Binding Header}" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
+              <ContentPresenter Content="{TemplateBinding Content}" x:Name="ContentSite" RecognizesAccessKey="True" ContentTemplate="{Binding Header}" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
             </Grid>
 	</Grid>
 	</LayoutTransformControl>

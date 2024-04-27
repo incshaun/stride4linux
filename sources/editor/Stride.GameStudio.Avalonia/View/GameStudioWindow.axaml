@@ -147,11 +147,11 @@
   </Window.InputBindings>-->
 
   <i:Interaction.Behaviors>
-<!--    <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.New" Command="{Binding NewSessionCommand}"/>
-    <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Open" Command="{Binding OpenSessionCommand}"/>
-    <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Save" Command="{Binding Session.SaveSessionCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
-    <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Undo" Command="{Binding Session.ActionHistory.UndoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
-    <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Redo" Command="{Binding Session.ActionHistory.RedoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
+<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.New" Command="{Binding NewSessionCommand}"/> -->
+<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Open" Command="{Binding OpenSessionCommand}"/> -->
+     <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Save}" Command="{Binding Session.SaveSessionCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> 
+<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Undo" Command="{Binding Session.ActionHistory.UndoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
+<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Redo" Command="{Binding Session.ActionHistory.RedoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
   </i:Interaction.Behaviors>
 
   <Grid>
@@ -201,7 +201,7 @@
           <Separator/>
           <MenuItem Header="{sd:Localize Clear list, Context=Menu}" Command="{Binding ClearMRUCommand}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         </MenuItem>
-<!--         <MenuItem Header="{sd:Localize Save, Context=Menu}" Command="ApplicationCommands.Save" Icon="{sd:Image {StaticResource ImageSave}}"/> -->
+        <MenuItem Header="{sd:Localize Save, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Save}" Icon="{sd:Image {StaticResource ImageSave}}"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Reload project, Context=Menu}" Command="{Binding ReloadSessionCommand}" Icon="{sd:Image {StaticResource ImageReloadProject}}"/>
         <Separator/>
@@ -256,7 +256,7 @@
           </MenuItem.ItemTemplate>
         </MenuItem>
         <MenuItem Header="{sd:Localize Add dependency..., Context=Menu}" Command="{Binding Session.AddDependencyCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageAddDependency}}"/>
-        <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding}" Icon="{sd:Image {StaticResource ImageStartupProject}}"/>
+        <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageStartupProject}}"/>
         <MenuItem Header="{sd:Localize Package properties, Context=Menu}" Command="{Binding Session.ActivatePackagePropertiesCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImagePackageProperties}}"/>
 
         <MenuItem Header="{sd:Localize Solution, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
@@ -381,10 +381,10 @@
               </MenuItem.ItemContainerTheme>
             </MenuItem>
           </Menu>
-<!--          <Button Command="ApplicationCommands.Save"
+          <Button Command="{x:Static sd:ApplicationCommands.Save}"
                   ToolTip.Tip="{sd:Localize Save the project and all its documents, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
             <Image Source="{StaticResource ImageSave}" />
-          </Button>-->
+          </Button>
           <Separator/>
           <Button Command="{Binding ReloadSessionCommand}"
                   ToolTip.Tip="{sd:Localize Reload current project (ask to save), Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
@@ -574,7 +574,7 @@
                               </MenuItem.ItemTemplate>
                             </MenuItem>
                             <MenuItem Header="{sd:Localize Add dependency..., Context=Menu}" Command="{Binding Session.AddDependencyCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageAddDependency}}" IsVisible="{Binding Session.AddDependencyCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
-                            <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding}" Icon="{sd:Image {StaticResource ImageStartupProject}}" IsVisible="{Binding Session.SetCurrentProjectCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
+                            <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageStartupProject}}" IsVisible="{Binding Session.SetCurrentProjectCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
                             <MenuItem Header="{sd:Localize Package properties, Context=Menu}" Command="{Binding Session.ActivatePackagePropertiesCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImagePackageProperties}}" IsVisible="{Binding Session.ActivatePackagePropertiesCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
 
 <!--                            <MenuItem Header="{sd:Localize Solution, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" Visibility="{sd:MultiBinding {Binding Session.NewPackageCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}, {Binding Session.AddExistingPackageCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}, {Binding Session.OpenInIDECommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}, Converter={sd:MultiChained {sd:OrMultiConverter}, {sd:VisibleOrCollapsed}}}"/>-->
@@ -718,7 +718,7 @@
 <!--                <Document AutoHideMinHeight="200" ContentId="BuildLog" Title="{Binding Debugging.OutputTitle, Source={x:Static vm:GameStudioViewModel.GameStudio}}"
                                        >-->
                   <TabControl x:Name="LogTabControl">
-                    <TabItem DataContext="{Binding Debugging.BuildLog}">
+                    <TabItem DataContext="{Binding Debugging.BuildLog, Source={x:Static vm:GameStudioViewModel.GameStudio}}">
                       <TabItem.Header>
                         <TextBlock FontWeight="{Binding HasNewMessages, Mode=OneWay, Converter={sd:BoolToParam},
                                     ConverterParameter={x:Static FontWeight.Bold}, FallbackValue={x:Static FontWeight.Normal}}"
@@ -733,7 +733,7 @@
                       </i:Interaction.Behaviors>
                     </TabItem>
                     <!-- FIXME live scripting is disabled (XK-4309) -->
-                    <TabItem DataContext="{Binding Debugging.LiveScriptingLog}" IsVisible="false">
+                    <TabItem DataContext="{Binding Debugging.LiveScriptingLog, Source={x:Static vm:GameStudioViewModel.GameStudio}}" IsVisible="false">
                       <TabItem.Header>
                         <TextBlock FontWeight="{Binding HasNewMessages, Mode=OneWay, Converter={sd:BoolToParam},
                                     ConverterParameter={x:Static FontWeight.Bold}, FallbackValue={x:Static FontWeight.Normal}}"

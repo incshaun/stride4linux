@@ -15,7 +15,7 @@ using Stride.Editor.Annotations;
 using Stride.Editor.Build;
 using Stride.Editor.Preview;
 using Stride.Editor.Thumbnails;
-// using Stride.GameStudio.Debugging;
+using Stride.GameStudio.Avalonia.Debugging;
 using Stride.GameStudio.Avalonia.Helpers;
 using Stride.GameStudio.Avalonia.ViewModels;
 
@@ -82,11 +82,11 @@ namespace Stride.GameStudio.Avalonia.Plugin
             var thumbnailService = new GameStudioThumbnailService(session, settingsProvider, builderService);
             session.ServiceProvider.RegisterService(thumbnailService);
 
-//             var strideDebugService = new StrideDebugService(session.ServiceProvider);
-//             session.ServiceProvider.RegisterService(strideDebugService);
+            var strideDebugService = new StrideDebugService(session.ServiceProvider);
+            session.ServiceProvider.RegisterService(strideDebugService);
 
-//             GameStudioViewModel.GameStudio.Preview = new PreviewViewModel(session);
-//             GameStudioViewModel.GameStudio.Debugging = new DebuggingViewModel(GameStudioViewModel.GameStudio, strideDebugService);
+            GameStudioViewModel.GameStudio.Preview = new PreviewViewModel(session);
+            GameStudioViewModel.GameStudio.Debugging = new DebuggingViewModel(GameStudioViewModel.GameStudio, strideDebugService);
         }
 
         public override void RegisterAssetPreviewViewTypes(IDictionary<Type, Type> assetPreviewViewTypes)

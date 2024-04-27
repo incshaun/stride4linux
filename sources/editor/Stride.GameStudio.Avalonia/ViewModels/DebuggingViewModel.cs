@@ -405,7 +405,7 @@ namespace Stride.GameStudio.Avalonia.ViewModels
                     {
                         var solutionPath = UPath.Combine(Environment.CurrentDirectory, Session.SolutionPath);
                         extraProperties.Add("SolutionPath", solutionPath.ToWindowsPath());
-                        extraProperties.Add("SolutionDir", solutionPath.GetParent().ToWindowsPath() + "\\");
+                        extraProperties.Add("SolutionDir", solutionPath.GetParent().ToWindowsPath() + Path.DirectorySeparatorChar);
                     }
                     else
                     {

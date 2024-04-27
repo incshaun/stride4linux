@@ -1540,6 +1540,10 @@ def translateTags (contents):
 
   contents = regex.sub ("<ControlTheme x:Key=\"{x:Type TextBox}\" TargetType=\"{x:Type TextBox}\" >", r'<ControlTheme x:Key="{x:Type TextBox}" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}" >', contents) 
 
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type TabControl}\" TargetType=\"{x:Type TabControl}\" >", r'<ControlTheme x:Key="{x:Type TabControl}" TargetType="{x:Type TabControl}" BasedOn="{StaticResource {x:Type TabControl}}" >', contents) 
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type TabItem}\"(.*?)TargetType=\"{x:Type TabItem}\" >", r'<ControlTheme x:Key="{x:Type TabItem}"\1TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}" >', contents) 
+  contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type TabItem}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type TabItem}"\2<ContentPresenter Content="{TemplateBinding Content}" \4>\6</ControlTheme>', contents) 
+
   contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ContextMenu}\" TargetType=\"{x:Type ContextMenu}\" >", r'<ControlTheme x:Key="{x:Type ContextMenu}" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">', contents) 
 
   contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ToggleButton}\" TargetType=\"{x:Type ToggleButton}\" >", r'<ControlTheme x:Key="{x:Type ToggleButton}" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">', contents) 
