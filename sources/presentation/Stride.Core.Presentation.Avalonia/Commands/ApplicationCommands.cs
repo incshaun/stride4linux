@@ -74,21 +74,34 @@ namespace Stride.Core.Presentation.Commands
             initialize ();
             
             var serviceProvider = new ViewModelServiceProvider(new[] { new DispatcherService(Dispatcher.UIThread) });
-            commands[CommandId.Save] = new AnonymousCommand<RoutedEventArgs?>(serviceProvider, (v) => OnApplicationCommand(CommandId.Save, v));
+            foreach (CommandId cid in Enum.GetValues (typeof (CommandId)))
+            {
+              commands[cid] = new AnonymousCommand<RoutedEventArgs?>(serviceProvider, (v) => OnApplicationCommand(cid, v));
+            }
         }
         
-        public static readonly StyledProperty<ICommand> SaveProperty = StyledProperty<ICommand>.Register<ApplicationCommands, ICommand>("SaveCommand");
-        
-//         public ICommand SaveCommand
-//         {
-//             get { return (ICommand)GetValue(SaveProperty); }
-//             set { SetValue(SaveProperty, value); }
-//         }
-//         
-        public static ICommand Save 
-        {
-            get { initialize (); return commands[CommandId.Save]; }
-        }
+        public static ICommand Cut { get { initialize (); return commands[CommandId.Cut]; } }
+        public static ICommand Copy { get { initialize (); return commands[CommandId.Copy]; } }
+        public static ICommand Paste { get { initialize (); return commands[CommandId.Paste]; } }
+        public static ICommand Undo { get { initialize (); return commands[CommandId.Undo]; } }
+        public static ICommand Redo { get { initialize (); return commands[CommandId.Redo]; } }
+        public static ICommand Delete { get { initialize (); return commands[CommandId.Delete]; } }
+        public static ICommand Find { get { initialize (); return commands[CommandId.Find]; } }
+        public static ICommand Replace { get { initialize (); return commands[CommandId.Replace]; } }
+        public static ICommand Help { get { initialize (); return commands[CommandId.Help]; } }
+        public static ICommand SelectAll { get { initialize (); return commands[CommandId.SelectAll]; } }
+        public static ICommand New { get { initialize (); return commands[CommandId.New]; } }
+        public static ICommand Open { get { initialize (); return commands[CommandId.Open]; } }
+        public static ICommand Save { get { initialize (); return commands[CommandId.Save]; } }
+        public static ICommand SaveAs { get { initialize (); return commands[CommandId.SaveAs]; } }
+        public static ICommand Print { get { initialize (); return commands[CommandId.Print]; } }
+        public static ICommand CancelPrint { get { initialize (); return commands[CommandId.CancelPrint]; } }
+        public static ICommand PrintPreview { get { initialize (); return commands[CommandId.PrintPreview]; } }
+        public static ICommand Close { get { initialize (); return commands[CommandId.Close]; } }
+        public static ICommand Properties { get { initialize (); return commands[CommandId.Properties]; } }
+        public static ICommand ContextMenu { get { initialize (); return commands[CommandId.ContextMenu]; } }
+        public static ICommand CorrectionList { get { initialize (); return commands[CommandId.CorrectionList]; } }
+        public static ICommand Stop { get { initialize (); return commands[CommandId.Stop]; } }
         
         private void OnApplicationCommand (CommandId name, RoutedEventArgs? v)
         {

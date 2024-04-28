@@ -1771,7 +1771,7 @@
     </ControlTemplate.Triggers> -->
   </ControlTemplate>
 
-  <ControlTheme x:Key="{x:Type MenuItem}" TargetType="{x:Type MenuItem}" >
+  <ControlTheme x:Key="{x:Type MenuItem}" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
     
     <Setter Property="HorizontalAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
     <Setter Property="VerticalAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
@@ -1787,14 +1787,14 @@
           <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0,0,0,0" Margin="3,0">
             <Grid x:Name="Grid">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition  MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
+                <ColumnDefinition MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
                 <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemContentColumnGroup" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup" />
                 <ColumnDefinition  Width="14" />
               </Grid.ColumnDefinitions>
               <Border Grid.Column="0" Grid.ColumnSpan="5" Background="{DynamicResource MenuHoverBrush}" Opacity="0" x:Name="HoverBorder" />
-              <ContentPresenter Grid.Column="0" Margin="5,5" x:Name="Icon" MaxHeight="14" VerticalAlignment="Center" ContentTemplate="{Binding Icon}" />
+              <ContentPresenter Grid.Column="0" Margin="5,5" x:Name="Icon" MaxHeight="14" VerticalAlignment="Center" Content="{TemplateBinding Icon}" />
               <Grid Grid.Column="0" IsVisible="false" Margin="4,2" x:Name="GlyphPanel" VerticalAlignment="Center">
                 <Path x:Name="GlyphPanelpath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,2 L0,4.8 L2.5,7.4 L7.1,2.8 L7.1,0 L2.5,4.6 z" FlowDirection="LeftToRight" />
               </Grid>
@@ -1803,7 +1803,7 @@
               <Grid Grid.Column="4" Margin="4,2" x:Name="ArrowPanel" VerticalAlignment="Center">
                 <Path x:Name="ArrowPanelPath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z" />
               </Grid>
-              <Popup IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Right" x:Name="SubMenuPopup" Focusable="false"  >
+              <Popup IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Right" x:Name="PART_Popup" Focusable="false"  >
                 <Grid>
                   <Grid.RowDefinitions>
                     <RowDefinition Height="3" />
@@ -1897,6 +1897,92 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
+
+    <Style Selector="^:not(:empty)">
+              <Setter Property="DockPanel.Dock" Value="Top" />
+              <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+<!--               <Setter Property="Width" Value="16" TargetName="IconColumn" /> -->
+      <Style Selector="^ /template/ TextBlock#IGTTextBlock">
+              <Setter Property="MinWidth" Value="70" />
+      </Style>
+    </Style>
+    
+    <Style Selector="^:empty">
+              <Setter Property="DockPanel.Dock" Value="Top" />
+              <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+<!--               <Setter Property="Width" Value="16" TargetName="IconColumn" /> -->
+      <Style Selector="^ /template/ Grid#ArrowPanel">
+              <Setter Property="IsVisible" Value="false" />
+      </Style>
+      <Style Selector="^ /template/ TextBlock#IGTTextBlock">
+              <Setter Property="MinWidth" Value="70" />
+      </Style>
+    </Style>
+
+<!--    <Style Selector="^[IsChecked=true]">
+      <Style Selector="^ /template/ Grid#GlyphPanel">
+              <Setter Property="IsVisible" Value="true" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#Icon">
+              <Setter Property="IsVisible" Value="false" />
+      </Style>
+    </Style>-->
+            
+    <Style Selector="^:selected">
+      <Style Selector="^ /template/ Border#HoverBorder">
+              <Setter Property="Opacity" Value="1" />
+      </Style>
+      <Style Selector="^ /template/ Path#GlyphPanelpath">
+              <Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}" />
+      </Style>
+      <Style Selector="^ /template/ Path#ArrowPanelPath">
+              <Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}" />
+      </Style>
+    </Style>
+    
+    <Style Selector="^[IsSubMenuOpen=True]">
+      <Style Selector="^ /template/ Border#HoverBorder">
+                <Setter Property="Opacity" Value="0" />
+      </Style>
+      <Style Selector="^ /template/ Border#Border">
+                <Setter Property="Background" Value="{StaticResource MenuBackgroundBrush}" />
+                <Setter Property="BorderThickness" Value="0.5,0.5,0.5,0" />
+                <Setter Property="BorderBrush" Value="{StaticResource MenuBorderBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Border#SubmenuMainWrapperBorder">
+                <Setter Property="BorderThickness" Value="0.5,0,0.5,0.5" />
+      </Style>
+    </Style>
+
+    <Style Selector="^[IsEnabled=False]">
+              <Setter Property="Foreground" Value="Gray" />
+      <Style Selector="^ /template/ TextBlock#IGTTextBlock">
+              <Setter Property="Foreground" Value="Gray" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#HeaderHost">
+              <Setter Property="Opacity" Value="0.5" />
+      </Style>
+    </Style>
+    
+    
+<!--    <Style Selector="^ /template/ Grid#ArrowPanel">
+      <Setter Property="IsVisible" Value="false" />      
+    </Style>-->
+    
+    
+<!--             <Style Selector="^[IsTopLevel=true]"> -->
+<!--               <Style Selector="^:selected /template/ Border#root"> -->
+<!--              <Style Selector="^#HeaderHost">
+      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}" />
+                <Setter Property="Margin" Value="10,2" />
+    </Style>-->
+<!--            <Style Selector="^[IsTopLevel=true]">
+              <Style Selector="#HeaderHost">
+                <Setter Property="Margin" Value="10,2" />
+              </Style>
+            </Style>-->
+
   </ControlTheme>
   <ControlTheme x:Key="{x:Type Separator}" TargetType="{x:Type Separator}" >
     <Setter Property="Background" Value="{DynamicResource SolidBorderBrush}"/>

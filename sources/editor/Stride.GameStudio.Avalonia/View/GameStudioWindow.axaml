@@ -109,11 +109,11 @@
           </MenuItem.Template>
         </MenuItem>
         <Separator/>
-<!--        <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="ApplicationCommands.Cut" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCut}}"/>
-        <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="ApplicationCommands.Copy" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCopy}}"/>
+<!--        <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Cut}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCut}}"/>
+        <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Copy}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCopy}}"/>-->
         <MenuItem Header="{sd:Localize Copy with dependencies, Context=Menu}" Command="{Binding CopyAssetsRecursivelyCommand}" InputGesture="{x:Static strings:KeyGestures.CopyAssetRecursively}" Icon="{sd:Image {StaticResource ImageCopyRecursively}}"/>
-        <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="ApplicationCommands.Paste" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImagePaste}}"/>
-        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="ApplicationCommands.Delete" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
+<!--        <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Paste}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImagePaste}}"/>
+        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
         <Separator/>
         <MenuItem Header="{sd:Localize Copy asset URL, Context=Menu}" Command="{Binding CopyAssetUrlCommand}" />
 <!--         <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="sd:AssetViewUserControl.BeginEditCommand" Icon="{sd:Image {StaticResource ImageRename}}" InputGesture="F2"/> -->
@@ -147,11 +147,11 @@
   </Window.InputBindings>-->
 
   <i:Interaction.Behaviors>
-<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.New" Command="{Binding NewSessionCommand}"/> -->
-<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Open" Command="{Binding OpenSessionCommand}"/> -->
+    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.New}" Command="{Binding NewSessionCommand}"/>
+    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Open}" Command="{Binding OpenSessionCommand}"/>
      <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Save}" Command="{Binding Session.SaveSessionCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> 
-<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Undo" Command="{Binding Session.ActionHistory.UndoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
-<!--     <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Redo" Command="{Binding Session.ActionHistory.RedoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
+    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Undo}" Command="{Binding Session.ActionHistory.UndoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Redo}" Command="{Binding Session.ActionHistory.RedoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
   </i:Interaction.Behaviors>
 
   <Grid>
@@ -166,8 +166,8 @@
     <Menu IsHitTestVisible="True" Grid.Row="0" FontSize="12">
       <!-- File Menu -->
       <MenuItem Header="{sd:Localize File, Context=Menu}">
-<!--         <MenuItem Header="{sd:Localize New, Context=Menu}" Command="ApplicationCommands.New" Icon="{sd:Image {StaticResource ImageNewSolution}}"/> -->
-<!--         <MenuItem Header="{sd:Localize Open, Context=Menu}" Command="ApplicationCommands.Open" Icon="{sd:Image {StaticResource ImageOpen}}"/> -->
+        <MenuItem Header="{sd:Localize New, Context=Menu}" Command="{x:Static sd:ApplicationCommands.New}" Icon="{sd:Image {StaticResource ImageNewSolution}}"/>
+        <MenuItem Header="{sd:Localize Open, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Open}" Icon="{sd:Image {StaticResource ImageOpen}}"/>
         <MenuItem Header="{sd:Localize Open recent, Context=Menu}" Icon="{sd:Image {StaticResource ImageOpen}}">
           <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
           <MenuItem ItemsSource="{Binding RecentFiles}" >
@@ -213,13 +213,13 @@
       </MenuItem>
       <!-- Edit Menu -->
       <MenuItem Header="{sd:Localize Edit, Context=Menu}">
-<!--        <MenuItem Header="{sd:Localize Undo, Context=Menu}" Command="ApplicationCommands.Undo" Icon="{sd:Image {StaticResource ImageUndo}}"/>
-        <MenuItem Header="{sd:Localize Redo, Context=Menu}" Command="ApplicationCommands.Redo" Icon="{sd:Image {StaticResource ImageRedo}}"/>-->
+        <MenuItem Header="{sd:Localize Undo, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Undo}" Icon="{sd:Image {StaticResource ImageUndo}}"/>
+        <MenuItem Header="{sd:Localize Redo, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Redo}" Icon="{sd:Image {StaticResource ImageRedo}}"/>
         <Separator/>
-<!--        <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
-        <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="ApplicationCommands.Copy" Icon="{sd:Image {StaticResource ImageCopy}}" />
-        <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="ApplicationCommands.Paste" Icon="{sd:Image {StaticResource ImagePaste}}" />
-        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
+        <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
+        <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Paste}" Icon="{sd:Image {StaticResource ImagePaste}}" />
+        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Settings, Context=Menu}" Command="{Binding OpenSettingsWindowCommand}" Icon="{sd:Image {StaticResource ImageSettings}}"/>
       </MenuItem>
@@ -347,14 +347,14 @@
 			</StackPanel>
 		</ItemsPanelTemplate>
 	</ItemsControl.ItemsPanel>
-<!--          <Button Command="ApplicationCommands.New"
+          <Button Command="{x:Static sd:ApplicationCommands.New}"
                   ToolTip.Tip="{sd:Localize Create a project, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
             <Image Source="{StaticResource ImageNewSolution}" />
           </Button>
-          <Button Command="ApplicationCommands.Open" Margin="2,0,0,0"
+          <Button Command="{x:Static sd:ApplicationCommands.Open}" Margin="2,0,0,0"
                   ToolTip.Tip="{sd:Localize Open an existing project, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
             <Image Source="{StaticResource ImageOpen}" />
-          </Button>-->
+          </Button>
           <Menu Background="Transparent" Margin="0"
                 ToolTip.Tip="{sd:Localize Open recent, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" 
                 ToolTip.IsEnabled="{Binding ElementName=MRUMenu, Path=IsSubmenuOpen, Converter={sd:InvertBool}}">
@@ -391,14 +391,14 @@
             <Image Source="{StaticResource ImageReloadProject}" />
           </Button>
           <Separator/>
-<!--          <Button Command="ApplicationCommands.Undo"
+          <Button Command="{x:Static sd:ApplicationCommands.Undo}"
                   ToolTip.Tip="{sd:Localize Undo last action, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
             <Image Source="{StaticResource ImageUndo}" />
           </Button>
-          <Button Command="ApplicationCommands.Redo"
+          <Button Command="{x:Static sd:ApplicationCommands.Redo}"
                   ToolTip.Tip="{sd:Localize Redo last cancelled action, Context=ToolTip}" sd:ToolTipHelper.Status="{Binding Status}" >
             <Image Source="{StaticResource ImageRedo}" />
-          </Button>-->
+          </Button>
         </ItemsControl>
         <ItemsControl>
 	<ItemsControl.ItemsPanel>
@@ -583,10 +583,10 @@
                             <MenuItem Header="{sd:Localize Open in IDE, Context=Menu}" Command="{Binding Session.OpenInIDECommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageVisualStudio}}" IsVisible="{Binding Session.OpenInIDECommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
 
                             <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
-<!--                            <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="ApplicationCommands.Cut" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCut}}"/>
-                            <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="ApplicationCommands.Copy" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCopy}}"/>
-                            <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="ApplicationCommands.Paste" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImagePaste}}"/>
-                            <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="ApplicationCommands.Delete" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
+<!--                            <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Cut}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCut}}"/>
+                            <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Copy}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageCopy}}"/>
+                            <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Paste}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImagePaste}}"/>
+                            <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
                             <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding Session.RenameDirectoryOrPackageCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" CommandParameter="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageRename}}" IsVisible="{Binding Session.RenameDirectoryOrPackageCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}" InputGesture="F2"/>
 
                             <MenuItem Header="{sd:Localize Asset, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
@@ -602,10 +602,10 @@
                           <sd:TreeViewAutoExpandBehavior/>
                           <sd:TreeViewDragDropBehavior DragVisualTemplate="{StaticResource DragVisualTemplate}"/>
                           <sd:TreeViewBindableSelectedItemsBehavior SelectedItems="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
-<!--                          <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Cut" Command="{Binding Session.ActiveAssetView.CutLocationsCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
-                          <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" Command="{Binding Session.ActiveAssetView.CopyLocationsCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
-                          <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding Session.ActiveAssetView.PasteCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
-                          <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding Session.DeleteSelectedSolutionItemsCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
+                          <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Cut}" Command="{Binding Session.ActiveAssetView.CutLocationsCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+                          <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Copy}" Command="{Binding Session.ActiveAssetView.CopyLocationsCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+                          <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Paste}" Command="{Binding Session.ActiveAssetView.PasteCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+                          <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Delete}" Command="{Binding Session.DeleteSelectedSolutionItemsCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
                         </i:Interaction.Behaviors>
                         <sd:TreeView.ItemContainerTheme>
                           <ControlTheme TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}">
@@ -655,10 +655,10 @@
                       AssetDoubleClick="{Binding Session.EditSelectedContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}">
                       
                       <i:Interaction.Behaviors>
-<!--                        <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Cut" Command="{Binding Session.ActiveAssetView.CutContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
-                        <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" Command="{Binding Session.ActiveAssetView.CopyContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
-                        <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding Session.ActiveAssetView.PasteCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
-                        <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding Session.ActiveAssetView.DeleteContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/> -->
+                        <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Cut}" Command="{Binding Session.ActiveAssetView.CutContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+                        <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Copy}" Command="{Binding Session.ActiveAssetView.CopyContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+                        <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Paste}" Command="{Binding Session.ActiveAssetView.PasteCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+                        <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Delete}" Command="{Binding Session.ActiveAssetView.DeleteContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
                         <gl:ActivateParentPaneOnGotFocusBehavior/>
                       </i:Interaction.Behaviors>
                     </sd:AssetViewUserControl>
@@ -697,8 +697,8 @@
                         <ToggleButton  Content="{sd:Localize Referenced by}" MinWidth="80"/>
                       </sd:AssetViewUserControl.PrimaryToolBarItems>
                       <i:Interaction.Behaviors>
-<!--                        <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Cut" Command="{Binding Session.References.DisplayedReferences.CutContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
-                        <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" Command="{Binding Session.References.DisplayedReferences.CopyContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
+                        <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Cut}" Command="{Binding Session.References.DisplayedReferences.CutContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+                        <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Copy}" Command="{Binding Session.References.DisplayedReferences.CopyContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
                       </i:Interaction.Behaviors>
                     </sd:AssetViewUserControl>
                   </DockPanel>
@@ -886,9 +886,9 @@
                                          />
                                 <Separator />
 <!--                                <MenuItem Icon="{sd:Image {StaticResource ImageCopy}}"
-                                          Command="ApplicationCommands.Copy" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}"/>
+                                          Command="{x:Static sd:ApplicationCommands.Copy}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}"/>
                                 <MenuItem Icon="{sd:Image {StaticResource ImagePaste}}"
-                                          Command="ApplicationCommands.Paste" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}" />
+                                          Command="{x:Static sd:ApplicationCommands.Paste}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}" />
                                 <MenuItem Icon="{sd:Image {StaticResource ImagePaste}}"
                                           IsVisible="{Binding HasCommand_ReplaceProperty}"
                                           Command="{StaticResource ReplaceCommand}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type MenuBase}}}"/>-->
@@ -962,8 +962,8 @@
                           <Setter Property="sd:Interaction.Behaviors">
                             <Setter.Value>
                               <sd:BehaviorCollection>
-<!--                                 <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Copy" ContinueRouting="False" Command="{Binding CopyProperty, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
-                                <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" ContinueRouting="False" Command="{Binding PasteProperty, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
+                                <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Copy}" ContinueRouting="False" Command="{Binding CopyProperty, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+                                <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Paste}" ContinueRouting="False" Command="{Binding PasteProperty, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
 <!--                                 <sd:CommandBindingBehavior RoutedCommand="{StaticResource ReplaceCommand}" ContinueRouting="False" Command="{Binding ReplaceProperty, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}" /> -->
                                 <sd:PropertyViewFilteringBehavior FilterToken="{Binding Text, ElementName=PropertyFilterTextBox, Mode=OneWay}"/>
                                 <sd:PropertyViewItemDragDropBehavior CanDrop="False" CanDrag="False" CanInsert="True"/>
