@@ -1095,6 +1095,9 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"Visible\"", r'IsVisible="true"', contents)
   contents = re.sub ("Visibility=\"{TemplateBinding ([a-zA-Z]*?)}\"", r'IsVisible="{TemplateBinding \1}"', contents)
 
+  contents = re.sub ("Property=\"Visibility\" Value=\"Hidden\"", r'Property="IsVisible" Value="false"', contents)
+  contents = re.sub ("Property=\"Visibility\" Value=\"Collapsed\"", r'Property="IsVisible" Value="false"', contents)
+
   # Tooltip
   contents = re.sub ("ToolTipService.ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
   contents = re.sub ("ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -1114,10 +1117,10 @@ def translateTags (contents):
   contents = re.sub ("IsItemsHost=\"True\"", r'', contents)
   contents = re.sub ("IsItemsHost=\"true\"", r'', contents)
 
-  # ContentSource  
-  contents = re.sub ("<ContentPresenter([^>]*?)ContentSource=\"(.*?)\"([^>]*?)/>", r'<ContentPresenter\1ContentTemplate="{Binding \2}"\3/>', contents)
-  contents = re.sub ("<ContentPresenter([^>]*?)ContentTemplate=\"(.*?)\"([^>]*?)ContentSource=\"(.*?)\"([^>]*?)>", r'<ContentPresenter\1ContentTemplate="\2"\3\5>', contents)
-  contents = re.sub ("<ContentPresenter([^>]*?)ContentSource=\"(.*?)\"([^>]*?)>", r'<ContentPresenter\1ContentTemplate="{Binding \2}"\3>', contents)
+  # ContentSource   - is this a content + templatebinding?
+  contents = re.sub ("<ContentPresenter([^>]*?)ContentSource=\"(.*?)\"([^>]*?)/>", r'<ContentPresenter\1Content="{TemplateBinding \2}"\3/>', contents)
+  #contents = re.sub ("<ContentPresenter([^>]*?)ContentTemplate=\"(.*?)\"([^>]*?)ContentSource=\"(.*?)\"([^>]*?)>", r'<ContentPresenter\1ContentTemplate="\2"\3\5>', contents)
+  #contents = re.sub ("<ContentPresenter([^>]*?)ContentSource=\"(.*?)\"([^>]*?)>", r'<ContentPresenter\1ContentTemplate="{Binding \2}"\3>', contents)
   #contents = re.sub ("ContentSource=\"(.*?)\"", r'ContentTemplate="\1"', contents)
   #contents = re.sub ("ContentTemplateSelector=\"(.*?)\"", r'ContentTemplate="\1"', contents)
   # ContentTemplateSelector will probably have to be manually managed in the short term.
@@ -1185,6 +1188,7 @@ def translateTags (contents):
   # SystemColors
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ActiveCaptionTextBrushKey\}\}", r'{StaticResource ActiveCaptionTextBrushKey}', contents) # one line style  
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ControlTextBrushKey\}\}", r'{StaticResource ControlTextBrushKey}', contents) # one line style  
+  contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.GrayTextBrushKey\}\}", r'{StaticResource GrayTextBrushKey}', contents) # one line style  
   
   # Styles become various forms of Theme.
   contents = re.sub ("\<Style TargetType=\"([^\"].*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1"\2></ControlTheme>', contents) # one line style
@@ -1343,16 +1347,6 @@ def translateTags (contents):
   
   contents = re.sub ("<ControlTheme x:Key=\"TextBlock\"", '<ControlTheme x:Key="{x:Type TextBlock}"', contents)
   
-  # Triggers. These will probably have to be managed by hand. Just comment them out.
-  contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
-  contents = re.sub (re.compile ("\<DataTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
-  contents = re.sub (re.compile ("\<i:Interaction\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
-  contents = re.sub (re.compile ("\<Style\.Triggers>(.*?)</Style\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1</ControlTheme.Triggers> -->", contents)
-  contents = re.sub (re.compile ("\<Rectangle\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <Rectangle.Triggers>\1.Triggers> -->", contents)
-  
-  # Fix nested comments.
-  contents = removeNestedComments (contents)
-
   # Fontweight
   contents = re.sub ("FontWeights\.", "FontWeight.", contents)
   contents = re.sub ("FontTheme=\"(.*?)\"", r'FontStyle="\1"', contents)
@@ -1521,7 +1515,7 @@ def translateTags (contents):
   contents = re.sub (re.compile ("<ControlTheme x:Key=\"ctrl:NumericTextBox\" TargetType=\"ctrl:NumericTextBox\"(.*?)<ScrollViewer(.*?)/>", re.DOTALL), r'<ControlTheme x:Key="ctrl:NumericTextBox" TargetType="ctrl:NumericTextBox"\1<ScrollViewer\2>\n\t\t<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>\n\t</ScrollViewer>', contents)
   
   # fix avalonia specific additions.
-  contents = re.sub ("<ControlTheme x:Key=\"{x:Type Menu}\" TargetType=\"{x:Type Menu}\" >", '<ControlTheme x:Key="{x:Type Menu}" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">', contents)
+  #contents = re.sub ("<ControlTheme x:Key=\"{x:Type Menu}\" TargetType=\"{x:Type Menu}\" >", '<ControlTheme x:Key="{x:Type Menu}" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">', contents)
 
   contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type Button}\"(((?!</ControlTemplate>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type Button}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTemplate>', contents) # have to force a content value in buttons?
   
@@ -1530,9 +1524,11 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type Expander}\"(((?!</ControlTemplate>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type Expander}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTemplate>', contents) 
   contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type Expander}\"(((?!</ControlTemplate>).)*)<Border IsVisible=\"(.*?)\"(.*?)>(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type Expander}"\2<Border IsVisible="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" \5>\6</ControlTemplate>', contents) 
   
-  contents = regex.sub ("<ContentPresenter(.*?)x:Name=\"HeaderHost\"(.*?)>", r'<ContentPresenter Content="{TemplateBinding Header}"\1x:Name="HeaderHost"\2>', contents) 
+  #contents = regex.sub ("<ContentPresenter(.*?)x:Name=\"HeaderHost\"(.*?)>", r'<ContentPresenter Content="{TemplateBinding Header}"\1x:Name="HeaderHost"\2>', contents) 
 
   contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ListBoxItem}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ListBoxItem}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTheme>', contents) 
+
+  contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ctrl:TreeViewItem}\"(.*?)ContentSource=\"Header\"(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ctrl:TreeViewItem}"\2\3</ControlTheme>', contents) 
 
   contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ToolTip}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ToolTip}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTheme>', contents) 
 
@@ -1545,6 +1541,9 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type TabItem}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type TabItem}"\2<ContentPresenter Content="{TemplateBinding Content}" \4>\6</ControlTheme>', contents) 
 
   contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ContextMenu}\" TargetType=\"{x:Type ContextMenu}\" >", r'<ControlTheme x:Key="{x:Type ContextMenu}" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">', contents) 
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type Menu}\" TargetType=\"{x:Type Menu}\" >", r'<ControlTheme x:Key="{x:Type Menu}" TargetType="{x:Type Menu}" BasedOn="{StaticResource {x:Type Menu}}">', contents) 
+  contents = regex.sub ("<ControlTheme x:Key=\"{x:Type MenuItem}\" TargetType=\"{x:Type MenuItem}\" >", r'<ControlTheme x:Key="{x:Type MenuItem}" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">', contents) 
+  contents = regex.sub (regex.compile ("<ControlTemplate([^>]*?)TargetType=\"{x:Type MenuItem}\"(((?!</ControlTemplate>).)*)<Popup (.*?)x:Name=\"SubMenuPopup\"(.*?)>(((?!ControlTemplate>).)*)</ControlTemplate>", regex.DOTALL), r'<ControlTemplate\1TargetType="{x:Type MenuItem}"\2<Popup \4x:Name="PART_Popup"\5>\6</ControlTemplate>', contents) 
 
   contents = regex.sub ("<ControlTheme x:Key=\"{x:Type ToggleButton}\" TargetType=\"{x:Type ToggleButton}\" >", r'<ControlTheme x:Key="{x:Type ToggleButton}" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">', contents) 
 
@@ -1603,6 +1602,28 @@ def translateTags (contents):
   contents = regex.sub ("Source=\"{StaticResource ImageUnlocked}\"", r'Source="{Binding Source={StaticResource ImageUnlocked}, Path=Source}"', contents) 
   contents = regex.sub ("Source=\"{StaticResource ImageLength}\"", r'Source="{Binding Source={StaticResource ImageLength}, Path=Source}"', contents) 
 
+  # Triggers. These will probably have to be managed by hand. Just comment them out.
+  
+  # Handle those triggers we can.
+  pat = re.compile ("<ControlTheme(((?!</ControlTheme>).)*)<ControlTemplate.Triggers>(.*?)</ControlTemplate.Triggers>(((?!ControlTheme>).)*)</ControlTheme>", re.DOTALL)
+  #contents = pat.sub (lambda match: match.group () if "x:Key" in match.group () else r'<ControlTheme x:Key="' + match.group(2) + '"' + match.group(1) + r'TargetType="' + match.group(2) + r'"' + match.group(3) + r' >', contents)
+  if (re.findall (pat, contents)):
+    for match in reversed(list(re.finditer (pat, contents))):
+      context = match.group (1)
+      triggers = match.group (3)
+      (styles, triggers) = rewriteTriggers (triggers, context)
+      contents = contents[:match.start ()] + r"<ControlTheme" + context + r"<ControlTemplate.Triggers>" + triggers + r"</ControlTemplate.Triggers>" + match.group(4) + styles + r"</ControlTheme>" + contents[match.end ():] 
+  
+  
+  contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<DataTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<i:Interaction\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<Style\.Triggers>(.*?)</Style\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1</ControlTheme.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<Rectangle\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <Rectangle.Triggers>\1.Triggers> -->", contents)
+
+  # Fix nested comments.
+  contents = removeNestedComments (contents)
+  
   contents = regex.sub (regex.compile ("<!-- <ControlTheme\.Triggers>(\s*?)<Trigger Property=\"Orientation\" Value=\"Horizontal\">(\s*?)<Setter Property=\"Height\" Value=\"18\" />(\s*?)<Setter Property=\"Template\" Value=\"{StaticResource HorizontalScrollBarControlTemplate}\" />(\s*?)</Trigger>(\s*?)<Trigger Property=\"Orientation\" Value=\"Vertical\">(\s*?)<Setter Property=\"Width\" Value=\"18\" />(\s*?)<Setter Property=\"Template\" Value=\"{StaticResource VerticalScrollBarControlTemplate}\" />(\s*?)</Trigger>(\s*?)</ControlTheme\.Triggers> -->", regex.DOTALL), r'<Style Selector="^[Orientation=Horizontal]">\n<Setter Property="Height" Value="18" />\n<Setter Property="Template" Value="{StaticResource HorizontalScrollBarControlTemplate}" />\n</Style>\n<Style Selector="^[Orientation=Vertical]">\n<Setter Property="Width" Value="18" />\n<Setter Property="Template" Value="{StaticResource VerticalScrollBarControlTemplate}" />\n</Style>', contents) 
 
   contents = regex.sub (regex.compile ("<ControlTemplate x:Key=\"TreeExpanderToggleButton\" TargetType=\"{x:Type ToggleButton}\">(\s*?)<Grid Background=\"Transparent\">(\s*?)<Path HorizontalAlignment=\"Center\" x:Name=\"Up_Arrow\" VerticalAlignment=\"Center\" Fill=\"{StaticResource GlyphBrush}\"(\s*?)Data=\"M 0 6 V 0 l 5 3 z\" RenderTransformOrigin=\"0.5,0.5\" Stretch=\"Uniform\" StrokeThickness=\"0\"/>(\s*?)<Path IsVisible=\"false\" HorizontalAlignment=\"Center\" x:Name=\"Down_Arrow\" VerticalAlignment=\"Center\" Fill=\"{StaticResource GlyphBrush}\"(\s*?)Data=\"M 0 0 H 6 L 3 6 Z\" RenderTransformOrigin=\"0.5,0.5\" Stretch=\"Uniform\" StrokeThickness=\"0\"/>", regex.DOTALL), r'<ControlTemplate x:Key="TreeExpanderToggleButton" TargetType="{x:Type ToggleButton}">\n<Grid Background="Transparent">\n<Path HorizontalAlignment="Center" x:Name="Up_Arrow" VerticalAlignment="Center" Fill="{StaticResource GlyphBrush}" Data="M 0 6 V 0 l 5 3 z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0" IsVisible="{Binding $parent[ToggleButton].IsChecked}"/>\n<Path HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center" Fill="{StaticResource GlyphBrush}" Data="M 0 0 H 6 L 3 6 Z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>', contents) 
@@ -1627,6 +1648,74 @@ def translateTags (contents):
     #</Style\.Triggers> -->  
     
   return contents
+
+def rewriteTriggers (triggers, context):
+  print ("\n\n\n\nTriggers", triggers)
+  
+  styles = ""
+  validProperties = [ "IsEnabled", ":not(:empty)", ":empty", ":selected"]
+  
+  pat = re.compile ("<Trigger Property=\"(.*?)\" Value=\"(.*?)\"(\s*?)>(((?!</Trigger>).)*)</Trigger>", re.DOTALL)
+  if (re.findall (pat, triggers)):
+    for match in reversed(list(re.finditer (pat, triggers))):
+      prop = match.group (1)
+      value = match.group (2)
+      setters = match.group (4)
+      (prop, value) = substituteTriggers (prop, value)
+      print ("T:", prop, value, setters)
+      if prop in validProperties:
+        if value != None:
+          styles += '\t<Style Selector="^[' + prop + '=' + value + ']">\n'
+        else:
+          styles += '\t<Style Selector="^' + prop + '">\n'
+        styles += rewriteSetters (setters, context)
+        styles += '\t</Style>\n'
+        triggers = triggers[:match.start ()] + triggers[match.end ():]
+        print (styles, triggers)
+  
+  return (styles, triggers)
+
+def substituteTriggers (prop, value):
+  if prop == "Role" and value == "SubmenuHeader":
+    return (":not(:empty)", None)
+  if prop == "Role" and value == "SubmenuItem":
+    return (":empty", None)
+  if prop == "IsHighlighted" and value == "True":
+    return (":selected", None)
+
+  return (prop, value)
+
+def rewriteSetters (setters, context):
+  
+  # rewrite those with a target name.
+  pat = re.compile ("<Setter ((Property|TargetName|Value)=\"([^>]*?)\"(\s*?))((Property|TargetName|Value)=\"([^>]*?)\"(\s*?))((Property|TargetName|Value)=\"([^>]*?)\"(\s*?))/>", re.DOTALL)
+  print ("hthh", pat, setters)
+  if (re.findall (pat, setters)):
+    for match in reversed(list(re.finditer (pat, setters))):
+      d = {}
+      d[match.group(2)] = match.group(3)
+      d[match.group(6)] = match.group(7)
+      d[match.group(10)] = match.group(11)
+      prop = d["Property"]
+      value = d["Value"]
+      target = d["TargetName"]
+      cpat = re.compile ("<([^<>]*?) ([^>]*?)x:Name=\"" + target + "\"([^>]*?)>", re.DOTALL)
+      print ("S:", prop, value, target, setters, context, cpat)
+      
+      if (re.findall (cpat, context)):
+        rmatch = re.findall (cpat, context)[0]
+        ttype = rmatch[0]
+        print ("Found", rmatch)
+        
+        updatedsetter = '\t\t<Style Selector="^ /template/ ' + ttype + '#' + target + '">\n'
+        updatedsetter += '\t\t\t<Setter Property="' + prop + '" Value="' + value + '"/>\n'
+        updatedsetter += '\t\t</Style>\n'
+        setters = setters[:match.start ()] + updatedsetter + setters[match.end ():]
+        print ("Update", updatedsetter)
+      else:
+        setters = setters[:match.start ()] + "<!--" + match.group(0) + "-->" + setters[match.end ():]
+  
+  return setters
 
 def translateXAML (sourceFile):
   

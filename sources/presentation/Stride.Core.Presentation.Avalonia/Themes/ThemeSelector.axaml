@@ -171,13 +171,13 @@
               <Setter TargetName="Caption" Property="Foreground" Value="{StaticResource MainWindowActiveCaptionTextBrush}"/>
             </Trigger>
             <Trigger Property="ResizeMode" Value="NoResize">
-              <Setter TargetName="MaximizeButton" Property="Visibility" Value="Collapsed"/>
-              <Setter TargetName="MinimizeButton" Property="Visibility" Value="Collapsed"/>
-              <Setter TargetName="RestoreButton" Property="Visibility" Value="Collapsed"/>
+              <Setter TargetName="MaximizeButton" Property="IsVisible" Value="false"/>
+              <Setter TargetName="MinimizeButton" Property="IsVisible" Value="false"/>
+              <Setter TargetName="RestoreButton" Property="IsVisible" Value="false"/>
             </Trigger>
             <Trigger Property="WindowState" Value="Maximized">
               <Setter TargetName="ContentBorder" Property="BorderThickness" Value="0"/>
-              <Setter TargetName="MaximizeButton" Property="Visibility" Value="Collapsed"/>
+              <Setter TargetName="MaximizeButton" Property="IsVisible" Value="false"/>
               <Setter TargetName="RestoreButton" Property="Visibility" Value="Visible"/>
               
             </Trigger>
@@ -408,7 +408,7 @@
       <Trigger Property="IsEditable" Value="true">
         <Setter Property="IsTabStop" Value="false" />
         <Setter Property="Visibility" Value="Visible" TargetName="PART_EditableTextBox" />
-        <Setter Property="Visibility" Value="Hidden" TargetName="ContentSite" />
+        <Setter Property="IsVisible" Value="false" TargetName="ContentSite" />
       </Trigger>
     </ControlTemplate.Triggers> -->
   </ControlTemplate>
@@ -443,14 +443,16 @@
             <Trigger Property="IsMouseOver" Value="True">
               <Setter TargetName="HoverRectangle" Property="Opacity" Value="1"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+            	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="{x:Type ctrl:ColorPicker}" TargetType="{x:Type ctrl:ColorPicker}" >
     <Setter Property="Focusable" Value="False"/>
@@ -616,8 +618,8 @@
           </Grid>
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="ShowAlpha" Value="False">
-              <Setter TargetName="AlphaTextBlock" Property="Visibility" Value="Collapsed"/>
-              <Setter TargetName="AlphaValue" Property="Visibility" Value="Collapsed"/>
+              <Setter TargetName="AlphaTextBlock" Property="IsVisible" Value="false"/>
+              <Setter TargetName="AlphaValue" Property="IsVisible" Value="false"/>
             </Trigger>
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
@@ -678,9 +680,7 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="overlayRect" Property="Fill" Value="Fuchsia"/>
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="overlayRect" Property="Fill" Value="White"/>
-                        </Trigger>--><!--
+                        --><!--
             <Trigger Property="IsChecked" Value="True">
               <Setter TargetName="overlayRect" Property="Fill" Value="#40FFFFFF"/>
             </Trigger>
@@ -690,14 +690,26 @@
             <Trigger Property="IsPressed" Value="True">
               <Setter TargetName="overlayRect" Property="Fill" Value="#60FFFFFF"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter TargetName="overlayRect" Property="Fill" Value="#20FFFFFF"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=False]">
+
+              		<Style Selector="^ /template/ Rectangle#overlayRect">
+			<Setter Property="Fill" Value="#20FFFFFF"/>
+		</Style>
+
+            	</Style>
+	<Style Selector="^[IsEnabled=False]">
+
+                            		<Style Selector="^ /template/ Rectangle#overlayRect">
+			<Setter Property="Fill" Value="White"/>
+		</Style>
+
+                        	</Style>
+</ControlTheme>
 
   
 
@@ -817,14 +829,19 @@
             <Trigger Property="IsPressed" Value="True">
               <Setter TargetName="ContentPresenter" Property="Opacity" Value="0.5"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter TargetName="ContentPresenter" Property="Opacity" Value="0.25"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=False]">
+
+              		<Style Selector="^ /template/ ContentPresenter#ContentPresenter">
+			<Setter Property="Opacity" Value="0.25"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="VerticalScrollBarThumbStyle" d:IsControlPart="True" TargetType="{x:Type Thumb}" BasedOn="{x:Null}">
     <Setter Property="Template">
@@ -837,9 +854,7 @@
             <Trigger Property="IsMouseOver" Value="True">
               <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbMouseOverBackgroundBrush}"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="False" >
-              <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbDisabledBrush}"/>
-            </Trigger>
+            
             <Trigger Property="IsDragging" Value="True">
               <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbPressedBackgroundBrush}"/>
             </Trigger>
@@ -847,7 +862,14 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=False]">
+
+              		<Style Selector="^ /template/ Rectangle#ThumbRectangle">
+			<Setter Property="Fill" Value="{StaticResource ScrollBarThumbDisabledBrush}"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="HorizontalScrollBarThumbStyle" d:IsControlPart="True" TargetType="{x:Type Thumb}" BasedOn="{x:Null}">
     <Setter Property="Template">
       <Setter.Value>
@@ -859,9 +881,7 @@
             <Trigger Property="IsMouseOver" Value="True">
               <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbMouseOverBackgroundBrush}"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbDisabledBrush}"/>
-            </Trigger>
+            
             <Trigger Property="IsDragging" Value="True">
               <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbPressedBackgroundBrush}"/>
             </Trigger>
@@ -869,7 +889,14 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=False]">
+
+              		<Style Selector="^ /template/ Rectangle#ThumbRectangle">
+			<Setter Property="Fill" Value="{StaticResource ScrollBarThumbDisabledBrush}"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="ScrollBarArrowRepeatButtonStyle" d:IsControlPart="True" TargetType="{x:Type RepeatButton}">
     <Setter Property="IsTabStop" Value="False" />
@@ -1353,9 +1380,7 @@
             <Border Background="{StaticResource DisabledBackgroundBrush}" Opacity="0" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{StaticResource DisabledBorderBrush}" x:Name="border"/>
           </Grid>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter Property="Opacity" TargetName="border" Value="0.8"/>
-            </Trigger>
+            
             <Trigger Property="IsIndeterminate" Value="True">
               <Trigger.EnterActions>
                 <BeginStoryboard x:Name="IndeterminateOnStoryboard">
@@ -1371,7 +1396,14 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=False]">
+
+              		<Style Selector="^ /template/ Border#border">
+			<Setter Property="Opacity" Value="0.8"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="{x:Type TextBox}" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}" >
     <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
@@ -1398,11 +1430,9 @@
           </Border>
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="HasText" Value="True">
-              <Setter TargetName="Watermark" Property="Visibility" Value="Hidden"/>
+              <Setter TargetName="Watermark" Property="IsVisible" Value="false"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter TargetName="PART_TrimmedText" Property="Foreground" Value="Gray"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
@@ -1414,7 +1444,14 @@
         </DataTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=False]">
+
+              		<Style Selector="^ /template/ TextBlock#PART_TrimmedText">
+			<Setter Property="Foreground" Value="Gray"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="{x:Type ctrl:NumericTextBox}" TargetType="ctrl:NumericTextBox" BasedOn="{StaticResource {x:Type TextBox}}" >
     <Setter Property="BorderThickness" Value="1,1,1,1"/>
@@ -1447,14 +1484,12 @@
           </Border>
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="HasText" Value="True">
-              <Setter TargetName="Watermark" Property="Visibility" Value="Hidden"/>
+              <Setter TargetName="Watermark" Property="IsVisible" Value="false"/>
             </Trigger>
             <Trigger Property="DisplayUpDownButtons" Value="True">
               <Setter TargetName="upDownButtons" Property="Visibility" Value="Visible"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter Property="Foreground" Value="Gray"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
@@ -1473,7 +1508,11 @@
         </interactivity:BehaviorCollection>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=False]">
+
+              <Setter Property="Foreground" Value="Gray"/>
+            	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="{x:Type ctrl:TimeSpanEditor}" TargetType="ctrl:TimeSpanEditor" >
     <Setter Property="Focusable" Value="False"/>
@@ -1716,9 +1755,9 @@
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource MenuHoverBrush}" Opacity="0" x:Name="HoverBorder"/>
-        <ContentPresenter Grid.Column="0" Margin="6,3" x:Name="Icon" VerticalAlignment="Center" ContentTemplate="{Binding Icon}" />
-        <ContentPresenter Content="{TemplateBinding Header}" Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" ContentTemplate="{Binding Header}" Margin="2,1,2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
-        <Popup Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="SubMenuPopup" Focusable="false"  >
+        <ContentPresenter Grid.Column="0" Margin="6,3" x:Name="Icon" VerticalAlignment="Center" Content="{TemplateBinding Icon}" />
+        <ContentPresenter Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" Content="{TemplateBinding Header}" Margin="2,1,2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+        <Popup Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="PART_Popup" Focusable="false"  >
           <Grid x:Name="SubMenu">
             <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="0"/>
             <StackPanel   />
@@ -1731,7 +1770,7 @@
         <Setter Property="PopupAnimation" Value="None" TargetName="SubMenuPopup" />
       </Trigger>
       <Trigger Property="Icon" Value="{x:Null}">
-        <Setter Property="Visibility" Value="Collapsed" TargetName="Icon" />
+        <Setter Property="IsVisible" Value="false" TargetName="Icon" />
       </Trigger>
       <Trigger Property="IsHighlighted" Value="True">
         <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
@@ -1752,13 +1791,13 @@
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource MenuHoverBrush}" Opacity="0" x:Name="HoverBorder"/>
-        <ContentPresenter Grid.Column="0" Margin="6,3" x:Name="Icon" VerticalAlignment="Center" ContentTemplate="{Binding Icon}" />
-        <ContentPresenter Content="{TemplateBinding Header}" Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" ContentTemplate="{Binding Header}" Margin="2,1,2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+        <ContentPresenter Grid.Column="0" Margin="6,3" x:Name="Icon" VerticalAlignment="Center" Content="{TemplateBinding Icon}" />
+        <ContentPresenter Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" Content="{TemplateBinding Header}" Margin="2,1,2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
       </Grid>
     </Border>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="Icon" Value="{x:Null}">
-        <Setter Property="Visibility" Value="Collapsed" TargetName="Icon" />
+        <Setter Property="IsVisible" Value="false" TargetName="Icon" />
       </Trigger>
       <Trigger Property="IsHighlighted" Value="True">
         <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
@@ -1787,7 +1826,7 @@
           <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0,0,0,0" Margin="3,0">
             <Grid x:Name="Grid">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
+                <ColumnDefinition  MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
                 <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemContentColumnGroup" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup" />
@@ -1798,7 +1837,7 @@
               <Grid Grid.Column="0" IsVisible="false" Margin="4,2" x:Name="GlyphPanel" VerticalAlignment="Center">
                 <Path x:Name="GlyphPanelpath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,2 L0,4.8 L2.5,7.4 L7.1,2.8 L7.1,0 L2.5,4.6 z" FlowDirection="LeftToRight" />
               </Grid>
-              <ContentPresenter Content="{TemplateBinding Header}" Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" ContentTemplate="{Binding Header}" Margin="0,3" VerticalAlignment="Center" HorizontalAlignment="Stretch"  />
+              <ContentPresenter Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" Content="{TemplateBinding Header}" Margin="0,3" VerticalAlignment="Center" HorizontalAlignment="Stretch"  />
               <TextBlock x:Name="IGTTextBlock" Grid.Column="3" Text="{TemplateBinding MenuItem.InputGesture}"  VerticalAlignment="Center" IsVisible="true"  />
               <Grid Grid.Column="4" Margin="4,2" x:Name="ArrowPanel" VerticalAlignment="Center">
                 <Path x:Name="ArrowPanelPath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z" />
@@ -1831,50 +1870,34 @@
               <Setter Property="Margin" Value="10,2" TargetName="HeaderHost" />
               <Setter Property="Grid.IsSharedSizeScope" Value="true" />
               <Setter Property="Placement" Value="Bottom" TargetName="SubMenuPopup" />
-              <Setter Property="Visibility" Value="Collapsed" TargetName="GlyphPanel" />
-              <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel" />
-              <Setter Property="Visibility" Value="Collapsed" TargetName="Icon" />
+              <Setter Property="IsVisible" Value="false" TargetName="GlyphPanel" />
+              <Setter Property="IsVisible" Value="false" TargetName="ArrowPanel" />
+              <Setter Property="IsVisible" Value="false" TargetName="Icon" />
               <Setter Property="MinWidth" Value="0" TargetName="IconColumn" />
               <Setter Property="Width" Value="0" TargetName="ArrowColumn" />
             </Trigger>
             <Trigger Property="Role" Value="TopLevelItem">
               <Setter Property="Margin" Value="10,2" TargetName="HeaderHost" />
-              <Setter Property="Visibility" Value="Collapsed" TargetName="GlyphPanel" />
-              <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel" />
-              <Setter Property="Visibility" Value="Collapsed" TargetName="Icon" />
+              <Setter Property="IsVisible" Value="false" TargetName="GlyphPanel" />
+              <Setter Property="IsVisible" Value="false" TargetName="ArrowPanel" />
+              <Setter Property="IsVisible" Value="false" TargetName="Icon" />
               <Setter Property="MinWidth" Value="0" TargetName="IconColumn" />
               <Setter Property="Width" Value="0" TargetName="ArrowColumn" />
             </Trigger>
-            <Trigger Property="Role" Value="SubmenuHeader">
-              <Setter Property="DockPanel.Dock" Value="Top" />
-              <Setter Property="Width" Value="16" TargetName="IconColumn" />
-              <Setter Property="Grid.IsSharedSizeScope" Value="true" />
-              <Setter Property="MinWidth" Value="70" TargetName="IGTTextBlock" />
-            </Trigger>
-            <Trigger Property="Role" Value="SubmenuItem">
-              <Setter Property="DockPanel.Dock" Value="Top" />
-              <Setter Property="Width" Value="16" TargetName="IconColumn" />
-              <Setter Property="Visibility" Value="Hidden" TargetName="ArrowPanel" />
-              <Setter Property="Grid.IsSharedSizeScope" Value="true" />
-              <Setter Property="MinWidth" Value="70" TargetName="IGTTextBlock" />
-            </Trigger>
+            
+            
             <Trigger Property="IsSuspendingPopupAnimation" Value="true">
               <Setter Property="PopupAnimation" Value="None" TargetName="SubMenuPopup" />
             </Trigger>
             <Trigger Property="IsChecked" Value="true">
               <Setter Property="Visibility" Value="Visible" TargetName="GlyphPanel" />
-              <Setter Property="Visibility" Value="Collapsed" TargetName="Icon" />
+              <Setter Property="IsVisible" Value="false" TargetName="Icon" />
             </Trigger>
             <Trigger Property="AllowsTransparency" SourceName="SubMenuPopup" Value="true">
               <Setter Property="Margin" Value="0" TargetName="SubMenu" />
               
             </Trigger>
-            <Trigger Property="IsHighlighted" Value="True">
-              <Setter Property="Opacity" TargetName="HoverBorder" Value="1" />
-              <Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}" TargetName="GlyphPanelpath" />
-              <Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}" TargetName="ArrowPanelPath" />
-
-            </Trigger>
+            
             <MultiTrigger>
               <MultiTrigger.Conditions>
                 <Condition Property="IsSubmenuOpen" Value="True" />
@@ -1888,102 +1911,64 @@
                 <Setter Property="BorderBrush" Value="{StaticResource MenuBorderBrush}" TargetName="Border" />
               </MultiTrigger.Setters>
             </MultiTrigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter Property="Foreground" Value="Gray" />
-              <Setter TargetName="IGTTextBlock" Property="Foreground" Value="Gray" />
-              <Setter TargetName="HeaderHost" Property="Opacity" Value="0.5" />
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
+  	<Style Selector="^[IsEnabled=False]">
 
-    <Style Selector="^:not(:empty)">
-              <Setter Property="DockPanel.Dock" Value="Top" />
-              <Setter Property="Grid.IsSharedSizeScope" Value="true" />
-<!--               <Setter Property="Width" Value="16" TargetName="IconColumn" /> -->
-      <Style Selector="^ /template/ TextBlock#IGTTextBlock">
-              <Setter Property="MinWidth" Value="70" />
-      </Style>
-    </Style>
-    
-    <Style Selector="^:empty">
-              <Setter Property="DockPanel.Dock" Value="Top" />
-              <Setter Property="Grid.IsSharedSizeScope" Value="true" />
-<!--               <Setter Property="Width" Value="16" TargetName="IconColumn" /> -->
-      <Style Selector="^ /template/ Grid#ArrowPanel">
-              <Setter Property="IsVisible" Value="false" />
-      </Style>
-      <Style Selector="^ /template/ TextBlock#IGTTextBlock">
-              <Setter Property="MinWidth" Value="70" />
-      </Style>
-    </Style>
-
-<!--    <Style Selector="^[IsChecked=true]">
-      <Style Selector="^ /template/ Grid#GlyphPanel">
-              <Setter Property="IsVisible" Value="true" />
-      </Style>
-      <Style Selector="^ /template/ ContentPresenter#Icon">
-              <Setter Property="IsVisible" Value="false" />
-      </Style>
-    </Style>-->
-            
-    <Style Selector="^:selected">
-      <Style Selector="^ /template/ Border#HoverBorder">
-              <Setter Property="Opacity" Value="1" />
-      </Style>
-      <Style Selector="^ /template/ Path#GlyphPanelpath">
-              <Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}" />
-      </Style>
-      <Style Selector="^ /template/ Path#ArrowPanelPath">
-              <Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}" />
-      </Style>
-    </Style>
-    
-    <Style Selector="^[IsSubMenuOpen=True]">
-      <Style Selector="^ /template/ Border#HoverBorder">
-                <Setter Property="Opacity" Value="0" />
-      </Style>
-      <Style Selector="^ /template/ Border#Border">
-                <Setter Property="Background" Value="{StaticResource MenuBackgroundBrush}" />
-                <Setter Property="BorderThickness" Value="0.5,0.5,0.5,0" />
-                <Setter Property="BorderBrush" Value="{StaticResource MenuBorderBrush}" />
-      </Style>
-      <Style Selector="^ /template/ Border#SubmenuMainWrapperBorder">
-                <Setter Property="BorderThickness" Value="0.5,0,0.5,0.5" />
-      </Style>
-    </Style>
-
-    <Style Selector="^[IsEnabled=False]">
               <Setter Property="Foreground" Value="Gray" />
-      <Style Selector="^ /template/ TextBlock#IGTTextBlock">
-              <Setter Property="Foreground" Value="Gray" />
-      </Style>
-      <Style Selector="^ /template/ ContentPresenter#HeaderHost">
-              <Setter Property="Opacity" Value="0.5" />
-      </Style>
-    </Style>
-    
-    
-<!--    <Style Selector="^ /template/ Grid#ArrowPanel">
-      <Setter Property="IsVisible" Value="false" />      
-    </Style>-->
-    
-    
-<!--             <Style Selector="^[IsTopLevel=true]"> -->
-<!--               <Style Selector="^:selected /template/ Border#root"> -->
-<!--              <Style Selector="^#HeaderHost">
-      <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush4}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}" />
-                <Setter Property="Margin" Value="10,2" />
-    </Style>-->
-<!--            <Style Selector="^[IsTopLevel=true]">
-              <Style Selector="#HeaderHost">
-                <Setter Property="Margin" Value="10,2" />
-              </Style>
-            </Style>-->
+              		<Style Selector="^ /template/ TextBlock#IGTTextBlock">
+			<Setter Property="Foreground" Value="Gray"/>
+		</Style>
 
-  </ControlTheme>
+              		<Style Selector="^ /template/ ContentPresenter#HeaderHost">
+			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+            	</Style>
+	<Style Selector="^:selected">
+
+              		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Path#GlyphPanelpath">
+			<Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Path#ArrowPanelPath">
+			<Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}"/>
+		</Style>
+
+
+            	</Style>
+	<Style Selector="^:empty">
+
+              <Setter Property="DockPanel.Dock" Value="Top" />
+              <!--<Setter Property="Width" Value="16" TargetName="IconColumn" />-->
+              		<Style Selector="^ /template/ Grid#ArrowPanel">
+			<Setter Property="IsVisible" Value="false"/>
+		</Style>
+
+              <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+              		<Style Selector="^ /template/ TextBlock#IGTTextBlock">
+			<Setter Property="MinWidth" Value="70"/>
+		</Style>
+
+            	</Style>
+	<Style Selector="^:not(:empty)">
+
+              <Setter Property="DockPanel.Dock" Value="Top" />
+              <!--<Setter Property="Width" Value="16" TargetName="IconColumn" />-->
+              <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+              		<Style Selector="^ /template/ TextBlock#IGTTextBlock">
+			<Setter Property="MinWidth" Value="70"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="{x:Type Separator}" TargetType="{x:Type Separator}" >
     <Setter Property="Background" Value="{DynamicResource SolidBorderBrush}"/>
     <Setter Property="Margin" Value="0,0,0,0" />
@@ -2041,7 +2026,7 @@
               <ItemsPresenter x:Name="HeaderPanel"/>
             </Border>
             <Border x:Name="ContentPanel" Grid.Column="0" Grid.Row="1"  KeyboardNavigation.TabIndex="2" KeyboardNavigation.TabNavigation="Local">
-              <ContentPresenter  x:Name="PART_SelectedContentHost" ContentTemplate="{Binding SelectedContent}"/>
+              <ContentPresenter  x:Name="PART_SelectedContentHost" Content="{TemplateBinding SelectedContent}"/>
             </Border>
             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   BorderThickness="0,0,0,1" Opacity="0.5" Margin="2,0,2,0" x:Name="border1">
               <LayoutTransformControl>
@@ -2118,14 +2103,16 @@
               <Setter Property="CornerRadius" TargetName="ContentPanel" Value="2,0,0,2"/>
               <Setter Property="CornerRadius" TargetName="border" Value="0,2,2,0"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}" />
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="{x:Type TabItem}" d:IsControlPart="True" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}" >
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
@@ -2168,7 +2155,7 @@
               </Border.Background>
             </Border>
             <Grid>
-              <ContentPresenter Content="{TemplateBinding Content}" x:Name="ContentSite" RecognizesAccessKey="True" ContentTemplate="{Binding Header}" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
+              <ContentPresenter x:Name="ContentSite" RecognizesAccessKey="True" Content="{TemplateBinding Header}" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
             </Grid>
 	</Grid>
 	</LayoutTransformControl>
@@ -2249,11 +2236,7 @@
               <Setter Property="Background" TargetName="border" Value="{DynamicResource SelectedBackgroundBrush}" />
               <Setter Property="Opacity" TargetName="border" Value="0.9" />
             </MultiTrigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
-              <Setter Property="Background" TargetName="border" Value="{DynamicResource DisabledBackgroundBrush}"/>
-              <Setter Property="Opacity" TargetName="grid" Value="0.3"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
@@ -2267,7 +2250,19 @@
         </Setter>
       </Trigger>
     </ControlTheme.Triggers> -->
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=False]">
+
+              <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+              		<Style Selector="^ /template/ Border#border">
+			<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Grid#grid">
+			<Setter Property="Opacity" Value="0.3"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="NuclearSliderThumb" d:IsControlPart="True" TargetType="{x:Type Thumb}">
     
     <Setter Property="Height" Value="14" />
@@ -2307,9 +2302,7 @@
               </Trigger.EnterActions>
 
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Background" TargetName="Background" Value="{DynamicResource DisabledBackgroundBrush}" />
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
@@ -2317,7 +2310,14 @@
     <Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
     <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
     <Setter Property="BorderThickness" Value="1,1,1,1"/>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              		<Style Selector="^ /template/ Border#Background">
+			<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="{x:Type Slider}" TargetType="{x:Type Slider}" >
     <Setter Property="Focusable" Value="False"/>
     <Setter Property="Background" Value="{DynamicResource NormalBrush}" />
@@ -2357,10 +2357,7 @@
               <Setter Property="Visibility" Value="Visible" TargetName="TopTick" />
               <Setter Property="Visibility" Value="Visible" TargetName="BottomTick" />
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" TargetName="Border" />
-              <Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}" TargetName="Border" />
-            </Trigger>
+            
             <Trigger Property="Orientation" Value="Vertical">
               <Setter Property="LayoutTransform" TargetName="GridRoot">
                 <Setter.Value>
@@ -2373,7 +2370,18 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              		<Style Selector="^ /template/ Border#Border">
+			<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Border#Border">
+			<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="{x:Type TreeView}" TargetType="{x:Type TreeView}" >
     <Setter Property="Template">
       <Setter.Value>
@@ -2399,7 +2407,7 @@
     </Grid>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsChecked" Value="true">
-        <Setter Property="Visibility" Value="Collapsed" TargetName="Up_Arrow" />
+        <Setter Property="IsVisible" Value="false" TargetName="Up_Arrow" />
         <Setter Property="Visibility" Value="Visible" TargetName="Down_Arrow" />
       </Trigger>
     </ControlTemplate.Triggers> -->
@@ -2412,7 +2420,7 @@
     </Grid>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsChecked" Value="true">
-        <Setter Property="Visibility" Value="Collapsed" TargetName="Up_Arrow" />
+        <Setter Property="IsVisible" Value="false" TargetName="Up_Arrow" />
         <Setter Property="Visibility" Value="Visible" TargetName="Down_Arrow" />
       </Trigger>
       <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ctrl:TreeViewItem}}, Mode=OneWay}" Value="True">
@@ -2457,17 +2465,17 @@
                 <Border x:Name="MainBorder" Opacity="0.25" Background="{DynamicResource NormalBrush}" CornerRadius="2,2,2,2"/>
                 <Border x:Name="SelectionBorder" Opacity="0" Background="{DynamicResource SelectedBackgroundBrush}" CornerRadius="2,2,2,2"/>
                 <Border x:Name="HoverBorder" Opacity="0" Background="{DynamicResource NormalBrush}" CornerRadius="2,2,2,2"/>
-                <ContentPresenter x:Name="PART_Header" ContentTemplate="{Binding Header}" d:LayoutOverrides="Width"  Margin="2,0,2,0" />
+                <ContentPresenter x:Name="PART_Header" Content="{TemplateBinding Header}" d:LayoutOverrides="Width"  Margin="2,0,2,0" />
               </Grid>
             </Border>
             <ItemsPresenter Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" x:Name="ItemsHost" />
           </Grid>
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="IsExpanded" Value="False">
-              <Setter Property="Visibility" Value="Collapsed" TargetName="ItemsHost" />
+              <Setter Property="IsVisible" Value="false" TargetName="ItemsHost" />
             </Trigger>
             <Trigger Property="HasItems" Value="False">
-              <Setter Property="Visibility" Value="Hidden" TargetName="Expander" />
+              <Setter Property="IsVisible" Value="false" TargetName="Expander" />
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
               <Trigger.ExitActions>
@@ -2487,9 +2495,7 @@
               <Setter Property="Opacity" TargetName="Selection_Border" Value="0.5" />
               <Setter Property="BorderBrush" TargetName="Selection_Border" Value="{DynamicResource NormalBorderBrush}" />
             </MultiTrigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-            </Trigger>
+            
             <MultiDataTrigger>
               <MultiDataTrigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
@@ -2516,7 +2522,11 @@
       </Setter.Value>
     </Setter>
     <Setter Property="Background" Value="Transparent"/>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}" />
+            	</Style>
+</ControlTheme>
 
   
 
@@ -2587,12 +2597,7 @@
                 <BeginStoryboard Storyboard="{StaticResource CheckedOn}" x:Name="CheckedOn_BeginStoryboard"/>
               </Trigger.EnterActions>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="#ADADAD" />
-              <Setter Property="Background" TargetName="Border" Value="{DynamicResource DisabledBackgroundBrush}"/>
-              <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource DisabledBorderBrush}"/>
-              <Setter Property="Opacity" TargetName="grid" Value="0.5"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
@@ -2606,7 +2611,23 @@
         </Setter>
       </Trigger>
     </ControlTheme.Triggers> -->
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              <Setter Property="Foreground" Value="#ADADAD" />
+              		<Style Selector="^ /template/ Border#Border">
+			<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Border#Border">
+			<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Grid#grid">
+			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
 
   
 
@@ -2770,14 +2791,16 @@
             <Trigger Property="IsKeyboardFocused" Value="true">
               <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="{StaticResource ToolBarGripper}"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              <Setter Property="Foreground" Value="{StaticResource ToolBarGripper}"/>
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="ToolBarThumbStyle" TargetType="{x:Type Thumb}">
     <Setter Property="Template">
       <Setter.Value>
@@ -2831,14 +2854,16 @@
             <Trigger Property="IsKeyboardFocused" Value="true">
               <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="{StaticResource ToolBarGripper}"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              <Setter Property="Foreground" Value="{StaticResource ToolBarGripper}"/>
+            	</Style>
+</ControlTheme>
   <LinearGradientBrush x:Key="ToolBarVerticalBackground" EndPoint="1,0" StartPoint="0,0">
     <GradientStop Color="#FFFFFF" Offset="0"/>
     <GradientStop Color="#FFFBFF" Offset="0.5"/>
@@ -2867,14 +2892,16 @@
             <Trigger Property="HasOverflowItems" Value="False">
               <Setter Property="Margin" TargetName="MainPanelBorder" Value="0"/>
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}"/>
+            	</Style>
+</ControlTheme>
   <ControlTemplate x:Key="PropertyGridExpander" TargetType="{x:Type ToggleButton}">
     <Grid  Background="Transparent" Focusable="False">
       <Grid.ColumnDefinitions>
@@ -2973,7 +3000,7 @@
         <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderLeftHeaderStyle}" />
       </Trigger>
       <Trigger Property="IsEnabled" Value="false">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+        <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}" />
       </Trigger>
     </ControlTemplate.Triggers> -->
   </ControlTemplate>
@@ -3943,7 +3970,7 @@
                                   ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
                                   
                                   ContentTemplateSelector="{TemplateBinding HeaderedItemsControl.HeaderTemplateSelector}"
-                                  
+                                  ContentSource="Header"
                                   HorizontalAlignment="{TemplateBinding ContentControl.HorizontalContentAlignment}"
                                   VerticalAlignment="{TemplateBinding ContentControl.VerticalContentAlignment}"
                                    > -->
@@ -4010,12 +4037,17 @@
             <Trigger Property="IsMouseOver" Value="true">
               <Setter Property="Opacity" TargetName="Grid" Value="1.0" />
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Opacity" TargetName="Grid" Value="0.5" />
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^[IsEnabled=false]">
+
+              		<Style Selector="^ /template/ Grid#Grid">
+			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
 </ResourceDictionary>
