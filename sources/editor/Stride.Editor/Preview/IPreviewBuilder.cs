@@ -45,6 +45,6 @@ namespace Stride.Editor.Preview
         /// Gets the framework element that contains the stride viewport.
         /// </summary>
         /// <returns></returns>
-//         FrameworkElement GetStrideView();
+        object GetStrideView();
     }
 }

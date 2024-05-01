@@ -27,6 +27,9 @@ namespace Stride.Assets.Presentation
             AssemblyRegistry.Register(typeof(Module).Assembly, AssemblyCommonCategories.Assets);
             // We need access to the AssetQuantumRegistry from the SessionTemplateGenerator so for now we register graph types in the module initializer.
             AssetQuantumRegistry.RegisterAssembly(typeof(Module).Assembly);
+            AssetPreview.DefaultViewType = typeof(StridePreviewView);
+            // Register default template
+            StrideTemplates.Register();
             // Initialize translation
             TranslationManager.Instance.RegisterProvider(new GettextTranslationProvider());
         }

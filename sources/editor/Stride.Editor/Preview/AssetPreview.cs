@@ -80,11 +80,10 @@ namespace Stride.Editor.Preview
             RenderingMode = gameSettings.GetOrCreate<EditorSettings>().RenderingMode;
 
             await Initialize();
-//             PreviewViewModel = await ProvideViewModel(asset.ServiceProvider);
-//             previewView = await ProvideView(asset.ServiceProvider);
+            PreviewViewModel = await ProvideViewModel(asset.ServiceProvider);
+            previewView = await ProvideView(asset.ServiceProvider);
             FinalizeInitialization();
-//             return previewView;
-            return null;
+            return previewView;
         }
 
         /// <inheritdoc/>
@@ -223,21 +222,21 @@ namespace Stride.Editor.Preview
             initCompletionSource.SetResult(0);
         }
 
-//         [ItemCanBeNull]
-//         private async Task<IPreviewView> ProvideView([NotNull] IViewModelServiceProvider serviceProvider)
-//         {
-//             var pluginService = serviceProvider.Get<IAssetsPluginService>();
-//             var viewType = pluginService.GetPreviewViewType(GetType()) ?? DefaultViewType;
-// 
-//             return viewType is not null
-//                 ? await Builder.Dispatcher.InvokeAsync(() =>
-//                 {
-//                     var view = (IPreviewView)Activator.CreateInstance(viewType);
-//                     view?.InitializeView(Builder, this);
-//                     return view;
-//                 })
-//                 : null;
-//         }
+        [ItemCanBeNull]
+        private async Task<IPreviewView> ProvideView([NotNull] IViewModelServiceProvider serviceProvider)
+        {
+            var pluginService = serviceProvider.Get<IAssetsPluginService>();
+            var viewType = pluginService.GetPreviewViewType(GetType()) ?? DefaultViewType;
+
+            return viewType is not null
+                ? await Builder.Dispatcher.InvokeAsync(() =>
+                {
+                    var view = (IPreviewView)Activator.CreateInstance(viewType);
+                    view?.InitializeView(Builder, this);
+                    return view;
+                })
+                : null;
+        }
 
         [ItemCanBeNull]
         private async Task<IAssetPreviewViewModel> ProvideViewModel([NotNull] IViewModelServiceProvider serviceProvider)

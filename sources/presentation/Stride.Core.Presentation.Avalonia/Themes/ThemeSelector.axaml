@@ -314,11 +314,13 @@
   <ControlTheme x:Key="{x:Type TextBlock}" TargetType="TextBlock" >
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
     <!-- <ControlTheme.Triggers>
-      <Trigger Property="IsEnabled" Value="False">
-        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
-      </Trigger>
+      
     </ControlTheme.Triggers> -->
-  </ControlTheme>
+  	<Style Selector="^:disabled">
+
+        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+      	</Style>
+</ControlTheme>
 
   
 
@@ -407,7 +409,7 @@
       </Trigger>
       <Trigger Property="IsEditable" Value="true">
         <Setter Property="IsTabStop" Value="false" />
-        <Setter Property="Visibility" Value="Visible" TargetName="PART_EditableTextBox" />
+        <Setter Property="IsVisible" TargetName="PART_EditableTextBox" Value="true" />
         <Setter Property="IsVisible" Value="false" TargetName="ContentSite" />
       </Trigger>
     </ControlTemplate.Triggers> -->
@@ -440,17 +442,22 @@
             <Trigger Property="IsHighlighted" Value="true">
               <Setter TargetName="SelectedRectangle" Property="Opacity" Value="1"/>
             </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="HoverRectangle" Property="Opacity" Value="1"/>
-            </Trigger>
+            
             
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+            	</Style>
+	<Style Selector="^:pointerover">
+
+              		<Style Selector="^ /template/ Rectangle#HoverRectangle">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
             	</Style>
 </ControlTheme>
 
@@ -671,22 +678,14 @@
             <Rectangle x:Name="overlayRect" Fill="#00FFFFFF"/>
           </Grid>
           <!-- <ControlTemplate.Triggers>
-            --><!--<Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="overlayRect" Property="Fill" Value="Gold"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="overlayRect" Property="Fill" Value="Lime"/>
-                        </Trigger>
+            --><!--
+                        
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="overlayRect" Property="Fill" Value="Fuchsia"/>
                         </Trigger>
                         --><!--
-            <Trigger Property="IsChecked" Value="True">
-              <Setter TargetName="overlayRect" Property="Fill" Value="#40FFFFFF"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="overlayRect" Property="Fill" Value="#80FFFFFF"/>
-            </Trigger>
+            
+            
             <Trigger Property="IsPressed" Value="True">
               <Setter TargetName="overlayRect" Property="Fill" Value="#60FFFFFF"/>
             </Trigger>
@@ -695,17 +694,45 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ Rectangle#overlayRect">
 			<Setter Property="Fill" Value="#20FFFFFF"/>
 		</Style>
 
             	</Style>
-	<Style Selector="^[IsEnabled=False]">
+	<Style Selector="^:pointerover">
+
+              		<Style Selector="^ /template/ Rectangle#overlayRect">
+			<Setter Property="Fill" Value="#80FFFFFF"/>
+		</Style>
+
+            	</Style>
+	<Style Selector="^:checked">
+
+              		<Style Selector="^ /template/ Rectangle#overlayRect">
+			<Setter Property="Fill" Value="#40FFFFFF"/>
+		</Style>
+
+            	</Style>
+	<Style Selector="^:disabled">
 
                             		<Style Selector="^ /template/ Rectangle#overlayRect">
 			<Setter Property="Fill" Value="White"/>
+		</Style>
+
+                        	</Style>
+	<Style Selector="^:pointerover">
+
+                            		<Style Selector="^ /template/ Rectangle#overlayRect">
+			<Setter Property="Fill" Value="Lime"/>
+		</Style>
+
+                        	</Style>
+	<Style Selector="^:checked">
+
+                            		<Style Selector="^ /template/ Rectangle#overlayRect">
+			<Setter Property="Fill" Value="Gold"/>
 		</Style>
 
                         	</Style>
@@ -834,7 +861,7 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ ContentPresenter#ContentPresenter">
 			<Setter Property="Opacity" Value="0.25"/>
@@ -851,9 +878,7 @@
             <Rectangle x:Name="ThumbRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4,0" Fill="{DynamicResource ScrollBarThumbBackgroundBrush}"/>
           </Border>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbMouseOverBackgroundBrush}"/>
-            </Trigger>
+            
             
             <Trigger Property="IsDragging" Value="True">
               <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbPressedBackgroundBrush}"/>
@@ -862,10 +887,17 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ Rectangle#ThumbRectangle">
 			<Setter Property="Fill" Value="{StaticResource ScrollBarThumbDisabledBrush}"/>
+		</Style>
+
+            	</Style>
+	<Style Selector="^:pointerover">
+
+              		<Style Selector="^ /template/ Rectangle#ThumbRectangle">
+			<Setter Property="Fill" Value="{StaticResource ScrollBarThumbMouseOverBackgroundBrush}"/>
 		</Style>
 
             	</Style>
@@ -878,9 +910,7 @@
             <Rectangle x:Name="ThumbRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,4" Fill="{DynamicResource ScrollBarThumbBackgroundBrush}"/>
           </Border>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbMouseOverBackgroundBrush}"/>
-            </Trigger>
+            
             
             <Trigger Property="IsDragging" Value="True">
               <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbPressedBackgroundBrush}"/>
@@ -889,10 +919,17 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ Rectangle#ThumbRectangle">
 			<Setter Property="Fill" Value="{StaticResource ScrollBarThumbDisabledBrush}"/>
+		</Style>
+
+            	</Style>
+	<Style Selector="^:pointerover">
+
+              		<Style Selector="^ /template/ Rectangle#ThumbRectangle">
+			<Setter Property="Fill" Value="{StaticResource ScrollBarThumbMouseOverBackgroundBrush}"/>
 		</Style>
 
             	</Style>
@@ -1071,7 +1108,7 @@
       </Setter.Value>
     </Setter>
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-    <!-- <ControlTheme.Triggers>
+    <!-- --><!-- <ControlTheme.Triggers>
       <Trigger Property="Selector.IsSelected" Value="True">
         <Setter Property="Foreground">
           <Setter.Value>
@@ -1079,7 +1116,7 @@
           </Setter.Value>
         </Setter>
       </Trigger>
-    </ControlTheme.Triggers> -->
+    </ControlTheme.Triggers> --><!-- -->
   </ControlTheme>
 
   
@@ -1139,32 +1176,42 @@
             </Grid>
           </Border>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsChecked" Value="true">
-              <Setter Property="Visibility" TargetName="Up_Arrow" Value="Collapsed" />
-              <Setter Property="Visibility" TargetName="Down_Arrow" Value="Visible" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Trigger.ExitActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
-              </Trigger.EnterActions>
-
-            </Trigger>
+            
+            
             <Trigger Property="IsPressed" Value="true">
-              <Trigger.ExitActions>
+              --><!-- <Trigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOff}" x:Name="PressedOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
+              </Trigger.ExitActions> --><!--
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOn}" x:Name="PressedOn_BeginStoryboard"/>
-              </Trigger.EnterActions>
+              </Trigger.EnterActions> --><!--
             </Trigger>
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^:pointerover">
+
+              <!-- <Trigger.ExitActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
+              </Trigger.ExitActions> -->
+              <!-- <Trigger.EnterActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
+              </Trigger.EnterActions> -->
+
+            	</Style>
+	<Style Selector="^:checked">
+
+              		<Style Selector="^ /template/ Path#Up_Arrow">
+			<Setter Property="IsVisible" Value="false"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Path#Down_Arrow">
+			<Setter Property="IsVisible" Value="true"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="ExpanderUpHeaderStyle" TargetType="{x:Type ToggleButton}">
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Template">
@@ -1204,32 +1251,42 @@
             </Grid>
           </Border>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsChecked" Value="true">
-              <Setter Property="Visibility" TargetName="Up_Arrow" Value="Collapsed" />
-              <Setter Property="Visibility" TargetName="Down_Arrow" Value="Visible" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Trigger.ExitActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
-              </Trigger.EnterActions>
-
-            </Trigger>
+            
+            
             <Trigger Property="IsPressed" Value="true">
-              <Trigger.ExitActions>
+              --><!-- <Trigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOff}" x:Name="PressedOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
+              </Trigger.ExitActions> --><!--
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOn}" x:Name="PressedOn_BeginStoryboard"/>
-              </Trigger.EnterActions>
+              </Trigger.EnterActions> --><!--
             </Trigger>
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^:pointerover">
+
+              <!-- <Trigger.ExitActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
+              </Trigger.ExitActions> -->
+              <!-- <Trigger.EnterActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
+              </Trigger.EnterActions> -->
+
+            	</Style>
+	<Style Selector="^:checked">
+
+              		<Style Selector="^ /template/ Path#Up_Arrow">
+			<Setter Property="IsVisible" Value="false"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Path#Down_Arrow">
+			<Setter Property="IsVisible" Value="true"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
   <ControlTheme x:Key="ExpanderLeftHeaderStyle" TargetType="{x:Type ToggleButton}">
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Template">
@@ -1279,32 +1336,42 @@
             </Grid>
           </Border>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsChecked" Value="true">
-              <Setter Property="Visibility" TargetName="Up_Arrow" Value="Collapsed" />
-              <Setter Property="Visibility" TargetName="Down_Arrow" Value="Visible" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Trigger.ExitActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
-              </Trigger.EnterActions>
-
-            </Trigger>
+            
+            
             <Trigger Property="IsPressed" Value="true">
-              <Trigger.ExitActions>
+              --><!-- <Trigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOff}" x:Name="PressedOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
+              </Trigger.ExitActions> --><!--
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOn}" x:Name="PressedOn_BeginStoryboard"/>
-              </Trigger.EnterActions>
+              </Trigger.EnterActions> --><!--
             </Trigger>
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^:pointerover">
+
+              <!-- <Trigger.ExitActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
+              </Trigger.ExitActions> -->
+              <!-- <Trigger.EnterActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
+              </Trigger.EnterActions> -->
+
+            	</Style>
+	<Style Selector="^:checked">
+
+              		<Style Selector="^ /template/ Path#Up_Arrow">
+			<Setter Property="IsVisible" Value="false"/>
+		</Style>
+
+              		<Style Selector="^ /template/ Path#Down_Arrow">
+			<Setter Property="IsVisible" Value="true"/>
+		</Style>
+
+            	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="{x:Type Expander}" TargetType="{x:Type Expander}" >
     <Setter Property="Focusable" Value="False"/>
@@ -1382,21 +1449,21 @@
           <!-- <ControlTemplate.Triggers>
             
             <Trigger Property="IsIndeterminate" Value="True">
-              <Trigger.EnterActions>
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard x:Name="IndeterminateOnStoryboard">
                   
                 </BeginStoryboard>
-              </Trigger.EnterActions>
-              <Trigger.ExitActions>
+              </Trigger.EnterActions> --><!--
+              --><!-- <Trigger.ExitActions>
                 <StopStoryboard BeginStoryboardName="IndeterminateOnStoryboard"/>
-              </Trigger.ExitActions>
-              <Setter Property="Visibility" TargetName="IndeterminateRoot" Value="Visible"/>
+              </Trigger.ExitActions> --><!--
+              <Setter Property="IsVisible" TargetName="IndeterminateRoot" Value="true"/>
             </Trigger>
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ Border#border">
 			<Setter Property="Opacity" Value="0.8"/>
@@ -1444,7 +1511,7 @@
         </DataTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ TextBlock#PART_TrimmedText">
 			<Setter Property="Foreground" Value="Gray"/>
@@ -1508,7 +1575,7 @@
         </interactivity:BehaviorCollection>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="Gray"/>
             	</Style>
@@ -1658,12 +1725,12 @@
     </Grid>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsFocused" Value="True">
-        <Trigger.ExitActions>
+        --><!-- <Trigger.ExitActions>
           <BeginStoryboard Storyboard="{StaticResource FocusedOff}" x:Name="FocusedOff_BeginStoryboard" />
-        </Trigger.ExitActions>
-        <Trigger.EnterActions>
+        </Trigger.ExitActions> --><!--
+        --><!-- <Trigger.EnterActions>
           <BeginStoryboard Storyboard="{StaticResource FocusedOn}" x:Name="FocusedOn_BeginStoryboard" />
-        </Trigger.EnterActions>
+        </Trigger.EnterActions> --><!--
       </Trigger>
       <MultiTrigger>
         <MultiTrigger.ExitActions>
@@ -1889,10 +1956,7 @@
             <Trigger Property="IsSuspendingPopupAnimation" Value="true">
               <Setter Property="PopupAnimation" Value="None" TargetName="SubMenuPopup" />
             </Trigger>
-            <Trigger Property="IsChecked" Value="true">
-              <Setter Property="Visibility" Value="Visible" TargetName="GlyphPanel" />
-              <Setter Property="IsVisible" Value="false" TargetName="Icon" />
-            </Trigger>
+            
             <Trigger Property="AllowsTransparency" SourceName="SubMenuPopup" Value="true">
               <Setter Property="Margin" Value="0" TargetName="SubMenu" />
               
@@ -1916,7 +1980,7 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="Gray" />
               		<Style Selector="^ /template/ TextBlock#IGTTextBlock">
@@ -1942,6 +2006,17 @@
 			<Setter Property="Fill" Value="{StaticResource MenuBlueGlyphs}"/>
 		</Style>
 
+
+            	</Style>
+	<Style Selector="^:checked">
+
+              		<Style Selector="^ /template/ Grid#GlyphPanel">
+			<Setter Property="IsVisible" Value="true"/>
+		</Style>
+
+              		<Style Selector="^ /template/ ContentPresenter#Icon">
+			<Setter Property="IsVisible" Value="false"/>
+		</Style>
 
             	</Style>
 	<Style Selector="^:empty">
@@ -2108,7 +2183,7 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}" />
             	</Style>
@@ -2219,12 +2294,12 @@
               </MultiTrigger.Conditions>
             </MultiTrigger>
             <Trigger Property="IsSelected" Value="True">
-              <Trigger.ExitActions>
+              --><!-- <Trigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource SelectedOff}" x:Name="SelectedOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
+              </Trigger.ExitActions> --><!--
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard Storyboard="{StaticResource SelectedOn}" x:Name="SelectedOn_BeginStoryboard"/>
-              </Trigger.EnterActions>
+              </Trigger.EnterActions> --><!--
               <Setter Property="Panel.ZIndex" Value="100" />
               <Setter Property="Foreground" Value="#0088cc" />
             </Trigger>
@@ -2250,7 +2325,7 @@
         </Setter>
       </Trigger>
     </ControlTheme.Triggers> -->
-  	<Style Selector="^[IsEnabled=False]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
               		<Style Selector="^ /template/ Border#border">
@@ -2284,22 +2359,14 @@
             <Border x:Name="ShineBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Background="{StaticResource ShineBrush}" Opacity="1" />
           </Grid>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Trigger.ExitActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
-              </Trigger.EnterActions>
-
-            </Trigger>
+            
             <Trigger Property="IsDragging" Value="True">
-              <Trigger.ExitActions>
+              --><!-- <Trigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOff}" x:Name="PressedOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
+              </Trigger.ExitActions> --><!--
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOn}" x:Name="PressedOn_BeginStoryboard"/>
-              </Trigger.EnterActions>
+              </Trigger.EnterActions> --><!--
 
             </Trigger>
             
@@ -2310,11 +2377,21 @@
     <Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
     <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}"/>
     <Setter Property="BorderThickness" Value="1,1,1,1"/>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ Border#Background">
 			<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}"/>
 		</Style>
+
+            	</Style>
+	<Style Selector="^:pointerover">
+
+              <!-- <Trigger.ExitActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
+              </Trigger.ExitActions> -->
+              <!-- <Trigger.EnterActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
+              </Trigger.EnterActions> -->
 
             	</Style>
 </ControlTheme>
@@ -2348,14 +2425,14 @@
           </Grid>
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="TickPlacement" Value="TopLeft">
-              <Setter Property="Visibility" Value="Visible" TargetName="TopTick" />
+              <Setter Property="IsVisible" TargetName="TopTick" Value="true" />
             </Trigger>
             <Trigger Property="TickPlacement" Value="BottomRight">
-              <Setter Property="Visibility" Value="Visible" TargetName="BottomTick" />
+              <Setter Property="IsVisible" TargetName="BottomTick" Value="true" />
             </Trigger>
             <Trigger Property="TickPlacement" Value="Both">
-              <Setter Property="Visibility" Value="Visible" TargetName="TopTick" />
-              <Setter Property="Visibility" Value="Visible" TargetName="BottomTick" />
+              <Setter Property="IsVisible" TargetName="TopTick" Value="true" />
+              <Setter Property="IsVisible" TargetName="BottomTick" Value="true" />
             </Trigger>
             
             <Trigger Property="Orientation" Value="Vertical">
@@ -2370,7 +2447,7 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ Border#Border">
 			<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}"/>
@@ -2408,7 +2485,7 @@
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsChecked" Value="true">
         <Setter Property="IsVisible" Value="false" TargetName="Up_Arrow" />
-        <Setter Property="Visibility" Value="Visible" TargetName="Down_Arrow" />
+        <Setter Property="IsVisible" TargetName="Down_Arrow" Value="true" />
       </Trigger>
     </ControlTemplate.Triggers> -->
   </ControlTemplate>
@@ -2421,7 +2498,7 @@
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsChecked" Value="true">
         <Setter Property="IsVisible" Value="false" TargetName="Up_Arrow" />
-        <Setter Property="Visibility" Value="Visible" TargetName="Down_Arrow" />
+        <Setter Property="IsVisible" TargetName="Down_Arrow" Value="true" />
       </Trigger>
       <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ctrl:TreeViewItem}}, Mode=OneWay}" Value="True">
         <Setter Property="Fill" Value="{StaticResource GlyphHeaderBrush}" TargetName="Up_Arrow"/>
@@ -2478,12 +2555,12 @@
               <Setter Property="IsVisible" Value="false" TargetName="Expander" />
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-              <Trigger.ExitActions>
+              --><!-- <Trigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource SelectedOff}" x:Name="SelectedOn_BeginStoryboard1"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
+              </Trigger.ExitActions> --><!--
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard Storyboard="{StaticResource SelectedOn}" x:Name="SelectedOn_BeginStoryboard"/>
-              </Trigger.EnterActions>
+              </Trigger.EnterActions> --><!--
             </Trigger>
             <MultiTrigger>
               <MultiTrigger.Conditions>
@@ -2522,7 +2599,7 @@
       </Setter.Value>
     </Setter>
     <Setter Property="Background" Value="Transparent"/>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}" />
             	</Style>
@@ -2572,30 +2649,23 @@
           </Grid>
 
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Trigger.ExitActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
-                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
-              </Trigger.EnterActions>
-            </Trigger>
+            
             <Trigger Property="IsPressed" Value="True">
-              <Trigger.ExitActions>
+              --><!-- <Trigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOff}" x:Name="PressedOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
+              </Trigger.ExitActions> --><!--
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard Storyboard="{StaticResource PressedOn}" x:Name="PressedOn_BeginStoryboard"/>
-              </Trigger.EnterActions>
+              </Trigger.EnterActions> --><!--
             </Trigger>
             <Trigger Property="IsKeyboardFocused" Value="true"/>
             <Trigger Property="IsChecked" Value="true">
-              <Trigger.ExitActions>
+              --><!-- <Trigger.ExitActions>
                 <BeginStoryboard Storyboard="{StaticResource CheckedOff}" x:Name="CheckedOff_BeginStoryboard"/>
-              </Trigger.ExitActions>
-              <Trigger.EnterActions>
+              </Trigger.ExitActions> --><!--
+              --><!-- <Trigger.EnterActions>
                 <BeginStoryboard Storyboard="{StaticResource CheckedOn}" x:Name="CheckedOn_BeginStoryboard"/>
-              </Trigger.EnterActions>
+              </Trigger.EnterActions> --><!--
             </Trigger>
             
           </ControlTemplate.Triggers> -->
@@ -2603,15 +2673,9 @@
       </Setter.Value>
     </Setter>
     <!-- <ControlTheme.Triggers>
-      <Trigger Property="IsChecked" Value="True">
-        <Setter Property="Foreground">
-          <Setter.Value>
-            <SolidColorBrush Color="{DynamicResource BlackColor}" />
-          </Setter.Value>
-        </Setter>
-      </Trigger>
+      
     </ControlTheme.Triggers> -->
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="#ADADAD" />
               		<Style Selector="^ /template/ Border#Border">
@@ -2627,6 +2691,23 @@
 		</Style>
 
             	</Style>
+	<Style Selector="^:pointerover">
+
+              <!-- <Trigger.ExitActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOff}" x:Name="HoverOff_BeginStoryboard"/>
+              </Trigger.ExitActions> -->
+              <!-- <Trigger.EnterActions>
+                <BeginStoryboard Storyboard="{StaticResource HoverOn}"/>
+              </Trigger.EnterActions> -->
+            	</Style>
+	<Style Selector="^:checked">
+
+        <Setter Property="Foreground">
+          <Setter.Value>
+            <SolidColorBrush Color="{DynamicResource BlackColor}" />
+          </Setter.Value>
+        </Setter>
+      	</Style>
 </ControlTheme>
 
   
@@ -2674,11 +2755,13 @@
     <Setter Property="MinHeight" Value="20"/>
     <Setter Property="MinWidth" Value="20"/>
     <!-- <ControlTheme.Triggers>
-      <Trigger Property="IsMouseOver" Value="True">
-        <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonHoverBackground}"/>
-      </Trigger>
+      
     </ControlTheme.Triggers> -->
-  </ControlTheme>
+  	<Style Selector="^:pointerover">
+
+        <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonHoverBackground}"/>
+      	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="ItemsControl.CheckBoxStyleKey" TargetType="{x:Type CheckBox}">
     
@@ -2699,15 +2782,17 @@
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="Margin" Value="2,0,2,0"/>
     <!-- <ControlTheme.Triggers>
-      <Trigger Property="IsEnabled" Value="False">
+      
+    </ControlTheme.Triggers> -->
+  	<Style Selector="^:disabled">
+
         <Setter Property="Foreground">
           <Setter.Value>
             <SolidColorBrush Color="{DynamicResource TopGradientSelectColor}" />
           </Setter.Value>
         </Setter>
-      </Trigger>
-    </ControlTheme.Triggers> -->
-  </ControlTheme>
+      	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="ItemsControl.ToggleButtonStyleKey" TargetType="{x:Type ToggleButton}"
          BasedOn="{StaticResource {x:Type ToggleButton}}">
@@ -2716,14 +2801,18 @@
     <Setter Property="MinHeight" Value="20"/>
     <Setter Property="MinWidth" Value="20"/>
     <!-- <ControlTheme.Triggers>
-      <Trigger Property="IsMouseOver" Value="True">
-        <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonHoverBackground}"/>
-      </Trigger>
-      <Trigger Property="IsChecked" Value="True">
-        <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonPressedBackground}"/>
-      </Trigger>
+      
+      
     </ControlTheme.Triggers> -->
-  </ControlTheme>
+  	<Style Selector="^:checked">
+
+        <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonPressedBackground}"/>
+      	</Style>
+	<Style Selector="^:pointerover">
+
+        <Setter Property="Background" Value="{StaticResource ToolBarToggleButtonHoverBackground}"/>
+      	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="ItemsControl.ComboBoxStyleKey" TargetType="{x:Type ComboBox}">
     
@@ -2785,9 +2874,7 @@
             </Canvas>
           </Border>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Setter Property="Background" TargetName="Bd" Value="{DynamicResource MouseOverBrush}"/>
-            </Trigger>
+            
             <Trigger Property="IsKeyboardFocused" Value="true">
               <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
             </Trigger>
@@ -2796,9 +2883,16 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="{StaticResource ToolBarGripper}"/>
+            	</Style>
+	<Style Selector="^:pointerover">
+
+              		<Style Selector="^ /template/ Border#Bd">
+			<Setter Property="Background" Value="{DynamicResource MouseOverBrush}"/>
+		</Style>
+
             	</Style>
 </ControlTheme>
   <ControlTheme x:Key="ToolBarThumbStyle" TargetType="{x:Type Thumb}">
@@ -2819,14 +2913,16 @@
             </Rectangle>
           </Border>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Setter Property="Cursor" Value="SizeAll"/>
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  </ControlTheme>
+  	<Style Selector="^:pointerover">
+
+              <Setter Property="Cursor" Value="SizeAll"/>
+            	</Style>
+</ControlTheme>
   <LinearGradientBrush x:Key="ToolBarToggleButtonVerticalBackground" EndPoint="1,0" StartPoint="0,0">
     <GradientStop Color="#ECECEC" Offset="0"/>
     <GradientStop Color="#DDDDDD" Offset="0.5"/>
@@ -2848,9 +2944,7 @@
             </Canvas>
           </Border>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
-            </Trigger>
+            
             <Trigger Property="IsKeyboardFocused" Value="true">
               <Setter Property="Background" TargetName="Bd" Value="{StaticResource ToolBarButtonHover}"/>
             </Trigger>
@@ -2859,9 +2953,16 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="{StaticResource ToolBarGripper}"/>
+            	</Style>
+	<Style Selector="^:pointerover">
+
+              		<Style Selector="^ /template/ Border#Bd">
+			<Setter Property="Background" Value="{StaticResource ToolBarButtonHover}"/>
+		</Style>
+
             	</Style>
 </ControlTheme>
   <LinearGradientBrush x:Key="ToolBarVerticalBackground" EndPoint="1,0" StartPoint="0,0">
@@ -2897,7 +2998,7 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}"/>
             	</Style>
@@ -2914,8 +3015,8 @@
     </Grid>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsChecked" Value="true">
-        <Setter Property="Visibility" TargetName="Down_Arrow" Value="Visible" />
-        <Setter Property="Visibility" TargetName="Up_Arrow" Value="Collapsed" />
+        <Setter Property="IsVisible" TargetName="Down_Arrow" Value="true" />
+        <Setter Property="IsVisible" TargetName="Up_Arrow" Value="false" />
       </Trigger>
       <Trigger Property="IsMouseOver" Value="true">
         <Setter Property="Fill" TargetName="Up_Arrow" Value="White"/>
@@ -2982,7 +3083,7 @@
     </Border>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsExpanded" Value="true">
-        <Setter Property="Visibility" TargetName="border" Value="Visible" />
+        <Setter Property="IsVisible" TargetName="border" Value="true" />
       </Trigger>
       <Trigger Property="ExpandDirection" Value="Right">
         <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Right" />
@@ -3094,17 +3195,21 @@
   <ControlTheme x:Key="{x:Static ctrl:VectorEditorResources.ToggleButtonStyleKey}" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}" >
     <Setter Property="ToolTip.Tip" Value="{sd:Localize Toggle editing mode, Context=ToolTip}" />
     <!-- <ControlTheme.Triggers>
-      <Trigger Property="IsChecked" Value="False">
-        <Setter Property="Content" Value="{me:Image {StaticResource ImageUnlocked}, 16, 16, NearestNeighbor}" />
-      </Trigger>
-      <Trigger Property="IsChecked" Value="True">
-        <Setter Property="Content" Value="{me:Image {StaticResource ImageLocked}, 16, 16, NearestNeighbor}" />
-      </Trigger>
+      
+      
       <Trigger Property="IsChecked" Value="{x:Null}">
-        <Setter Property="Content" Value="{me:Image {StaticResource ImageLength}, 16, 16, NearestNeighbor}" />
+        <Setter Property="Content" Value="{me:Image {StaticResource ImageLength}, 16, 16, LowQuality}" />
       </Trigger>
     </ControlTheme.Triggers> -->
-  </ControlTheme>
+  	<Style Selector="^:checked">
+
+        <Setter Property="Content" Value="{me:Image {StaticResource ImageLocked}, 16, 16, LowQuality}" />
+      	</Style>
+	<Style Selector="^:not(:checked)">
+
+        <Setter Property="Content" Value="{me:Image {StaticResource ImageUnlocked}, 16, 16, LowQuality}" />
+      	</Style>
+</ControlTheme>
 
   <ControlTheme x:Key="{x:Type ctrl:Vector2Editor}" TargetType="ctrl:Vector2Editor" >
     <Setter Property="Focusable" Value="False"/>
@@ -4034,18 +4139,23 @@
                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" />
           </Grid>
           <!-- <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="true">
-              <Setter Property="Opacity" TargetName="Grid" Value="1.0" />
-            </Trigger>
+            
             
           </ControlTemplate.Triggers> -->
         </ControlTemplate>
       </Setter.Value>
     </Setter>
-  	<Style Selector="^[IsEnabled=false]">
+  	<Style Selector="^:disabled">
 
               		<Style Selector="^ /template/ Grid#Grid">
 			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+            	</Style>
+	<Style Selector="^:pointerover">
+
+              		<Style Selector="^ /template/ Grid#Grid">
+			<Setter Property="Opacity" Value="1.0"/>
 		</Style>
 
             	</Style>

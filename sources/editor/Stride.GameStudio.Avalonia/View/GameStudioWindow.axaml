@@ -256,7 +256,7 @@
           </MenuItem.ItemTemplate>
         </MenuItem>
         <MenuItem Header="{sd:Localize Add dependency..., Context=Menu}" Command="{Binding Session.AddDependencyCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageAddDependency}}"/>
-        <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageStartupProject}}"/>
+        <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding}" Icon="{sd:Image {StaticResource ImageStartupProject}}"/>
         <MenuItem Header="{sd:Localize Package properties, Context=Menu}" Command="{Binding Session.ActivatePackagePropertiesCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImagePackageProperties}}"/>
 
         <MenuItem Header="{sd:Localize Solution, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
@@ -574,7 +574,7 @@
                               </MenuItem.ItemTemplate>
                             </MenuItem>
                             <MenuItem Header="{sd:Localize Add dependency..., Context=Menu}" Command="{Binding Session.AddDependencyCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageAddDependency}}" IsVisible="{Binding Session.AddDependencyCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
-                            <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageStartupProject}}" IsVisible="{Binding Session.SetCurrentProjectCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
+                            <MenuItem Header="{sd:Localize Set as current project, Context=Menu}" Command="{Binding Session.SetCurrentProjectCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding SelectedItem, ElementName=DirectoryTreeView}" Icon="{sd:Image {StaticResource ImageStartupProject}}" IsVisible="{Binding Session.SetCurrentProjectCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
                             <MenuItem Header="{sd:Localize Package properties, Context=Menu}" Command="{Binding Session.ActivatePackagePropertiesCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImagePackageProperties}}" IsVisible="{Binding Session.ActivatePackagePropertiesCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
 
 <!--                            <MenuItem Header="{sd:Localize Solution, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" Visibility="{sd:MultiBinding {Binding Session.NewPackageCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}, {Binding Session.AddExistingPackageCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}, {Binding Session.OpenInIDECommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}, Converter={sd:MultiChained {sd:OrMultiConverter}, {sd:VisibleOrCollapsed}}}"/>-->
@@ -1034,7 +1034,7 @@
 <!--                  <Document AutoHideMinWidth="400" ContentId="AssetPreview" Title="{Binding Source={sd:Localize Asset preview, Context=View}}"
                                          >-->
                     <DockPanel LastChildFill="True">
-                      <ContentPresenter Content="{Binding Preview.PreviewObject}"/>
+                      <ContentPresenter Content="{Binding Preview.PreviewObject, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
                     </DockPanel>
                   </Document>
                   <!-- ACTION HISTORY -->

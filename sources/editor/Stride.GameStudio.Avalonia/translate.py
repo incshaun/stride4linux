@@ -1041,6 +1041,8 @@ def translateTags (contents):
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"pack://application:,,,/Stride.Core.Presentation.Wpf;component/Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
   contents = re.sub ("<BitmapImage x:Key=\"(.*?)\" UriSource=\"\.\./Resources/(.*?)\" />", r'<ImageBrush x:Key="\1" Source="/Resources/\2" />', contents)  
   contents = re.sub ("BitmapScalingMode=\"NearestNeighbor\"", r'BitmapInterpolationMode="LowQuality"', contents)
+  contents = re.sub (", NearestNeighbor}", r', LowQuality}', contents)
+
   #contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\"([^>]*?)/>", r'<Setter Property="RenderOptions.BitmapInterpolationMode" Value="LowQuality"\1/>', contents)  # This works without the setter?
   contents = re.sub ("<Setter Property=\"RenderOptions\.BitmapScalingMode\" Value=\"NearestNeighbor\"([^>]*?)/>", r'', contents)  # This works without the setter?
   contents = re.sub ("<ImageBrush ImageSource=", r'<ImageBrush Source=', contents)
@@ -1097,6 +1099,10 @@ def translateTags (contents):
 
   contents = re.sub ("Property=\"Visibility\" Value=\"Hidden\"", r'Property="IsVisible" Value="false"', contents)
   contents = re.sub ("Property=\"Visibility\" Value=\"Collapsed\"", r'Property="IsVisible" Value="false"', contents)
+  contents = re.sub ("Property=\"Visibility\" TargetName=\"(.*?)\" Value=\"Collapsed\"", r'Property="IsVisible" TargetName="\1" Value="false"', contents)
+  contents = re.sub ("Property=\"Visibility\" Value=\"Collapsed\" TargetName=\"(.*?)\"", r'Property="IsVisible" TargetName="\1" Value="false"', contents)
+  contents = re.sub ("Property=\"Visibility\" TargetName=\"(.*?)\" Value=\"Visible\"", r'Property="IsVisible" TargetName="\1" Value="true"', contents)
+  contents = re.sub ("Property=\"Visibility\" Value=\"Visible\" TargetName=\"(.*?)\"", r'Property="IsVisible" TargetName="\1" Value="true"', contents)
 
   # Tooltip
   contents = re.sub ("ToolTipService.ToolTip=\"(.*?)\"", r'ToolTip.Tip="\1"', contents)
@@ -1606,7 +1612,6 @@ def translateTags (contents):
   
   # Handle those triggers we can.
   pat = re.compile ("<ControlTheme(((?!</ControlTheme>).)*)<ControlTemplate.Triggers>(.*?)</ControlTemplate.Triggers>(((?!ControlTheme>).)*)</ControlTheme>", re.DOTALL)
-  #contents = pat.sub (lambda match: match.group () if "x:Key" in match.group () else r'<ControlTheme x:Key="' + match.group(2) + '"' + match.group(1) + r'TargetType="' + match.group(2) + r'"' + match.group(3) + r' >', contents)
   if (re.findall (pat, contents)):
     for match in reversed(list(re.finditer (pat, contents))):
       context = match.group (1)
@@ -1614,12 +1619,22 @@ def translateTags (contents):
       (styles, triggers) = rewriteTriggers (triggers, context)
       contents = contents[:match.start ()] + r"<ControlTheme" + context + r"<ControlTemplate.Triggers>" + triggers + r"</ControlTemplate.Triggers>" + match.group(4) + styles + r"</ControlTheme>" + contents[match.end ():] 
   
+  pat = re.compile ("<ControlTheme(((?!</ControlTheme>).)*)<Style.Triggers>(.*?)</Style.Triggers>(((?!ControlTheme>).)*)</ControlTheme>", re.DOTALL)
+  if (re.findall (pat, contents)):
+    for match in reversed(list(re.finditer (pat, contents))):
+      context = match.group (1)
+      triggers = match.group (3)
+      (styles, triggers) = rewriteTriggers (triggers, context)
+      contents = contents[:match.start ()] + r"<ControlTheme" + context + r"<ControlTheme.Triggers>" + triggers + r"</ControlTheme.Triggers>" + match.group(4) + styles + r"</ControlTheme>" + contents[match.end ():] 
   
   contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<DataTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<i:Interaction\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<Style\.Triggers>(.*?)</Style\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1</ControlTheme.Triggers> -->", contents)
+  contents = re.sub (re.compile ("\<ControlTheme\.Triggers>(.*?)</ControlTheme\.Triggers>", re.DOTALL), r"<!-- <ControlTheme.Triggers>\1</ControlTheme.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<Rectangle\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <Rectangle.Triggers>\1.Triggers> -->", contents)
+  contents = re.sub (re.compile ("<Trigger.ExitActions>(.*?)</Trigger.ExitActions>", re.DOTALL), r"<!-- <Trigger.ExitActions>\1</Trigger.ExitActions> -->", contents)
+  contents = re.sub (re.compile ("<Trigger.EnterActions>(.*?)</Trigger.EnterActions>", re.DOTALL), r"<!-- <Trigger.EnterActions>\1</Trigger.EnterActions> -->", contents)
 
   # Fix nested comments.
   contents = removeNestedComments (contents)
@@ -1653,7 +1668,7 @@ def rewriteTriggers (triggers, context):
   print ("\n\n\n\nTriggers", triggers)
   
   styles = ""
-  validProperties = [ "IsEnabled", ":not(:empty)", ":empty", ":selected"]
+  validProperties = [ ":disabled", ":not(:empty)", ":empty", ":selected", ":pointerover", ":checked", ":not(:checked)"]
   
   pat = re.compile ("<Trigger Property=\"(.*?)\" Value=\"(.*?)\"(\s*?)>(((?!</Trigger>).)*)</Trigger>", re.DOTALL)
   if (re.findall (pat, triggers)):
@@ -1676,12 +1691,20 @@ def rewriteTriggers (triggers, context):
   return (styles, triggers)
 
 def substituteTriggers (prop, value):
+  if prop == "IsEnabled" and (value == "False" or value == "false"):
+    return (":disabled", None)
   if prop == "Role" and value == "SubmenuHeader":
     return (":not(:empty)", None)
   if prop == "Role" and value == "SubmenuItem":
     return (":empty", None)
   if prop == "IsHighlighted" and value == "True":
     return (":selected", None)
+  if prop == "IsMouseOver" and (value == "True" or value == "true"):
+    return (":pointerover", None)
+  if prop == "IsChecked" and (value == "True" or value == "true"):
+    return (":checked", None)
+  if prop == "IsChecked" and (value == "False" or value == "false"):
+    return (":not(:checked)", None)
 
   return (prop, value)
 
@@ -2024,10 +2047,12 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/KeyValueGrid.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/IntExtension.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Commands/ControlCommands.cs")
+#translateCS ("editor/Stride.Editor.Wpf/Preview/View/StridePreviewView.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/StrideTemplates.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
-translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")
