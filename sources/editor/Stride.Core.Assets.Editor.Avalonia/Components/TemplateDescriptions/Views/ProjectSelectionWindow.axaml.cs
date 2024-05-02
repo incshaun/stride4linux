@@ -1,47 +1,34 @@
+// Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
+// Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.ComponentModel;
+using Avalonia;
+using Avalonia.Controls;
+
 using Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels;
 using Stride.Core.Assets.Editor.Settings;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.IO;
+using Stride.Core.Presentation.Services;
 using Stride.Core.Presentation.View;
 using Stride.Core.Presentation.Windows;
-using Stride.Core.Translation;
-using MessageBoxButton = Stride.Core.Presentation.Services.MessageBoxButton;
-using MessageBoxImage = Stride.Core.Presentation.Services.MessageBoxImage;
-
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Stride.Core.Presentation.Controls;
-using Avalonia;
-using System.Linq;
-using System.Collections.ObjectModel;
+using Stride.Core.Translation;
+using MessageBoxImage = Stride.Core.Presentation.Services.MessageBoxImage;
 
 namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views
 {
-    public partial class AProjectSelectionWindow : ModalWindow
+    /// <summary>
+    /// Interaction logic for ProjectSelectionWindow.xaml
+    /// </summary>
+    public partial class ProjectSelectionWindow : ModalWindow
     {
-        public AProjectSelectionWindow(NewOrOpenSessionTemplateCollectionViewModel ctx)
+        public ProjectSelectionWindow()
         {
-            InitializeComponent(ctx);
-
-
-            //            Width = Math.Min(Width, SystemParameters.WorkArea.Width);
-            //            Height = Math.Min(Height, SystemParameters.WorkArea.Height);
+            InitializeComponent();
+//             Width = Math.Min(Width, SystemParameters.WorkArea.Width);
+//             Height = Math.Min(Height, SystemParameters.WorkArea.Height);
             Title = string.Format(Tr._p("Title", "Project selection - {0}"), EditorPath.EditorTitle);
-        }
-
-        private void InitializeComponent(NewOrOpenSessionTemplateCollectionViewModel ctx, bool loadXaml = true, bool attachDevTools = true)
-        {
-            AvaloniaXamlLoader.Load(this);
-            //DataContext = ctx;
-
-#if DEBUG
-            if (attachDevTools)
-            {
-//                this.AttachDevTools();
-            }
-#endif
         }
 
         public NewSessionParameters NewSessionParameters { get; private set; }
@@ -94,6 +81,7 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views
                 InternalSettings.Save();
             }
         }
+
         private void OnTextBoxValidated(object sender, EventArgs e)
         {
             ValidateProperties();
@@ -104,11 +92,10 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views
             string error;
             if (!Templates.ValidateProperties(out error))
             {
-//                 DialogHelper.BlockingMessageBox(DispatcherService.Create(), error, EditorPath.EditorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
-//                 return false;
+//                 DialogHelper.BlockingMessageBox(DispatcherService.Create(), error, EditorPath.EditorTitle, [IDialogService.ButtonOK], MessageBoxImage.Error);
+                return false;
             }
             return true;
         }
     }
 }
-

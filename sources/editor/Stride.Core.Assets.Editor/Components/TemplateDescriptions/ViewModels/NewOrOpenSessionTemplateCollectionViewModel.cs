@@ -26,6 +26,8 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
         public NewOrOpenSessionTemplateCollectionViewModel(IViewModelServiceProvider serviceProvider/*, IModalDialog dialog*/)
             : base(serviceProvider)
         {
+            SolutionLocation = ""; // in case no previous projects exist.
+            
 //             this.dialog = dialog;
             rootGroup = new TemplateDescriptionGroupViewModel(serviceProvider, "New project");
 

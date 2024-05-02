@@ -1117,7 +1117,7 @@ def translateTags (contents):
   contents = re.sub ("{x:Reference (.*?)}", r'{Binding ElementName=\1}', contents)
 
   # Case sensitive ok.
-  contents = re.sub ("DialogResult=\"Ok\"", r'DialogResult="Ok"', contents)
+  contents = re.sub ("DialogResult=\"OK\"", r'DialogResult="Ok"', contents)
 
   # isitemshost - only read access.
   contents = re.sub ("IsItemsHost=\"True\"", r'', contents)
@@ -2048,7 +2048,9 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/IntExtension.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/Commands/ControlCommands.cs")
 #translateCS ("editor/Stride.Editor.Wpf/Preview/View/StridePreviewView.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/StrideTemplates.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/StrideTemplates.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ProjectSelectionWindow.xaml.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/TextBoxCloseWindowBehavior.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -2088,6 +2090,7 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/StrideTemplates.cs
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/VisualScriptingTemplates.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/VisualScriptEditor/Views/GraphTemplates.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Resources/VectorResources.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ProjectSelectionWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
