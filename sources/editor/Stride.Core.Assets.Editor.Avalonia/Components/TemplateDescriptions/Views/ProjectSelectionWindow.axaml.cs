@@ -92,7 +92,7 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views
             string error;
             if (!Templates.ValidateProperties(out error))
             {
-//                 DialogHelper.BlockingMessageBox(DispatcherService.Create(), error, EditorPath.EditorTitle, [IDialogService.ButtonOK], MessageBoxImage.Error);
+                DialogHelper.BlockingMessageBox(DispatcherService.Create(), error, EditorPath.EditorTitle, [IDialogService.ButtonOK], MessageBoxImage.Error);
                 return false;
             }
             return true;

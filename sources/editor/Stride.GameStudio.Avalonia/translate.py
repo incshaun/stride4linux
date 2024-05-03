@@ -841,6 +841,7 @@ def translateProperties (contents):
   contents = re.sub ("\.MouseDown", ".PointerPressed", contents)
   contents = re.sub ("\.MouseUp", ".PointerReleased", contents)
   contents = re.sub ("\.MouseMove", ".PointerMoved", contents)
+  contents = re.sub ("\.MouseDoubleClick", ".DoubleTapped", contents)
   
   # OnApplyTemplate
   pat = re.compile ("public override void OnApplyTemplate\(\)(\s*){(\s*)base.OnApplyTemplate\(\);")
@@ -1141,6 +1142,8 @@ def translateTags (contents):
   contents = re.sub ("ScrollViewer\.CanContentScroll=\"(.*?)\"", "", contents)
   contents = re.sub ("CanContentScroll=\"(.*?)\"", "", contents)
   contents = re.sub ("KeyboardNavigation.DirectionalNavigation=\"(.*?)\"", "", contents)
+
+  contents = re.sub ("\.ScrollToTop()", ".ScrollToHome()", contents)
   
   contents = re.sub ("<Setter Property=\"SnapsToDevicePixels\" Value=\"(.*?)\" />", "", contents)
   contents = re.sub ("<Setter Property=\"SnapsToDevicePixels\" Value=\"True\"/>", "", contents)
@@ -2050,7 +2053,14 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Editor.Wpf/Preview/View/StridePreviewView.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/StrideTemplates.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ProjectSelectionWindow.xaml.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/TextBoxCloseWindowBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/TextBoxCloseWindowBehavior.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Windows/DialogHelper.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ObjectBrowserUserControl.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/DoubleClickCloseWindowBehavior.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/TemplateSampleGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/UpdatePlatformsTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/UpdatePlatformsWindows.xaml.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/SolutionPlatformViewModel.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -2091,6 +2101,8 @@ translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/TextBoxCloseWi
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/VisualScriptEditor/Views/GraphTemplates.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Resources/VectorResources.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ProjectSelectionWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ObjectBrowserUserControl.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/UpdatePlatformsWindows.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
