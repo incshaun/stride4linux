@@ -3990,7 +3990,7 @@
     <Setter Property="TextElement.Foreground" Value="{StaticResource TextBrush}"/>
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-    <Setter Property="VerticalAlignment" Value="Center" />
+<!--     <Setter Property="VerticalAlignment" Value="Center" /> -->
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type ctrl:TreeView}">

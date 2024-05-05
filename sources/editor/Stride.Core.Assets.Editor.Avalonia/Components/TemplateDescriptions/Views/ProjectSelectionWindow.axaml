@@ -20,7 +20,7 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Window.Resources>
-  <DockPanel>
+  <DockPanel MaxHeight="{Binding $parent[sd:ModalWindow].Height}">
     <Grid DockPanel.Dock="Bottom">
       <DockPanel>
         <DockPanel DockPanel.Dock="Bottom" Margin="20">
