@@ -4062,7 +4062,7 @@
                 <ContentPresenter x:Name="content"
                                   
                                   Content="{TemplateBinding HeaderedContentControl.Header}"
-                                  ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
+                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
                                   
                                   
                                   
