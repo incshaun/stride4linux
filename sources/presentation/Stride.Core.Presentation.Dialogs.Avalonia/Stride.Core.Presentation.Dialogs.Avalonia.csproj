@@ -1,0 +1,26 @@
+<Project>
+  <Import Project="..\..\targets\Stride.Core.props" />
+  <PropertyGroup>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <StrideBuildTags>WindowsTools</StrideBuildTags>
+    <TargetFramework>$(StrideEditorTargetFramework)</TargetFramework>
+    <StrideAssemblyProcessor>true</StrideAssemblyProcessor>
+    <StrideAssemblyProcessorOptions>--auto-module-initializer</StrideAssemblyProcessorOptions>
+    <UseWPF>false</UseWPF>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+  </PropertyGroup>
+  <ItemGroup>
+
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\shared\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>  
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Stride.Core.Presentation.Avalonia\Stride.Core.Presentation.Avalonia.csproj" />
+    <ProjectReference Include="..\Stride.Core.Presentation\Stride.Core.Presentation.csproj" />
+  </ItemGroup>
+  <Import Project="$(StrideSdkTargets)" />
+</Project>
