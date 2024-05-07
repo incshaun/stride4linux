@@ -2060,7 +2060,11 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/TemplateSampleGenerator.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/UpdatePlatformsTemplateGenerator.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/UpdatePlatformsWindows.xaml.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/SolutionPlatformViewModel.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/SolutionPlatformViewModel.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/NewGameTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptNameWindow.xaml.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -2103,6 +2107,8 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/SolutionPlatformVi
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ProjectSelectionWindow.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ObjectBrowserUserControl.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/UpdatePlatformsWindows.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptNameWindow.xaml")
+translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
