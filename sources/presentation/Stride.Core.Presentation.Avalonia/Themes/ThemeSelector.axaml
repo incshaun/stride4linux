@@ -219,6 +219,13 @@
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
               <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type diag:DialogButtonInfo}">
+                  <Button d:DataContext="{d:DesignInstance diag:DialogButtonInfo}"
+                            Margin="5,0" Padding="20,6" MinWidth="80"
+                            Command="{Binding ButtonCommand, RelativeSource={RelativeSource AncestorType={x:Type wnd:MessageDialogBase}}}"
+                            CommandParameter="{Binding Result}"
+                            Content="{Binding Content}" IsCancel="{Binding IsCancel}" IsDefault="{Binding IsDefault}" />
+                </DataTemplate>
                 
               </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -264,7 +271,7 @@
             </i:Interaction.Behaviors>
             <Image DockPanel.Dock="Left" Source="{Binding Image, RelativeSource={RelativeSource AncestorType=wnd:MessageBox}}"
                    HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" RenderOptions.BitmapInterpolationMode="HighQuality"
-                   Height="{Binding RelativeSource={RelativeSource Self}, Path=Source.(BitmapSource.PixelHeight)}" Width="{Binding RelativeSource={RelativeSource Self}, Path=Source.(BitmapSource.PixelWidth)}"
+                   Height="{Binding RelativeSource={RelativeSource Self}, Path=Size.Height}" Width="{Binding RelativeSource={RelativeSource Self}, Path=Size.Width}"
                    IsVisible="{Binding Image, RelativeSource={RelativeSource AncestorType=wnd:MessageBox}, Converter={cvt:ObjectToBool}}" />
             <ctrl:MarkdownTextBlock Text="{Binding}" VerticalAlignment="Center"/>
           </DockPanel>

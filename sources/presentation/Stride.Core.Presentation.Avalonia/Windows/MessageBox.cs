@@ -19,6 +19,8 @@ namespace Stride.Core.Presentation.Windows
 
     public class MessageBox : MessageDialogBase
     {
+        protected override Type StyleKeyOverride { get { return typeof(MessageBox); } }
+
         /// <summary>
         /// Identifies the <see cref="Image"/> dependency property.
         /// </summary>
@@ -26,6 +28,7 @@ namespace Stride.Core.Presentation.Windows
 
         protected MessageBox()
         {
+            this.AttachDevTools();
         }
 
         protected override void OnInitialized()
@@ -69,6 +72,10 @@ namespace Stride.Core.Presentation.Windows
                     throw new ArgumentOutOfRangeException(nameof(image), image, null);
             }
             bool found = messageBox.TryFindResource(imageKey, out var value);
+            if (value is ImageBrush)
+            {
+                value = (IImage)((ImageBrush)value).Source;
+            }
             messageBox.Image = imageKey != null ? (IImage)value : null;
         }
 

@@ -32,7 +32,7 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views
 
         public static readonly StyledProperty<IEnumerable> ObjectItemsSourceProperty = StyledProperty<IEnumerable>.Register<ObjectBrowserUserControl, IEnumerable>("ObjectItemsSource"); // T1
 
-        public static readonly StyledProperty<object> SelectedObjectItemProperty = StyledProperty<object>.Register<ObjectBrowserUserControl, object>("SelectedObjectItem"); // T6E
+        public static readonly StyledProperty<object> SelectedObjectItemProperty = StyledProperty<object>.Register<ObjectBrowserUserControl, object>("SelectedObjectItem", defaultBindingMode: BindingMode.TwoWay); // T6E
 
         public static readonly StyledProperty<DataTemplate> ObjectItemTemplateProperty = StyledProperty<DataTemplate>.Register<ObjectBrowserUserControl, DataTemplate>("ObjectItemTemplate"); // T1
 

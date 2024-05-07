@@ -415,7 +415,7 @@ def translateProperties (contents):
 
   # FrameworkPropertyMetadata with initializer.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata(\s*){([^})]*?)}\);")
-  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T6E", contents)
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4); // T6E - warning check meta data.", contents)
 
   # 1 argument to FrameworkPropertyMetadata, function call
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?)\(([^,\)]*?)\)\)\);")
@@ -1331,7 +1331,7 @@ def translateTags (contents):
   contents = re.sub ("<BorderGapMaskConverter x:Key=\"BorderGapMaskConverter\" />", "", contents)
   contents = re.sub ("<EventSetter Event=\"Loaded\" Handler=\"Image_Loaded\" />", "", contents)
   contents = re.sub ("<MouseBinding(.*?)/>", "", contents)
-  contents = regex.sub (regex.compile ("<ItemContainerTemplate(.*?)</ItemContainerTemplate>", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("<ItemContainerTemplate(.*?)</ItemContainerTemplate>", regex.DOTALL), r"<DataTemplate\1</DataTemplate>", contents)
 
   contents = regex.sub (regex.compile ("<ControlTheme x:Key=\"TagToolBarStyle\" TargetType=\"{x:Type ToolBar}\">", regex.DOTALL), r'<ControlTheme x:Key="TagToolBarStyle" TargetType="{x:Type ItemsControl}">', contents) 
   contents = regex.sub (regex.compile ("<ControlTemplate TargetType=\"{x:Type ToolBar}\">", regex.DOTALL), r'<ControlTemplate TargetType="{x:Type ItemsControl}">', contents) 

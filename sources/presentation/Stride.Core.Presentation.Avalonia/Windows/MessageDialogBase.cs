@@ -17,6 +17,8 @@ using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Controls.Templates;
 using System.Windows.Input;
 
+using System;
+
 namespace Stride.Core.Presentation.Windows
 {
     /// <summary>
@@ -24,6 +26,8 @@ namespace Stride.Core.Presentation.Windows
     /// </summary>
     public abstract class MessageDialogBase : ModalWindow
     {
+        protected override Type StyleKeyOverride { get { return typeof(MessageDialogBase); } }
+
         /// <summary>
         /// Identifies the <see cref="ButtonsSource"/> dependency property.
         /// </summary>
