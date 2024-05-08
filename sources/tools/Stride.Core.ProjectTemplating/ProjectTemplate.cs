@@ -141,6 +141,7 @@ namespace Stride.Core.ProjectTemplating
                 // Iterate on each files
                 foreach (var fileItem in Files)
                 {
+                    fileItem.Source = fileItem.Source.Replace("\\", "/");
                     if (fileItem.Source == null)
                     {
                         log.Warning($"Invalid empty file item [{fileItem}] with no source location");
@@ -178,6 +179,8 @@ namespace Stride.Core.ProjectTemplating
                         if (fileItem.IsTemplate)
                         {
                             var content = File.ReadAllText(sourceFilePath);
+                            // Rewrite slashes.
+                            content = content.Replace("\\", "/");
                             // Replace the default platform with the selected one from the ProjectItemTemplate.
                             object oldPlatform = null;
                             if (fileItem.CurrentPlatform != null)

@@ -116,11 +116,13 @@
         <Setter Property="BorderBrush" Value="{StaticResource MainWindowButtonDownBorderBrush}"/>
       </Trigger>
       --><!-- Disabled --><!--
-      <Trigger Property="IsEnabled" Value="False">
-        <Setter Property="Opacity" Value="0.25"/>
-      </Trigger>
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:disabled">
+
+        <Setter Property="Opacity" Value="0.25"/>
+      	</Style>
+--></ControlTemplate>
   <ControlTheme x:Key="MainWindowButtonStyle" TargetType="{x:Type Button}">
     <Setter Property="Background" Value="Transparent"/>
     <Setter Property="BorderBrush" Value="{StaticResource MainWindowButtonActiveBorderBrush}"/>
@@ -182,7 +184,7 @@
               
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   </ControlTheme>
@@ -220,13 +222,15 @@
               </ItemsControl.ItemsPanel>
               <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type diag:DialogButtonInfo}">
-                  <Button d:DataContext="{d:DesignInstance diag:DialogButtonInfo}"
+                  <Button
                             Margin="5,0" Padding="20,6" MinWidth="80"
                             Command="{Binding ButtonCommand, RelativeSource={RelativeSource AncestorType={x:Type wnd:MessageDialogBase}}}"
                             CommandParameter="{Binding Result}"
                             Content="{Binding Content}" IsCancel="{Binding IsCancel}" IsDefault="{Binding IsDefault}" />
+	<Design.DataContext>
+		<diag:DialogButtonInfo />
+	</Design.DataContext>
                 </DataTemplate>
-                
               </ItemsControl.ItemTemplate>
             </ItemsControl>
             <!--  CONTENT  -->
@@ -370,20 +374,41 @@
       <Path Grid.Column="1" HorizontalAlignment="Center" x:Name="Arrow" VerticalAlignment="Center" Data="M0.5,0.5 L3,6.5 5.5,0.5" Stroke="{DynamicResource TextBrush}" Margin="0" Height="5.5" StrokeThickness="2" Stretch="Fill" Width="9.8" />
     </Grid>
     <!-- <ControlTemplate.Triggers>
-      <Trigger Property="IsMouseOver" Value="true">
-        <Setter Property="Background" TargetName="border" Value="{DynamicResource ComboToggleButtonHoverBackground}"/>
-      </Trigger>
-      <Trigger Property="IsChecked" Value="true" >
-        <Setter Property="Background" TargetName="border" Value="{DynamicResource ComboToggleButtonHoverBackground}"/>
-      </Trigger>
-      <Trigger Property="IsEnabled" Value="False">
-        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
-        <Setter Property="Stroke" TargetName="Arrow" Value="{DynamicResource DisabledForegroundBrush}"/>
-        <Setter Property="Background" TargetName="border" Value="{DynamicResource DisabledBorderBrush}"/>
-        <Setter Property="Opacity" TargetName="grid" Value="0.8"/>
-      </Trigger>
+      
+      
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:disabled">
+
+        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+        		<Style Selector="^ /template/ Path#Arrow">
+			<Setter Property="Stroke" Value="{DynamicResource DisabledForegroundBrush}"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Border#border">
+			<Setter Property="Background" Value="{DynamicResource DisabledBorderBrush}"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Grid#grid">
+			<Setter Property="Opacity" Value="0.8"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Border#border">
+			<Setter Property="Background" Value="{DynamicResource ComboToggleButtonHoverBackground}"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:pointerover">
+
+        		<Style Selector="^ /template/ Border#border">
+			<Setter Property="Background" Value="{DynamicResource ComboToggleButtonHoverBackground}"/>
+		</Style>
+
+      	</Style>
+--></ControlTemplate>
 
   <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
     <Grid x:Name="grid">
@@ -404,10 +429,7 @@
       <Trigger Property="HasItems" Value="false">
         <Setter Property="MinHeight" Value="95" TargetName="DropDownBorder" />
       </Trigger>
-      <Trigger Property="IsEnabled" Value="false">
-        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
-        <Setter Property="Opacity" TargetName="grid" Value="0.5" />
-      </Trigger>
+      
       <Trigger Property="IsGrouping" Value="true">
         <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
       </Trigger>
@@ -420,7 +442,15 @@
         <Setter Property="IsVisible" Value="false" TargetName="ContentSite" />
       </Trigger>
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:disabled">
+
+        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+        		<Style Selector="^ /template/ Grid#grid">
+			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+      	</Style>
+--></ControlTemplate>
 
   <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
     <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
@@ -452,7 +482,7 @@
             
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -636,7 +666,7 @@
               <Setter TargetName="AlphaValue" Property="IsVisible" Value="false"/>
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   </ControlTheme>
@@ -659,7 +689,7 @@
               <Setter TargetName="Border" Property="SnapsToDevicePixels" Value="true" />
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   </ControlTheme>
@@ -698,7 +728,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -759,23 +789,44 @@
       <Trigger Property="IsKeyboardFocused" Value="true">
         <Setter Property="BorderBrush" TargetName="FocusVisualElement" Value="{DynamicResource DefaultedBorderBrush}"/>
       </Trigger>
-      <Trigger Property="IsMouseOver" Value="true">
-        <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
-      </Trigger>
+      
       <Trigger Property="IsPressed" Value="true">
         <Setter Property="Opacity" TargetName="PressedBorder" Value="1"/>
         <Setter Property="Background" TargetName="PressedBorder" Value="{DynamicResource PressedBrush}"/>
       </Trigger>
-      <Trigger Property="IsChecked" Value="true">
-        <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
-        <Setter Property="Background" TargetName="HoverBorder" Value="{DynamicResource SelectedBackgroundBrush}"/>
-      </Trigger>
-      <Trigger Property="IsEnabled" Value="false">
-        <Setter Property="Opacity" TargetName="Grid" Value="1"/>
-        <Setter Property="Background" TargetName="Grid" Value="{DynamicResource SelectedBackgroundBrush}" />
-      </Trigger>
+      
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:disabled">
+
+        		<Style Selector="^ /template/ Grid#Grid">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Grid#Grid">
+			<Setter Property="Background" Value="{DynamicResource SelectedBackgroundBrush}"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Background" Value="{DynamicResource SelectedBackgroundBrush}"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:pointerover">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+      	</Style>
+--></ControlTemplate>
 
   <ControlTheme x:Key="{x:Type ToggleButton}" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
     
@@ -809,10 +860,7 @@
       <Trigger Property="IsKeyboardFocused" Value="true">
         <Setter Property="BorderBrush" TargetName="FocusVisualElement" Value="{DynamicResource DefaultedBorderBrush}"/>
       </Trigger>
-      <Trigger Property="IsMouseOver" Value="true">
-        <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
-
-      </Trigger>
+      
       <Trigger Property="IsPressed" Value="true">
         <Setter Property="Opacity" TargetName="PressedBorder" Value="1"/>
         <Setter Property="Background" TargetName="PressedBorder" Value="{DynamicResource PressedBrush}"/>
@@ -822,7 +870,15 @@
         <Setter Property="Opacity" TargetName="Grid" Value="0.25" />
       </Trigger>
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:pointerover">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+
+      	</Style>
+--></ControlTemplate>
 
   
   
@@ -833,9 +889,109 @@
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
     <Setter Property="Template" Value="{DynamicResource CheckBoxTemplate}" />
+  <Style Selector="^:disabled">
+
+        		<Style Selector="^ /template/ Rectangle#Background">
+			<Setter Property="Fill" Value="{DynamicResource DisabledBackgroundBrush}"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Rectangle#Background">
+			<Setter Property="Stroke" Value="{DynamicResource DisabledBorderBrush}"/>
+		</Style>
+
+        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+        		<Style Selector="^ /template/ Panel#bulletDecorator">
+			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:pointerover">
+
+        		<Style Selector="^ /template/ Rectangle#ContentFocusVisualElement">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Path#CheckIcon">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+      	</Style>
+    
   </ControlTheme>
 
-  
+  <ControlTemplate x:Key="CheckBoxTemplate" TargetType="{x:Type CheckBox}">
+    <Panel Background="Transparent" x:Name="bulletDecorator">
+      <Panel>
+        <Grid Width="16" Height="16" Margin="0">
+          <Rectangle  Margin="1" x:Name="Background"  Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" />
+          <Path Height="10" Margin="1,1,0,1.5" x:Name="CheckIcon" Width="10.5" Opacity="0" Fill="{StaticResource GlyphBrush}" Stretch="Fill" Data="M102.03442,598.79645 L105.22962,597.78918 L106.78825,600.42358 C106.78825,600.42358 108.51028,595.74304 110.21724,593.60419 C112.00967,591.35822 114.89314,591.42316 114.89314,591.42316 C114.89314,591.42316 112.67844,593.42645 111.93174,594.44464 C110.7449,596.06293 107.15683,604.13837 107.15683,604.13837 z" />
+          <Rectangle  x:Name="IndeterminateIcon"  Opacity="0" Fill="{StaticResource GlyphBrush}" Margin="4" />
+          <Rectangle Height="14" x:Name="DisabledVisualElement" Width="14" Opacity="0" Fill="{StaticResource DisabledBackgroundBrush}" />
+          <Rectangle  x:Name="ContentFocusVisualElement"  IsHitTestVisible="false" Opacity="0" Stroke="{DynamicResource HoverTextBorderBrush}" StrokeThickness="1" Margin="1" />
+        </Grid>
+      </Panel>
+      <ContentPresenter RecognizesAccessKey="True" Margin="5,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
+    </Panel>
+    <!-- <ControlTemplate.Triggers>
+      <Trigger Property="IsFocused" Value="True">
+        <Setter Property="Opacity" TargetName="ContentFocusVisualElement" Value="1"/>
+      </Trigger>
+      <MultiTrigger>
+        <MultiTrigger.Conditions>
+          <Condition Property="IsChecked" Value="True" />
+          <Condition Property="IsThreeState" Value="True" />
+        </MultiTrigger.Conditions>
+        <Setter Property="Opacity" TargetName="CheckIcon" Value="1"/>
+      </MultiTrigger>
+      <MultiTrigger>
+        <MultiTrigger.Conditions>
+          <Condition Property="IsChecked" Value="{x:Null}" />
+          <Condition Property="IsThreeState" Value="True" />
+        </MultiTrigger.Conditions>
+        <Setter Property="Visibility" TargetName="CheckIcon" Value="Hidden" />
+        <Setter Property="Opacity" TargetName="IndeterminateIcon" Value="1"/>
+      </MultiTrigger>
+      
+      
+      <Trigger Property="IsMouseOver" Value="False">
+        <Setter Property="Opacity" TargetName="ContentFocusVisualElement" Value="0"/>
+      </Trigger>
+      
+    </ControlTemplate.Triggers> -->
+  <!--	<Style Selector="^:disabled">
+
+        		<Style Selector="^ /template/ Rectangle#Background">
+			<Setter Property="Fill" Value="{DynamicResource DisabledBackgroundBrush}"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Rectangle#Background">
+			<Setter Property="Stroke" Value="{DynamicResource DisabledBorderBrush}"/>
+		</Style>
+
+        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+        		<Style Selector="^ /template/ Panel#bulletDecorator">
+			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:pointerover">
+
+        		<Style Selector="^ /template/ Rectangle#ContentFocusVisualElement">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Path#CheckIcon">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+      	</Style>
+--></ControlTemplate>
 
   <ControlTheme x:Key="{x:Type RadioButton}" TargetType="{x:Type RadioButton}" >
     
@@ -865,7 +1021,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -891,7 +1047,7 @@
               <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbPressedBackgroundBrush}"/>
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -923,7 +1079,7 @@
               <Setter TargetName="ThumbRectangle" Property="Fill" Value="{StaticResource ScrollBarThumbPressedBackgroundBrush}"/>
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -1063,7 +1219,7 @@
               <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   </ControlTheme>
@@ -1107,11 +1263,13 @@
               </MultiTrigger.Conditions>
               <Setter Property="Opacity" TargetName="HoverRectangle" Value="1"/>
             </MultiTrigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
-            </Trigger>
+            
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!--	<Style Selector="^:disabled">
+
+              <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+            	</Style>
+--></ControlTemplate>
       </Setter.Value>
     </Setter>
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
@@ -1194,7 +1352,7 @@
               </Trigger.EnterActions> --><!--
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:pointerover">
@@ -1269,7 +1427,7 @@
               </Trigger.EnterActions> --><!--
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:pointerover">
@@ -1354,7 +1512,7 @@
               </Trigger.EnterActions> --><!--
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:pointerover">
@@ -1467,7 +1625,7 @@
               <Setter Property="IsVisible" TargetName="IndeterminateRoot" Value="true"/>
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -1508,7 +1666,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
     <Setter Property="WatermarkContentTemplate">
@@ -1565,7 +1723,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
     <Setter Property="WatermarkContentTemplate">
@@ -1751,13 +1909,21 @@
           <Condition Property="IsFocused" Value="False" />
         </MultiTrigger.Conditions>
       </MultiTrigger>
-      <Trigger Property="IsEnabled" Value="False">
-        <Setter Property="Background" TargetName="Border" Value="{DynamicResource DisabledBackgroundBrush}" />
-        <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource DisabledBorderBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
-      </Trigger>
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:disabled">
+
+        		<Style Selector="^ /template/ Border#Border">
+			<Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Border#Border">
+			<Setter Property="BorderBrush" Value="{DynamicResource DisabledBorderBrush}"/>
+		</Style>
+
+        <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+      	</Style>
+--></ControlTemplate>
 
   
 
@@ -1774,7 +1940,7 @@
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="IsEnabled" Value="false" />
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
     <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
@@ -1846,16 +2012,26 @@
       <Trigger Property="Icon" Value="{x:Null}">
         <Setter Property="IsVisible" Value="false" TargetName="Icon" />
       </Trigger>
-      <Trigger Property="IsHighlighted" Value="True">
-        <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
-        <Setter Property="Foreground" Value="Black" />
-      </Trigger>
-      <Trigger Property="IsEnabled" Value="False">
-        <Setter Property="Foreground" Value="Gray" />
-        <Setter TargetName="HeaderHost" Property="Opacity" Value="0.5" />
-      </Trigger>
+      
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:disabled">
+
+        <Setter Property="Foreground" Value="Gray" />
+        		<Style Selector="^ /template/ ContentPresenter#HeaderHost">
+			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:selected">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+        <Setter Property="Foreground" Value="Black" />
+      	</Style>
+--></ControlTemplate>
 
   <ControlTemplate x:Key="MenuItem.TopLevelItemTemplateKey"  TargetType="{x:Type MenuItem}">
     <Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0,0,0,0" Margin="2">
@@ -1873,16 +2049,26 @@
       <Trigger Property="Icon" Value="{x:Null}">
         <Setter Property="IsVisible" Value="false" TargetName="Icon" />
       </Trigger>
-      <Trigger Property="IsHighlighted" Value="True">
-        <Setter Property="Opacity" TargetName="HoverBorder" Value="1"/>
-        <Setter Property="Foreground" Value="Black" />
-      </Trigger>
-      <Trigger Property="IsEnabled" Value="False">
-        <Setter Property="Foreground" Value="Gray" />
-        <Setter TargetName="HeaderHost" Property="Opacity" Value="0.5" />
-      </Trigger>
+      
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:disabled">
+
+        <Setter Property="Foreground" Value="Gray" />
+        		<Style Selector="^ /template/ ContentPresenter#HeaderHost">
+			<Setter Property="Opacity" Value="0.5"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:selected">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+        <Setter Property="Foreground" Value="Black" />
+      	</Style>
+--></ControlTemplate>
 
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
     
@@ -1984,7 +2170,7 @@
             </MultiTrigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -2187,7 +2373,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -2320,7 +2506,7 @@
             </MultiTrigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
     <!-- <ControlTheme.Triggers>
@@ -2378,7 +2564,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
     <Setter Property="Background" Value="{DynamicResource NormalBrush}"/>
@@ -2451,7 +2637,7 @@
               <Setter TargetName="PART_Track" Property="Orientation" Value="Horizontal" />
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -2490,12 +2676,20 @@
                   Data="M 0 0 H 6 L 3 6 Z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0"/>
     </Grid>
     <!-- <ControlTemplate.Triggers>
-      <Trigger Property="IsChecked" Value="true">
-        <Setter Property="IsVisible" Value="false" TargetName="Up_Arrow" />
-        <Setter Property="IsVisible" TargetName="Down_Arrow" Value="true" />
-      </Trigger>
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Path#Up_Arrow">
+			<Setter Property="IsVisible" Value="false"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Path#Down_Arrow">
+			<Setter Property="IsVisible" Value="true"/>
+		</Style>
+
+      	</Style>
+--></ControlTemplate>
 
   <ControlTemplate x:Key="TreeExpanderToggleButton" TargetType="{x:Type ToggleButton}">
 <Grid Background="Transparent">
@@ -2503,16 +2697,24 @@
 <Path HorizontalAlignment="Center" x:Name="Down_Arrow" VerticalAlignment="Center" Fill="{StaticResource GlyphBrush}" Data="M 0 0 H 6 L 3 6 Z" RenderTransformOrigin="0.5,0.5" Stretch="Uniform" StrokeThickness="0" IsVisible="{Binding !$parent[ToggleButton].IsChecked}"/>
     </Grid>
     <!-- <ControlTemplate.Triggers>
-      <Trigger Property="IsChecked" Value="true">
-        <Setter Property="IsVisible" Value="false" TargetName="Up_Arrow" />
-        <Setter Property="IsVisible" TargetName="Down_Arrow" Value="true" />
-      </Trigger>
+      
       <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ctrl:TreeViewItem}}, Mode=OneWay}" Value="True">
         <Setter Property="Fill" Value="{StaticResource GlyphHeaderBrush}" TargetName="Up_Arrow"/>
         <Setter Property="Fill" Value="{StaticResource GlyphHeaderBrush}" TargetName="Down_Arrow"/>
       </DataTrigger>
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Path#Up_Arrow">
+			<Setter Property="IsVisible" Value="false"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Path#Down_Arrow">
+			<Setter Property="IsVisible" Value="true"/>
+		</Style>
+
+      	</Style>
+--></ControlTemplate>
 
   <ControlTheme x:Key="NuclearTreeViewItemToggleButton" d:IsControlPart="True" TargetType="{x:Type ToggleButton}">
     <Setter Property="Focusable" Value="False" />
@@ -2602,7 +2804,7 @@
               <Setter Property="BorderBrush" TargetName="Selection_Border" Value="{DynamicResource NormalBorderBrush}" />
             </MultiDataTrigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
     <Setter Property="Background" Value="Transparent"/>
@@ -2676,7 +2878,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
     <!-- <ControlTheme.Triggers>
@@ -2887,7 +3089,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -2922,7 +3124,7 @@
           <!-- <ControlTemplate.Triggers>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:pointerover">
@@ -2957,7 +3159,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -3002,7 +3204,7 @@
             </Trigger>
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">
@@ -3021,16 +3223,32 @@
       <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"  HorizontalAlignment="Left" Margin="4,2,0,2" VerticalAlignment="Center" Grid.Column="1" RecognizesAccessKey="True" Focusable="False"/>
     </Grid>
     <!-- <ControlTemplate.Triggers>
-      <Trigger Property="IsChecked" Value="true">
-        <Setter Property="IsVisible" TargetName="Down_Arrow" Value="true" />
-        <Setter Property="IsVisible" TargetName="Up_Arrow" Value="false" />
-      </Trigger>
-      <Trigger Property="IsMouseOver" Value="true">
-        <Setter Property="Fill" TargetName="Up_Arrow" Value="White"/>
-        <Setter Property="Fill" TargetName="Down_Arrow" Value="White"/>
-      </Trigger>
+      
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:pointerover">
+
+        		<Style Selector="^ /template/ Path#Up_Arrow">
+			<Setter Property="Fill" Value="White"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Path#Down_Arrow">
+			<Setter Property="Fill" Value="White"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Path#Down_Arrow">
+			<Setter Property="IsVisible" Value="true"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Path#Up_Arrow">
+			<Setter Property="IsVisible" Value="false"/>
+		</Style>
+
+      	</Style>
+--></ControlTemplate>
 
   <ControlTemplate x:Key="ExpanderTemplate" TargetType="{x:Type Expander}">
     <Border  BorderThickness="1" CornerRadius="3" Margin="0,1" Background="{TemplateBinding Background}" Focusable="False" BorderBrush="{TemplateBinding BorderBrush}">
@@ -3107,11 +3325,13 @@
         <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Right" />
         <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderLeftHeaderStyle}" />
       </Trigger>
-      <Trigger Property="IsEnabled" Value="false">
-        <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}" />
-      </Trigger>
+      
     </ControlTemplate.Triggers> -->
-  </ControlTemplate>
+  <!--	<Style Selector="^:disabled">
+
+        <Setter Property="Foreground" Value="{StaticResource GrayTextBrushKey}" />
+      	</Style>
+--></ControlTemplate>
   
 
   
@@ -3997,7 +4217,7 @@
     <Setter Property="TextElement.Foreground" Value="{StaticResource TextBrush}"/>
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-<!--     <Setter Property="VerticalAlignment" Value="Center" /> -->
+    <!-- <Setter Property=\"VerticalAlignment\" Value=\"Center\" /> -->
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type ctrl:TreeView}">
@@ -4022,7 +4242,7 @@
               </Setter>
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   </ControlTheme>
@@ -4079,7 +4299,7 @@
 	<!-- <ContentPresenter x:Name="content"
                                   
                                   Content="{TemplateBinding HeaderedContentControl.Header}"
-                                  ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
+                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
                                   
                                   ContentTemplateSelector="{TemplateBinding HeaderedItemsControl.HeaderTemplateSelector}"
                                   ContentSource="Header"
@@ -4119,9 +4339,7 @@
               </MultiTrigger.Conditions>
               <Setter Property="Opacity" TargetName="HoverRectangle" Value="1"/>
             </MultiTrigger>
-            <Trigger Property="IsEnabled" Value="false">
-              <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
-            </Trigger>
+            
 
             <Trigger Property="ctrl:TreeViewItem.IsEditing" Value="True">
               <Setter TargetName="content" Property="ContentPresenter.ContentTemplate"
@@ -4131,7 +4349,11 @@
               <Setter Property="Padding" Value="0" />
             </Trigger>
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!--	<Style Selector="^:disabled">
+
+              <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
+            	</Style>
+--></ControlTemplate>
       </Setter.Value>
     </Setter>
   </ControlTheme>
@@ -4149,7 +4371,7 @@
             
             
           </ControlTemplate.Triggers> -->
-        </ControlTemplate>
+        <!----></ControlTemplate>
       </Setter.Value>
     </Setter>
   	<Style Selector="^:disabled">

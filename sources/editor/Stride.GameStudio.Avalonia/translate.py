@@ -1323,8 +1323,10 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<Setter Property=\"Template\">(\s*?)<Setter.Value>(\s*?)<ControlTemplate TargetType=\"{x:Type ContextMenu}(.*?)</ControlTemplate>(\s*?)</Setter.Value>(\s*?)</Setter>", regex.DOTALL), r"", contents) # temp, possible to resolve?
   contents = regex.sub (regex.compile ("<Setter Property=\"Template\">(\s*?)<Setter.Value>(\s*?)<ControlTemplate TargetType=\"{x:Type Menu}(.*?)</ControlTemplate>(\s*?)</Setter.Value>(\s*?)</Setter>", regex.DOTALL), r"", contents) # temp, possible to resolve?
 
-  contents = regex.sub (regex.compile ("<ControlTemplate x:Key=\"CheckBoxTemplate(.*?)</ControlTemplate>", regex.DOTALL), r"", contents) # maybe add support later?
+  #contents = regex.sub (regex.compile ("<ControlTemplate x:Key=\"CheckBoxTemplate(.*?)</ControlTemplate>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTemplate x:Key=\"RadioButtonTemplate(.*?)</ControlTemplate>", regex.DOTALL), r"", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("BulletDecorator.Bullet", regex.DOTALL), r"Panel", contents) # maybe add support later?
+  contents = regex.sub (regex.compile ("BulletDecorator", regex.DOTALL), r"Panel", contents) # maybe add support later?
 
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type StatusBar(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
   contents = regex.sub (regex.compile ("<ControlTheme TargetType=\"{x:Type IFrameworkInputElement(.*?)</ControlTheme>", regex.DOTALL), r"", contents) # maybe add support later?
@@ -1517,6 +1519,9 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<Rectangle([^>]*?)Height=\"Auto\"", regex.DOTALL), r"<Rectangle\1", contents)
   contents = regex.sub (regex.compile ("<Rectangle([^>]*?)Width=\"Auto\"", regex.DOTALL), r"<Rectangle\1", contents)
   contents = regex.sub (regex.compile ("x:Shared=\"False\"", regex.DOTALL), r"", contents)
+  contents = regex.sub (regex.compile ("Path=Source\.\(BitmapSource\.PixelHeight\)", regex.DOTALL), r"Path=Size.Height", contents)
+  contents = regex.sub (regex.compile ("Path=Source\.\(BitmapSource\.PixelWidth\)", regex.DOTALL), r"Path=Size.Width", contents)
+  contents = regex.sub (regex.compile ("ContentTemplate=\"{TemplateBinding HeaderedContentControl.HeaderTemplate}\"", regex.DOTALL), r'ContentTemplate="{TemplateBinding HeaderTemplate}"', contents)
 
   # Force a textpresenter into textbox.
   contents = re.sub (re.compile ("<ControlTemplate x:Key=\"TextBoxTemplate\" TargetType=\"{x:Type TextBox}\">(.*?)<ScrollViewer (.*?)/>", re.DOTALL), r'<ControlTemplate x:Key="TextBoxTemplate" TargetType="{x:Type TextBox}">\1<ScrollViewer \2>\n\t\t<TextPresenter x:Name="PART_TextPresenter" Text="{TemplateBinding Text, Mode=TwoWay}" CaretIndex="{TemplateBinding CaretIndex}" SelectionStart="{TemplateBinding SelectionStart}" SelectionEnd="{TemplateBinding SelectionEnd}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" LineHeight="{TemplateBinding LineHeight}" LetterSpacing="{TemplateBinding LetterSpacing}" PasswordChar="{TemplateBinding PasswordChar}" RevealPassword="{TemplateBinding RevealPassword}" SelectionBrush="{TemplateBinding SelectionBrush}" SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}" CaretBrush="{TemplateBinding CaretBrush}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>\n\t</ScrollViewer>', contents)
@@ -1538,6 +1543,7 @@ def translateTags (contents):
   contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ListBoxItem}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ListBoxItem}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTheme>', contents) 
 
   contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ctrl:TreeViewItem}\"(.*?)ContentSource=\"Header\"(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ctrl:TreeViewItem}"\2\3</ControlTheme>', contents) 
+  contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ctrl:TreeView}\"(.*?)<Setter Property=\"VerticalAlignment\" Value=\"Center\" />(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ctrl:TreeView}"\2<!-- <Setter Property=\"VerticalAlignment\" Value=\"Center\" /> -->\3</ControlTheme>', contents) 
 
   contents = regex.sub (regex.compile ("<ControlTheme([^>]*?)TargetType=\"{x:Type ToolTip}\"(((?!</ControlTheme>).)*)<ContentPresenter (((?!Content=).)*?)>(((?!ControlTheme>).)*)</ControlTheme>", regex.DOTALL), r'<ControlTheme\1TargetType="{x:Type ToolTip}"\2<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" \4>\6</ControlTheme>', contents) 
 
@@ -1630,6 +1636,14 @@ def translateTags (contents):
       (styles, triggers) = rewriteTriggers (triggers, context)
       contents = contents[:match.start ()] + r"<ControlTheme" + context + r"<ControlTheme.Triggers>" + triggers + r"</ControlTheme.Triggers>" + match.group(4) + styles + r"</ControlTheme>" + contents[match.end ():] 
   
+  pat = re.compile ("<ControlTemplate(((?!</ControlTemplate>).)*)<ControlTemplate.Triggers>(.*?)</ControlTemplate.Triggers>(((?!ControlTemplate>).)*)</ControlTemplate>", re.DOTALL)
+  if (re.findall (pat, contents)):
+    for match in reversed(list(re.finditer (pat, contents))):
+      context = match.group (1)
+      triggers = match.group (3)
+      (styles, triggers) = rewriteTriggers (triggers, context)
+      contents = contents[:match.start ()] + r"<ControlTemplate" + context + r"<ControlTemplate.Triggers>" + triggers + r"</ControlTemplate.Triggers>" + match.group(4) + "<!--" +  styles + "-->" + r"</ControlTemplate>" + contents[match.end ():] 
+
   contents = re.sub (re.compile ("\<ControlTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <ControlTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<DataTemplate\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
   contents = re.sub (re.compile ("\<i:Interaction\.Triggers>(.*?)\.Triggers>", re.DOTALL), r"<!-- <DataTemplate.Triggers>\1.Triggers> -->", contents)
@@ -2064,11 +2078,11 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/NewGameTemplateGenerator.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptTemplateGenerator.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptNameWindow.xaml.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
-#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
+translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")
@@ -2108,7 +2122,7 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/ObjectBrowserUserControl.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/UpdatePlatformsWindows.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptNameWindow.xaml")
-translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
