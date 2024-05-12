@@ -48,7 +48,7 @@ namespace Stride.Core.Presentation.Dialogs
             List<FilePickerFileType> OFilters = new List<FilePickerFileType> ();
             foreach (var filter in Filters.Where(x => !string.IsNullOrEmpty(x.ExtensionList)))
             {
-                OFilters.Add(new FilePickerFileType (filter.Description) { Patterns = new List<string> (filter.ExtensionList.Split(';'))});
+                OFilters.Add(new FilePickerFileType (filter.Description) { Patterns = new List<string> (filter.ExtensionList.Split(';').Select (x => "*." + x))});
             }
             Window window = null;
             if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)

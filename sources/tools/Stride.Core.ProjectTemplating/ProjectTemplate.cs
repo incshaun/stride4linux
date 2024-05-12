@@ -142,6 +142,7 @@ namespace Stride.Core.ProjectTemplating
                 foreach (var fileItem in Files)
                 {
                     fileItem.Source = fileItem.Source.Replace("\\", "/");
+                    fileItem.Target = fileItem.Target.Replace("\\", "/");
                     if (fileItem.Source == null)
                     {
                         log.Warning($"Invalid empty file item [{fileItem}] with no source location");

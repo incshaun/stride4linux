@@ -69,7 +69,7 @@ namespace Stride.Core.Assets.Editor.Settings
         /// </summary>
         public static void WriteFile()
         {
-//             SettingsContainer.SaveSettingsProfile(Profile, EditorPath.InternalConfigPath);
+            SettingsContainer.SaveSettingsProfile(Profile, EditorPath.InternalConfigPath);
         }
 
         private static object LegacyMRUDeserializer(EventReader eventReader)

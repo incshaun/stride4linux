@@ -473,7 +473,8 @@
             <Rectangle x:Name="Background" IsHitTestVisible="True" Fill="Transparent"/>
             <Rectangle x:Name="HoverRectangle" IsHitTestVisible="False" Opacity="0" Fill="{StaticResource NormalBrush}"/>
             <Rectangle x:Name="SelectedRectangle" IsHitTestVisible="False" Opacity="0" Fill="{StaticResource ComboBoxItemHoverBackground}"/>
-            <ContentPresenter Margin="5,1" x:Name="contentPresenter" VerticalAlignment="Center" />
+            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Content="{TemplateBinding Content}" Margin="5,1" x:Name="contentPresenter" VerticalAlignment="Center" />
           </Grid>
           <!-- <ControlTemplate.Triggers>
             <Trigger Property="IsHighlighted" Value="true">
