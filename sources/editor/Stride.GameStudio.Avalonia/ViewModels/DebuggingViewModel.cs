@@ -535,6 +535,28 @@ namespace Stride.GameStudio.Avalonia.ViewModels
 
                             break;
                         case PlatformType.Linux:
+                            if (Path.GetExtension(assemblyPath).ToLowerInvariant() == ".dll")
+                                assemblyPath = Path.ChangeExtension(assemblyPath, null);
+
+                            if (string.Equals(Path.GetExtension(assemblyPath), ".Linux", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                if (!File.Exists(assemblyPath))
+                                {
+                                    logger.Error(string.Format(Tr._p("Message", "Unable to reach to output executable: {0}"), assemblyPath));
+                                    return false;
+                                }
+                                var process = new Process
+                                {
+                                    StartInfo = new ProcessStartInfo(assemblyPath)
+                                    {
+                                        WorkingDirectory = Path.GetDirectoryName(assemblyPath) ?? ""
+                                    }
+                                };
+                                process.Start();
+                            }
+                            break;
+// FIXME: Need local/remote, rather than platform type.                            
+//                        case PlatformType.Linux:
                         case PlatformType.macOS:
                             {
                                 // Sanity check to verify executable was compiled properly
