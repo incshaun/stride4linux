@@ -2081,10 +2081,25 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptTemplateGenerator.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptNameWindow.xaml.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ProjectLibraryTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/HeightmapFactoryTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ColliderShapeHullFactoryTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ColliderShapeStaticMeshFactoryTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ProceduralModelFactoryTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/SkyboxFactoryTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/GraphicsCompositorTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/SpriteSheetFromFileTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ModelFromFileTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/AnimationFromFileTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/VideoFromFileTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/SoundFromFileTemplateGenerator.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ModelAssetTemplateWindow.xaml.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ProjectLibraryWindow.xaml.cs")
+translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/EntityComponentToResource.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
-translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
+#translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/ExpressionDarkTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DarkSteelTheme.xaml")
 #translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/Overrides/DividedTheme.xaml")
@@ -2125,6 +2140,8 @@ translateXAML ("presentation/Stride.Core.Presentation.Wpf/Themes/ThemeSelector.x
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/UpdatePlatformsWindows.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ScriptNameWindow.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ModelAssetTemplateWindow.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ProjectLibraryWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

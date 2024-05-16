@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <StridePlatform>Windows</StridePlatform>
-    <StrideSkipAutoPack>true</StrideSkipAutoPack>
+<!--     <StrideSkipAutoPack>true</StrideSkipAutoPack> -->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <Prefer32Bit>false</Prefer32Bit>

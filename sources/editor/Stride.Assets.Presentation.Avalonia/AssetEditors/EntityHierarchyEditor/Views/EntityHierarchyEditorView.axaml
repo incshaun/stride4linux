@@ -462,8 +462,8 @@
                   <Setter.Value>
                     <DataTemplate DataType="{x:Type ehvm:EntityViewModel}">
                       <StackPanel Orientation="Horizontal">
-<!--                        <Image Source="{Binding Components, Converter={pvc:EntityComponentToResource}}"
-                               MaxWidth="16" MaxHeight="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>-->
+                        <Image Source="{Binding Components, Converter={pvc:EntityComponentToResource}}"
+                               MaxWidth="16" MaxHeight="16" RenderOptions.BitmapInterpolationMode="LowQuality"/>
                         <sd:TextBox Text="{Binding Name}" GetFocusOnLoad="True" SelectAllOnFocus="True" Margin="6,2"/>
                       </StackPanel>
                     </DataTemplate>
@@ -478,6 +478,12 @@
               </ControlTheme>
             </sd:TreeView.ItemContainerTheme>
             <i:Interaction.Behaviors>
+              <sd:DragOverAutoScrollBehavior/>
+              <sd:TreeViewAutoExpandBehavior/>
+              <sd:TreeViewDragDropBehavior DragVisualTemplate="{StaticResource DragVisualTemplate}" CanInsert="True" AllowDropOnEmptyArea="True"/>
+              <sd:TreeViewBindableSelectedItemsBehavior SelectedItems="{Binding SelectedContent}" GiveFocusOnSelectionChange="False"/>
+              <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Cut}" Command="{Binding CutCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+              <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Copy}" Command="{Binding CopyCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
 
             </i:Interaction.Behaviors>
           </sd:TreeView>
