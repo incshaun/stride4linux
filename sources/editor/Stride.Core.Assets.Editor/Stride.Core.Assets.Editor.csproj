@@ -7,7 +7,7 @@
     <StrideAssemblyProcessorOptions>--auto-module-initializer --serialization</StrideAssemblyProcessorOptions>
     <StrideLocalized>true</StrideLocalized>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
-    <StrideSkipAutoPack>true</StrideSkipAutoPack>
+<!--     <StrideSkipAutoPack>true</StrideSkipAutoPack> -->
   </PropertyGroup>
   <ItemGroup>
 <!--     <PackageReference Include="Dirkster.AvalonDock" /> -->
