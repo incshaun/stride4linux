@@ -128,11 +128,11 @@
       <Border sd:PropertyViewHelper.Increment="0" sd:PropertyViewHelper.IsExpanded="True"
           IsVisible="{Binding IsVisible}">
         <Border x:Name="PART_Name" Background="{Binding Background}" MinHeight="26" Margin="4,4,1,8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTip.Tip="{Binding Documentation}">
-<!--          <localView:AddEntityComponentUserControl 
+          <localView:AddEntityComponentUserControl 
             AvailableComponentTypes="{Binding EntityComponentAvailableTypes}"
             AvailableComponentTypeGroups="{Binding EntityComponentAvailableTypeGroups}"
             AddNewItemCommand="{Binding AddNewItem}"
-            AddNewScriptComponentCommand="{Binding AddNewScriptComponent}"/>-->
+            AddNewScriptComponentCommand="{Binding AddNewScriptComponent}"/>
         </Border>
       </Border>
     </DataTemplate>

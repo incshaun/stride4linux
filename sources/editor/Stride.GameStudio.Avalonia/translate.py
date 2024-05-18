@@ -2095,7 +2095,10 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/SoundFromFileTemplateGenerator.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ModelAssetTemplateWindow.xaml.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/Templates/ProjectLibraryWindow.xaml.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/EntityComponentToResource.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/EntityComponentToResource.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/View/AddEntityComponentUserControl.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/ListBoxHighlightedItemBehavior.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AbstractNodeEntryToType.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -2142,6 +2145,7 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/EntityCompon
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/GameTemplateWindow.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ModelAssetTemplateWindow.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ProjectLibraryWindow.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/AddEntityComponentUserControl.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

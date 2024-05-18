@@ -46,18 +46,18 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="SelectedItem"/> dependency property.
         /// </summary>
-        public static StyledProperty<object> SelectedItemProperty =
-            StyledProperty<object>.Register<TreeView, object>(nameof(SelectedItem), null);
+//         public static StyledProperty<object> SelectedItemProperty =
+//             StyledProperty<object>.Register<TreeView, object>(nameof(SelectedItem), null);
         /// <summary>
         /// Identifies the <see cref="SelectedItems"/> dependency property.
         /// </summary>
-        public static StyledProperty<IList> SelectedItemsProperty =
-            StyledProperty<IList>.Register<TreeView, IList>(nameof(SelectedItems), null);
+//         public static StyledProperty<IList> SelectedItemsProperty =
+//             StyledProperty<IList>.Register<TreeView, IList>(nameof(SelectedItems), null);
         /// <summary>
         /// Identifes the <see cref="SelectionMode"/> dependency property.
         /// </summary>
-        public static StyledProperty<SelectionMode> SelectionModeProperty =
-            StyledProperty<SelectionMode>.Register<TreeView, SelectionMode>(nameof(SelectionMode), SelectionMode.Multiple);
+//         public static StyledProperty<SelectionMode> SelectionModeProperty =
+//             StyledProperty<SelectionMode>.Register<TreeView, SelectionMode>(nameof(SelectionMode), SelectionMode.Multiple);
         /// <summary>
         /// Identifies the <see cref="IsVirtualizing"/> dependency property.
         /// </summary>
@@ -135,7 +135,8 @@ namespace Stride.Core.Presentation.Controls
         /// </summary>
         public TreeView()
         {
-            SelectedItems = new NonGenericObservableListWrapper<object>(new ObservableList<object>());
+            Console.WriteLine ("Treeview A");
+//             SelectedItems = new NonGenericObservableListWrapper<object>(new ObservableList<object>());
 
             Items.CollectionChanged += OnItemsViewCollectionChanged;
         }
@@ -145,17 +146,17 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Gets the last selected item.
         /// </summary>
-        public object SelectedItem { get { return GetValue(SelectedItemProperty); } set { SetValue(SelectedItemProperty, value); } }
+//         public object SelectedItem { get { return GetValue(SelectedItemProperty); } set { SetValue(SelectedItemProperty, value); } }
 
         /// <summary>
         /// Gets the list of selected items.
         /// </summary>
-        public IList SelectedItems { get { return (IList)GetValue(SelectedItemsProperty); } private set { SetValue(SelectedItemsProperty, value); } }
+//         public IList SelectedItems { get { return (IList)GetValue(SelectedItemsProperty); } private set { SetValue(SelectedItemsProperty, value); } }
 
         /// <summary>
         /// Gets the selection mode for this control.
         /// </summary>
-        public SelectionMode SelectionMode { get { return (SelectionMode)GetValue(SelectionModeProperty); } set { SetValue(SelectionModeProperty, value); } }
+//         public SelectionMode SelectionMode { get { return (SelectionMode)GetValue(SelectionModeProperty); } set { SetValue(SelectionModeProperty, value); } }
 
         /// <summary>
         /// Raised when a <see cref="TreeViewItem"/> is being prepared to be added to the <see cref="TreeView"/>.
@@ -358,6 +359,7 @@ namespace Stride.Core.Presentation.Controls
         /// <inheritdoc />
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
+            Console.WriteLine ("Treeview pointer pressed");
             base.OnPointerPressed(e);
             StopEditing();
 
@@ -616,6 +618,7 @@ namespace Stride.Core.Presentation.Controls
 
         private static void OnSelectedItemsPropertyChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
+            Console.WriteLine ("Treeview selected items changede");
             var treeView = (TreeView)d;
             if (e.OldValue != null)
             {
