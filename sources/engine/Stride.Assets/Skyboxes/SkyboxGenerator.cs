@@ -149,7 +149,7 @@ namespace Stride.Assets.Skyboxes
             var filteringTextureFormat = skyboxTexture.Format.IsHDR() ? skyboxTexture.Format : PixelFormat.R8G8B8A8_UNorm;
 
             //var outputTexture = Texture.New2D(graphicsDevice, 256, 256, skyboxTexture.Format, TextureFlags.ShaderResource | TextureFlags.UnorderedAccess, 6);
-            using (var outputTexture = Texture.New2D(context.GraphicsDevice, textureSize, textureSize, true, filteringTextureFormat, TextureFlags.ShaderResource | TextureFlags.RenderTarget, 6))
+/*            using (var outputTexture = Texture.New2D(context.GraphicsDevice, textureSize, textureSize, true, filteringTextureFormat, TextureFlags.ShaderResource | TextureFlags.RenderTarget, 6))
             {
                 specularRadiancePrefilterGGX.RadianceMap = skyboxTexture;
                 specularRadiancePrefilterGGX.PrefilteredRadiance = outputTexture;
@@ -162,7 +162,7 @@ namespace Stride.Assets.Skyboxes
 
                 skybox.SpecularLightingParameters.Set(SkyboxKeys.Shader, new ShaderClassSource("RoughnessCubeMapEnvironmentColor"));
                 skybox.SpecularLightingParameters.Set(SkyboxKeys.CubeMap, cubeTexture);
-            }
+            }*/
             // TODO: cubeTexture is not deallocated
 
             return result;

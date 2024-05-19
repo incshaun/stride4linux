@@ -644,7 +644,8 @@ namespace Stride.TextureConverter.DxtWrapper
 
         public static HRESULT GenerateMipMaps(DxtImage[] srcImages, int nimages, ref TexMetadata metadata, TEX_FILTER_FLAGS filter, int levels, ScratchImage mipChain)
         {
-            return HandleHRESULT(dxtGenerateMipMapsArray(srcImages, nimages, ref metadata, filter, levels, mipChain.ptr));
+           return HandleHRESULT(dxtGenerateMipMapsArray(srcImages, nimages, ref metadata, filter, levels, mipChain.ptr));
+//return HRESULT.E_FAIL;            
         }
 
         public static HRESULT GenerateMipMaps3D(ref DxtImage baseImage, int depth, TEX_FILTER_FLAGS filter, int levels, ScratchImage mipChain)

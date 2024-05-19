@@ -110,7 +110,7 @@ namespace Stride.Core.Presentation.Windows
         public static void ShowMainWindow([NotNull] Window window)
         {
             if (window == null) throw new ArgumentNullException(nameof(window));
-            CheckDispatcher();
+//             CheckDispatcher();
 
             if (MainWindow != null)
             {

@@ -91,7 +91,7 @@ namespace Stride.Assets.SpriteFont
                 var loader = originalLoader.QueryInterface<LocalFontFileLoader>();
                 return loader.GetFilePath(referenceKey);
             }*/
-            return ""; // path not relevant here, return empty string.
+            return "/usr/share/texlive/texmf-dist/bibtex/bst/wiley/Fonts/Arial/Arial.ttf"; // path not relevant here, return empty string. FIXME: placeholder, to fix exceptions.
         }
 
         /// <inheritdoc/>

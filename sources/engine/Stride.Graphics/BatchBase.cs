@@ -176,7 +176,8 @@ namespace Stride.Graphics
         {
             CheckEndHasBeenCalled("begin");
 
-            graphicsDevice.LocalInitialize ();
+//using (graphicsDevice.UseOpenGLCreationContext ())
+//            graphicsDevice.LocalInitialize ();
             ResourceContext = ResourceContextPool.Value;
 
             GraphicsContext = graphicsContext;
@@ -251,10 +252,13 @@ namespace Stride.Graphics
             GraphicsContext.CommandList.SetPipelineState(mutablePipeline.CurrentState);
 
             // Bind VB/IB
-            if (ResourceContext.VertexBuffer != null)
-                GraphicsContext.CommandList.SetVertexBuffer(0, ResourceContext.VertexBuffer, 0, vertexStructSize);
-            if (ResourceContext.IndexBuffer != null)
-                GraphicsContext.CommandList.SetIndexBuffer(ResourceContext.IndexBuffer, 0, indexStructSize == sizeof(int));
+            using (GraphicsContext.CommandList.GraphicsDevice.UseOpenGLCreationContext ())
+            {
+                if (ResourceContext.VertexBuffer != null)
+                    GraphicsContext.CommandList.SetVertexBuffer(0, ResourceContext.VertexBuffer, 0, vertexStructSize);
+                if (ResourceContext.IndexBuffer != null)
+                    GraphicsContext.CommandList.SetIndexBuffer(ResourceContext.IndexBuffer, 0, indexStructSize == sizeof(int));
+            }
         }
 
         protected void CheckBeginHasBeenCalled(string functionName)
@@ -293,8 +297,12 @@ namespace Stride.Graphics
                 }
 
                 // If not immediate, then setup and render all sprites
+// Console.WriteLine ("SpriteEnd A ");
+                
                 PrepareForRendering();
+// Console.WriteLine ("SpriteEnd B ");
                 FlushBatch();
+// Console.WriteLine ("SpriteEnd C ");
             }
 
             ResourceContext = null;
@@ -345,6 +353,7 @@ namespace Stride.Graphics
         private void FlushBatch()
         {
             ElementInfo[] spriteQueueForBatch;
+// Console.WriteLine ("FlushBatch A ");
 
             // If Deferred, then sprites are displayed in the same order they arrived
             if (sortMode == SpriteSortMode.Deferred)
@@ -358,6 +367,7 @@ namespace Stride.Graphics
                 spriteQueueForBatch = sortedDraws;
             }
 
+// Console.WriteLine ("FlushBatch B ");
             // Iterate on all sprites and group batch per texture.
             int offset = 0;
             Texture previousTexture = null;
@@ -378,21 +388,27 @@ namespace Stride.Graphics
                     // Get the texture indirectly
                     texture = drawTextures[index];
                 }
+// Console.WriteLine ("FlushBatch C " + i);
 
                 if (texture != previousTexture)
                 {
                     if (i > offset)
                     {
+// Console.WriteLine ("FlushBatch D " + i);
                         DrawBatchPerTexture(previousTexture, spriteQueueForBatch, offset, i - offset);
+// Console.WriteLine ("FlushBatch E " + i);
+
                     }
 
                     offset = i;
                     previousTexture = texture;
                 }
             }
+// Console.WriteLine ("FlushBatch F ");
 
             // Draw the last batch
             DrawBatchPerTexture(previousTexture, spriteQueueForBatch, offset, drawsQueueCount - offset);
+// Console.WriteLine ("FlushBatch G ");
 
             // Reset the queue.
             Array.Clear(drawTextures, 0, drawsQueueCount);
@@ -405,6 +421,8 @@ namespace Stride.Graphics
             {
                 Array.Clear(sortedDraws, 0, sortedDraws.Length);
             }
+// Console.WriteLine ("FlushBatch H ");
+
         }
 
         private void DrawBatchPerTexture(Texture texture, ElementInfo[] sprites, int offset, int count)
@@ -425,6 +443,7 @@ namespace Stride.Graphics
         {
             while (count > 0)
             {
+// Console.WriteLine ("DrawBatch A ");                
                 // How many index/vertex do we want to draw?
                 var indexCount = 0;
                 var vertexCount = 0;
@@ -458,83 +477,104 @@ namespace Stride.Graphics
                     vertexCount += spriteElementInfo.VertexCount;
                     indexCount += spriteElementInfo.IndexCount;
                 }
+// Console.WriteLine ("DrawBatch B ");                
 
                 // Sets the data directly to the buffer in memory
                 var offsetVertexInBytes = ResourceContext.VertexBufferPosition * vertexStructSize;
                 var offsetIndexInBytes = ResourceContext.IndexBufferPosition * indexStructSize;
 
-                if (ResourceContext.VertexBufferPosition == 0)
+                using (GraphicsContext.CommandList.GraphicsDevice.UseOpenGLCreationContext ())
                 {
-                    if (ResourceContext.VertexBuffer != null)
-                        GraphicsContext.Allocator.ReleaseReference(ResourceContext.VertexBuffer);
-                    ResourceContext.VertexBuffer = GraphicsContext.Allocator.GetTemporaryBuffer(new BufferDescription(ResourceContext.VertexCount * vertexStructSize, BufferFlags.VertexBuffer, GraphicsResourceUsage.Dynamic));
-                    GraphicsContext.CommandList.SetVertexBuffer(0, ResourceContext.VertexBuffer, 0, vertexStructSize);
-                }
-
-                if (ResourceContext.IsIndexBufferDynamic && ResourceContext.IndexBufferPosition == 0)
-                {
-                    if (ResourceContext.IndexBuffer != null)
-                        GraphicsContext.Allocator.ReleaseReference(ResourceContext.IndexBuffer);
-                    ResourceContext.IndexBuffer = GraphicsContext.Allocator.GetTemporaryBuffer(new BufferDescription(ResourceContext.IndexCount * indexStructSize, BufferFlags.IndexBuffer, GraphicsResourceUsage.Dynamic));
-                    GraphicsContext.CommandList.SetIndexBuffer(ResourceContext.IndexBuffer, 0, indexStructSize == sizeof(int));
-                }
-
-                // ------------------------------------------------------------------------------------------------------------
-                // CAUTION: Performance problem under x64 resolved by this special codepath:
-                // For some unknown reasons, It seems that writing directly to the pointer returned by the MapSubresource is 
-                // extremely inefficient using x64 but using a temporary buffer and performing a mempcy to the locked region
-                // seems to be running at the same speed than x86
-                // ------------------------------------------------------------------------------------------------------------
-                // TODO Check again why we need this code
-                //if (IntPtr.Size == 8)
-                //{
-                //    if (x64TempBuffer == null)
-                //    {
-                //        x64TempBuffer = ToDispose(new DataBuffer(Utilities.SizeOf<VertexPositionColorTexture>() * MaxBatchSize * VerticesPerSprite));
-                //    }
-
-                //    // Perform the update of all vertices on a temporary buffer
-                //    var texturePtr = (VertexPositionColorTexture*)x64TempBuffer.DataPointer;
-                //    for (int i = 0; i < batchSize; i++)
-                //    {
-                //        UpdateBufferValuesFromElementInfo(ref sprites[offset + i], ref texturePtr, deltaX, deltaY);
-                //    }
-
-                //    // Then copy this buffer in one shot
-                //    resourceContext.VertexBuffer.SetData(GraphicsDevice, new DataPointer(x64TempBuffer.DataPointer, batchSize * VerticesPerSprite * Utilities.SizeOf<VertexPositionColorTexture>()), offsetInBytes, noOverwrite);
-                //}
-                //else
-                {
-                    var mappedIndices = new MappedResource();
-                    var mappedVertices = GraphicsContext.CommandList.MapSubresource(ResourceContext.VertexBuffer, 0, MapMode.WriteNoOverwrite, false, offsetVertexInBytes, vertexCount * vertexStructSize);
-                    if (ResourceContext.IsIndexBufferDynamic)
-                        mappedIndices = GraphicsContext.CommandList.MapSubresource(ResourceContext.IndexBuffer, 0, MapMode.WriteNoOverwrite, false, offsetIndexInBytes, indexCount * indexStructSize);
-
-                    var vertexPointer = mappedVertices.DataBox.DataPointer;
-                    var indexPointer = mappedIndices.DataBox.DataPointer;
-
-                    for (var i = 0; i < batchSize; i++)
+                    if (ResourceContext.VertexBufferPosition == 0)
                     {
-                        var spriteIndex = offset + i;
-                        ref var spriteElementInfo = ref sprites[spriteIndex];
-
-                        UpdateBufferValuesFromElementInfo(ref spriteElementInfo, vertexPointer, indexPointer, ResourceContext.VertexBufferPosition);
-
-                        ResourceContext.VertexBufferPosition += spriteElementInfo.VertexCount;
-                        vertexPointer += vertexStructSize * spriteElementInfo.VertexCount;
-                        indexPointer += indexStructSize * spriteElementInfo.IndexCount;
+                        if (ResourceContext.VertexBuffer != null)
+                            GraphicsContext.Allocator.ReleaseReference(ResourceContext.VertexBuffer);
+                        ResourceContext.VertexBuffer = GraphicsContext.Allocator.GetTemporaryBuffer(new BufferDescription(ResourceContext.VertexCount * vertexStructSize, BufferFlags.VertexBuffer, GraphicsResourceUsage.Dynamic));
+                        GraphicsContext.CommandList.SetVertexBuffer(0, ResourceContext.VertexBuffer, 0, vertexStructSize);
                     }
+// Console.WriteLine ("DrawBatch C ");                
 
-                    GraphicsContext.CommandList.UnmapSubresource(mappedVertices);
-                    if (ResourceContext.IsIndexBufferDynamic)
-                        GraphicsContext.CommandList.UnmapSubresource(mappedIndices);
-                }
+                    if (ResourceContext.IsIndexBufferDynamic && ResourceContext.IndexBufferPosition == 0)
+                    {
+                        if (ResourceContext.IndexBuffer != null)
+                            GraphicsContext.Allocator.ReleaseReference(ResourceContext.IndexBuffer);
+                        ResourceContext.IndexBuffer = GraphicsContext.Allocator.GetTemporaryBuffer(new BufferDescription(ResourceContext.IndexCount * indexStructSize, BufferFlags.IndexBuffer, GraphicsResourceUsage.Dynamic));
+                        GraphicsContext.CommandList.SetIndexBuffer(ResourceContext.IndexBuffer, 0, indexStructSize == sizeof(int));
+                    }
+// Console.WriteLine ("DrawBatch D ");                
+
+                    // ------------------------------------------------------------------------------------------------------------
+                    // CAUTION: Performance problem under x64 resolved by this special codepath:
+                    // For some unknown reasons, It seems that writing directly to the pointer returned by the MapSubresource is 
+                    // extremely inefficient using x64 but using a temporary buffer and performing a mempcy to the locked region
+                    // seems to be running at the same speed than x86
+                    // ------------------------------------------------------------------------------------------------------------
+                    // TODO Check again why we need this code
+                    //if (IntPtr.Size == 8)
+                    //{
+                    //    if (x64TempBuffer == null)
+                    //    {
+                    //        x64TempBuffer = ToDispose(new DataBuffer(Utilities.SizeOf<VertexPositionColorTexture>() * MaxBatchSize * VerticesPerSprite));
+                    //    }
+
+                    //    // Perform the update of all vertices on a temporary buffer
+                    //    var texturePtr = (VertexPositionColorTexture*)x64TempBuffer.DataPointer;
+                    //    for (int i = 0; i < batchSize; i++)
+                    //    {
+                    //        UpdateBufferValuesFromElementInfo(ref sprites[offset + i], ref texturePtr, deltaX, deltaY);
+                    //    }
+
+                    //    // Then copy this buffer in one shot
+                    //    resourceContext.VertexBuffer.SetData(GraphicsDevice, new DataPointer(x64TempBuffer.DataPointer, batchSize * VerticesPerSprite * Utilities.SizeOf<VertexPositionColorTexture>()), offsetInBytes, noOverwrite);
+                    //}
+                    //else
+                    {
+// Console.WriteLine ("DrawBatch E ");                
+
+                        var mappedIndices = new MappedResource();
+                        var mappedVertices = GraphicsContext.CommandList.MapSubresource(ResourceContext.VertexBuffer, 0, MapMode.WriteNoOverwrite, false, offsetVertexInBytes, vertexCount * vertexStructSize);
+//                        if (ResourceContext.IsIndexBufferDynamic)
+                            mappedIndices = GraphicsContext.CommandList.MapSubresource(ResourceContext.IndexBuffer, 0, MapMode.WriteNoOverwrite, false, offsetIndexInBytes, indexCount * indexStructSize);
+//                        else
+//                        {
+//                            Console.WriteLine ("Not dynamic");
+//                        }
+
+                        var vertexPointer = mappedVertices.DataBox.DataPointer;
+                        var indexPointer = mappedIndices.DataBox.DataPointer;
+// Console.WriteLine ("DrawBatch F " + ResourceContext.IndexBuffer + " " + 0 + " " + MapMode.WriteNoOverwrite + " " +  false + " " +  offsetIndexInBytes + " " +  indexCount  + " " + indexStructSize);                
+
+                        for (var i = 0; i < batchSize; i++)
+                        {
+                            var spriteIndex = offset + i;
+                            ref var spriteElementInfo = ref sprites[spriteIndex];
+// Console.WriteLine ("DrawBatch G " + i + " " + batchSize + " " + spriteIndex);                
+
+                            UpdateBufferValuesFromElementInfo(ref spriteElementInfo, vertexPointer, indexPointer, ResourceContext.VertexBufferPosition);
+// Console.WriteLine ("DrawBatch H ");                
+
+                            ResourceContext.VertexBufferPosition += spriteElementInfo.VertexCount;
+                            vertexPointer += vertexStructSize * spriteElementInfo.VertexCount;
+                            indexPointer += indexStructSize * spriteElementInfo.IndexCount;
+                        }
+// Console.WriteLine ("DrawBatch I ");                
+
+                        GraphicsContext.CommandList.UnmapSubresource(mappedVertices);
+//                        if (ResourceContext.IsIndexBufferDynamic)
+                            GraphicsContext.CommandList.UnmapSubresource(mappedIndices);
+                    }
 //var color = new Color4(0.8f,0.5f,1,1);                    
 //                    GraphicsContext.CommandList.Clear2(color);
 
-                // Draw from the specified index
-                GraphicsContext.CommandList.DrawIndexed(indexCount, ResourceContext.IndexBufferPosition);
+                    // Draw from the specified index
+// Console.WriteLine ("DrawBatch J " + indexCount + " " + ResourceContext.IndexBufferPosition);                
 
+                    GraphicsContext.CommandList.DrawIndexed(indexCount, ResourceContext.IndexBufferPosition);
+// Console.WriteLine ("DrawBatch K ");
+
+                }
+
+// Console.WriteLine ("DrawBatch L ");                
 
                 // Update position, offset and remaining count
                 ResourceContext.IndexBufferPosition += indexCount;

@@ -11,6 +11,62 @@
 [![Financial sponsors](https://img.shields.io/opencollective/all/stride3d?logo=opencollective)](https://opencollective.com/stride3d)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/stride3d/stride/blob/master/LICENSE.md)
 
+## Linux Alpha
+
+These steps should be enough to help build, run, create a (simple) project, compile and run that project. This version is still rough, so some features don't work, others may behave erratically.
+
+* Clone the repository: git lfs clone git@github.com:incshaun/stride4linux.git
+* Switch to the Linux Alpha branch: cd stride4linux; git checkout LinuxAlpha01
+* Change to the GameStudio folder: cd sources/editor/Stride.GameStudio.Avalonia
+* Build (assumes dotnet already installed): dotnet build /nologo /nr:false /m /verbosity:n /p:Configuration=Debug /p:Platform="Linux" /p:StrideSkipUnitTests=false Stride.GameStudio.Avalonia.csproj /p:DeployExtension=false
+* When this fails, because it can't pack CompilerApp.exe: ln -s Stride.Core.Assets.CompilerApp ../../assets/Stride.Core.Assets.CompilerApp/bin/Debug/net8.0/Stride.Core.Assets.CompilerApp.exe
+* Repeat the build: dotnet build /nologo /nr:false /m /verbosity:n /p:Configuration=Debug /p:Platform="Linux" /p:StrideSkipUnitTests=false Stride.GameStudio.Avalonia.csproj /p:DeployExtension=false
+* Should now have: bin/Debug/net8.0/Stride.GameStudio.Avalonia
+* This can be run as: ./bin/Debug/net8.0/Stride.GameStudio.Avalonia
+
+* This will probably fail on the first run, as it is looking for "package Stride.Assets.Presentation 4.2.0.1". These should be in: ../../../bin/packages/ if the build succeeded, but need to be installed. One strategy to try to get these installed:
+* Edit ~/.nuget/NuGet/NuGet.Config, add a line referencing your packages. Something like:
+  <add key="local2" value="/YOURPATH/stride4linux/bin/packages/" />
+* mkdir /tmp/np
+* cd /tmp/np
+* Create a file called np.csproj containing:
+  <Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+      <TargetFrameworks>net8.0</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Stride.Assets.Presentation" Version="4.2.0.2125" />
+      <PackageReference Include="Stride.Samples.Templates" Version="4.2.0.2125" />
+      <PackageReference Include="Stride.Samples.Templates" Version="4.2.0.2125" />
+    </ItemGroup>
+  </Project>
+* dotnet restore
+* This should produce the folder: 4.2.0.2125, in ~/.nuget/packages/stride.assets.presentation/
+
+* Run the GameStudio editor.
+* You should be able to create a new project. Use "New Project" in the left column, and "New game" as the template. Press the Select button.
+* From the project configuration screen, deselect Windows, and select Linux. Press OK.
+* Game studio window should start. Icons will be trashed until we install the support libraries (later step).
+
+* Support libraries:
+* Go to the deps folder: cd stride4linux/deps
+* ./updateDeps.sh
+
+
+* To build the game, expand the project in the Solution Explorer pane, right click on the .Linux project and Set as current project.
+* To run, menu option: Project/Start project.
+* This will probably fail - the nupkg doesn't copy enough across yet. Try (from the Stride.GameStudio.Avalonia folder): cp -r ../../assets/Stride.Core.Assets.CompilerApp/bin/Debug/net8.0 ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/
+* cp bin/Debug/net8.0/runtimes/linux-x64/native/lib*.so ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/net8.0/
+* Try the Project/Start menu option again - hopefully should work.
+* If issues, try compile and run the game manually. In the game project folder:
+dotnet build MyGame.Linux/MyGame.Linux.csproj 
+./Bin/Linux/Debug/linux-x64/MyGame.Linux
+
+Your experience may vary ;-)
+
+
 Welcome to the Stride source code repository!
 
 Stride is an open-source C# game engine for realistic rendering and VR. 

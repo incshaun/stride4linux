@@ -147,7 +147,13 @@ namespace Stride.TextureConverter.TexLibraries
                 case RequestType.Loading:
                     {
                         LoadingRequest loader = (LoadingRequest)request;
+                        Console.WriteLine ("FormatA: " + loader.FilePath);
+                        if (loader.FilePath == null)
+                        {
+                            return false;
+                        }
                         FREE_IMAGE_FORMAT format = FreeImage.GetFIFFromFilename(loader.FilePath);
+                        Console.WriteLine ("Format: " + format + " " + (format != FREE_IMAGE_FORMAT.FIF_UNKNOWN && format != FREE_IMAGE_FORMAT.FIF_DDS));
                         return format != FREE_IMAGE_FORMAT.FIF_UNKNOWN && format != FREE_IMAGE_FORMAT.FIF_DDS; // FreeImage can load DDS texture, but can't handle their mipmaps..
                     }
                 case RequestType.Export:

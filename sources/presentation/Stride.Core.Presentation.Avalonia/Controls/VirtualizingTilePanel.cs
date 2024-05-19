@@ -216,7 +216,13 @@ namespace Stride.Core.Presentation.Controls
                 if (child == null)
                     continue;
 
+try{
                 child.Measure(ItemSlotSize);
+}
+catch (Exception) 
+{
+    var b = 1;
+ }
             }
 
             return desiredSize;

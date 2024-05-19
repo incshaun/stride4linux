@@ -13,7 +13,7 @@ namespace Stride.Graphics
     /// Used internally to provide a context for async resource creation
     /// (such as texture or buffer created on a thread where no context is active).
     /// </summary>
-    internal struct UseOpenGLCreationContext : IDisposable
+    public struct UseOpenGLCreationContext : IDisposable
     {
         public readonly CommandList CommandList;
 
@@ -32,6 +32,7 @@ namespace Stride.Graphics
             : this()
         {
             GL = graphicsDevice.GL;
+//            Console.WriteLine ("Graphics context " + __makeref (graphicsDevice).GetHashCode () + " " + graphicsDevice.CurrentGraphicsContext + " " + Graphics.SDL.Window.SDL.GetHashCode ()/* + " " + GL.GetError ()*/);
             if (graphicsDevice.CurrentGraphicsContext == IntPtr.Zero)
             {
                 needUnbindContext = true;

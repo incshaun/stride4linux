@@ -39,9 +39,9 @@ namespace Stride.TextureConverter
             var type = typeof(TextureTool);
             NativeLibraryHelper.PreloadLibrary("DxtWrapper", type);
             NativeLibraryHelper.PreloadLibrary("PVRTexLib", type);
-            NativeLibraryHelper.PreloadLibrary("PvrttWrapper", type);
+            //NativeLibraryHelper.PreloadLibrary("PvrttWrapper", type);
             NativeLibraryHelper.PreloadLibrary("FreeImage", type);
-            NativeLibraryHelper.PreloadLibrary("FreeImageNET", type);
+            //NativeLibraryHelper.PreloadLibrary("FreeImageNET", type);
         }
 
         /// <summary>
@@ -367,6 +367,7 @@ namespace Stride.TextureConverter
             {
                 if (library.CanHandleRequest(texImage, request))
                 {
+                    Console.WriteLine ("Load " + request.FilePath); 
                     library.Execute(texImage, request);
                     texImage.CurrentLibrary = library;
                     return texImage;
