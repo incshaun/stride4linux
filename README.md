@@ -70,7 +70,7 @@ These steps should be enough to help build, run, create a (simple) project, comp
 
 Your experience may vary ;-)
 
-![Stride Editor in Linux](https://stride3d.net/images/external/script-editor.png)
+![Stride Editor in Linux](https://media.githubusercontent.com/media/incshaun/stride4linux/LinuxAlpha01/samples/linuxalpha01.png)
 
 Welcome to the Stride source code repository!
 
