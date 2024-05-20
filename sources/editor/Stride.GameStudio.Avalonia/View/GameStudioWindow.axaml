@@ -720,16 +720,16 @@
                   <TabControl x:Name="LogTabControl">
                     <TabItem DataContext="{Binding Debugging.BuildLog, Source={x:Static vm:GameStudioViewModel.GameStudio}}">
                       <TabItem.Header>
-                        <TextBlock FontWeight="{Binding HasNewMessages, Mode=OneWay, Converter={sd:BoolToParam},
+                        <TextBlock FontWeight="{Binding Debugging.BuildLog.HasNewMessages, Source={x:Static vm:GameStudioViewModel.GameStudio}, Mode=OneWay, Converter={sd:BoolToParam},
                                     ConverterParameter={x:Static FontWeight.Bold}, FallbackValue={x:Static FontWeight.Normal}}"
                                    Foreground="{StaticResource SelectedTextBrush}">
                                     <Run Text="{sd:Localize Build}"/>
-                                    <Run Text="{Binding HasNewMessages, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter=*}"/>
+                                    <Run Text="{Binding Debugging.BuildLog.HasNewMessages, Source={x:Static vm:GameStudioViewModel.GameStudio}, Mode=OneWay, Converter={sd:BoolToParam}, ConverterParameter=*}"/>
                         </TextBlock>
                       </TabItem.Header>
-                      <sd:TextLogViewer LogMessages="{Binding Messages}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/>
+                      <sd:TextLogViewer LogMessages="{Binding Debugging.BuildLog.Messages, Source={x:Static vm:GameStudioViewModel.GameStudio}}" ShowDebugMessages="False" ShowVerboseMessages="False" ShowInfoMessages="True"/>
                       <i:Interaction.Behaviors>
-                        <sd:TabItemActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Messages}"/>
+                        <sd:TabItemActivateOnLogBehavior MinimumLevel="Error" Collection="{Binding Messages, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
                       </i:Interaction.Behaviors>
                     </TabItem>
                     <!-- FIXME live scripting is disabled (XK-4309) -->

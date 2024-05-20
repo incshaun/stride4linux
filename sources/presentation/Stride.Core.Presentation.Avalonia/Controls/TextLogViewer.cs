@@ -248,37 +248,37 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Gets or sets the brush used to emphasize search results.
         /// </summary>
-        public Brush SearchMatchBrush { get { return (Brush)GetValue(SearchMatchBrushProperty); } set { SetValue(SearchMatchBrushProperty, value); } }
+        public IBrush SearchMatchBrush { get { return (IBrush)GetValue(SearchMatchBrushProperty); } set { SetValue(SearchMatchBrushProperty, value); } }
 
         /// <summary>
         /// Gets or sets the brush used to emphasize debug messages.
         /// </summary>
-        public Brush DebugBrush { get { return (Brush)GetValue(DebugBrushProperty); } set { SetValue(DebugBrushProperty, value); } }
+        public IBrush DebugBrush { get { return (IBrush)GetValue(DebugBrushProperty); } set { SetValue(DebugBrushProperty, value); } }
 
         /// <summary>
         /// Gets or sets the brush used to emphasize verbose messages.
         /// </summary>
-        public Brush VerboseBrush { get { return (Brush)GetValue(VerboseBrushProperty); } set { SetValue(VerboseBrushProperty, value); } }
+        public IBrush VerboseBrush { get { return (IBrush)GetValue(VerboseBrushProperty); } set { SetValue(VerboseBrushProperty, value); } }
 
         /// <summary>
         /// Gets or sets the brush used to emphasize info messages.
         /// </summary>
-        public Brush InfoBrush { get { return (Brush)GetValue(InfoBrushProperty); } set { SetValue(InfoBrushProperty, value); } }
+        public IBrush InfoBrush { get { return (IBrush)GetValue(InfoBrushProperty); } set { SetValue(InfoBrushProperty, value); } }
 
         /// <summary>
         /// Gets or sets the brush used to emphasize warning messages.
         /// </summary>
-        public Brush WarningBrush { get { return (Brush)GetValue(WarningBrushProperty); } set { SetValue(WarningBrushProperty, value); } }
+        public IBrush WarningBrush { get { return (IBrush)GetValue(WarningBrushProperty); } set { SetValue(WarningBrushProperty, value); } }
 
         /// <summary>
         /// Gets or sets the brush used to emphasize error messages.
         /// </summary>
-        public Brush ErrorBrush { get { return (Brush)GetValue(ErrorBrushProperty); } set { SetValue(ErrorBrushProperty, value); } }
+        public IBrush ErrorBrush { get { return (IBrush)GetValue(ErrorBrushProperty); } set { SetValue(ErrorBrushProperty, value); } }
 
         /// <summary>
         /// Gets or sets the brush used to emphasize fatal messages.
         /// </summary>
-        public Brush FatalBrush { get { return (Brush)GetValue(FatalBrushProperty); } set { SetValue(FatalBrushProperty, value); } }
+        public IBrush FatalBrush { get { return (IBrush)GetValue(FatalBrushProperty); } set { SetValue(FatalBrushProperty, value); } }
 
         /// <summary>
         /// Gets or sets whether the log viewer should display debug messages.
@@ -516,7 +516,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private Brush GetLogColor(LogMessageType type)
+        private IBrush GetLogColor(LogMessageType type)
         {
             switch (type)
             {
