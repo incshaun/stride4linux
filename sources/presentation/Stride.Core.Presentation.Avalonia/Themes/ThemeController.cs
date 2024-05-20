@@ -9,8 +9,18 @@ namespace Stride.Core.Presentation.Themes
     /// <summary>
     /// This class contains properties to control theming of icons, etc.
     /// </summary>
-    public class ThemeController
+    public class ThemeController : IThemeController
     {
+        static ThemeController ()
+        {
+            IThemeController.themeSetter = setCurrentTheme;
+        }
+        
+        private static void setCurrentTheme (ThemeType tt)
+        {
+            CurrentTheme = tt;
+        }
+        
         /// <summary>
         /// The main purpose of this property is for Luminosity Check feature of
         /// <see cref="ImageThemingUtilities.TransformDrawing(Media.Drawing, IconTheme, bool)"/>.

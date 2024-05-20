@@ -13,8 +13,7 @@ namespace Stride.Core.Presentation.Themes
 
         static ThemesSettings()
         {
-//            ThemeName = new SettingsKey<ThemeType>("Themes/ThemeName", EditorSettings.SettingsContainer, ThemeType.ExpressionDark)
-            ThemeName = new SettingsKey<ThemeType>("Themes/ThemeName", EditorSettings.SettingsContainer, ThemeType.LightSteelBlue)
+            ThemeName = new SettingsKey<ThemeType>("Themes/ThemeName", EditorSettings.SettingsContainer, ThemeType.ExpressionDark)
             {
                 DisplayName = $"{Themes}/{Tr._p("Settings", "Theme Name")}"
             };
@@ -24,7 +23,7 @@ namespace Stride.Core.Presentation.Themes
 
         public static void Initialize()
         {
- //           ThemeController.CurrentTheme = ThemeName.GetValue();
+           IThemeController.SetCurrentTheme (ThemeName.GetValue());
         }
     }
 }

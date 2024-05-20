@@ -2,6 +2,8 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.Globalization;
+using System.ComponentModel;
+
 using Avalonia;
 using Avalonia.Controls;
 
@@ -9,6 +11,7 @@ using Avalonia.Media;
 
 using Stride.Core.Mathematics;
 using Stride.Core.Presentation.Extensions;
+using Stride.Core.TypeConverters;
 
 using Color = Stride.Core.Mathematics.Color;
 
@@ -141,4 +144,34 @@ namespace Stride.Core.Presentation.ValueConverters
             return Convert(value, targetType, parameter, culture);
         }
     }
+
+    public class ColorTypeConverter : BaseConverter 
+    {
+       [ModuleInitializer]
+       public static void Initialize ()
+       {
+           Color4Converter.extension = new ColorTypeConverter ();
+       }
+        
+       public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+       {
+           return (sourceType == typeof(Avalonia.Media.Color));
+       }
+ 
+       public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+       {
+           Avalonia.Media.Color c;
+           if (value is Avalonia.Media.SolidColorBrush)
+           {
+               c = ((Avalonia.Media.SolidColorBrush)value).Color;
+           }
+           else
+           {
+               c = (Avalonia.Media.Color) value;
+           }
+           
+           return new Color4 (c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, c.A / 255.0f);
+       }
+    }
+        
 }
