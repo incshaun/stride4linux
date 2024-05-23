@@ -131,13 +131,13 @@ namespace Stride.Assets.SpriteFont.Compiler
 //                 return;
 
 //             // Get the msdfgen.exe location
-//             var msdfgen = ToolLocator.LocateTool("msdfgen.exe") ?? throw new AssetException("Failed to compile a font asset, msdfgen was not found.");
+//             var msdfgen = ToolLocator.LocateTool("msdfgen") ?? throw new AssetException("Failed to compile a font asset, msdfgen was not found.");
 // 
 //             msdfgenExe = msdfgen.FullPath;
 //             tempDir = $"{Environment.GetEnvironmentVariable("TEMP")}\\";
 // 
 //             var factory = new Factory();
-// 
+
             SKFont fontFace = options.FontSource.GetFontFace();
 
             var fontMetrics = fontFace.Metrics;
