@@ -84,7 +84,7 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="Value"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<double?> ValueProperty = StyledProperty<double?>.Register<NumericTextBox, double?>(nameof(Value), 0.0); // T9
+        public static readonly StyledProperty<double?> ValueProperty = StyledProperty<double?>.Register<NumericTextBox, double?>(nameof(Value), 0.0, defaultBindingMode : BindingMode.TwoWay); // T9
 
         /// <summary>
         /// Identifies the <see cref="DecimalPlaces"/> dependency property.
