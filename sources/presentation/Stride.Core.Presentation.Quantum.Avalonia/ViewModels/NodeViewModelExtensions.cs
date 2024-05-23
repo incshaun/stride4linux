@@ -80,7 +80,8 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
 
                 public override bool SetValue(object? value, BindingPriority priority)
                 {
-                    throw new NotImplementedException();
+                    ((NodeViewModel)Value).NodeValue = value;
+                    return true;
                 }
 
                 protected override void SubscribeCore()

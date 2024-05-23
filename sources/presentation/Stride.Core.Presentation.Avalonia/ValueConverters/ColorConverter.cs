@@ -145,12 +145,12 @@ namespace Stride.Core.Presentation.ValueConverters
         }
     }
 
-    public class ColorTypeConverter : BaseConverter 
+    public class Color4TypeConverter : BaseConverter 
     {
        [ModuleInitializer]
        public static void Initialize ()
        {
-           Color4Converter.extension = new ColorTypeConverter ();
+           Color4Converter.extension = new Color4TypeConverter ();
        }
         
        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
@@ -173,5 +173,34 @@ namespace Stride.Core.Presentation.ValueConverters
            return new Color4 (c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, c.A / 255.0f);
        }
     }
+
+    public class Color3TypeConverter : BaseConverter 
+    {
+       [ModuleInitializer]
+       public static void Initialize ()
+       {
+           Color3Converter.extension = new Color3TypeConverter ();
+       }
         
+       public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+       {
+           return (sourceType == typeof(Avalonia.Media.Color));
+       }
+ 
+       public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+       {
+           Avalonia.Media.Color c;
+           if (value is Avalonia.Media.SolidColorBrush)
+           {
+               c = ((Avalonia.Media.SolidColorBrush)value).Color;
+           }
+           else
+           {
+               c = (Avalonia.Media.Color) value;
+           }
+           
+           return new Color3 (c.R / 255.0f, c.G / 255.0f, c.B / 255.0f);
+       }
+    }
+            
 }
