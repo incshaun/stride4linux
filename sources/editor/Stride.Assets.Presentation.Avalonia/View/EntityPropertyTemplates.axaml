@@ -209,8 +209,10 @@
           </i:Interaction.Behaviors>
         </Border>
         <DockPanel>
-          <sd:TextBox DockPanel.Dock="Top" SelectAllOnFocus="True" Text="{Binding NodeValue, Converter={sd:ContentReferenceToUrl}}"
+          <sd:TextBox DockPanel.Dock="Top" SelectAllOnFocus="True" Text="{Binding NodeValue}"
                         Margin="2,0,5,5" ContextMenu="{StaticResource ReferenceContextMenu}">
+<!--          <sd:TextBox DockPanel.Dock="Top" SelectAllOnFocus="True" Text="{Binding NodeValue, Converter={sd:ContentReferenceToUrl}}"
+                        Margin="2,0,5,5" ContextMenu="{StaticResource ReferenceContextMenu}">-->
             <i:Interaction.Behaviors>
               <behaviors:ReferenceHostDragDropBehavior UsePreviewEvents="True" />
             </i:Interaction.Behaviors>

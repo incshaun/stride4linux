@@ -357,10 +357,12 @@ namespace Stride.Core.Presentation.Controls
                 var document = new string("");
                 if (LogMessages != null)
                 {
+                    logTextBox.Text = "";
                     var logMessages = LogMessages.ToList();
                     AppendText(document, logMessages);
                 }
-                logTextBox.Text = document;
+                else
+                    logTextBox.Text = document;
             }
         }
 
@@ -370,85 +372,90 @@ namespace Stride.Core.Presentation.Controls
             if (logMessages == null) throw new ArgumentNullException(nameof(logMessages));
             if (logTextBox != null)
             {
-                logTextBox.Text += System.Environment.NewLine + string.Join(System.Environment.NewLine, logMessages);
+//                 logTextBox.Text += System.Environment.NewLine + string.Join(System.Environment.NewLine, logMessages);
 //                 var paragraph = (Paragraph)document.Blocks.AsEnumerable().First();
-//                 var stringComparison = SearchMatchCase ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-//                 var searchToken = SearchToken;
-//                 var sb = new StringBuilder();
-//                 foreach (var message in logMessages.Where(x => ShouldDisplayMessage(x.Type)))
-//                 {
-//                     sb.Clear();
-// 
-//                     if (message.Module != null)
-//                     {
-//                         sb.AppendFormat("[{0}]: ", message.Module);
-//                     }
-// 
-//                     sb.AppendFormat("{0}: {1}", message.Type, message.Text);
-//                     
-//                     var ex = message.ExceptionInfo;
-//                     if (ex != null)
-//                     {
-//                         if (ShowStacktrace)
-//                         {
-//                             sb.AppendFormat("{0}{1}{0}", Environment.NewLine, ex);
-//                         }
-//                         else
-//                         {
-//                             sb.Append(" (...)");
-//                         }
-//                     }
-// 
-//                     sb.AppendLine();
-// 
-//                     var lineText = sb.ToString();
-// 
-//                     var logColor = GetLogColor(message.Type);
-//                     if (string.IsNullOrEmpty(searchToken))
-//                     {
-//                         paragraph.Inlines.Add(new Run(lineText) { Foreground = logColor });
-//                     }
-//                     else
-//                     {
-//                         do
-//                         {
-//                             var tokenIndex = lineText.IndexOf(searchToken, stringComparison);
-//                             if (tokenIndex == -1)
-//                             {
-//                                 paragraph.Inlines.Add(new Run(lineText) { Foreground = logColor });
-//                                 break;
-//                             }
-//                             var acceptResult = true;
-//                             if (SearchMatchWord && lineText.Length > 1)
-//                             {
-//                                 if (tokenIndex > 0)
-//                                 {
-//                                     var c = lineText[tokenIndex - 1];
-//                                     if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-//                                         acceptResult = false;
-//                                 }
-//                                 if (tokenIndex + searchToken.Length < lineText.Length)
-//                                 {
-//                                     var c = lineText[tokenIndex + searchToken.Length];
-//                                     if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-//                                         acceptResult = false;
-//                                 }
-//                             }
-// 
-//                             if (acceptResult)
-//                             {
-//                                 if (tokenIndex > 0)
-//                                     paragraph.Inlines.Add(new Run(lineText.Substring(0, tokenIndex)) { Foreground = logColor });
-// 
+                var stringComparison = SearchMatchCase ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+                var searchToken = SearchToken;
+                var sb = new StringBuilder();
+                foreach (var message in logMessages.Where(x => ShouldDisplayMessage(x.Type)))
+                {
+                    sb.Clear();
+
+                    if (message.Module != null)
+                    {
+                        sb.AppendFormat("[{0}]: ", message.Module);
+                    }
+
+                    sb.AppendFormat("{0}: {1}", message.Type, message.Text);
+                    
+                    var ex = message.ExceptionInfo;
+                    if (ex != null)
+                    {
+                        if (ShowStacktrace)
+                        {
+                            sb.AppendFormat("{0}{1}{0}", Environment.NewLine, ex);
+                        }
+                        else
+                        {
+                            sb.Append(" (...)");
+                        }
+                    }
+
+                    sb.AppendLine();
+
+                    var lineText = sb.ToString();
+
+                    var logColor = GetLogColor(message.Type);
+                    if (string.IsNullOrEmpty(searchToken))
+                    {
+                        //paragraph.Inlines.Add(new Run(lineText) { Foreground = logColor });
+                        logTextBox.Text += lineText;
+                    }
+                    else
+                    {
+                        do
+                        {
+                            var tokenIndex = lineText.IndexOf(searchToken, stringComparison);
+                            if (tokenIndex == -1)
+                            {
+                                //paragraph.Inlines.Add(new Run(lineText) { Foreground = logColor });
+                                logTextBox.Text += lineText;
+                                break;
+                            }
+                            var acceptResult = true;
+                            if (SearchMatchWord && lineText.Length > 1)
+                            {
+                                if (tokenIndex > 0)
+                                {
+                                    var c = lineText[tokenIndex - 1];
+                                    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+                                        acceptResult = false;
+                                }
+                                if (tokenIndex + searchToken.Length < lineText.Length)
+                                {
+                                    var c = lineText[tokenIndex + searchToken.Length];
+                                    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+                                        acceptResult = false;
+                                }
+                            }
+
+                            if (acceptResult)
+                            {
+                                if (tokenIndex > 0)
+                                    //paragraph.Inlines.Add(new Run(lineText.Substring(0, tokenIndex)) { Foreground = logColor });
+                                    logTextBox.Text += lineText.Substring(0, tokenIndex);
+
 //                                 var tokenRun = new Run(lineText.Substring(tokenIndex, searchToken.Length)) { Background = SearchMatchBrush, Foreground = logColor };
-//                                 paragraph.Inlines.Add(tokenRun);
+//                                 //paragraph.Inlines.Add(tokenRun);
+//                                 logTextBox.Text += tokenRun;
 //                                 var tokenRange = new TextRange(tokenRun.ContentStart, tokenRun.ContentEnd);
 //                                 searchMatches.Add(tokenRange);
-//                                 lineText = lineText.Substring(tokenIndex + searchToken.Length);
-//                             }
-//                         } while (lineText.Length > 0);
-//                     }
-//                 }
+                                logTextBox.Text += "[" + lineText.Substring(tokenIndex, searchToken.Length) + "]";
+                                lineText = lineText.Substring(tokenIndex + searchToken.Length);
+                            }
+                        } while (lineText.Length > 0);
+                    }
+                }
             }
         }
 

@@ -543,13 +543,14 @@ def translateProperties (contents):
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7(\8), \9, coerce: \11); // T9A", contents)
 
-  # Deal with case with frameworkpropertymetadata with 6 arguments.
+  # Deal with case with frameworkpropertymetadata with 6 arguments. 
+  #FIXME: deal with parameters.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?)\)\);")
   for match in re.findall (pat, contents):
     #print (match)
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[8] + ");\n"
     classname = match[5];
-  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T9", contents)
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T9 FIXME", contents)
 
   
   # Direct properties

@@ -32,8 +32,11 @@ if [ ! -f ../externals/BulletSharpPInvoke/src/x64/libVHACD.so ]; then
   touch ../inc/omp.h
   clang++ -m64 --shared -I../inc/ -O3 -Wall -Wno-unused-variable -stdlib=libc++ -std=c++14 -fPIC  *.cpp -o ../../x64/libVHACD.so -ldl
   mkdir ../../../../../deps/VHACD/linux-x64
+  cp ../../x64/libVHACD.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native
+  cp ../../x64/libVHACD.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/
   cp ../../x64/libVHACD.so ../../../../../deps/VHACD/linux-x64
 )
+fi
 
 # FreeImage
 if [ ! -f ../externals/FreeImage/libfreeimage-3.16.0.so ]; then
@@ -44,6 +47,8 @@ if [ ! -f ../externals/FreeImage/libfreeimage-3.16.0.so ]; then
   make
   mkdir ../../deps/FreeImage/Release/linux-x64/
   cp libfreeimage-3.16.0.so ../../deps/FreeImage/Release/linux-x64/libFreeImage.so
+  cp libfreeimage-3.16.0.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native/libFreeImage.so
+  cp libfreeimage-3.16.0.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/libFreeImage.so
   )
 fi
 
@@ -54,7 +59,8 @@ if [ ! -f PVRTT/linux-x64/libPVRTexLib.so ]; then
   mkdir ../linux-x64
   clang++ -m64 --shared -I../include/ -O3 -Wall -Wno-unused-variable -stdlib=libc++ -std=c++14 -fPIC  *.cpp -o ../linux-x64/libPVRTexLib.so -ldl
   # copy to somewhere relevant.
-  cp PVRTT/linux-x64/libPVRTexLib.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0-windows7.0/runtimes/linux-x64/native/
+  cp PVRTT/linux-x64/libPVRTexLib.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native/
+  cp PVRTT/linux-x64/libPVRTexLib.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/
 
   )
 fi
@@ -62,11 +68,16 @@ fi
 # DirectXTex
 (
   git clone --recursive https://github.com/microsoft/DirectXTex.git ../externals/DirectXTex
-#  https://github.com/microsoft/DirectXMath
-# https://github.com/microsoft/DirectX-Headers
-# https://raw.githubusercontent.com/tpn/winsdk-10/master/Include/10.0.10240.0/shared/sal.h
-# clang++ -m64 --shared -I. -I../DirectXMath-main/Inc/ -I../DirectX-Headers-main/include/ -I../DirectX-Headers-main/include/wsl/stubs -I../include/ -O3 -Wall -Wno-unused-variable -stdlib=libc++ -std=c++17 -fPIC  dxt_wrapper.cpp DirectXTexDDS.cpp DirectXTexConvert.cpp DirectXTexCompress.cpp DirectXTexMipmaps.cpp DirectXTexResize.cpp DirectXTexNormalMaps.cpp -o ../linux-x64/libDxtWrapper.so  -ldl -fdeclspec
-clang++ -m64 --shared -I. -I../DirectXMath-main/Inc/ -I../DirectX-Headers-main/include/ -I../DirectX-Headers-main/include/wsl/stubs -I../include/ -O3 -Wall -Wno-unused-variable -stdlib=libc++ -std=c++17 -fPIC  dxt_wrapper.cpp DirectXTexDDS.cpp DirectXTexConvert.cpp DirectXTexCompress.cpp DirectXTexMipmaps.cpp DirectXTexResize.cpp DirectXTexNormalMaps.cpp DirectXTexImage.cpp DirectXTexUtil.cpp BC6HBC7.cpp BC.cpp BC4BC5.cpp DirectXTexTGA.cpp DirectXTexPMAlpha.cpp -fshort-wchar -o ../linux-x64/libDxtWrapper.so  -ldl -fdeclspec -Wl,-z,defs
-cp ../linux-x64/libDxtWrapper.so ../../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0-windows7.0/DxtWrapper.so 
-cp ../linux-x64/libDxtWrapper.so ../../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0-windows7.0/runtimes/linux-x64/native/
+  git clone --recursive https://github.com/microsoft/DirectX-Headers.git ../externals/DirectXTex/DirectX-Headers-main
+  git clone --recursive https://github.com/microsoft/DirectXMath.git ../externals/DirectXTex/DirectXMath-main
+  cp DxtWrapper/* ../externals/DirectXTex/DirectXTex
+  mkdir ../externals/DirectXTex/linux-x64
+  #  https://github.com/microsoft/DirectXMath
+  # https://github.com/microsoft/DirectX-Headers
+  # https://raw.githubusercontent.com/tpn/winsdk-10/master/Include/10.0.10240.0/shared/sal.h
+  # clang++ -m64 --shared -I. -I../DirectXMath-main/Inc/ -I../DirectX-Headers-main/include/ -I../DirectX-Headers-main/include/wsl/stubs -I../include/ -O3 -Wall -Wno-unused-variable -stdlib=libc++ -std=c++17 -fPIC  dxt_wrapper.cpp DirectXTexDDS.cpp DirectXTexConvert.cpp DirectXTexCompress.cpp DirectXTexMipmaps.cpp DirectXTexResize.cpp DirectXTexNormalMaps.cpp -o ../linux-x64/libDxtWrapper.so  -ldl -fdeclspec
+  cd ../externals/DirectXTex/DirectXTex
+  clang++ -m64 --shared -I. -I../DirectXMath-main/Inc/ -I../DirectX-Headers-main/include/ -I../DirectX-Headers-main/include/wsl/stubs -I../include/ -O3 -Wall -Wno-unused-variable -stdlib=libc++ -std=c++17 -fPIC  dxt_wrapper.cpp DirectXTexDDS.cpp DirectXTexConvert.cpp DirectXTexCompress.cpp DirectXTexMipmaps.cpp DirectXTexResize.cpp DirectXTexNormalMaps.cpp DirectXTexImage.cpp DirectXTexUtil.cpp BC6HBC7.cpp BC.cpp BC4BC5.cpp DirectXTexTGA.cpp DirectXTexPMAlpha.cpp -fshort-wchar -o ../linux-x64/libDxtWrapper.so  -ldl -fdeclspec -Wl,-z,defs
+  cp ../linux-x64/libDxtWrapper.so ../../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/DxtWrapper.so 
+  cp ../linux-x64/libDxtWrapper.so ../../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native/DxtWrapper.so
 )
