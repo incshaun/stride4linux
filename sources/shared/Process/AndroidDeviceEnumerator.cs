@@ -8,6 +8,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
+using Stride.Core;
+
 namespace Stride
 {
     public static class AndroidDeviceEnumerator
@@ -27,6 +29,20 @@ namespace Stride
                 catch (Exception)
                 {
                     // Mute errors
+                }
+            }
+
+            // 1.5, Look in path.
+            if (Platform.Type == PlatformType.Linux)
+            {
+                string paths = Environment.GetEnvironmentVariable("PATH");
+                foreach (string path in paths.Split(':'))
+                {
+                    string candidate = path + Path.DirectorySeparatorChar + "adb"; 
+                    if (File.Exists (path + Path.DirectorySeparatorChar + "adb"))
+                    {
+                        return candidate;
+                    }
                 }
             }
 
@@ -113,22 +129,28 @@ namespace Stride
             {
                 var device = devices[i];
                 //TODO: doing a grep instead will be better
-                var deviceNameOutputs = ShellHelper.RunProcessAndGetOutput(adbPath, $@"-s {device.Serial} shell cat /system/build.prop");
-                foreach (var line in deviceNameOutputs.OutputLines)
+//                var deviceNameOutputs = ShellHelper.RunProcessAndGetOutput(adbPath, $@"-s {device.Serial} shell cat /system/build.prop");
+                var deviceNameOutputs = ShellHelper.RunProcessAndGetOutput(adbPath, $@"-s {device.Serial} shell getprop ro.product.model");
+                if (deviceNameOutputs.OutputLines.Count > 0)
                 {
-                    if (line != null && line.StartsWith(@"ro.product.model", StringComparison.Ordinal)) // correct line
-                    {
-                        var parts = line.Split('=');
-
-                        if (parts.Length > 1)
-                        {
-                            device.Name = parts[1];
-                            devices[i] = device;
-                        }
-
-                        break; // no need to search further
-                    }
+                    device.Name = deviceNameOutputs.OutputLines[0];
+                    devices[i] = device;
                 }
+                // foreach (var line in deviceNameOutputs.OutputLines)
+                // {
+                //     if (line != null && line.StartsWith(@"ro.product.model", StringComparison.Ordinal)) // correct line
+                //     {
+                //         var parts = line.Split('=');
+
+                //         if (parts.Length > 1)
+                //         {
+                //             device.Name = parts[1];
+                //             devices[i] = device;
+                //         }
+
+                //         break; // no need to search further
+                //     }
+                // }
             }
 
             return devices.ToArray();

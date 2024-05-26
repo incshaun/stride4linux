@@ -79,7 +79,9 @@ namespace Stride.Rendering.Compositing
             {
                 var clearOptions = DepthStencilClearOptions.DepthBuffer | DepthStencilClearOptions.Stencil;
 
+#if STRIDE_GRAPHICS_API_OPENGL
                 using (GraphicsDevice.UseOpenGLCreationContext ())
+#endif                
                 {
                     commandList.Clear(depthStencil, clearOptions, Depth, Stencil);
                 }
@@ -91,7 +93,9 @@ namespace Stride.Rendering.Compositing
                 {
                     var renderTarget = commandList.RenderTargets[index];
                     var color = index == 0 ? Color.ToColorSpace(drawContext.GraphicsDevice.ColorSpace) : Color4.Black;
+#if STRIDE_GRAPHICS_API_OPENGL
                     using (GraphicsDevice.UseOpenGLCreationContext ())
+#endif                    
                     {
                         commandList.Clear(renderTarget, color);
                     }

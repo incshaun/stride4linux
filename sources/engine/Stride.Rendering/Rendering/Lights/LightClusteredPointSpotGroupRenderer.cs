@@ -516,7 +516,9 @@ namespace Stride.Rendering.Lights
             /// <inheritdoc/>
             public override unsafe void UpdateViewResources(RenderDrawContext context, int viewIndex)
             {
+#if STRIDE_GRAPHICS_API_OPENGL
                 using (context.CommandList.GraphicsDevice.UseOpenGLCreationContext ())
+#endif                
                 {
                     ref var renderViewInfo = ref renderViewInfos[viewIndex];
 

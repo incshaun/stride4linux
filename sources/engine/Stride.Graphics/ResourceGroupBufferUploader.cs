@@ -75,7 +75,9 @@ namespace Stride.Graphics
                     {
                         if (hasResourceRenaming)
                         {
+#if STRIDE_GRAPHICS_API_OPENGL
                             using (commandList.GraphicsDevice.UseOpenGLCreationContext ())
+#endif                            
                             {
                                 var mappedConstantBuffer = commandList.MapSubresource(preallocatedBuffer, 0, MapMode.WriteDiscard);
                                 Unsafe.CopyBlockUnaligned((void*)mappedConstantBuffer.DataBox.DataPointer, (void*)resourceGroup.ConstantBuffer.Data, (uint)resourceGroup.ConstantBuffer.Size);
@@ -84,7 +86,9 @@ namespace Stride.Graphics
                         }
                         else
                         {
+#if STRIDE_GRAPHICS_API_OPENGL
                             using (commandList.GraphicsDevice.UseOpenGLCreationContext ())
+#endif                            
                             {
                                 commandList.UpdateSubresource(preallocatedBuffer, 0, new DataBox(resourceGroup.ConstantBuffer.Data, resourceGroup.ConstantBuffer.Size, 0));
                             }

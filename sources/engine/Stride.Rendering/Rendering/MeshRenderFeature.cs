@@ -188,7 +188,9 @@ namespace Stride.Rendering
                 if (renderEffect.Effect == null)
                     continue;
 
+#if STRIDE_GRAPHICS_API_OPENGL
                 using (commandList.GraphicsDevice.UseOpenGLCreationContext ())
+#endif
                 {
                     // Bind VB
                     if (currentDrawData != drawData)
