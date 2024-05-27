@@ -19,8 +19,12 @@ namespace Stride.Core.Assets.Compiler
 
         static PackageCompiler()
         {
+            SdkDirectory = GetSdkDirectory();
+        }
+
+        private static string GetSdkDirectory()
+        {
             // Compute StrideSdkDir from this assembly
-            // TODO Move this code to a reusable method
             var codeBase = typeof(PackageCompiler).Assembly.Location;
             if (codeBase.StartsWith ("/"))
             {
@@ -28,7 +32,7 @@ namespace Stride.Core.Assets.Compiler
             }
             var uri = new UriBuilder(codeBase);
             var path = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
-            SdkDirectory = Path.GetFullPath(Path.Combine(path, @".." + Path.DirectorySeparatorChar + @".."));
+            return Path.GetFullPath(Path.Combine(path, $"..{Path.DirectorySeparatorChar}.."));
         }
 
         /// <summary>
