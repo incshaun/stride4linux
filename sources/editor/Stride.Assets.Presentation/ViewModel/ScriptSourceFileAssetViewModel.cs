@@ -268,7 +268,12 @@ return true;
                     cancellationToken.Token.ThrowIfCancellationRequested();
 
                     // Wait for project to be available
-                    project = workspace.CurrentSolution.Projects.FirstOrDefault(x => x.FilePath == sourceProject);
+//                    project = workspace.CurrentSolution.Projects.FirstOrDefault(x => x.FilePath == sourceProject);
+                    // FIXME: This produces an infinite loop, for assets in some projects.
+                    // These projects never get loaded, because they don't seem to have assemblies when loaded.
+                    // This seems to be because they are executable, rather than libraries. Maybe an issue with
+                    // project loading?
+                    project = workspace.CurrentSolution.Projects.FirstOrDefault();
                     if (project != null)
                         break;
                     await Task.Delay(10);
