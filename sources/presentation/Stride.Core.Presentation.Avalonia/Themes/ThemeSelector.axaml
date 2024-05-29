@@ -510,7 +510,8 @@
           <Grid x:Name="RootLayout" VerticalAlignment="Top" TextElement.Foreground="{DynamicResource TextBrush}" Focusable="False">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="{TemplateBinding InputColumnWidth}"/>
+              <ColumnDefinition Width="*"/>
+<!--               <ColumnDefinition Width="{TemplateBinding InputColumnWidth}"/> -->
             </Grid.ColumnDefinitions>
             <Grid x:Name="LeftPaneLayout" Margin="2" VerticalAlignment="Top" Focusable="False">
               <Grid.RowDefinitions>
@@ -837,6 +838,35 @@
     <Setter Property="Template" Value="{StaticResource SimpleToggleButtonTemplate}" />
     <Setter Property="BorderThickness" Value="0"/>
     <Setter Property="Margin" Value="0"/>
+<Style Selector="^:disabled">
+
+        		<Style Selector="^ /template/ Grid#Grid">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Grid#Grid">
+			<Setter Property="Background" Value="{DynamicResource SelectedBackgroundBrush}"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Background" Value="{DynamicResource SelectedBackgroundBrush}"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:pointerover">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+      	</Style>    
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type Button}" TargetType="{x:Type Button}" BasedOn="{x:Null}" >

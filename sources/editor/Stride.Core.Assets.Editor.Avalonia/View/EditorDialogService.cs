@@ -138,11 +138,11 @@ return null;
 // 
         public IAssetPickerDialog CreateAssetPickerDialog(SessionViewModel session)
         {
-//             var assetPickerWindow = new AssetPickerWindow(session);
-//             var assetView = new AssetCollectionViewModel(session.ServiceProvider, session, new[] { FilterCategory.AssetName, FilterCategory.AssetTag });
-//             assetPickerWindow.AssetView = assetView;
-//             return assetPickerWindow;
-return null;            
+            var assetPickerWindow = new AssetPickerWindow(session);
+            var assetView = new AssetCollectionViewModel(session.ServiceProvider, session, new[] { FilterCategory.AssetName, FilterCategory.AssetTag });
+            assetPickerWindow.AssetView = assetView;
+            return assetPickerWindow;
+// return null;            
         }
 // 
         public IPackagePickerDialog CreatePackagePickerDialog(SessionViewModel session)

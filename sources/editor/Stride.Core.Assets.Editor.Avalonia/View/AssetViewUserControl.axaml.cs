@@ -9,11 +9,14 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Input;
+using Avalonia.Threading;
 using Stride.Core.Assets.Editor.View.Controls;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Presentation.Collections;
 using Stride.Core.Presentation.Extensions;
 using Stride.Core.Presentation.Commands;
+using Stride.Core.Presentation.ViewModels;
+using Stride.Core.Presentation.View;
 
 using Avalonia.Interactivity;
 
@@ -94,7 +97,8 @@ namespace Stride.Core.Assets.Editor.View
         /// <summary>
         /// Gets the command that initiate the edition of the currently selected item.
         /// </summary>
-        public static ICommand BeginEditCommand { get; }
+        private ICommandBase _BeginEditCommand;
+        public ICommandBase BeginEditCommand { get { return _BeginEditCommand; }  }
 
         /// <summary>
         /// Gets the command that will increase the size of thumbnails.
@@ -111,7 +115,8 @@ namespace Stride.Core.Assets.Editor.View
 			AssetCollectionProperty.Changed.AddClassHandler<AssetViewUserControl>(AssetCollectionChanged);
 			AssetContextMenuProperty.Changed.AddClassHandler<AssetViewUserControl>(OnAssetContextMenuChanged);
 
-            BeginEditCommand = new RoutedCommand<AssetViewUserControl>(CanBeginEditCommand);
+//             var serviceProvider = new ViewModelServiceProvider(new[] { new DispatcherService(Dispatcher.UIThread) });
+//             _BeginEditCommand = new AnonymousCommand<AssetViewUserControl>(serviceProvider, CanBeginEditCommand);
 //             BeginEditCommand = new ICommand(nameof(BeginEditCommand), typeof(AssetViewUserControl));
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), new CommandBinding(BeginEditCommand, BeginEdit, CanBeginEditCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(AssetViewUserControl), new InputBinding(BeginEditCommand, new KeyGesture(Key.F2)));
@@ -137,7 +142,9 @@ namespace Stride.Core.Assets.Editor.View
         /// </summary>
         public AssetViewUserControl()
         {
-
+            var serviceProvider = new ViewModelServiceProvider(new[] { new DispatcherService(Dispatcher.UIThread) });
+            _BeginEditCommand = new AnonymousCommand<AssetViewUserControl>(serviceProvider, CanBeginEditCommand);
+            
             InitializeComponent();
         }
 

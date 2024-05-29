@@ -36,7 +36,7 @@
                       IsVisible="{Binding SelectFilesToCreateItemCommand, RelativeSource={RelativeSource AncestorType=view:AddItemUserControl}, Converter={sd:ObjectToBool}}"
                       Command="{Binding SelectFilesToCreateItemCommand, RelativeSource={RelativeSource AncestorType=view:AddItemUserControl}}"
                       ToolTip.Tip="{sd:Localize Import directly from files, Context=ToolTip}" Width="20" Height="20" Padding="2">
-                <Image Source="{StaticResource ImageImportAsset}" Width="16" Height="16"/>
+                <Image Source="{Binding Source={StaticResource ImageImportAsset}, Path=Source}" Width="16" Height="16"/>
               </Button>
               <sd:TextBox x:Name="PART_EditableTextBox" ValidateOnLostFocus="False" VerticalAlignment="Center" Focusable="True"
                                     WatermarkContent="{Binding WatermarkContent, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}}"
