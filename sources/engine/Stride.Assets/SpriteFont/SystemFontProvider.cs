@@ -7,7 +7,12 @@ using Stride.Core.Assets.Compiler;
 using Stride.Core;
 using Stride.Core.Diagnostics;
 using Stride.Assets.SpriteFont.Compiler;
+using Stride.Core;
+using Stride.Core.Assets.Compiler;
+using Stride.Core.Diagnostics;
 using Stride.Graphics.Font;
+using System;
+using System.Linq;
 
 using SkiaSharp;
 
@@ -19,11 +24,9 @@ namespace Stride.Assets.SpriteFont
     {
         private static readonly Logger Log = GlobalLogger.GetLogger("SystemFontProvider");
 
-        public const string DefaultFontName = "Arial";
-
         public SystemFontProvider()
         {
-            FontName = DefaultFontName;
+            FontName = GetDefaultFontName();
         }
 
         public SystemFontProvider(string fontName)
@@ -98,6 +101,12 @@ namespace Stride.Assets.SpriteFont
         public override string GetFontName()
         {
             return FontName;
+        }
+
+        private static string GetDefaultFontName()
+        {
+            //Note : Both macOS and Windows contains Arial
+            return OperatingSystem.IsLinux() ? "Liberation" : "Arial";
         }
     }
 }

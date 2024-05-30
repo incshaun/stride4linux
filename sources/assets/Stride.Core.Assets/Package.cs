@@ -937,13 +937,10 @@ namespace Stride.Core.Assets
                 // Try to load only if asset is not already in the package or assetRef.Asset is null
                 var assetPath = assetFile.AssetLocation;
 
-//                 var assetFullPath = fileUPath.ToWindowsPath();
-                var assetFullPath = fileUPath;
+                var assetFullPath = fileUPath.ToOSPath();
                 var assetContent = assetFile.AssetContent;
 
-                bool aliasOccurred;
-                AttachedYamlAssetMetadata yamlMetadata;
-                var asset = LoadAsset(context.Log, Meta.Name, assetFullPath, assetPath, assetContent, out aliasOccurred, out yamlMetadata);
+                var asset = LoadAsset(context.Log, Meta.Name, assetFullPath, assetPath.ToOSPath(), assetContent, out var aliasOccurred, out var yamlMetadata);
 
                 // Create asset item
                 var assetItem = new AssetItem(assetPath, asset, this)
