@@ -2101,7 +2101,16 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/ListBoxHighlightedItemBehavior.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AbstractNodeEntryToType.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetPickerWindow.xaml.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Extensions/ControlExtensions.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Extensions/ControlExtensions.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/NewProjectWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/NotificationWindow.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/HyperlinkCloseWindowBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemWindow.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PopupModalWindow.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/AddAssets/View/ItemTemplatesWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/PackagePickerWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/FixAssetReferences/Views/FixAssetReferencesWindow.xaml.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AssetViewModelToUrl.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -2150,6 +2159,12 @@ translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Extensions/ControlExtensions.
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ProjectLibraryWindow.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/AddEntityComponentUserControl.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetPickerWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/NewProjectWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/NotificationWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/AddAssets/View/ItemTemplatesWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/PackagePickerWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/FixAssetReferences/Views/FixAssetReferencesWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

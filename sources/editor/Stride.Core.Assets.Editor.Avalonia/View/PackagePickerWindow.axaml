@@ -1,0 +1,38 @@
+<sd:ModalWindow x:Class="Stride.Core.Assets.Editor.View.PackagePickerWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:view="clr-namespace:Stride.Core.Assets.Editor.View"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+        mc:Ignorable="d"
+        Title="{sd:Localize Select a package}" Height="640" Width="480"
+        Theme="{DynamicResource WindowChromeStyle}" ShowInTaskbar="False"
+       >
+	<Design.DataContext>
+		<view:PackagePickerWindow />
+	</Design.DataContext>
+  <DockPanel>
+    <UniformGrid Rows="1" DockPanel.Dock="Bottom" Margin="20" HorizontalAlignment="Right">
+      <Button Margin="10,0,0,0" Padding="20,4" Content="{sd:Localize OK, Context=Button}" ToolTip.Tip="{sd:Localize Select this package, Context=ToolTip}"
+             >
+        <i:Interaction.Behaviors>
+          <sd:ButtonCloseWindowBehavior DialogResult="Ok"/>
+        </i:Interaction.Behaviors>
+      </Button>
+      <Button Margin="10,0,0,0" Padding="20,4" Content="{sd:Localize Cancel, Context=Button}" IsCancel="True" ToolTip.Tip="{sd:Localize Cancel (Esc), Context=ToolTip}">
+        <i:Interaction.Behaviors>
+          <sd:ButtonCloseWindowBehavior DialogResult="Cancel"/>
+        </i:Interaction.Behaviors>
+      </Button>
+    </UniformGrid>
+    <ListBox x:Name="PackageListBox" Margin="10" ItemsSource="{Binding Packages}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding Name}"/>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </DockPanel>
+</sd:ModalWindow>

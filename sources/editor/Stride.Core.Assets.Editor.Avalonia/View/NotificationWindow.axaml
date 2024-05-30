@@ -1,0 +1,58 @@
+<Window x:Class="Stride.Core.Assets.Editor.View.NotificationWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+        Title="{sd:Localize Notification}" Width="300" SizeToContent="Height" ShowInTaskbar="False"
+        Background="Transparent">
+  <Window.Resources>
+    <ResourceDictionary>
+      <!-- MERGED DICTIONARIES: IMAGE DICTIONARY, PROPERTY GRID VIEWS -->
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://Stride.Core.Presentation.Avalonia/Themes/ThemeSelector.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      
+    </ResourceDictionary>
+  </Window.Resources>
+  <Grid RenderTransformOrigin="0,1">
+
+    <!-- Notification area -->
+    <Border BorderThickness="1" Background="{DynamicResource NormalBrush}" BorderBrush="{DynamicResource NormalBorderBrush}">
+      <StackPanel Margin="5">
+        <DockPanel>
+          <Button DockPanel.Dock="Right" Width="12" Height="12" VerticalAlignment="Top">
+            <i:Interaction.Behaviors>
+              <sd:ButtonCloseWindowBehavior/>
+            </i:Interaction.Behaviors>
+            <Path Width="8" Height="8" Stretch="Fill" Fill="{StaticResource TextBrush}" Data="F1 M 26.9166,22.1667L 37.9999,33.25L 49.0832,22.1668L 53.8332,26.9168L 42.7499,38L 53.8332,49.0834L 49.0833,53.8334L 37.9999,42.75L 26.9166,53.8334L 22.1666,49.0833L 33.25,38L 22.1667,26.9167L 26.9166,22.1667 Z "/>
+          </Button>
+          <TextBlock Text="{Binding Caption}" FontWeight="Bold" Margin="5"/>
+        </DockPanel>
+        <TextBlock TextWrapping="Wrap" Margin="5">
+          <Button Command="{Binding Command}" CommandParameter="{Binding CommandParameter}">
+              <Run Text="{Binding Message, Mode=OneWay}"/>
+              <i:Interaction.Behaviors>
+                  <sd:HyperlinkCloseWindowBehavior/>
+              </i:Interaction.Behaviors>
+          </Button>
+<!--          <HyperlinkButton Command="{Binding Command}" CommandParameter="{Binding CommandParameter}">
+              <Run Text="{Binding Message, Mode=OneWay}"/>
+              <i:Interaction.Behaviors>
+                  <sd:HyperlinkCloseWindowBehavior/>
+              </i:Interaction.Behaviors>
+          </HyperlinkButton>-->
+        </TextBlock>
+      </StackPanel>
+    </Border>
+
+    <!-- Animation -->
+<!--    <Grid.Triggers>
+      <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+        <BeginStoryboard>
+          
+        </BeginStoryboard>
+      </EventTrigger>
+    </Grid.Triggers>-->
+  </Grid>
+</Window>

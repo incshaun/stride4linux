@@ -96,18 +96,8 @@
 
       <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
  
-      <StackPanel Grid.Column="2">
-      <TextBlock Text="AAA" />
-      <TextBlock Text="{Binding AssetView}" />
-      <TextBlock Text="{Binding AssetView, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}" />
-      <TextBlock Text="{Binding AssetView.SelectedAssets, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}" />
-      <TextBlock Text="{Binding AssetView.SelectedAssets.Count, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}" />
-      <TextBlock Text="AAA" />
-      <TextBlock Text="{Binding AssetView.SelectedLocations, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}" />
-      <TextBlock Text="AAA" />
       <view:AssetViewUserControl Grid.Column="2" AssetCollection="{Binding AssetView, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}" CanEditAssets="True" CanDeleteAssets="True"
                                  AssetDoubleClick="{Binding AssetDoubleClickCommand, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}" AssetContextMenu="{StaticResource AssetContextMenu}" />
-    </StackPanel>
     </Grid>
   </DockPanel>
 </sd:ModalWindow>

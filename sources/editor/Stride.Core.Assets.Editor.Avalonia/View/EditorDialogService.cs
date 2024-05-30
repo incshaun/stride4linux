@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 using Avalonia;
 using Stride.Core.Assets.Analysis;
 using Stride.Core.Assets.Editor.Components.AddAssets;
-// using Stride.Core.Assets.Editor.Components.AddAssets.View;
+using Stride.Core.Assets.Editor.Components.AddAssets.View;
 using Stride.Core.Assets.Editor.Components.FixAssetReferences;
-// using Stride.Core.Assets.Editor.Components.FixAssetReferences.Views;
+using Stride.Core.Assets.Editor.Components.FixAssetReferences.Views;
 using Stride.Core.Assets.Editor.Components.TemplateDescriptions;
 using Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels;
-// using Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views;
+using Stride.Core.Assets.Editor.Components.TemplateDescriptions.Views;
 using Stride.Core.Assets.Editor.Services;
 using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Assets.Editor.ViewModel.Progress;
@@ -30,6 +30,7 @@ using Stride.Core.Presentation.View;
 using Stride.Core.Presentation.ViewModels;
 using Stride.Core.Presentation.Windows;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Styling;
 
 namespace Stride.Core.Assets.Editor.View
@@ -69,27 +70,27 @@ namespace Stride.Core.Assets.Editor.View
 
         public void ShowNotificationWindow(string title, string message, ICommandBase command, object commandParameter)
         {
-//             var notificationWindow = new NotificationWindow(title, message, command, commandParameter);
-//             lock (notificationWindows)
-//             {
-//                 notificationWindows.Add(notificationWindow);
-//             }
-//             notificationWindow.Closed += (s, e) => { lock (notificationWindows) { notificationWindows.Remove(notificationWindow); } };
-//             notificationWindow.Show();
+            var notificationWindow = new NotificationWindow(title, message, command, commandParameter);
+            lock (notificationWindows)
+            {
+                notificationWindows.Add(notificationWindow);
+            }
+            notificationWindow.Closed += (s, e) => { lock (notificationWindows) { notificationWindows.Remove(notificationWindow); } };
+            notificationWindow.Show();
         }
-// 
+
         public void CloseAllNotificationWindows()
         {
-//             lock (notificationWindows)
-//             {
-//                 foreach (var notificationWindow in notificationWindows.ToArray())
-//                 {
-//                     notificationWindow.Close();
-//                 }
-//                 settingsWindow?.Close();
-//             }
+            lock (notificationWindows)
+            {
+                foreach (var notificationWindow in notificationWindows.ToArray())
+                {
+                    notificationWindow.Close();
+                }
+                settingsWindow?.Close();
+            }
         }
-// 
+
         public void ShowSettingsWindow(IViewModelServiceProvider serviceProvider)
         {
             if (settingsWindow == null)
@@ -103,65 +104,58 @@ namespace Stride.Core.Assets.Editor.View
 
         public INewProjectDialog CreateNewProjectDialog(SessionViewModel session)
         {
-//             var newPackageWindow = new NewProjectWindow();
-//             var templates = new NewProjectTemplateCollectionViewModel(session.ServiceProvider, session);
-//             newPackageWindow.DataContext = templates;
-//             return newPackageWindow;
-return null;            
+            var newPackageWindow = new NewProjectWindow();
+            var templates = new NewProjectTemplateCollectionViewModel(session.ServiceProvider, session);
+            newPackageWindow.DataContext = templates;
+            return newPackageWindow;
         }
-// 
+
         public IItemTemplateDialog CreateAddAssetDialog(SessionViewModel session, DirectoryBaseViewModel directory)
         {
-//             // TODO: We can't share session.ActiveAssetView.AddAssetTemplateCollection view model (used for Add asset popup) with the add asset context menu
-//             // because they are fighting each other, probably due to two-way bindings (on the SearchToken?)
-//             //var addAssetWindow = new AddItemWindow(session.ServiceProvider, session.ActiveAssetView.AddAssetTemplateCollection);
-//             var addAssetWindow = new AddItemWindow(session.ServiceProvider, new AddAssetTemplateCollectionViewModel(session));
-//             return addAssetWindow;
-return null;            
+            // TODO: We can't share session.ActiveAssetView.AddAssetTemplateCollection view model (used for Add asset popup) with the add asset context menu
+            // because they are fighting each other, probably due to two-way bindings (on the SearchToken?)
+            //var addAssetWindow = new AddItemWindow(session.ServiceProvider, session.ActiveAssetView.AddAssetTemplateCollection);
+            var addAssetWindow = new AddItemWindow(session.ServiceProvider, new AddAssetTemplateCollectionViewModel(session));
+            return addAssetWindow;
         }
-// 
+
         public IItemTemplateDialog CreateAssetTemplatesDialog(SessionViewModel session, DirectoryBaseViewModel directory, IEnumerable<TemplateAssetDescription> templates)
         {
-//             var viewModel = new AssetTemplatesViewModel(session.ServiceProvider, templates);
-//             var window = new ItemTemplatesWindow(viewModel);
-//             return window;
-return null;                
+            var viewModel = new AssetTemplatesViewModel(session.ServiceProvider, templates);
+            var window = new ItemTemplatesWindow(viewModel);
+            return window;
         }
-// 
+
         public IItemTemplateDialog CreateAssetTemplatesDialog(SessionViewModel session, DirectoryBaseViewModel directory, int fileCount, IEnumerable<KeyValuePair<TemplateAssetDescription, int>> templates)
         {
-//             var viewModel = new AssetTemplatesViewModel(session.ServiceProvider, fileCount, templates);
-//             var window = new ItemTemplatesWindow(viewModel);
-//             return window;
-return null;            
+            var viewModel = new AssetTemplatesViewModel(session.ServiceProvider, fileCount, templates);
+            var window = new ItemTemplatesWindow(viewModel);
+            return window;
         }
-// 
+
         public IAssetPickerDialog CreateAssetPickerDialog(SessionViewModel session)
         {
             var assetPickerWindow = new AssetPickerWindow(session);
             var assetView = new AssetCollectionViewModel(session.ServiceProvider, session, new[] { FilterCategory.AssetName, FilterCategory.AssetTag });
             assetPickerWindow.AssetView = assetView;
             return assetPickerWindow;
-// return null;            
         }
-// 
+
         public IPackagePickerDialog CreatePackagePickerDialog(SessionViewModel session)
         {
-//             var packagePickerWindow = new PackagePickerWindow(session);
-//             return packagePickerWindow;
-return null;            
+            var packagePickerWindow = new PackagePickerWindow(session);
+            return packagePickerWindow;
         }
-// 
+
         public IFixReferencesDialog CreateFixAssetReferencesDialog(IViewModelServiceProvider serviceProvider, IReadOnlyCollection<AssetViewModel> assets, IAssetDependencyManager dependencyManager)
         {
-//             var fixReferencesWindow = new FixAssetReferencesWindow(serviceProvider);
-//             var viewModel = new FixAssetReferencesViewModel(serviceProvider, assets, dependencyManager, fixReferencesWindow);
-//             viewModel.Initialize(assets);
-//             fixReferencesWindow.DataContext = viewModel;
-//             return fixReferencesWindow;
-return null;            
+            var fixReferencesWindow = new FixAssetReferencesWindow(serviceProvider);
+            var viewModel = new FixAssetReferencesViewModel(serviceProvider, assets, dependencyManager, fixReferencesWindow);
+            viewModel.Initialize(assets);
+            fixReferencesWindow.DataContext = viewModel;
+            return fixReferencesWindow;
         }
-// 
+
         public async void ShowProgressWindow(WorkProgressViewModel workProgress, int minDelay)
         {
             if (workProgress == null) throw new ArgumentNullException(nameof(workProgress));
@@ -348,19 +342,19 @@ return null;
                 var ask = confirmationSettingsKey.GetValue();
                 if (ask)
                 {
-//                     var buttons = DialogHelper.CreateButtons(new[] { yesCaption, noCaption }, 1, 2);
-//                     var result = await CheckedMessageBox(message, false, DialogHelper.DontAskAgain, buttons, MessageBoxImage.Question);
-//                     // Close without clicking on a button
-//                     if (result.Result == 0)
-//                         return;
-// 
-//                     yesNo = result.Result == 1;
-//                     if (result.IsChecked == true && (yesNo || yesNoSettingsKey != null))
-//                     {
-//                         confirmationSettingsKey.SetValue(false);
-//                         yesNoSettingsKey?.SetValue(yesNo);
-//                         Settings.EditorSettings.Save();
-//                     }
+                    var buttons = DialogHelper.CreateButtons(new[] { yesCaption, noCaption }, 1, 2);
+                    var result = await CheckedMessageBoxAsync(message, false, DialogHelper.DontAskAgain, buttons, MessageBoxImage.Question);
+                    // Close without clicking on a button
+                    if (result.Result == 0)
+                        return;
+
+                    yesNo = result.Result == 1;
+                    if (result.IsChecked == true && (yesNo || yesNoSettingsKey != null))
+                    {
+                        confirmationSettingsKey.SetValue(false);
+                        yesNoSettingsKey?.SetValue(yesNo);
+                        Settings.EditorSettings.Save();
+                    }
                 }
                 if (yesNo)
                     yesAction?.Invoke();
@@ -368,13 +362,14 @@ return null;
                     noAction?.Invoke();
             };
 
-  /*          var windows = Application.Current.Windows;
+            var lifetime = (ClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!;
+            var windows = lifetime.Windows;
             if (windows.Count == 0 || windows.OfType<Window>().Any(w => w.IsActive))
             {
                 // Execute immediately
                 Dispatcher.Invoke(action);
                 return;
-            }*/
+            }
 
             // Add a new question
             delayedNotifications.Enqueue(Tuple.Create((SettingsKey)confirmationSettingsKey, action));
