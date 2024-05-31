@@ -1279,6 +1279,8 @@ def translateTags (contents):
   # inputbindings
   contents = re.sub ("<Button.InputBindings>", r"", contents)
   contents = re.sub ("</Button.InputBindings>", r"", contents)
+
+  contents = re.sub ("IsSubmenuOpen", r"IsSubMenuOpen", contents)
   
   # menuitem
   contents = re.sub ("{x:Static MenuItem.SeparatorStyleKey}", r"MenuItem.SeparatorStyleKey", contents)

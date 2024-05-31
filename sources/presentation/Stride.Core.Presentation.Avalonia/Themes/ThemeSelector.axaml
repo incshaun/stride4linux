@@ -2028,7 +2028,7 @@
         <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource MenuHoverBrush}" Opacity="0" x:Name="HoverBorder"/>
         <ContentPresenter Grid.Column="0" Margin="6,3" x:Name="Icon" VerticalAlignment="Center" Content="{TemplateBinding Icon}" />
         <ContentPresenter Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" Content="{TemplateBinding Header}" Margin="2,1,2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
-        <Popup Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="PART_Popup" Focusable="false"  >
+        <Popup IsLightDismissEnabled="False" Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}" Placement="Bottom" x:Name="PART_Popup" Focusable="false"  >
           <Grid x:Name="SubMenu">
             <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="0"/>
                         <ScrollViewer >
@@ -2138,7 +2138,7 @@
               <Grid Grid.Column="4" Margin="4,2" x:Name="ArrowPanel" VerticalAlignment="Center">
                 <Path x:Name="ArrowPanelPath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z" />
               </Grid>
-              <Popup IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Right" x:Name="PART_Popup" Focusable="false"  >
+              <Popup IsLightDismissEnabled="False" IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}" Placement="Right" x:Name="PART_Popup"   >
                 <Grid>
                   <Grid.RowDefinitions>
                     <RowDefinition Height="3" />
@@ -2159,7 +2159,6 @@
                         <ScrollViewer >
                           <ItemsPresenter Name="PART_ItemsPresenter"
                                           Margin="2"
-                                          Grid.IsSharedSizeScope="True"
                                           ItemsPanel="{TemplateBinding ItemsPanel}" />
                         </ScrollViewer>
                     
@@ -2200,7 +2199,7 @@
             
             <MultiTrigger>
               <MultiTrigger.Conditions>
-                <Condition Property="IsSubmenuOpen" Value="True" />
+                <Condition Property="IsSubMenuOpen" Value="True" />
                 <Condition Property="Role" Value="TopLevelHeader" />
               </MultiTrigger.Conditions>
               <MultiTrigger.Setters>

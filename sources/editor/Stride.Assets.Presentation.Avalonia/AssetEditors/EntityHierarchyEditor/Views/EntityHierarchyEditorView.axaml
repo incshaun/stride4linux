@@ -85,13 +85,13 @@
                   <ControlTheme TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
                     <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
                     <Setter Property="CommandParameter" Value="{Binding Factory, Mode=OneWay}"/>
-                    <Setter Property="Command" Value="{Binding DataContext.Editor.CreateEntityInRootCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay}"/>
+                    <Setter Property="Command" Value="{Binding $parent[ContextMenu].DataContext.Editor.CreateEntityInRootCommand, Mode=OneWay}"/>
                   </ControlTheme>
                 </Setter.Value>
               </Setter>
             </ControlTheme>
           </MenuItem.ItemContainerTheme>
-          <MenuItem.Template>
+<!--          <MenuItem.Template>
             <ControlTemplate>
               <Border Background="Transparent">
                         <ScrollViewer >
@@ -102,7 +102,7 @@
                         </ScrollViewer>
               </Border>
             </ControlTemplate>
-          </MenuItem.Template>
+          </MenuItem.Template>-->
         </MenuItem>
         <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
         <MenuItem Header="{sd:Localize Open prefab in editor, Context=Menu}" Command="{Binding Editor.OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
@@ -140,13 +140,13 @@
                   <ControlTheme  TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
                     <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
                     <Setter Property="CommandParameter" Value="{Binding Factory, Mode=OneWay}"/>
-                    <Setter Property="Command" Value="{Binding DataContext.Editor.CreateEntityInSelectionCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay}"/>
+                    <Setter Property="Command" Value="{Binding $parent[ContextMenu].DataContext.Editor.CreateEntityInRootCommand, Mode=OneWay}"/>
                   </ControlTheme>
                 </Setter.Value>
               </Setter>
             </ControlTheme>
           </MenuItem.ItemContainerTheme>
-          <MenuItem.Template>
+<!--          <MenuItem.Template>
             <ControlTemplate>
               <Border Background="Transparent">
                         <ScrollViewer >
@@ -157,7 +157,7 @@
                         </ScrollViewer>
               </Border>
             </ControlTemplate>
-          </MenuItem.Template>
+          </MenuItem.Template>-->
         </MenuItem>
         <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
         <MenuItem Header="{sd:Localize Set as active scene, Context=Menu}" Command="{Binding Editor.SetActiveRootCommand}" IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type svm:SceneRootViewModel}, FallbackValue=false}"
@@ -225,31 +225,31 @@
 	</Design.DataContext>
                   <MenuItem.ItemContainerTheme>
                     <ControlTheme TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
-                      <Setter Property="ItemsSource" Value="{Binding Factories.Values, Mode=OneWay}"/>
-                      <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
-                      <Setter Property="ItemContainerTheme">
+                       <Setter Property="ItemsSource" Value="{Binding Factories.Values, Mode=OneWay}"/> 
+                       <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/> 
+                        <Setter Property="ItemContainerTheme">
                         <Setter.Value>
                           <ControlTheme TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
-                            <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
+                            <Setter Property="Header" Value="{Binding Name, Mode=OneWay}" />
                             <Setter Property="CommandParameter" Value="{Binding Factory, Mode=OneWay}"/>
-                            <Setter Property="Command" Value="{Binding DataContext.Editor.CreateEntityInRootCommand, RelativeSource={RelativeSource AncestorType=Menu}, Mode=OneWay}"/>
+                            <Setter Property="Command" Value="{Binding $parent[Menu].DataContext.Editor.CreateEntityInRootCommand, Mode=OneWay}"/>
                           </ControlTheme>
                         </Setter.Value>
                       </Setter>
                     </ControlTheme>
                   </MenuItem.ItemContainerTheme>
-                  <MenuItem.Template>
+                  
+<!--                  <MenuItem.Template>
                     <ControlTemplate>
                       <Border Background="Transparent">
                         <ScrollViewer >
                           <ItemsPresenter Name="PART_ItemsPresenter"
                                           Margin="2"
-                                          Grid.IsSharedSizeScope="True"
                                           ItemsPanel="{TemplateBinding ItemsPanel}" />
                         </ScrollViewer>
                       </Border>
                     </ControlTemplate>
-                  </MenuItem.Template>
+                  </MenuItem.Template>-->
                 </MenuItem>
               </MenuItem>
             </Menu>
@@ -859,13 +859,13 @@
                         <ControlTheme  TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
                           <Setter Property="Header" Value="{Binding Name, Mode=OneWay}"/>
                           <Setter Property="CommandParameter" Value="{Binding Factory, Mode=OneWay}"/>
-                          <Setter Property="Command" Value="{Binding DataContext.CreateEntityCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay}"/>
+                            <Setter Property="Command" Value="{Binding $parent[ContextMenu].DataContext.Editor.CreateEntityInRootCommand, Mode=OneWay}"/>
                         </ControlTheme>
                       </Setter.Value>
                     </Setter>
                   </ControlTheme>
                 </MenuItem.ItemContainerTheme>
-                <MenuItem.Template>
+<!--                <MenuItem.Template>
                   <ControlTemplate>
                     <Border Background="Transparent">
                         <ScrollViewer >
@@ -876,7 +876,7 @@
                         </ScrollViewer>
                     </Border>
                   </ControlTemplate>
-                </MenuItem.Template>
+                </MenuItem.Template>-->
               </MenuItem>
               <MenuItem Header="{sd:Localize Actions, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
               <MenuItem Header="{sd:Localize Open in prefab editor, Context=Menu}" Command="{Binding OpenPrefabEditorCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />

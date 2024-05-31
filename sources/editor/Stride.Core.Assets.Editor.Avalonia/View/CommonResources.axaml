@@ -83,17 +83,11 @@
                                 x:Name="Icon" VerticalAlignment="Center"  />-->
               <ContentPresenter Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" Margin="2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Content="{TemplateBinding Header}"
                               ContentTemplate="{TemplateBinding HeaderTemplate}"/>
-<!--              <Popup Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="PART_Popup" Focusable="false"  >
-                <Grid x:Name="SubMenu">
-                  <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1"/>
-                  <StackPanel />
-                </Grid>
-              </Popup>-->
             <Popup Grid.Column="0" Grid.ColumnSpan="2" Name="PART_Popup"
                    IsLightDismissEnabled="False"
-                   IsOpen="{TemplateBinding IsSubMenuOpen,
-                                            Mode=TwoWay}"
+                   IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
                    Placement="Bottom" Focusable="false" >
+                <Grid x:Name="SubMenu">
                 <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1">
                 <ScrollViewer >
                   <ItemsPresenter Name="PART_ItemsPresenter"
@@ -102,6 +96,7 @@
                                   ItemsPanel="{TemplateBinding ItemsPanel}" />
                 </ScrollViewer>
               </Border>
+                </Grid>
             </Popup>
               
             </Grid>
@@ -143,7 +138,7 @@
                   <RotateTransform Angle="180"/>
                 </Path.RenderTransform>
               </Path>
-              <Popup IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="SubMenuPopup" Focusable="false"  >
+              <Popup IsLightDismissEnabled="False" IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}" Placement="Bottom" x:Name="SubMenuPopup" Focusable="false"  >
                 <Grid x:Name="SubMenu">
                   <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="1"/>
                         <ScrollViewer >
