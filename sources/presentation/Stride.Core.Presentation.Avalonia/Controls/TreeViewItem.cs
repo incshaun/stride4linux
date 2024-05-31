@@ -179,11 +179,11 @@ namespace Stride.Core.Presentation.Controls
             var newValue = (bool)e.NewValue;
             if (newValue)
             {
-                item.ParentTreeView.StartEditing(item);
+                item.ParentTreeView?.StartEditing(item);
             }
             else
             {
-                item.ParentTreeView.StopEditing();
+                item.ParentTreeView?.StopEditing();
             }
         }
 

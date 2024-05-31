@@ -2031,7 +2031,12 @@
         <Popup Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="PART_Popup" Focusable="false"  >
           <Grid x:Name="SubMenu">
             <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="0"/>
-            <StackPanel   />
+                        <ScrollViewer >
+                          <ItemsPresenter Name="PART_ItemsPresenter"
+                                          Margin="2"
+                                          Grid.IsSharedSizeScope="True"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
           </Grid>
         </Popup>
       </Grid>
@@ -2150,7 +2155,14 @@
                   <Border x:Name="SubmenuMainWrapperBorder" Grid.RowSpan="3" Grid.ColumnSpan="3" Background="{StaticResource MenuBackgroundBrush}" BorderBrush="{StaticResource MenuBorderBrush}" BorderThickness="0.5" />
                   <Grid x:Name="SubMenu" Grid.Row="1" Grid.Column="1">
                     <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="0" />
-                    <StackPanel   Grid.IsSharedSizeScope="true" />
+<!--                     <StackPanel   Grid.IsSharedSizeScope="true" /> -->
+                        <ScrollViewer >
+                          <ItemsPresenter Name="PART_ItemsPresenter"
+                                          Margin="2"
+                                          Grid.IsSharedSizeScope="True"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
+                    
                   </Grid>
                 </Grid>
               </Popup>

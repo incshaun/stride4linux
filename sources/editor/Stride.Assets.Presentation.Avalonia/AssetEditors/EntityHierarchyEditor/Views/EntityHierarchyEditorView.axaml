@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-             xmlns:p="clr-namespace:Stride.Assets.Presentation"
+             xmlns:p="clr-namespace:Stride.Assets.Presentation;assembly=Stride.Assets.Presentation.Avalonia"
              xmlns:strings="clr-namespace:Stride.Assets.Presentation.Resources.Strings"
              xmlns:pvc="clr-namespace:Stride.Assets.Presentation.ValueConverters;assembly=Stride.Assets.Presentation.Avalonia"
              xmlns:assetEditors="clr-namespace:Stride.Assets.Presentation.AssetEditors;assembly=Stride.Assets.Presentation"
@@ -94,7 +94,12 @@
           <MenuItem.Template>
             <ControlTemplate>
               <Border Background="Transparent">
-                <StackPanel />
+                        <ScrollViewer >
+                          <ItemsPresenter Name="PART_ItemsPresenter"
+                                          Margin="2"
+                                          Grid.IsSharedSizeScope="True"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
               </Border>
             </ControlTemplate>
           </MenuItem.Template>
@@ -144,7 +149,12 @@
           <MenuItem.Template>
             <ControlTemplate>
               <Border Background="Transparent">
-                <StackPanel />
+                        <ScrollViewer >
+                          <ItemsPresenter Name="PART_ItemsPresenter"
+                                          Margin="2"
+                                          Grid.IsSharedSizeScope="True"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
               </Border>
             </ControlTemplate>
           </MenuItem.Template>
@@ -231,7 +241,12 @@
                   <MenuItem.Template>
                     <ControlTemplate>
                       <Border Background="Transparent">
-                        <StackPanel />
+                        <ScrollViewer >
+                          <ItemsPresenter Name="PART_ItemsPresenter"
+                                          Margin="2"
+                                          Grid.IsSharedSizeScope="True"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
                       </Border>
                     </ControlTemplate>
                   </MenuItem.Template>
@@ -853,7 +868,12 @@
                 <MenuItem.Template>
                   <ControlTemplate>
                     <Border Background="Transparent">
-                      <StackPanel />
+                        <ScrollViewer >
+                          <ItemsPresenter Name="PART_ItemsPresenter"
+                                          Margin="2"
+                                          Grid.IsSharedSizeScope="True"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
                     </Border>
                   </ControlTemplate>
                 </MenuItem.Template>
