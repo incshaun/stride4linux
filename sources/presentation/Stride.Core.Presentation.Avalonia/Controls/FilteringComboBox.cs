@@ -130,12 +130,12 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Raised just before the TextBox changes are validated. This event is cancellable
         /// </summary>
-        public static readonly RoutedEvent ValidatingEvent = RoutedEvent.Register<FilteringComboBox, RoutedEventArgs>("Validating", RoutingStrategies.Bubble);
+        public static readonly RoutedEvent ValidatingEvent = RoutedEvent.Register<FilteringComboBox, CancelRoutedEventArgs>("Validating", RoutingStrategies.Bubble);
 
         /// <summary>
         /// Raised when TextBox changes have been validated.
         /// </summary>
-        public static readonly RoutedEvent ValidatedEvent = RoutedEvent.Register<FilteringComboBox, RoutedEventArgs>("Validated", RoutingStrategies.Bubble);
+        public static readonly RoutedEvent ValidatedEvent = RoutedEvent.Register<FilteringComboBox, ValidationRoutedEventArgs<string>>("Validated", RoutingStrategies.Bubble);
 
         static FilteringComboBox()
 		{
@@ -222,17 +222,17 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Raised when TextBox changes have been validated.
         /// </summary>
-        public event EventHandler<CancelRoutedEventArgs> Validated { add { AddHandler(ValidatedEvent, value); } remove { RemoveHandler(ValidatedEvent, value); } }
+        public event EventHandler<ValidationRoutedEventHandler<string>> Validated { add { AddHandler(ValidatedEvent, value); } remove { RemoveHandler(ValidatedEvent, value); } }
 
-//         protected override void OnItemsSourceChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)
-//         {
-//             base.OnItemsSourceChanged(oldValue, newValue);
-// 
-//             if (newValue != null)
-//             {
-//                 UpdateCollectionView();
-//             }
-//         }
+        private void OnItemsViewSourceChanged(IEnumerable oldValue, IEnumerable newValue)  // Removed override, since marked as private in SelectingItemsControl.
+        {
+            //base.OnItemsViewSourceChanged(items, e);
+
+            if (newValue != null)
+            {
+                UpdateCollectionView();
+            }
+        }
 
         private static void OnIsDropDownOpenChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
@@ -286,7 +286,7 @@ namespace Stride.Core.Presentation.Controls
         private static void OnItemsSourceRefresh(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
             var filteringComboBox = (FilteringComboBox)d;
-//             filteringComboBox.OnItemsSourceChanged(filteringComboBox.ItemsSource, filteringComboBox.ItemsSource);
+            filteringComboBox.OnItemsViewSourceChanged(filteringComboBox.ItemsSource, filteringComboBox.ItemsSource);
         }
 
         private void EditableTextBoxValidating(object sender, CancelRoutedEventArgs e)
@@ -343,7 +343,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private void EditableTextBoxValidated(object sender, RoutedEventArgs e)
+        private void EditableTextBoxValidated(object sender, ValidationRoutedEventArgs<string> e)
         {
             // This may happens somehow when the template is refreshed.
             if (!ReferenceEquals(sender, editableTextBox))
@@ -539,10 +539,10 @@ namespace Stride.Core.Presentation.Controls
             }
             listBoxClicking = true;
             
-                        ValidatedValue = SelectedValue;
-            ValidatedItem = SelectedItem;
-                        var validatedArgs = new RoutedEventArgs(ValidatedEvent);
-            RaiseEvent(validatedArgs);
+//                         ValidatedValue = SelectedValue;
+//             ValidatedItem = SelectedItem;
+//                         var validatedArgs = new RoutedEventArgs(ValidatedEvent);
+//             RaiseEvent(validatedArgs);
 
         }
 

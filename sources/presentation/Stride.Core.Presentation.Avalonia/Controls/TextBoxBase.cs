@@ -210,7 +210,7 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Raised when TextBox changes have been validated.
         /// </summary>
-        public event EventHandler<CancelRoutedEventArgs> Validated { add { AddHandler(ValidatedEvent, value); } remove { RemoveHandler(ValidatedEvent, value); } }
+        public event ValidationRoutedEventHandler<string> Validated { add { AddHandler(ValidatedEvent, value); } remove { RemoveHandler(ValidatedEvent, value); } }
 
         /// <summary>
         /// Raised when the TextBox changes are cancelled.
@@ -265,10 +265,10 @@ namespace Stride.Core.Presentation.Controls
 
             ClearUndoStack();
 
-//             var validatedArgs = new ValidationRoutedEventArgs<string>(ValidatedEvent, coercedText);
+            var validatedArgs = new ValidationRoutedEventArgs<string>(ValidatedEvent, coercedText);
             OnValidated();
 
-//             RaiseEvent(validatedArgs);
+            RaiseEvent(validatedArgs);
             if (ValidateCommand != null && ValidateCommand.CanExecute(ValidateCommandParameter))
                 ValidateCommand.Execute(ValidateCommandParameter);
             validating = false;
@@ -432,6 +432,10 @@ namespace Stride.Core.Presentation.Controls
         private static string OnTextChanged(AvaloniaObject d, string value)
         {
             var input = (TextBoxBase)d;
+            if ((input.Text != null) && (input.Text.Equals (value)))
+            {
+                return value; // seems to be triggering an event loop otherwise.
+            }
             input.HasText = value != null && value.Length > 0;
             if (!input.validating)
                 input.HasChangesToValidate = true;
@@ -440,7 +444,7 @@ namespace Stride.Core.Presentation.Controls
             if (input.ValidateOnTextChange && !input.validating)
                 input.Validate();
 
-            Console.WriteLine ("Text changed: " + input.Text + " " + value);
+            Console.WriteLine ("Text changed: " + input.Text + " - " + value);
             return value;
         }
 
