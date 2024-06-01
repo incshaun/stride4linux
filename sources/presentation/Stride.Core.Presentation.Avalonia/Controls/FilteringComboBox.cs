@@ -146,6 +146,12 @@ namespace Stride.Core.Presentation.Controls
             
         }
 
+        [ModuleInitializer]
+        internal static void Initialize ()
+        {
+            var v = ValidatedEvent; // Force the event to be registered as soon as possible.
+        }
+        
         public FilteringComboBox()
         {
             IsTextSearchEnabled = false;
@@ -523,15 +529,21 @@ namespace Stride.Core.Presentation.Controls
             updatingSelection = false;
         }
 
-        private void ListBoxMouseUp(object sender, [NotNull] PointerEventArgs e)
+        private void ListBoxMouseUp(object sender, [NotNull] PointerReleasedEventArgs e)
         {
-//             if (e.ChangedButton == MouseButton.Left && listBox.SelectedIndex > -1)
-//             {
-//                 // We need to force the validation here
-//                 // The user might have clicked on the list after the drop down was automatically open (see OpenDropDownOnFocus).
-//                 editableTextBox.ForceValidate();
-//             }
+            if (e.InitialPressMouseButton == MouseButton.Left && listBox.SelectedIndex > -1)
+            {
+                // We need to force the validation here
+                // The user might have clicked on the list after the drop down was automatically open (see OpenDropDownOnFocus).
+                editableTextBox.ForceValidate();
+            }
             listBoxClicking = true;
+            
+                        ValidatedValue = SelectedValue;
+            ValidatedItem = SelectedItem;
+                        var validatedArgs = new RoutedEventArgs(ValidatedEvent);
+            RaiseEvent(validatedArgs);
+
         }
 
         private void BringSelectedItemIntoView()

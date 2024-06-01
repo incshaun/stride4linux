@@ -1183,7 +1183,7 @@ def translateTags (contents):
   contents = re.sub ("</xcad:DockingManager>", "</DockControl>", contents)
   contents = regex.sub (regex.compile ("gh:AvalonDockHelper.IsVisible=\".*?\"", regex.DOTALL), "", contents)
   
-  contents = re.sub ("Value=\"{sd:False}\"", 'Value="false"', contents)
+  #contents = re.sub ("Value=\"{sd:False}\"", 'Value="false"', contents) # not needed, fails in some cases.
   
   contents = re.sub ("TextSearch\.TextPath", 'TextSearch.Text', contents)
   

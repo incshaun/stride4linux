@@ -230,7 +230,7 @@
                                               SelectFilesToCreateItemCommand="{Binding SelectFilesToCreateAssetCommand}"/>
           </Border>
           <i:Interaction.Behaviors>
-<!--             <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="sd:FilteringComboBox" Property="{x:Static Popup.IsOpenProperty}" Value="false"/> -->
+            <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="{x:Type sd:FilteringComboBox}" Property="{x:Static Popup.IsOpenProperty}" Value="{sd:False}"/>
           </i:Interaction.Behaviors>
         </Popup>
         <!--  UPDATE ASSETS FROM SOURCE BUTTON  -->
