@@ -213,8 +213,8 @@ def translateNames (contents):
   
   contents = re.sub ("CancelRoutedEventHandler", "EventHandler<CancelRoutedEventArgs>", contents)
   contents = re.sub ("RoutedPropertyChangedEventHandler<double>", "EventHandler<RoutedEventArgs>", contents)
-  contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional
-  contents = re.sub ("ValidationRoutedEventArgs<string> e", "RoutedEventArgs e", contents) # provisional
+  #contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional - wrong
+  #contents = re.sub ("ValidationRoutedEventArgs<string> e", "RoutedEventArgs e", contents) # provisional - this class now translated.
   contents = re.sub ("ExecutedRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub ("CanExecuteRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
@@ -2112,7 +2112,8 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/AddAssets/View/ItemTemplatesWindow.xaml.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/PackagePickerWindow.xaml.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/FixAssetReferences/Views/FixAssetReferencesWindow.xaml.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AssetViewModelToUrl.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AssetViewModelToUrl.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/ValidationRoutedEvent.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
