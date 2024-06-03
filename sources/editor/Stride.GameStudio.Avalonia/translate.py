@@ -2113,7 +2113,10 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/PackagePickerWindow.xaml.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/FixAssetReferences/Views/FixAssetReferencesWindow.xaml.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AssetViewModelToUrl.cs")
-translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/ValidationRoutedEvent.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/ValidationRoutedEvent.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragContainer.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragWindow.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragDropHelper.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
