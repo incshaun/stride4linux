@@ -1415,6 +1415,9 @@ def translateTags (contents):
   # Control
   contents = re.sub ("Control.HorizontalContentAlignment}", "ContentControl.HorizontalContentAlignment}", contents)
   contents = re.sub ("Control.VerticalContentAlignment}", "ContentControl.VerticalContentAlignment}", contents)
+
+  contents = re.sub ("CommandTarget=", "CommandParameter=", contents)
+  contents = re.sub ("\"CommandTarget\"", '"CommandParameter"', contents)
   
   # Combobox
   contents = re.sub ("<ComboBox Theme=\"(.*?)\" Text=\"(.*?)\"", r'<ComboBox Theme="\1" PlaceholderText="\2"', contents)
