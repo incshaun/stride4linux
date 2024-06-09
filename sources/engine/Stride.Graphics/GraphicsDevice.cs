@@ -64,9 +64,20 @@ namespace Stride.Graphics
 
         public delegate IDisposable CreateLockContext (GraphicsDevice d);
         public static CreateLockContext createLockContext = null;
+        private class NullDisposable : IDisposable
+        {
+            public void Dispose() {}
+        }
         public IDisposable LockContext ()
         {
-            return createLockContext (this);
+            if (createLockContext != null)
+            {
+                return createLockContext (this);
+            }
+            else
+            {
+                return new NullDisposable ();
+            }
         }
         
         /// <summary>
