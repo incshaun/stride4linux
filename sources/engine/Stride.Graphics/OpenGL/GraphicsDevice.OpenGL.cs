@@ -92,7 +92,9 @@ namespace Stride.Graphics
         
          static GraphicsDevice ()
         {
+#if STRIDE_GRAPHICS_API_OPENGLES           
             createLockContext = LockUseOpenGLCreationContext;
+#endif            
         }
         
         public static GraphicsDevice Current
