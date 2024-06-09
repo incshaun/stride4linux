@@ -206,7 +206,7 @@ namespace Stride.Core.Presentation.Controls
                        double maxWidth = 0;
                        double currentYinItemSystem = 0;
 
-            if (treeView.IsVirtualizing)
+            if (false) //if (treeView.IsVirtualizing)
             {
                 /*                           // never forget: virtualization of a tree is an approximation. there are some use cases which theoretically work and others
                                            // we try to get it working by estimations. See GetCachedOrEstimatedHeight for more infos.

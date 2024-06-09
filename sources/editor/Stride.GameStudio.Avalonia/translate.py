@@ -213,8 +213,8 @@ def translateNames (contents):
   
   contents = re.sub ("CancelRoutedEventHandler", "EventHandler<CancelRoutedEventArgs>", contents)
   contents = re.sub ("RoutedPropertyChangedEventHandler<double>", "EventHandler<RoutedEventArgs>", contents)
-  contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional
-  contents = re.sub ("ValidationRoutedEventArgs<string> e", "RoutedEventArgs e", contents) # provisional
+  #contents = re.sub ("ValidationRoutedEventHandler<string>", "EventHandler<CancelRoutedEventArgs>", contents) # provisional - wrong
+  #contents = re.sub ("ValidationRoutedEventArgs<string> e", "RoutedEventArgs e", contents) # provisional - this class now translated.
   contents = re.sub ("ExecutedRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub ("CanExecuteRoutedEventArgs", "RoutedEventArgs", contents)
   contents = re.sub (" RoutedEventHandler ", " EventHandler<RoutedEventArgs> ", contents)
@@ -543,13 +543,14 @@ def translateProperties (contents):
     classname = match[5];
   contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7(\8), \9, coerce: \11); // T9A", contents)
 
-  # Deal with case with frameworkpropertymetadata with 6 arguments.
+  # Deal with case with frameworkpropertymetadata with 6 arguments. 
+  #FIXME: deal with parameters.
   pat = re.compile ("public static readonly DependencyProperty (.*?)(\s*)\=(\s*)DependencyProperty.Register\((.*?), typeof\((.*?)\), typeof\((.*?)\), new FrameworkPropertyMetadata\(([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?), ([^,\)]*?)\)\);")
   for match in re.findall (pat, contents):
     #print (match)
     commands += "\t\t\t" + match[0] + ".Changed.AddClassHandler<" + match[5] + ">(" + match[8] + ");\n"
     classname = match[5];
-  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T9", contents)
+  contents = re.sub (pat, r"public static readonly StyledProperty<\5> \1 = StyledProperty<\5>.Register<\6, \5>(\4, \7); // T9 FIXME", contents)
 
   
   # Direct properties
@@ -1182,7 +1183,7 @@ def translateTags (contents):
   contents = re.sub ("</xcad:DockingManager>", "</DockControl>", contents)
   contents = regex.sub (regex.compile ("gh:AvalonDockHelper.IsVisible=\".*?\"", regex.DOTALL), "", contents)
   
-  contents = re.sub ("Value=\"{sd:False}\"", 'Value="false"', contents)
+  #contents = re.sub ("Value=\"{sd:False}\"", 'Value="false"', contents) # not needed, fails in some cases.
   
   contents = re.sub ("TextSearch\.TextPath", 'TextSearch.Text', contents)
   
@@ -1278,6 +1279,8 @@ def translateTags (contents):
   # inputbindings
   contents = re.sub ("<Button.InputBindings>", r"", contents)
   contents = re.sub ("</Button.InputBindings>", r"", contents)
+
+  contents = re.sub ("IsSubmenuOpen", r"IsSubMenuOpen", contents)
   
   # menuitem
   contents = re.sub ("{x:Static MenuItem.SeparatorStyleKey}", r"MenuItem.SeparatorStyleKey", contents)
@@ -1412,6 +1415,9 @@ def translateTags (contents):
   # Control
   contents = re.sub ("Control.HorizontalContentAlignment}", "ContentControl.HorizontalContentAlignment}", contents)
   contents = re.sub ("Control.VerticalContentAlignment}", "ContentControl.VerticalContentAlignment}", contents)
+
+  contents = re.sub ("CommandTarget=", "CommandParameter=", contents)
+  contents = re.sub ("\"CommandTarget\"", '"CommandParameter"', contents)
   
   # Combobox
   contents = re.sub ("<ComboBox Theme=\"(.*?)\" Text=\"(.*?)\"", r'<ComboBox Theme="\1" PlaceholderText="\2"', contents)
@@ -2098,7 +2104,22 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/ValueConverters/EntityComponentToResource.cs")
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/View/AddEntityComponentUserControl.xaml.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/ListBoxHighlightedItemBehavior.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AbstractNodeEntryToType.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AbstractNodeEntryToType.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetPickerWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Extensions/ControlExtensions.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/NewProjectWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/NotificationWindow.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/HyperlinkCloseWindowBehavior.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemWindow.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Controls/PopupModalWindow.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/AddAssets/View/ItemTemplatesWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/PackagePickerWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/Components/FixAssetReferences/Views/FixAssetReferencesWindow.xaml.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/AssetViewModelToUrl.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/ValidationRoutedEvent.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragContainer.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragWindow.cs")
+translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragDropHelper.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -2146,6 +2167,13 @@ translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/ValueConverters/Abstract
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ModelAssetTemplateWindow.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/Templates/ProjectLibraryWindow.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/View/AddEntityComponentUserControl.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/AssetPickerWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/NewProjectWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/NotificationWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/TemplateDescriptions/Views/AddItemWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/AddAssets/View/ItemTemplatesWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/PackagePickerWindow.xaml")
+#translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/FixAssetReferences/Views/FixAssetReferencesWindow.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

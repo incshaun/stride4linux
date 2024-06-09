@@ -147,7 +147,9 @@ namespace Stride.Graphics
         /// <param name="format"></param>
         public void Resize(int width, int height, PixelFormat format)
         {
+#if STRIDE_GRAPHICS_API_OPENGL
             using (GraphicsDevice.UseOpenGLCreationContext())
+#endif            
             {
                 GraphicsDevice.Begin();
 

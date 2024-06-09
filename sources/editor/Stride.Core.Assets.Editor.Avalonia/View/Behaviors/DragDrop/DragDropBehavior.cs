@@ -21,6 +21,8 @@ using Stride.Core.Translation;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using Stride.Core.Presentation.Windows;
+using Avalonia.LogicalTree;
 
 namespace Stride.Core.Assets.Editor.View.Behaviors
 {
@@ -185,22 +187,27 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 
         private void SubscribeToDragEvents()
         {
-//             AssociatedObject.PreviewMouseLeftButtonDown += PreviewMouseLeftButtonDown;
-//             AssociatedObject.PreviewMouseMove += PreviewMouseMove;
-//             AssociatedObject.PreviewMouseUp += PreviewMouseUp;
+//             Console.WriteLine ("SubscribeToDragEvents " + AssociatedObject);
+            AssociatedObject.AddHandler (InputElement.PointerPressedEvent, PreviewMouseLeftButtonDown, handledEventsToo: true);
+            AssociatedObject.PointerMoved += PreviewMouseMove;
+            AssociatedObject.PointerReleased += PreviewMouseUp;
 //             if (UsePreviewEvents)
 //             {
 //                 AssociatedObject.PreviewDragLeave += OnDragLeave;
 //             }
 //             else
-//             {
+            {
+            AssociatedObject.AddHandler (DragDrop.DragLeaveEvent, OnDragLeave);
 //                 AssociatedObject.DragLeave += OnDragLeave;
-//             }
+            }
 //             AssociatedObject.GiveFeedback += OnGiveFeedback;
         }
 
         private void SubscribeToDropEvents()
         {
+            var p = (Control) (global::Avalonia.VisualTree.VisualExtensions.GetVisualParent<Window> (AssociatedObject));
+//             Console.WriteLine ("SubscribeToDropEvents " + p);
+//             Console.WriteLine ("SubscribeToDropEvents " + AssociatedObject);
 //             AssociatedObject.AllowDrop = true;
 //             if (UsePreviewEvents)
 //             {
@@ -209,6 +216,13 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 //             }
 //             else
 //             {
+            AssociatedObject.AddHandler (DragDrop.DropEvent, OnDrop);
+            AssociatedObject.AddHandler (DragDrop.DragOverEvent, OnDragOver);
+            if (p != null)
+            {
+            p.AddHandler (DragDrop.DropEvent, OnDrop);
+            p.AddHandler (DragDrop.DragOverEvent, OnDragOver);
+            }
 //                 AssociatedObject.Drop += OnDrop;
 //                 AssociatedObject.DragOver += OnDragOver;
 //             }
@@ -243,37 +257,52 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 //             }
         }
 
-//         protected DragDropEffects DoDragDrop(AvaloniaObject dragSource)
-//         {
-//             var data = InitializeDrag(DragStartOriginalSource);
-//             if (data == null)
+        private object draggedObject;
+        protected async void DoDragDrop(AvaloniaObject dragSource, PointerEventArgs e)
+        {
+//             Console.WriteLine ("DoDragDrop " + dragSource);
+            var data = InitializeDrag(DragStartOriginalSource);
+            if (data == null)
+                return;
 //                 return DragDropEffects.None;
-// 
-//             DragWindow = new DragWindow
-//             {
-//                 Content = new ContentControl { Content = data, ContentTemplate = DragVisualTemplate }
-//             };
-//             DragWindow.Show();
-// 
-//             try
-//             {
-//                 IsDragging = true;
-//                 return DragDrop.DoDragDrop(dragSource, new DataObject(DragContainer.Format, data), DragDropEffects.All);
-//             }
-//             catch (COMException)
-//             {
+//             Console.WriteLine ("DoDragDropB ");
+
+            DataObject dob = new DataObject ();
+            dob.Set (DragContainer.Format, data);
+            draggedObject = dob;
+            IsDragging = true;
+            return;
+            
+            DragWindow = new DragWindow
+            {
+                Content = new ContentControl { Content = data, ContentTemplate = DragVisualTemplate }
+            };
+            DragWindow.Show();
+
+            try
+            {
+//             Console.WriteLine ("DoDragDropC ");
+                var result = await DragDrop.DoDragDrop(e, dob, DragDropEffects.Copy);
+//             Console.WriteLine ("DoDragDropD " + result);
+            }
+            catch (COMException)
+            {
 //                 return DragDropEffects.None;
-//             }
-//             finally
-//             {
-//                 IsDragging = false;
-//                 if (DragWindow != null)
-//                 {
-//                     DragWindow.Close();
-//                     DragWindow = null;
-//                 }
-//             }
-//         }
+                return;
+            }
+            finally
+            {
+                IsDragging = false;
+                if (DragWindow != null)
+                {
+                    DragWindow.Close();
+                    DragWindow = null;
+//             Console.WriteLine ("DoDragDropE ");
+                    
+                }
+            }
+//             Console.WriteLine ("DoDragDropF ");
+        }
 
         [CanBeNull]
         protected virtual TContainer GetContainer(object source)
@@ -303,29 +332,31 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
         [NotNull]
         protected abstract IEnumerable<object> GetItemsToDrag(TContainer container);
 
-//         [CanBeNull]
-//         protected object InitializeDrag(object originalSource)
-//         {
-//             if (!CanDrag)
-//                 return null;
-// 
-//             if (!CanInitializeDrag(originalSource))
-//             {
-//                 return null;
-//             }
-//             object data = null;
-//             var container = GetContainer(originalSource);
-//             var itemsToDrag = GetItemsToDrag(container).ToList();
-//             if (itemsToDrag.Count > 0)
-//             {
-//                 var dragContainer = new DragContainer(itemsToDrag);
-//                 data = dragContainer;
-//             }
-//             return data;
-//         }
+        [CanBeNull]
+        protected object InitializeDrag(object originalSource)
+        {
+            if (!CanDrag)
+                return null;
+
+            if (!CanInitializeDrag(originalSource))
+            {
+                return null;
+            }
+            object data = null;
+            var container = GetContainer(originalSource);
+            var itemsToDrag = GetItemsToDrag(container).ToList();
+            if (itemsToDrag.Count > 0)
+            {
+                var dragContainer = new DragContainer(itemsToDrag);
+                data = dragContainer;
+            }
+            return data;
+        }
 
         protected bool OnDragLeave(IDataObject data)
         {
+//             Console.WriteLine ("OnDragLeave ");
+            
 //             // Invalidate current drag status
 //             var dragContainer = DragDropHelper.GetDragContainer(data);
 //             if (dragContainer != null)
@@ -351,8 +382,10 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
             return true;
         }
 
-//         protected bool OnDragOver(TContainer container, Point position, IDataObject data, [NotNull] RoutedEventArgs e)
-//         {
+        protected bool OnDragOver(TContainer container, Point position, IDataObject data, [NotNull] RoutedEventArgs e)
+        {
+//             Console.WriteLine ("OnDragOver ");
+            
 //             var dragContainer = DragDropHelper.GetDragContainer(data);
 //             DragDropAdornerManager.ClearInsertAdorner();
 // 
@@ -418,11 +451,12 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 //                 return isAccepted;
 //             }
 // 
-//             return false;
-//         }
+            return false;
+        }
 
         protected bool OnDrop(TContainer container, Point position, IDataObject data, RoutedEventArgs e)
         {
+//             Console.WriteLine ("OnDrop ");
 //             DragDropAdornerManager.ClearInsertAdorner();
 // 
 //             if (DragWindow != null)
@@ -475,31 +509,128 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
             return true;
         }
 
-//         private void PreviewMouseUp(object sender, [NotNull] MouseButtonEventArgs e)
-//         {
-//             DragStartPoint = e.GetPosition(AssociatedObject);
-//             DragStartOriginalSource = null;
-//         }
-// 
-//         private void PreviewMouseLeftButtonDown(object sender, [NotNull] MouseButtonEventArgs e)
-//         {
-//             DragStartPoint = e.GetPosition(AssociatedObject);
-//             DragStartOriginalSource = e.OriginalSource;
-//         }
-// 
-//         private void PreviewMouseMove(object sender, [NotNull] MouseEventArgs e)
-//         {
-//             // Note: it is possible that multiple controls could sent an event during the same frame (e.g. a ContentControl and its content).
-//             // The drag drop operation could be triggered by the first event so we need to prevent any subsequent event from trigerring another operation.
-//             if (IsDragging || e.LeftButton != MouseButtonState.Pressed || DragStartOriginalSource == null)
-//                 return;
-// 
-//             var delta = e.GetPosition(AssociatedObject) - DragStartPoint;
-//             if (Math.Abs(delta.X) >= SystemParameters.MinimumHorizontalDragDistance || Math.Abs(delta.Y) >= SystemParameters.MinimumVerticalDragDistance)
-//             {
-//                 DoDragDrop((DependencyObject)sender);
-//             }
-//         }
+        protected bool OnDropSub (TContainer container, Point position)
+        {
+//             Console.WriteLine ("OnDropSub ");
+            if (CanInsert)
+            {
+//             Console.WriteLine ("OnDropSub CanInsert");
+                // Check if we can drop and if we have a valid target.
+                InsertPosition insertPosition;
+                var target = GetInsertTargetItem(container, position, out insertPosition);
+                if (target != null)
+                {
+                    IDataObject data = (IDataObject) draggedObject;
+                    var dragContainer = DragDropHelper.GetDragContainer(data);
+                    var itemsToDrop = DragDropHelper.GetItemsToDrop(dragContainer, data as DataObject);
+                    string message;
+
+                    if (itemsToDrop != null && target.CanInsertChildren(itemsToDrop, insertPosition, ComputeModifiers(), out message))
+                    {
+                        target.InsertChildren(itemsToDrop, insertPosition, ComputeModifiers());
+//                         if (e != null) e.Handled = true;
+                        return true;
+                    }
+                }
+            }
+
+            if (CanDrop)
+            {
+//             Console.WriteLine ("OnDropSub CanDrop");
+                // Check if we can drop and if we have a valid target.
+                var rootWindow = TopLevel.GetTopLevel (AssociatedObject);
+                if (rootWindow == null)
+                    return false;
+//             Console.WriteLine ("OnDropSub root " + rootWindow + " - " + position);
+
+                var objectAtPointer = global::Avalonia.VisualTree.VisualExtensions.GetVisualAt (rootWindow, position);
+                if (objectAtPointer == null)
+                {
+                    return false;
+                }
+                IAddChildViewModel target = null;
+                foreach (Visual v in global::Avalonia.VisualTree.VisualExtensions.GetVisualAncestors (objectAtPointer))
+                {
+                    target = v?.DataContext as IAddChildViewModel;
+                    if (target != null)
+                    {
+                        break;
+                    }
+                }
+//             Console.WriteLine ("OnDropSub targetarget " + target);
+//                 var target = GetDropTargetItem(container);
+//             Console.WriteLine ("OnDropSub target " + target);
+                if (target == null)
+                    return false;
+
+                IDataObject data = (IDataObject) draggedObject;
+                var dragContainer = DragDropHelper.GetDragContainer(data);
+                var itemsToDrop = DragDropHelper.GetItemsToDrop(dragContainer, data as DataObject);
+                string message;
+
+//             Console.WriteLine ("OnDropSub targetB " + target + " - " + dragContainer + " - " + itemsToDrop);
+                if (itemsToDrop != null && target.CanAddChildren(itemsToDrop, ComputeModifiers(), out message))
+                {
+//             Console.WriteLine ("OnDropSub targetC " + message);
+                    target.AddChildren(itemsToDrop, ComputeModifiers());
+                }
+            }
+
+            return true;
+        }
+
+        private void PreviewMouseUp(object sender, [NotNull] PointerReleasedEventArgs e)
+        {
+//             Console.WriteLine ("MouseUp");
+            
+            if (IsDragging)
+            {
+               var container = GetContainer(e.Source);
+//                Console.WriteLine ("MouseUpA " + container);
+               if (container == null)
+                   return;
+                if (CanDrag)
+                {
+//                     OnDragLeaveSub ();
+                }
+                if (CanDrop)
+                {
+//                     Console.WriteLine ("MouseUpB " + e.GetPosition(container));
+                    var rootWindow = TopLevel.GetTopLevel (AssociatedObject);
+                    OnDropSub (container, e.GetPosition(rootWindow));
+                }
+                IsDragging = false;
+            }
+            
+            DragStartPoint = e.GetPosition(AssociatedObject);
+            DragStartOriginalSource = null;
+        }
+
+        private void PreviewMouseLeftButtonDown(object sender, [NotNull] PointerPressedEventArgs e)
+        {
+//             Console.WriteLine ("MouseDown");
+            DragStartPoint = e.GetPosition(AssociatedObject);
+            DragStartOriginalSource = e.Source;
+        }
+
+        private void PreviewMouseMove(object sender, [NotNull] PointerEventArgs e)
+        {
+//   var rootWindow = TopLevel.GetTopLevel (AssociatedObject);
+//   Console.WriteLine ("MouseMove " + e.GetPosition(rootWindow));
+//             Console.WriteLine ("MouseMoveA " + IsDragging + " - " + e.GetCurrentPoint((Control)sender).Properties.IsLeftButtonPressed + " - " + (DragStartOriginalSource == null));
+            // Note: it is possible that multiple controls could sent an event during the same frame (e.g. a ContentControl and its content).
+            // The drag drop operation could be triggered by the first event so we need to prevent any subsequent event from trigerring another operation.
+            if (IsDragging || !e.GetCurrentPoint((Control)sender).Properties.IsLeftButtonPressed || DragStartOriginalSource == null)
+                return;
+
+            var delta = e.GetPosition(AssociatedObject) - DragStartPoint;
+//             Console.WriteLine ("MouseMove " + delta);
+      
+            if (Math.Abs(delta.X) >= SystemParameters.MinimumHorizontalDragDistance || Math.Abs(delta.Y) >= SystemParameters.MinimumVerticalDragDistance)
+            {
+                DoDragDrop((AvaloniaObject)sender, e);
+            }
+        }
 
 //         private void OnGiveFeedback(object sender, GiveFeedbackEventArgs e)
 //         {
@@ -526,6 +657,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 
         private void OnDragOver(object sender, [NotNull] DragEventArgs e)
         {
+//             Console.WriteLine ("OnDragOverX ");
 //             e.Effects = DragDropEffects.None;
 // 
 //             // Check if we can drop and if we have a valid target.
@@ -541,6 +673,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 
         private void OnDrop(object sender, [NotNull] DragEventArgs e)
         {
+//             Console.WriteLine ("OnDropX ");
 //             var container = GetContainer(e.OriginalSource);
 //             if (container == null)
 //                 return;
@@ -550,19 +683,20 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
 
         private void OnDragLeave(object sender, [NotNull] DragEventArgs e)
         {
+//             Console.WriteLine ("OnDragLeaveX ");
             OnDragLeave(e.Data);
         }
 
-//         private static AddChildModifiers ComputeModifiers()
-//         {
-//             var modifiers = AddChildModifiers.None;
+        private static AddChildModifiers ComputeModifiers()
+        {
+            var modifiers = AddChildModifiers.None;
 //             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
 //                 modifiers |= AddChildModifiers.Ctrl;
 //             if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
 //                 modifiers |= AddChildModifiers.Shift;
 //             if ((Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
 //                 modifiers |= AddChildModifiers.Alt;
-//             return modifiers;
-//         }
+            return modifiers;
+        }
     }
 }

@@ -22,6 +22,7 @@ using Silk.NET.SDL;
 using WindowState = Stride.Graphics.SDL.FormWindowState;
 #endif
 
+using Stride.Core.Serialization.Contents;
 namespace Stride.Graphics
 {
     /// <summary>
@@ -88,7 +89,12 @@ namespace Stride.Graphics
         private static GraphicsDevice _currentGraphicsDevice = null;
 
         [ThreadStatic] private static List<GraphicsDevice> _graphicsDevicesInUse;
-
+        
+         static GraphicsDevice ()
+        {
+            createLockContext = LockUseOpenGLCreationContext;
+        }
+        
         public static GraphicsDevice Current
         {
             get
@@ -96,7 +102,7 @@ namespace Stride.Graphics
                 if (_graphicsDevicesInUse != null && _graphicsDevicesInUse.Count > 0)
                     return _graphicsDevicesInUse[_graphicsDevicesInUse.Count - 1];
 
-                Console.WriteLine ("Current context ... " + __makeref (_currentGraphicsDevice).GetHashCode () + " " + _currentGraphicsDevice.CurrentGraphicsContext);
+//                 Console.WriteLine ("Current context ... " + __makeref (_currentGraphicsDevice).GetHashCode () + " " + _currentGraphicsDevice.CurrentGraphicsContext);
                 return _currentGraphicsDevice;
             }
 
@@ -176,6 +182,10 @@ namespace Stride.Graphics
                 _graphicsDevicesInUse = null;
         }
 
+        public static IDisposable LockUseOpenGLCreationContext(GraphicsDevice d)
+        {
+            return new UseOpenGLCreationContext(d);
+        }
         public UseOpenGLCreationContext UseOpenGLCreationContext()
         {
             return new UseOpenGLCreationContext(this);
@@ -300,10 +310,17 @@ namespace Stride.Graphics
                 "}                                                   \n";
 
             // First initialization of shader program
+// Console.WriteLine ("DOTNET CreateCopyProgarm - Create Program A " + CurrentGraphicsContext);
             var vertexShader = TryCompileShader(ShaderType.VertexShader, copyVertexShaderSource);
+// Console.WriteLine ("DOTNET CreateCopyProgarm - Create Program B " + CurrentGraphicsContext);
             var fragmentShader = TryCompileShader(ShaderType.FragmentShader, srgb ? copyFragmentShaderSourceSRgb : copyFragmentShaderSource);
 
+//             Console.WriteLine ("DOTNET CreateCopyProgarm - Create Program C " + CurrentGraphicsContext);
+            using (UseOpenGLCreationContext())
+            {
             var program = GL.CreateProgram();
+// Console.WriteLine ("DOTNET CreateCopyProgarm - Create Program " + program + " - " + CurrentGraphicsContext);
+            
             GL.AttachShader(program, vertexShader);
             GL.AttachShader(program, fragmentShader);
             GL.BindAttribLocation(program, 0, "aPosition");
@@ -315,6 +332,8 @@ namespace Stride.Graphics
             if (linkStatus != 1)
                 throw new InvalidOperationException("Error while linking GLSL shaders.");
 
+// Console.WriteLine ("DOTNET CreateCopyProgram Program " + program);
+            
             GL.UseProgram(program);
             var textureLocation = GL.GetUniformLocation(program, "s_texture");
             offsetLocation = GL.GetUniformLocation(program, "uOffset");
@@ -322,6 +341,7 @@ namespace Stride.Graphics
             GL.Uniform1(textureLocation, 0);
 
             return program;
+            }
         }
 
         public void EnableProfile(bool enabledFlag)
@@ -599,19 +619,25 @@ namespace Stride.Graphics
 #if DEBUG
             EnsureContextActive();
 #endif
+            using (UseOpenGLCreationContext())
+            {
+//             Console.WriteLine ("DOTNET TryCompileShader A " + shaderType + " - " + CurrentGraphicsContext + " - " + sourceCode);
 
             var shaderGL = GL.CreateShader(shaderType);
+//             Console.WriteLine ("DOTNET TryCompileShader B " + shaderType);
             GL.ShaderSource(shaderGL, sourceCode);
+//             Console.WriteLine ("DOTNET TryCompileShader C " + shaderType);
             GL.CompileShader(shaderGL);
 
             var log = GL.GetShaderInfoLog(shaderGL);
+//             Console.WriteLine ("DOTNET TryCompileShader D " + shaderType + " " + log);
 
             GL.GetShader(shaderGL, ShaderParameterName.CompileStatus, out var compileStatus);
-
+//             Console.WriteLine ("DOTNET TryCompileShader D " + shaderType + " " + log + " - " + compileStatus);
             if (compileStatus != 1)
                 throw new InvalidOperationException("Error while compiling GLSL shader: \n" + log);
-
             return shaderGL;
+            }
         }
 
         internal static void UnbindGraphicsContext(IGLContext graphicsContext)
@@ -621,6 +647,7 @@ namespace Stride.Graphics
 
         private void OnApplicationPaused(object sender, EventArgs e)
         {
+//             Console.WriteLine ("Stride OnApplicationPaused");
 #if DEBUG
             EnsureContextActive();
 #endif
@@ -689,7 +716,6 @@ namespace Stride.Graphics
             //gameWindow.Load += OnApplicationResumed;
             //gameWindow.Unload += OnApplicationPaused;
 #endif
-
 #if STRIDE_UI_SDL
             if (windowHandle != null)
             {
@@ -701,7 +727,7 @@ namespace Stride.Graphics
             }
 
             var SDL = Graphics.SDL.Window.SDL;
-
+        
 #if STRIDE_GRAPHICS_API_OPENGLES
             SDL.GLSetAttribute(GLattr.GLContextProfileMask, (int)GLprofile.GLContextProfileES);
 #else
@@ -725,18 +751,84 @@ namespace Stride.Graphics
 
             // The context must be made current to initialize OpenGL
             MainGraphicsContext.MakeCurrent();
+
 #else
 #error Creating context is only implemented for SDL
 #endif
 
             // Create shared context for creating graphics resources from other threads
             SDL.GLSetAttribute(GLattr.GLShareWithCurrentContext, 1);
+//             AA v = new AA (MainGraphicsContext);
+// //            var AgameWindow = new Stride.Graphics.SDL.Window ("SDL2 Window", IntPtr.Zero);
+// Console.WriteLine ("DOTNET InitializePlatformDevice W " + MainGraphicsContext + " " + v);                        
             deviceCreationContext = new SdlContext(SDL, (Silk.NET.SDL.Window*)gameWindow.SdlHandle);
             ((SdlContext)deviceCreationContext).Create();
 
+            
             MainGraphicsContext.MakeCurrent();
 
             GL = GL.GetApi(MainGraphicsContext);
+            
+// Console.WriteLine ("DOTNET InitializePlatformDevice X ");                        
+// Console.WriteLine ("DOTNET InitializePlatformDevice X " + deviceCreationContext + " - " + MainGraphicsContext);                        
+// Console.WriteLine ("DOTNET InitializePlatformDevice X " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError ());                        
+// System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
+// Console.WriteLine ("DOTNET InitializePlatformDevice X " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread);                        
+// Console.WriteLine ("DOTNET InitializePlatformDevice X " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId);                        
+// Console.WriteLine ("DOTNET InitializePlatformDevice X " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// Console.WriteLine ("DOTNET InitializePlatformDevice A " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+//             MainGraphicsContext.MakeCurrent();
+// Console.WriteLine ("DOTNET InitializePlatformDevice B " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId);                        
+// //             deviceCreationContext.MakeCurrent();
+// 
+// Console.WriteLine ("DOTNET InitializePlatformDevice C " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+//             MainGraphicsContext.MakeCurrent();
+// Console.WriteLine ("DOTNET InitializePlatformDevice D " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// //             deviceCreationContext.MakeCurrent();
+// Console.WriteLine ("DOTNET InitializePlatformDevice D1 " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+//             MainGraphicsContext.MakeCurrent();
+// Console.WriteLine ("DOTNET InitializePlatformDevice D2 " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// //             deviceCreationContext.Clear();
+//             MainGraphicsContext.Clear();
+// Console.WriteLine ("DOTNET InitializePlatformDevice E " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ()); 
+// bool ready = false;
+// new System.Threading.Thread(() => 
+// {
+//  //   System.Threading.Thread.CurrentThread.IsBackground = true; 
+// System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
+//     /* run your code here */ 
+//     Console.WriteLine("Hello, world"); 
+// Console.WriteLine ("DOTNET InitializePlatformDevice FA " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// //             MainGraphicsContext.Clear();
+// //             deviceCreationContext.Clear();
+// Console.WriteLine ("DOTNET InitializePlatformDevice FB " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+//             deviceCreationContext.MakeCurrent();
+// Console.WriteLine ("DOTNET InitializePlatformDevice FC " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode () + " - "/* + BitConverter.ToString(Graphics.SDL.Window.SDL.GetError ())*/);
+// //             deviceCreationContext.Clear();
+// //              MainGraphicsContext.MakeCurrent();
+// Console.WriteLine ("DOTNET InitializePlatformDevice FD " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// //             MainGraphicsContext.Clear();
+//             while (true)
+//             {
+//                 ready = true;
+//                 if (ContentManager.aaa != null)
+//                 {
+// //             deviceCreationContext.MakeCurrent();
+// Console.WriteLine ("DOTNET InitializePlatformDevice FDA " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+//                     ContentManager.aaa ();
+// Console.WriteLine ("DOTNET InitializePlatformDevice FDB " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// //             deviceCreationContext.Clear();
+//                     ContentManager.aaa = null;
+//                 }
+//             }
+// Console.WriteLine ("DOTNET InitializePlatformDevice FE " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// }).Start();
+// Console.WriteLine ("DOTNET InitializePlatformDevice F " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// Console.WriteLine ("DOTNET InitializePlatformDevice G " + deviceCreationContext + " - " + MainGraphicsContext + " " + GL.GetError () + " - " + thread.ManagedThreadId + " - " + CurrentGraphicsContext + " - " + CurrentGraphicsContext.GetHashCode ());                        
+// //             
+// while (!ready);
+//             MainGraphicsContext.MakeCurrent(); // not working if this is used.
+            
 #if STRIDE_GRAPHICS_API_OPENGLES
             GLExtDisjointTimerQuery = new ExtDisjointTimerQuery(MainGraphicsContext);
 #endif
@@ -747,16 +839,21 @@ namespace Stride.Graphics
 
         private unsafe void InitializePostFeatures()
         {
+// Console.WriteLine ("DOTNET InitializePostFeatures A " + CurrentGraphicsContext);            
+            
             using (UseOpenGLCreationContext ())
             {
+// Console.WriteLine ("DOTNET InitializePostFeatures B");            
                 deviceCreationContext.MakeCurrent();
                 GL.GenVertexArrays(1, out defaultVAO);
                 GL.BindVertexArray(defaultVAO);
+// Console.WriteLine ("DOTNET InitializePostFeatures C" + defaultVAO);            
 
                 // Create and bind default VAO
                 MainGraphicsContext.MakeCurrent();
                 GL.GenVertexArrays(1, out defaultVAO);
                 GL.BindVertexArray(defaultVAO);
+// Console.WriteLine ("DOTNET InitializePostFeatures D" + defaultVAO);            
 
                 // Save current FBO aside
                 GL.GetInteger(GetPName.DrawFramebufferBinding, out var boundFBO);

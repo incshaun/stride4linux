@@ -1,0 +1,103 @@
+<sd:ModalWindow x:Class="Stride.Core.Assets.Editor.View.AssetPickerWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
+        xmlns:view="clr-namespace:Stride.Core.Assets.Editor.View"
+        xmlns:behaviors="clr-namespace:Stride.Core.Assets.Editor.View.Behaviors"
+        xmlns:valueConverters="clr-namespace:Stride.Core.Assets.Editor.View.ValueConverters"
+        xmlns:viewModel="clr-namespace:Stride.Core.Assets.Editor.ViewModel;assembly=Stride.Core.Assets.Editor"
+        mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
+        ShowInTaskbar="False"
+        Title="{sd:Localize Select an asset}"
+        Height="768" Width="1024" Theme="{DynamicResource WindowChromeStyle}"
+       >
+	<Design.DataContext>
+		<view:AssetPickerWindow />
+	</Design.DataContext>
+  <sd:ModalWindow.Resources>
+    <ResourceDictionary>
+      <!-- MERGED DICTIONARIES: IMAGE DICTIONARY, PROPERTY GRID VIEWS -->
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="CommonResources.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      <ContextMenu x:Key="AssetContextMenu">
+	<Design.DataContext>
+		<viewModel:AssetCollectionViewModel />
+	</Design.DataContext>
+        <MenuItem Header="{sd:Localize Asset, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Icon="{sd:Image {StaticResource ImageDelete}}"
+                  Command="{x:Static sd:ApplicationCommands.Delete}"/>
+<!--        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Icon="{sd:Image {StaticResource ImageDelete}}"
+                  Command="{x:Static sd:ApplicationCommands.Delete}" CommandTarget="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"/>-->
+<!--        <MenuItem Header="{sd:Localize Rename, Context=Menu}" Icon="{sd:Image {StaticResource ImageRename}}"
+                  Command="view:AssetViewUserControl.BeginEditCommand"/>-->
+        <MenuItem Header="{sd:Localize Explore, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
+        <MenuItem Header="{sd:Localize OpenWithTextEditor, Context=Menu}" Icon="{sd:Image {StaticResource ImageOpenWithTextEditor}}"
+                  Command="{Binding Session.OpenWithTextEditorCommand}" CommandParameter="{Binding SingleSelectedAsset}"/>
+        <MenuItem Header="{sd:Localize OpenAssetFile, Context=Menu}" Icon="{sd:Image {StaticResource ImageOpenAssetFile}}"
+                  Command="{Binding Session.OpenAssetFileCommand}" CommandParameter="{Binding SingleSelectedAsset}"/>
+        <MenuItem Header="{sd:Localize OpenSourceFile, Context=Menu}" Icon="{sd:Image {StaticResource ImageOpenSourceFile}}"
+                  Command="{Binding Session.OpenSourceFileCommand}" CommandParameter="{Binding SingleSelectedAsset}"/>
+        <MenuItem Header="{sd:Localize ShowInExplorer, Context=Menu}" Icon="{sd:Image {StaticResource ImageExplore}}"
+                  Command="{Binding Session.ExploreCommand}" CommandParameter="{Binding SelectedContent}"/>
+      </ContextMenu>
+
+    </ResourceDictionary>
+  </sd:ModalWindow.Resources>
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Bottom" Margin="20" HorizontalAlignment="Right" Orientation="Horizontal">
+      <sd:MarkdownTextBlock Text="{Binding Message, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}"
+                              VerticalAlignment="Center" />
+      <UniformGrid Rows="1">
+        <Button Margin="10,0,0,0" Padding="20,4" Content="{sd:Localize OK, Context=Button}" ToolTip.Tip="{sd:Localize Select these assets, Context=ToolTip}">
+          <i:Interaction.Behaviors>
+            <sd:ButtonCloseWindowBehavior DialogResult="Ok"/>
+          </i:Interaction.Behaviors>
+        </Button>
+        <Button Margin="10,0,0,0" Padding="20,4" Content="{sd:Localize Cancel, Context=Button}" IsCancel="True" ToolTip.Tip="{sd:Localize Cancel (Esc), Context=ToolTip}">
+          <i:Interaction.Behaviors>
+            <sd:ButtonCloseWindowBehavior DialogResult="Cancel"/>
+          </i:Interaction.Behaviors>
+        </Button>
+      </UniformGrid>
+    </StackPanel>
+
+    <Grid Margin="20">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="2*"/>
+      </Grid.ColumnDefinitions>
+
+      <sd:TreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values}" IsVirtualizing="False">
+        <i:Interaction.Behaviors>
+          <behaviors:TreeViewAutoExpandBehavior/>
+          <behaviors:TreeViewBindableSelectedItemsBehavior SelectedItems="{Binding AssetView.SelectedLocations, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}"/>
+        </i:Interaction.Behaviors>
+        <sd:TreeView.ItemContainerTheme>
+          <ControlTheme TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}" >
+<!--             <Setter Property="IsExpanded" Value="{Binding Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}, Converter={valueConverters:AssetToExpandedAtInitialization}, ConverterParameter={sd:Int 1}}"/> -->
+          </ControlTheme>
+        </sd:TreeView.ItemContainerTheme>
+        <sd:TreeView.DataTemplates>
+                                <StaticResource ResourceKey="AssetMountPointTemplate"></StaticResource>
+                                <StaticResource ResourceKey="DirectoryTemplate"></StaticResource>
+                                <StaticResource ResourceKey="DependencyCategoryTemplate"></StaticResource>
+                                <StaticResource ResourceKey="ProjectTemplate"></StaticResource>
+                                <StaticResource ResourceKey="ProjectCodeTemplate"></StaticResource>
+                                <StaticResource ResourceKey="PackageReferenceTemplate"></StaticResource>
+                                <StaticResource ResourceKey="PackageTemplate"></StaticResource>
+        </sd:TreeView.DataTemplates>
+      </sd:TreeView>
+
+      <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
+ 
+      <view:AssetViewUserControl Grid.Column="2" AssetCollection="{Binding AssetView, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}" CanEditAssets="True" CanDeleteAssets="True"
+                                 AssetDoubleClick="{Binding AssetDoubleClickCommand, RelativeSource={RelativeSource AncestorType={x:Type view:AssetPickerWindow}}}" AssetContextMenu="{StaticResource AssetContextMenu}" />
+    </Grid>
+  </DockPanel>
+</sd:ModalWindow>

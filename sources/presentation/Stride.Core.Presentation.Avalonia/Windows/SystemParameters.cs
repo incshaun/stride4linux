@@ -7,5 +7,7 @@ namespace Stride.Core.Presentation.Windows
     {
         public static double VerticalScrollBarWidthKey = 10.0;
         public static double HorizontalScrollBarHeightKey = 10.0;
+        public static double MinimumHorizontalDragDistance = 10.0;
+        public static double MinimumVerticalDragDistance = 10.0;
     }
 }

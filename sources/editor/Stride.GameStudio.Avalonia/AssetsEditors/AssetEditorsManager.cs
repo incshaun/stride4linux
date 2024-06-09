@@ -29,6 +29,7 @@ using Avalonia.Data;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Dock.Model.Avalonia.Controls;
+using Dock.Model.Core.Events;
 
 namespace Stride.GameStudio.Avalonia.AssetsEditors
 {
@@ -312,6 +313,7 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
                         {
                             //editorPane = new LayoutAnchorable { CanClose = true };
                             editorPane = new LayoutAnchorable { Title = asset.Url, Content = view };
+                        
                             //                    editorPane.AttachDevTools();
                             // Stack the asset in the dictionary of editor to prevent double-opening while double-clicking twice on the asset, since the initialization is async
                             //                        AvalonDockHelper.GetDocumentPane(dockingLayoutManager.DockingManager).Children.Add(editorPane);
@@ -343,7 +345,7 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
                         //                   editorPane.IsSelectedChanged += EditorPaneIsSelectedChanged;
      //                   editorPane.Factory.ActiveDockableChanged += EditorPaneIsActiveChanged;
      //                   editorPane.Factory.WindowClosing += EditorPaneClosing;
-     //                   editorPane.Factory.DockableClosed += EditorPaneClosed;
+                        dockparentpane.Factory.DockableClosed += EditorPaneClosed;
                         // Make the pane visible immediately
                         MakeActiveVisible(editorPane);
                         // Initialize the editor view
@@ -591,8 +593,11 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
 //             editorPane.Closing -= EditorPaneClosing;
 //             editorPane.Closed -= EditorPaneClosed;
 
-            editorPane.Factory.WindowClosing -= EditorPaneClosing;
-            editorPane.Factory.DockableClosed -= EditorPaneClosed;
+//            editorPane.Factory.WindowClosing -= EditorPaneClosing;
+//            editorPane.Factory.DockableClosed -= EditorPaneClosed;
+            var dockparentpane = (LayoutAnchorablePane) dockingLayoutManager.DockingManager.Factory.FindDockable(dockingLayoutManager.DockingManager.Layout, p => p.Title == "AnchorablePane");
+            dockparentpane.Factory.DockableClosed -= EditorPaneClosed;
+
             
             // If this editor pane was closed by user, no need to do that; it is necessary for closing programmatically
 //             if (editorPane.Root != null)
@@ -612,9 +617,9 @@ namespace Stride.GameStudio.Avalonia.AssetsEditors
             }
         }
 
-        private void EditorPaneClosed(object sender, EventArgs eventArgs)
+        private void EditorPaneClosed(object sender, DockableClosedEventArgs eventArgs)
         {
-            var editorPane = (LayoutAnchorable)sender;
+            var editorPane = (LayoutAnchorable)eventArgs.Dockable;
 
             var element = editorPane.Content as Control;
             if (element?.DataContext is AssetEditorViewModel editor)

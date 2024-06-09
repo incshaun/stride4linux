@@ -99,7 +99,7 @@ namespace Stride.Graphics
 
         public void Clear(Texture depthStencilBuffer, DepthStencilClearOptions options, float depth = 1, byte stencil = 0)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {            
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
@@ -282,11 +282,11 @@ if (!init)
 //         GL.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
 //         GL.BindBuffer(BufferTargetARB.ElementArrayBuffer, 0);
          
-/*
-                GL.DetachShader(_program, vertexShader);
-       GL.DetachShader(_program, fragmentShader);
-       GL.DeleteShader(vertexShader);
-       GL.DeleteShader(fragmentShader);*/
+
+//                GL.DetachShader(_program, vertexShader);
+//       GL.DetachShader(_program, fragmentShader);
+//       GL.DeleteShader(vertexShader);
+//       GL.DeleteShader(fragmentShader);
         
         }
 
@@ -636,6 +636,10 @@ if (!init)
 
         internal unsafe void CopyScaler2D(Texture sourceTexture, Texture destTexture, Rectangle sourceRectangle, Rectangle destRectangle, bool flipY = false)
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
             // Use rendering
             GL.Viewport(0, 0, (uint)destTexture.Description.Width, (uint)destTexture.Description.Height);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, GraphicsDevice.FindOrCreateFBO(destTexture));
@@ -680,6 +684,8 @@ if (!init)
             int offsetLocation, scaleLocation;
             var program = GraphicsDevice.GetCopyProgram(needSRgbConversion, out offsetLocation, out scaleLocation);
 
+// Console.WriteLine ("DOTNET CopyScaler2D Program " + program);
+            
             GL.UseProgram(program);
 
             activeTexture = 0;
@@ -701,6 +707,7 @@ if (!init)
             GL.Uniform4(scaleLocation, sourceScale.X, sourceScale.Y, destScale.X, destScale.Y);
             GL.Viewport(0, 0, (uint)destTexture.Width, (uint)destTexture.Height);
             GL.DrawArrays(PrimitiveTypeGl.TriangleStrip, 0, 4);
+// Console.WriteLine ("DOTNET CopyScaler2D B Program " + boundProgram);
             GL.UseProgram(boundProgram);
 
             // Restore context
@@ -721,6 +728,10 @@ if (!init)
 
         internal unsafe void CopyScaler2D(Texture sourceTexture, Rectangle sourceRectangle, Rectangle destRectangle, bool needSRgbConversion = false, bool flipY = false)
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
             // Use rendering
             GL.Viewport(0, 0, (uint)sourceTexture.Description.Width, (uint)sourceTexture.Description.Height);
 
@@ -757,6 +768,7 @@ if (!init)
             int offsetLocation, scaleLocation;
             var program = GraphicsDevice.GetCopyProgram(needSRgbConversion, out offsetLocation, out scaleLocation);
 
+// Console.WriteLine ("DOTNET CopyScaler2D C Program " + program);
             GL.UseProgram(program);
 
             activeTexture = 0;
@@ -778,6 +790,7 @@ if (!init)
             GL.Uniform4(scaleLocation, sourceScale.X, sourceScale.Y, destScale.X, destScale.Y);
             GL.Viewport(0, 0, (uint)sourceTexture.Width, (uint)sourceTexture.Height);
             GL.DrawArrays(PrimitiveTypeGl.TriangleStrip, 0, 4);
+// Console.WriteLine ("DOTNET CopyScaler2D E Program " + boundProgram);
             GL.UseProgram(boundProgram);
 
             // Restore context
@@ -814,12 +827,19 @@ if (!init)
             // Copy each subresource
             for (int i = 0; i < subresourceCount; ++i)
             {
-                CopyRegion(source, i, null, destination, i);
+                using (GraphicsDevice.UseOpenGLCreationContext ())
+                {
+                    CopyRegion(source, i, null, destination, i);
+                }
             }
         }
 
         public void CopyMultisample(Texture sourceMultisampleTexture, int sourceSubResource, Texture destTexture, int destSubResource, PixelFormat format = PixelFormat.None)
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
             // Check if the source and destination are compatible:
             if (sourceMultisampleTexture.Width != destTexture.Width &&
                 sourceMultisampleTexture.Height != destTexture.Height &&
@@ -945,23 +965,130 @@ if (!init)
         /// <param name="baseVertexLocation">A value added to each index before reading a vertex from the vertex buffer.</param>
         public unsafe void DrawIndexed(int indexCount, int startIndexLocation = 0, int baseVertexLocation = 0)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+// Console.WriteLine ("DOTNET CommandList DrawIndexed A " + GraphicsDevice.CurrentGraphicsContext);            
+            
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {
+// Console.WriteLine ("DOTNET CommandList DrawIndexed B");            
 #if DEBUG
+// Console.WriteLine ("DOTNET CommandList DrawIndexed C");            
             GraphicsDevice.EnsureContextActive();
 #endif
+//Console.WriteLine ("DrawIndexed A ");
+// Console.WriteLine ("DOTNET CommandList DrawIndexed D");            
+            
             PreDraw();
+//Console.WriteLine ("DrawIndexed B ");
 
 #if STRIDE_GRAPHICS_API_OPENGLES
+// Console.WriteLine ("DOTNET CommandList DrawIndexed E " + newPipelineState.PrimitiveType + " - " + baseVertexLocation + " - " + indexCount + " - " + indexBuffer.Type + " - " + indexBuffer.Offset + " - " + startIndexLocation + " - " + indexBuffer.ElementSize + " - context=" + GraphicsDevice.CurrentGraphicsContext);            
+            
             if (baseVertexLocation != 0)
                 throw new NotSupportedException("DrawIndexed with no null baseVertexLocation is not supported on OpenGL ES.");
+           
+                // These two lines seem to make the difference - looks like an issue with creating the vertex array.
+//                 uint _vao = GL.GenVertexArray();
+//         GL.BindVertexArray(1);     
+        
+        
+//         GL.BindVertexArray(1);     
+        // The quad vertices data.
+//         float[] vertices =
+//         {
+//             0.5f,  0.5f, 0.0f,
+//             100.5f, -0.5f, 0.0f,
+//             -0.5f, -0.5f, 0.0f,
+//             -0.5f,  100.5f, 0.0f
+//         };
+// 
+//         // Create the VBO.
+//         _vbo = GL.GenBuffer();
+//         GL.BindBuffer(BufferTargetARB.ArrayBuffer, _vbo);
+// 
+//         // Upload the vertices data to the VBO.
+//          fixed (float* buf = vertices)GL.BufferData(BufferTargetARB.ArrayBuffer, (nuint) (vertices.Length * sizeof(float)), buf, BufferUsageARB.StaticDraw);
+
+//         The quad indices data.
+//         ushort[] indices =
+//         {
+//             0, 1, 3,
+//             1, 2, 3
+//         };
+// 
+//         // Create the EBO.
+//         _ebo = GL.GenBuffer();
+//         GL.BindBuffer(BufferTargetARB.ElementArrayBuffer, _ebo);
+
+        // Upload the indices data to the EBO.
+//         fixed (ushort* buf = indices)GL.BufferData(BufferTargetARB.ElementArrayBuffer, (nuint) (indices.Length * sizeof(ushort)), buf, BufferUsageARB.StaticDraw);
+// 
+//          const uint positionLoc = 0;
+//          GL.EnableVertexAttribArray(positionLoc);
+//          GL.VertexAttribPointer(positionLoc, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), (void*) 0);
+ 
+//           GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (void*) 0);   
+//           GL.DrawElements(newPipelineState.PrimitiveType, 6, indexBuffer.Type, (void*) 0);   
+                
             GL.DrawElements(newPipelineState.PrimitiveType, (uint)indexCount, indexBuffer.Type, (void*)(indexBuffer.Offset + (startIndexLocation * indexBuffer.ElementSize)));
+// Console.WriteLine ("DOTNET CommandList DrawIndexed F");            
 #else
+//Console.WriteLine ("DrawIndexed C " + newPipelineState.PrimitiveType + " " + (uint)indexCount + " "+  indexBuffer.Type + " " + (indexBuffer.Offset + (startIndexLocation * indexBuffer.ElementSize)) + " " + baseVertexLocation + " " + System.Environment.CurrentManagedThreadId);
+//Console.WriteLine ("DrawIndexed C2 " + indexBuffer.Offset + " " + startIndexLocation + " "+ indexBuffer.ElementSize + " " + GL.GetError () + " " +  System.Environment.StackTrace);
+
+        // // The quad vertices data.
+        // float[] vertices =
+        // {
+        //     0.5f,  0.5f, 0.0f,
+        //     100.5f, -0.5f, 0.0f,
+        //     -0.5f, -0.5f, 0.0f,
+        //     -0.5f,  100.5f, 0.0f
+        // };
+
+        // // Create the VBO.
+        // _vbo = GL.GenBuffer();
+        // GL.BindBuffer(BufferTargetARB.ArrayBuffer, _vbo);
+
+        // // Upload the vertices data to the VBO.
+        // fixed (float* buf = vertices)
+        //     GL.BufferData(BufferTargetARB.ArrayBuffer, (nuint) (vertices.Length * sizeof(float)), buf, BufferUsageARB.StaticDraw);
+
+        // The quad indices data.
+        // uint[] indices =
+        // {
+        //     0u, 1u, 3u,
+        //     1u, 2u, 3u
+        // };
+
+        // // Create the EBO.
+        // _ebo = GL.GenBuffer();
+        // GL.BindBuffer(BufferTargetARB.ElementArrayBuffer, _ebo);
+
+        // // Upload the indices data to the EBO.
+        // fixed (uint* buf = indices)
+        //     GL.BufferData(BufferTargetARB.ElementArrayBuffer, (nuint) (indices.Length * sizeof(uint)), buf, BufferUsageARB.StaticDraw);
+
+        //  const uint positionLoc = 0;
+        //  GL.EnableVertexAttribArray(positionLoc);
+        //  GL.VertexAttribPointer(positionLoc, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), (void*) 0);
+ 
+        //   GL.DrawElements(Silk.NET.OpenGL.PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (void*) 0);   
+
+//            GL.DrawElements(newPipelineState.PrimitiveType, 6, DrawElementsType.UnsignedInt, (void*)(indexBuffer.Offset + (startIndexLocation * indexBuffer.ElementSize)));
+
+//if (indexCount != 6)
+  //          GL.DrawElementsBaseVertex(newPipelineState.PrimitiveType, 3, indexBuffer.Type, (void*)(0), 0);
+// Console.WriteLine ("DOTNET CommandList DrawIndexed H");            
             GL.DrawElementsBaseVertex(newPipelineState.PrimitiveType, (uint)indexCount, indexBuffer.Type, (void*)(indexBuffer.Offset + (startIndexLocation * indexBuffer.ElementSize)), baseVertexLocation);
+//Console.WriteLine ("DrawIndexed C3 " + indexBuffer.Offset + " " + startIndexLocation + " "+ indexBuffer.ElementSize + " " + GL.GetError ());
+// Console.WriteLine ("DOTNET CommandList DrawIndexed I");            
 #endif
+//Console.WriteLine ("DrawIndexed D ");
+
+// Console.WriteLine ("DOTNET CommandList DrawIndexed J");            
 
             GraphicsDevice.FrameDrawCalls++;
             GraphicsDevice.FrameTriangleCount += (uint)indexCount;
+// Console.WriteLine ("DOTNET CommandList DrawIndexed K");            
             }
         }
 
@@ -975,20 +1102,32 @@ if (!init)
         /// <param name="startInstanceLocation">A value added to each index before reading per-instance data from a vertex buffer.</param>
         public unsafe void DrawIndexedInstanced(int indexCountPerInstance, int instanceCount, int startIndexLocation = 0, int baseVertexLocation = 0, int startInstanceLocation = 0)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+// Console.WriteLine ("DOTNET CommandList DrawIndexedInstanced A");            
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {
 #if DEBUG
+// Console.WriteLine ("DOTNET CommandList DrawIndexedInstanced B");            
             GraphicsDevice.EnsureContextActive();
 #endif
+// Console.WriteLine ("DOTNET CommandList DrawIndexedInstanced C");            
             PreDraw();
+// Console.WriteLine ("DOTNET CommandList DrawIndexedInstanced D");            
+            
 #if STRIDE_GRAPHICS_API_OPENGLES
+// Console.WriteLine ("DOTNET CommandList DrawIndexedInstanced E");            
+
             Internal.Refactor.ThrowNotImplementedException();
 #else
+// Console.WriteLine ("DOTNET CommandList DrawIndexedInstanced F");            
+            
             GL.DrawElementsInstancedBaseVertex(newPipelineState.PrimitiveType, (uint)indexCountPerInstance, indexBuffer.Type, (void*)(indexBuffer.Offset + (startIndexLocation * indexBuffer.ElementSize)), (uint)instanceCount, baseVertexLocation);
 #endif
+// Console.WriteLine ("DOTNET CommandList DrawIndexedInstanced G");            
 
             GraphicsDevice.FrameDrawCalls++;
             GraphicsDevice.FrameTriangleCount += (uint)(indexCountPerInstance * instanceCount);
+// Console.WriteLine ("DOTNET CommandList DrawIndexedInstanced H");            
+            
             }
         }
 
@@ -1005,7 +1144,7 @@ if (!init)
             if (argumentsBuffer == null) throw new ArgumentNullException(nameof(argumentsBuffer));
 
 #if DEBUG
-            GraphicsDevice.EnsureContextActive();
+            //GraphicsDevice.EnsureContextActive();
 #endif
             //PreDraw();
 
@@ -1073,6 +1212,9 @@ if (!init)
 
         public void BeginProfile(Color4 profileColor, string name)
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
 //             using (GraphicsDevice.UseOpenGLCreationContext())
             {
             if (GraphicsDevice.ProfileEnabled)
@@ -1084,6 +1226,9 @@ if (!init)
 
         public void EndProfile()
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
 //             using (GraphicsDevice.UseOpenGLCreationContext())
             {
             if (GraphicsDevice.ProfileEnabled)
@@ -1100,6 +1245,9 @@ if (!init)
         /// <param name="index">The query index.</param>
         public void WriteTimestamp(QueryPool queryPool, int index)
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
 //             using (GraphicsDevice.UseOpenGLCreationContext())
             {            
 #if STRIDE_GRAPHICS_API_OPENGLES
@@ -1116,7 +1264,7 @@ if (!init)
 
         public unsafe MappedResource MapSubresource(GraphicsResource resource, int subResourceIndex, MapMode mapMode, bool doNotWait = false, int offsetInBytes = 0, int lengthInBytes = 0)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
@@ -1201,7 +1349,7 @@ if (!init)
 
         public void UnmapSubresource(MappedResource unmapped)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
@@ -1283,12 +1431,20 @@ if (!init)
 
         private unsafe MappedResource MapTexture(Texture texture, bool adjustOffsetForSubresource, BufferTargetARB bufferTarget, uint pixelBufferObjectId, int subResourceIndex, MapMode mapMode, int offsetInBytes, int lengthInBytes)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {
             int mipLevel = subResourceIndex % texture.MipLevels;
 
             GL.BindBuffer(bufferTarget, pixelBufferObjectId);
+            int result;
+            GL.GetBufferParameter (BufferTargetARB.PixelPackBuffer, BufferPNameARB.BufferSize, out result);
+//             Console.WriteLine ("Map textureA: " + result + " " + GL.GetError () + " " + offsetInBytes + " " + texture.ComputeBufferOffset(subResourceIndex, 0) + " " + lengthInBytes);
             var mapResult = (IntPtr)GL.MapBufferRange(bufferTarget, (IntPtr)offsetInBytes + (adjustOffsetForSubresource ? texture.ComputeBufferOffset(subResourceIndex, 0) : 0), (UIntPtr)lengthInBytes, mapMode.ToOpenGLMask());
+//             Console.WriteLine ("Map texture: " + mapResult + " " + GL.GetError () + " " + offsetInBytes + " " + texture.ComputeBufferOffset(subResourceIndex, 0) + " " + lengthInBytes);
             GL.BindBuffer(bufferTarget, 0);
 
             return new MappedResource(texture, subResourceIndex, new DataBox { DataPointer = mapResult, SlicePitch = texture.ComputeSlicePitch(mipLevel), RowPitch = texture.ComputeRowPitch(mipLevel) }, offsetInBytes, lengthInBytes)
@@ -1300,29 +1456,45 @@ if (!init)
 
         internal unsafe void PreDraw()
         {
+// Console.WriteLine ("DOTNET PreDraw A " + GraphicsDevice.CurrentGraphicsContext);            
+            
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
+// Console.WriteLine ("DOTNET PreDraw B " + newPipelineState.EffectProgram.ProgramId + " - " + boundProgram);            
             // Bind program
             var program = newPipelineState.EffectProgram.ProgramId;
             if (program != boundProgram)
             {
                 boundProgram = program;
+// if ((program == 7) || (program == 4))
+// {
+//     boundProgram = 3;
+// }
                 GL.UseProgram(boundProgram);
+// Console.WriteLine ("DOTNET PreDraw B2 - using " + boundProgram);            
             }
 
+// Console.WriteLine ("DOTNET PreDraw C");
             int vertexBufferSlot = -1;
             var vertexBufferView = default(VertexBufferView);
             Buffer vertexBuffer = null;
 
+// Console.WriteLine ("DOTNET PreDraw D");
             // TODO OPENGL compare newPipelineState.VertexAttribs directly
             if (newPipelineState.VertexAttribs != currentPipelineState.VertexAttribs)
             {
                 vboDirty = true;
             }
+//Console.WriteLine ("PreDraw A " + vboDirty + " " + program + " " + BufferTargetARB.ArrayBuffer + " ");
 
             // Setup vertex buffers and vertex attributes
             if (vboDirty)
             {
                 foreach (var vertexAttrib in newPipelineState.VertexAttribs)
                 {
+// Console.WriteLine ("DOTNET PreDraw E");
                     if (vertexAttrib.VertexBufferSlot != vertexBufferSlot)
                     {
                         vertexBufferSlot = vertexAttrib.VertexBufferSlot;
@@ -1331,9 +1503,11 @@ if (!init)
                         if (vertexBuffer != null)
                         {
                             var vertexBufferResource = vertexBufferView.Buffer.BufferId;
+//Console.WriteLine ("PreDraw B " + vboDirty);
                             GL.BindBuffer(BufferTargetARB.ArrayBuffer, vertexBufferResource);
                         }
                     }
+// Console.WriteLine ("DOTNET PreDraw F");
 
                     var vertexAttribMask = 1U << vertexAttrib.AttributeIndex;
 
@@ -1344,32 +1518,44 @@ if (!init)
                         if ((enabledVertexAttribArrays & vertexAttribMask) != 0)
                         {
                             enabledVertexAttribArrays &= ~vertexAttribMask;
+//Console.WriteLine ("PreDraw C " + vboDirty);
                            GL.DisableVertexAttribArray((uint)vertexAttrib.AttributeIndex);
                         }
                         continue;
                     }
+// Console.WriteLine ("DOTNET PreDraw G");
 
                     // Enable this attribute if not previously enabled
                     if ((enabledVertexAttribArrays & vertexAttribMask) == 0)
                     {
                         enabledVertexAttribArrays |= vertexAttribMask;
+//Console.WriteLine ("PreDraw D " + vboDirty);
                         GL.EnableVertexAttribArray((uint)vertexAttrib.AttributeIndex);
                     }
+// Console.WriteLine ("DOTNET PreDraw H");
 
+//Console.WriteLine ("PreDraw E " + vertexAttrib.IsInteger + " " + vertexAttrib.Normalized);
                     if (vertexAttrib.IsInteger && !vertexAttrib.Normalized)
                         GL.VertexAttribIPointer((uint)vertexAttrib.AttributeIndex, vertexAttrib.Size, (VertexAttribIType)vertexAttrib.Type, (uint)vertexBufferView.Stride, (void*)(vertexBufferView.Offset + vertexAttrib.Offset));
                     else
+                    {
+//Console.WriteLine ("PreDraw F " + (uint)vertexAttrib.AttributeIndex + " " + vertexAttrib.Size+ " " + vertexAttrib.Type+ " " + vertexAttrib.Normalized+ " " + (uint)vertexBufferView.Stride+ " " + vertexBufferView.Offset + " " + vertexAttrib.Offset);
                         GL.VertexAttribPointer((uint)vertexAttrib.AttributeIndex, vertexAttrib.Size, vertexAttrib.Type, vertexAttrib.Normalized, (uint)vertexBufferView.Stride, (void*)(vertexBufferView.Offset + vertexAttrib.Offset));
+                    }
                 }
+// Console.WriteLine ("DOTNET PreDraw I");
 
                 vboDirty = false;
             }
+// Console.WriteLine ("DOTNET PreDraw J");
 
             // Resources
             newPipelineState.ResourceBinder.BindResources(this, currentDescriptorSets);
+// Console.WriteLine ("DOTNET PreDraw K");
 
             // States
             newPipelineState.Apply(this, currentPipelineState);
+// Console.WriteLine ("DOTNET PreDraw L");
 
             foreach (var textureInfo in newPipelineState.EffectProgram.Textures)
             {
@@ -1411,9 +1597,11 @@ if (!init)
                     }
                 }
             }
+// Console.WriteLine ("DOTNET PreDraw M");
 
             // Update viewports
             SetViewportImpl();
+// Console.WriteLine ("DOTNET PreDraw N");
 
             currentPipelineState = newPipelineState;
         }
@@ -1610,6 +1798,10 @@ if (!init)
 
         internal void SetupTargets()
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
 //             using (GraphicsDevice.UseOpenGLCreationContext())
             {
             if (needUpdateFBO)
@@ -1627,6 +1819,9 @@ if (!init)
 
         public void SetVertexBuffer(int index, Buffer buffer, int offset, int stride)
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
             var newVertexBuffer = new VertexBufferView(buffer, offset, stride);
             if (vertexBuffers[index] != newVertexBuffer)
             {
@@ -1637,6 +1832,10 @@ if (!init)
 
         public void SetIndexBuffer(Buffer buffer, int offset, bool is32bits)
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
 //             using (GraphicsDevice.UseOpenGLCreationContext())
             {
             var newIndexBuffer = new IndexBufferView(buffer, offset, is32bits);
@@ -1698,6 +1897,10 @@ if (!init)
 
         private void UpdateViewport(Viewport viewport)
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
 //             using (GraphicsDevice.UseOpenGLCreationContext())
             {
             GL.DepthRange(viewport.MinDepth, viewport.MaxDepth);
@@ -1708,6 +1911,10 @@ if (!init)
 #if !STRIDE_GRAPHICS_API_OPENGLES
         private void UpdateViewports()
         {
+#if DEBUG
+            GraphicsDevice.EnsureContextActive();
+#endif
+
 //             using (GraphicsDevice.UseOpenGLCreationContext())
             {
             int nbViewports = viewports.Length;
@@ -1749,7 +1956,7 @@ if (!init)
 
         internal unsafe void UpdateSubresource(GraphicsResource resource, int subResourceIndex, DataBox databox)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
@@ -1830,7 +2037,7 @@ if (!init)
 
         internal unsafe void UpdateSubresource(GraphicsResource resource, int subResourceIndex, DataBox databox, ResourceRegion region)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();

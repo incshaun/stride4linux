@@ -158,7 +158,11 @@ namespace Stride.Assets.Presentation
             global::Avalonia.Application.Current.Resources.MergedDictionaries.Add((new ResourceInclude (uri) {  Source = uri }).Loaded);
 
             var entityFactories = new Core.Collections.SortedList<EntityFactoryCategory, EntityFactoryCategory>();
-            foreach (var factoryType in Assembly.GetExecutingAssembly().GetTypes().Where(x => typeof(IEntityFactory).IsAssignableFrom(x) && x.GetConstructor(Type.EmptyTypes) != null))
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+            var factoryAssembly = Assembly.GetAssembly (typeof (SceneViewModel)); // A type to get Stride.Assets.Presentation assembly.
+            types = types.Concat (factoryAssembly.GetTypes()); // search both assemblies. 
+            // The entity factories are part of the model, but must be available to the view here.
+            foreach (var factoryType in types.Where(x => typeof(IEntityFactory).IsAssignableFrom(x) && x.GetConstructor(Type.EmptyTypes) != null))
             {
                 var display = factoryType.GetCustomAttribute<DisplayAttribute>();
                 if (display == null)

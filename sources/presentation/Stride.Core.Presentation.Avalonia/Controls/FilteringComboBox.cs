@@ -130,12 +130,12 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Raised just before the TextBox changes are validated. This event is cancellable
         /// </summary>
-        public static readonly RoutedEvent ValidatingEvent = RoutedEvent.Register<FilteringComboBox, RoutedEventArgs>("Validating", RoutingStrategies.Bubble);
+        public static readonly RoutedEvent ValidatingEvent = RoutedEvent.Register<FilteringComboBox, CancelRoutedEventArgs>("Validating", RoutingStrategies.Bubble);
 
         /// <summary>
         /// Raised when TextBox changes have been validated.
         /// </summary>
-        public static readonly RoutedEvent ValidatedEvent = RoutedEvent.Register<FilteringComboBox, RoutedEventArgs>("Validated", RoutingStrategies.Bubble);
+        public static readonly RoutedEvent ValidatedEvent = RoutedEvent.Register<FilteringComboBox, ValidationRoutedEventArgs<string>>("Validated", RoutingStrategies.Bubble);
 
         static FilteringComboBox()
 		{
@@ -146,6 +146,12 @@ namespace Stride.Core.Presentation.Controls
             
         }
 
+        [ModuleInitializer]
+        internal static void Initialize ()
+        {
+            var v = ValidatedEvent; // Force the event to be registered as soon as possible.
+        }
+        
         public FilteringComboBox()
         {
             IsTextSearchEnabled = false;
@@ -216,17 +222,17 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Raised when TextBox changes have been validated.
         /// </summary>
-        public event EventHandler<CancelRoutedEventArgs> Validated { add { AddHandler(ValidatedEvent, value); } remove { RemoveHandler(ValidatedEvent, value); } }
+        public event EventHandler<ValidationRoutedEventHandler<string>> Validated { add { AddHandler(ValidatedEvent, value); } remove { RemoveHandler(ValidatedEvent, value); } }
 
-//         protected override void OnItemsSourceChanged(IReadOnlyList<object?> items, NotifyCollectionChangedEventArgs e)
-//         {
-//             base.OnItemsSourceChanged(oldValue, newValue);
-// 
-//             if (newValue != null)
-//             {
-//                 UpdateCollectionView();
-//             }
-//         }
+        private void OnItemsViewSourceChanged(IEnumerable oldValue, IEnumerable newValue)  // Removed override, since marked as private in SelectingItemsControl.
+        {
+            //base.OnItemsViewSourceChanged(items, e);
+
+            if (newValue != null)
+            {
+                UpdateCollectionView();
+            }
+        }
 
         private static void OnIsDropDownOpenChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
@@ -280,7 +286,7 @@ namespace Stride.Core.Presentation.Controls
         private static void OnItemsSourceRefresh(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
             var filteringComboBox = (FilteringComboBox)d;
-//             filteringComboBox.OnItemsSourceChanged(filteringComboBox.ItemsSource, filteringComboBox.ItemsSource);
+            filteringComboBox.OnItemsViewSourceChanged(filteringComboBox.ItemsSource, filteringComboBox.ItemsSource);
         }
 
         private void EditableTextBoxValidating(object sender, CancelRoutedEventArgs e)
@@ -337,7 +343,7 @@ namespace Stride.Core.Presentation.Controls
             }
         }
 
-        private void EditableTextBoxValidated(object sender, RoutedEventArgs e)
+        private void EditableTextBoxValidated(object sender, ValidationRoutedEventArgs<string> e)
         {
             // This may happens somehow when the template is refreshed.
             if (!ReferenceEquals(sender, editableTextBox))
@@ -523,15 +529,21 @@ namespace Stride.Core.Presentation.Controls
             updatingSelection = false;
         }
 
-        private void ListBoxMouseUp(object sender, [NotNull] PointerEventArgs e)
+        private void ListBoxMouseUp(object sender, [NotNull] PointerReleasedEventArgs e)
         {
-//             if (e.ChangedButton == MouseButton.Left && listBox.SelectedIndex > -1)
-//             {
-//                 // We need to force the validation here
-//                 // The user might have clicked on the list after the drop down was automatically open (see OpenDropDownOnFocus).
-//                 editableTextBox.ForceValidate();
-//             }
+            if (e.InitialPressMouseButton == MouseButton.Left && listBox.SelectedIndex > -1)
+            {
+                // We need to force the validation here
+                // The user might have clicked on the list after the drop down was automatically open (see OpenDropDownOnFocus).
+                editableTextBox.ForceValidate();
+            }
             listBoxClicking = true;
+            
+//                         ValidatedValue = SelectedValue;
+//             ValidatedItem = SelectedItem;
+//                         var validatedArgs = new RoutedEventArgs(ValidatedEvent);
+//             RaiseEvent(validatedArgs);
+
         }
 
         private void BringSelectedItemIntoView()

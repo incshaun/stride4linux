@@ -71,7 +71,9 @@ namespace Stride.Graphics
         /// </summary>
         public void ClearState()
         {
+#if STRIDE_GRAPHICS_API_OPENGL
             using (GraphicsDevice.UseOpenGLCreationContext ())
+#endif            
             {
                 ClearStateImpl();
             }
@@ -304,7 +306,9 @@ namespace Stride.Graphics
                 renderTargets[i] = renderTargetViews[i];
             }
 
+#if STRIDE_GRAPHICS_API_OPENGL
             using (GraphicsDevice.UseOpenGLCreationContext ())
+#endif            
             {
                 SetRenderTargetsImpl(depthStencilBuffer, renderTargetCount, renderTargets);
             }
@@ -349,7 +353,9 @@ namespace Stride.Graphics
                 SetViewport(new Viewport(0, 0, rtv.ViewWidth, rtv.ViewHeight));
             }
 
+#if STRIDE_GRAPHICS_API_OPENGL
             using (GraphicsDevice.UseOpenGLCreationContext ())
+#endif            
             {
                 SetRenderTargetsImpl(depthStencilView, currentRenderTargetCount, renderTargetViews);
             }

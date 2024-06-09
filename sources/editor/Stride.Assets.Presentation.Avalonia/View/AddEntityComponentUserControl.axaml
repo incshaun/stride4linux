@@ -25,7 +25,7 @@
         <sd:ToggleButtonPopupBehavior/>
       </i:Interaction.Behaviors>
     </ToggleButton>
-    <Popup IsOpen="{Binding Path=IsChecked, Mode=TwoWay, ElementName=ToggleButton}" Placement="Bottom" x:Name="PART_Popup"
+    <Popup IsOpen="{Binding IsChecked, Mode=TwoWay, ElementName=ToggleButton}" Placement="Bottom" x:Name="PART_Popup"
                     >
       <sd:FilteringComboBox x:Name="FilteringComboBox"
                         ItemsSource="{Binding ComponentTypes}"
@@ -51,13 +51,13 @@
                   </Grid.ColumnDefinitions>
                   <DockPanel Grid.Column="0" Margin="4" x:Name="LeftPanel">
                     <DockPanel Margin="0,4" DockPanel.Dock="Top">
-                      <!--<Button VerticalAlignment="Center" Margin="4,0,0,0" Theme="{StaticResource ImageButtonStyle}"
+                      <Button VerticalAlignment="Center" Margin="4,0,0,0" Theme="{StaticResource ImageButtonStyle}"
                               DockPanel.Dock="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                               ClickMode="Press"
                               Command="{Binding AddNewScriptComponentCommand}" CommandParameter="{Binding SearchToken}"
                               ToolTip.Tip="{sd:Localize New script, Context=ToolTip}" Width="20" Height="20" Padding="2">
                         <Image Source="{StaticResource ImageNewScript}" Width="16" Height="16"/>
-                      </Button>-->
+                      </Button>
                       <sd:TextBox x:Name="PART_EditableTextBox" ValidateOnLostFocus="False" VerticalAlignment="Center" Focusable="True"
                                   WatermarkContent="{Binding WatermarkContent, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}}"
                                   Text="{Binding Text, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}}" ValidateOnTextChange="False" GetFocusOnLoad="True"
@@ -78,7 +78,7 @@
                           </ControlTheme.Triggers> -->
                         	<Style Selector="^:disabled">
 
-                              <Setter Property="SelectedItem" Value="{x:Null}"/>
+<!--                               <Setter Property="SelectedItem" Value="{x:Null}"/> -->
                             	</Style>
 </ControlTheme>
                       </ListBox.Theme>
@@ -141,8 +141,10 @@
                       </i:Interaction.Behaviors>
                     </ListBox>
                   </DockPanel>
+<!--                  <Separator Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="1" Background="{StaticResource NormalBrush}"
+                             IsVisible="{Binding Items.Count, ElementName=PART_ListBox}"/>-->
                   <Separator Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="1" Background="{StaticResource NormalBrush}"
-                             IsVisible="{Binding Items.Count, ElementName=PART_ListBox}"/>
+                             IsVisible="true"/>
                   <ListBox x:Name="PART_ListBox"  Width="{x:Static local:AddEntityComponentUserControl.ComponentListWidth}"
                            Margin="4" Grid.Column="2" Height="{Binding ActualHeight, ElementName=LeftPanel}"
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -152,7 +154,17 @@
                            SelectedValue="{Binding SelectedValue, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}, Mode=TwoWay}"
                            
                            ItemTemplate="{TemplateBinding ItemTemplate}" 
-                           IsVisible="{Binding Items.Count, RelativeSource={RelativeSource Self}}">
+                           IsVisible="true">
+<!--                  <ListBox x:Name="PART_ListBox"  Width="{x:Static local:AddEntityComponentUserControl.ComponentListWidth}"
+                           Margin="4" Grid.Column="2" Height="{Binding ActualHeight, ElementName=LeftPanel}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                           ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}}"
+                           SelectedIndex="{Binding SelectedIndex, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}, Mode=TwoWay}"
+                           SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}, Mode=TwoWay}"
+                           SelectedValue="{Binding SelectedValue, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}, Mode=TwoWay}"
+                           
+                           ItemTemplate="{TemplateBinding ItemTemplate}" 
+                           IsVisible="{Binding Items.Count, RelativeSource={RelativeSource Self}}">-->
                     <ListBox.ItemContainerTheme>
                       <ControlTheme TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}" >
                         <Setter Property="Background" Value="Transparent"/>
@@ -177,12 +189,12 @@
         <i:Interaction.Behaviors>
           <sd:OnEventCommandBehavior EventName="Validated" 
                                  Command="{Binding AddNewItemCommand}" 
-                                 CommandParameter="{Binding ValidatedItem, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}}"/>
+                                 CommandParameter="{Binding ValidatedItem, ElementName=FilteringComboBox}"/>
         </i:Interaction.Behaviors>
       </sd:FilteringComboBox>
 
       <i:Interaction.Behaviors>
-        <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="sd:FilteringComboBox" Property="{x:Static Popup.IsOpenProperty}" Value="false"/>
+        <sd:OnEventSetPropertyBehavior EventName="Validated" EventOwnerType="{x:Type sd:FilteringComboBox}" Property="{x:Static Popup.IsOpenProperty}" Value="{sd:False}"/>
       </i:Interaction.Behaviors>
     </Popup>
   </Grid>  

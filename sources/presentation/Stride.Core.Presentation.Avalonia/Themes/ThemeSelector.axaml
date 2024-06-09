@@ -510,7 +510,8 @@
           <Grid x:Name="RootLayout" VerticalAlignment="Top" TextElement.Foreground="{DynamicResource TextBrush}" Focusable="False">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="{TemplateBinding InputColumnWidth}"/>
+              <ColumnDefinition Width="*"/>
+<!--               <ColumnDefinition Width="{TemplateBinding InputColumnWidth}"/> -->
             </Grid.ColumnDefinitions>
             <Grid x:Name="LeftPaneLayout" Margin="2" VerticalAlignment="Top" Focusable="False">
               <Grid.RowDefinitions>
@@ -837,6 +838,35 @@
     <Setter Property="Template" Value="{StaticResource SimpleToggleButtonTemplate}" />
     <Setter Property="BorderThickness" Value="0"/>
     <Setter Property="Margin" Value="0"/>
+<Style Selector="^:disabled">
+
+        		<Style Selector="^ /template/ Grid#Grid">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Grid#Grid">
+			<Setter Property="Background" Value="{DynamicResource SelectedBackgroundBrush}"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:checked">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Background" Value="{DynamicResource SelectedBackgroundBrush}"/>
+		</Style>
+
+      	</Style>
+	<Style Selector="^:pointerover">
+
+        		<Style Selector="^ /template/ Border#HoverBorder">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+
+      	</Style>    
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type Button}" TargetType="{x:Type Button}" BasedOn="{x:Null}" >
@@ -1998,10 +2028,15 @@
         <Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource MenuHoverBrush}" Opacity="0" x:Name="HoverBorder"/>
         <ContentPresenter Grid.Column="0" Margin="6,3" x:Name="Icon" VerticalAlignment="Center" Content="{TemplateBinding Icon}" />
         <ContentPresenter Grid.Column="1" x:Name="HeaderHost" RecognizesAccessKey="True" Content="{TemplateBinding Header}" Margin="2,1,2,1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
-        <Popup Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" x:Name="PART_Popup" Focusable="false"  >
+        <Popup IsLightDismissEnabled="False" Grid.Column="0" Grid.ColumnSpan="2" IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}" Placement="Bottom" x:Name="PART_Popup" Focusable="false"  >
           <Grid x:Name="SubMenu">
             <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="0"/>
-            <StackPanel   />
+                        <ScrollViewer >
+                          <ItemsPresenter Name="PART_ItemsPresenter"
+                                          Margin="2"
+                                          Grid.IsSharedSizeScope="True"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
           </Grid>
         </Popup>
       </Grid>
@@ -2103,7 +2138,7 @@
               <Grid Grid.Column="4" Margin="4,2" x:Name="ArrowPanel" VerticalAlignment="Center">
                 <Path x:Name="ArrowPanelPath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z" />
               </Grid>
-              <Popup IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Right" x:Name="PART_Popup" Focusable="false"  >
+              <Popup IsLightDismissEnabled="False" IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}" Placement="Right" x:Name="PART_Popup"   >
                 <Grid>
                   <Grid.RowDefinitions>
                     <RowDefinition Height="3" />
@@ -2120,7 +2155,13 @@
                   <Border x:Name="SubmenuMainWrapperBorder" Grid.RowSpan="3" Grid.ColumnSpan="3" Background="{StaticResource MenuBackgroundBrush}" BorderBrush="{StaticResource MenuBorderBrush}" BorderThickness="0.5" />
                   <Grid x:Name="SubMenu" Grid.Row="1" Grid.Column="1">
                     <Border x:Name="SubMenuBorder" Background="{DynamicResource MenuBackgroundBrush}" BorderBrush="{DynamicResource MenuBorderBrush}" BorderThickness="0" />
-                    <StackPanel   Grid.IsSharedSizeScope="true" />
+<!--                     <StackPanel   Grid.IsSharedSizeScope="true" /> -->
+                        <ScrollViewer >
+                          <ItemsPresenter Name="PART_ItemsPresenter"
+                                          Margin="2"
+                                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
+                    
                   </Grid>
                 </Grid>
               </Popup>
@@ -2158,7 +2199,7 @@
             
             <MultiTrigger>
               <MultiTrigger.Conditions>
-                <Condition Property="IsSubmenuOpen" Value="True" />
+                <Condition Property="IsSubMenuOpen" Value="True" />
                 <Condition Property="Role" Value="TopLevelHeader" />
               </MultiTrigger.Conditions>
               <MultiTrigger.Setters>

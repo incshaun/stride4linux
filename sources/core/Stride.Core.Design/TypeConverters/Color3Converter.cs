@@ -15,6 +15,8 @@ namespace Stride.Core.TypeConverters
     /// </summary>
     public class Color3Converter : BaseConverter
     {
+        public static BaseConverter extension = null;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="Color3Converter"/> class.
         /// </summary>
@@ -56,7 +58,6 @@ namespace Stride.Core.TypeConverters
                 {
                     return color.ToColor4();
                 }
-
                 if (destinationType == typeof(InstanceDescriptor))
                 {
                     var constructor = typeof(Color3).GetConstructor(MathUtil.Array(typeof(float), 4));
@@ -71,7 +72,7 @@ namespace Stride.Core.TypeConverters
         /// <inheritdoc/>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            return sourceType == typeof(Color) || sourceType == typeof(Color4) || base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(Color) || sourceType == typeof(Color4) || base.CanConvertFrom(context, sourceType) || (bool) extension?.CanConvertFrom (context, sourceType);
         }
 
         /// <inheritdoc/>
@@ -88,6 +89,10 @@ namespace Stride.Core.TypeConverters
                 return color.ToColor3();
             }
 
+            if ((bool) extension?.CanConvertFrom (context, value.GetType ()))
+            {
+                return extension?.ConvertFrom (context, culture, value);
+            }
             var str = value as string;
             if (str != null)
             {

@@ -827,7 +827,9 @@ namespace Stride.Graphics
             // Calculate the subResourceIndex for a Texture
             int subResourceIndex = this.GetSubResourceIndex(arraySlice, mipSlice);
 
+#if STRIDE_GRAPHICS_API_OPENGL
             using (commandList.GraphicsDevice.UseOpenGLCreationContext ())
+#endif            
             {
                 // Map the staging resource to a CPU accessible memory
                 var mappedResource = commandList.MapSubresource(stagingTexture, subResourceIndex, MapMode.Read, doNotWait);
