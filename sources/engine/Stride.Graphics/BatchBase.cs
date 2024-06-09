@@ -126,6 +126,7 @@ namespace Stride.Graphics
             if (vertexDeclaration == null) throw new ArgumentNullException("vertexDeclaration");
 
             graphicsDevice = device;
+
             mutablePipeline = new MutablePipelineState(device);
             // TODO GRAPHICS REFACTOR Should we initialize FX lazily?
             DefaultEffect = new EffectInstance(new Effect(device, defaultEffectByteCode) { Name = "BatchDefaultEffect" });
@@ -176,7 +177,6 @@ namespace Stride.Graphics
         {
             CheckEndHasBeenCalled("begin");
 
-            graphicsDevice.LocalInitialize ();
             ResourceContext = ResourceContextPool.Value;
 
             GraphicsContext = graphicsContext;
@@ -293,8 +293,12 @@ namespace Stride.Graphics
                 }
 
                 // If not immediate, then setup and render all sprites
+// Console.WriteLine ("SpriteEnd A ");
+                
                 PrepareForRendering();
+// Console.WriteLine ("SpriteEnd B ");
                 FlushBatch();
+// Console.WriteLine ("SpriteEnd C ");
             }
 
             ResourceContext = null;
@@ -345,6 +349,7 @@ namespace Stride.Graphics
         private void FlushBatch()
         {
             ElementInfo[] spriteQueueForBatch;
+// Console.WriteLine ("FlushBatch A ");
 
             // If Deferred, then sprites are displayed in the same order they arrived
             if (sortMode == SpriteSortMode.Deferred)
@@ -358,6 +363,7 @@ namespace Stride.Graphics
                 spriteQueueForBatch = sortedDraws;
             }
 
+// Console.WriteLine ("FlushBatch B ");
             // Iterate on all sprites and group batch per texture.
             int offset = 0;
             Texture previousTexture = null;
@@ -378,21 +384,27 @@ namespace Stride.Graphics
                     // Get the texture indirectly
                     texture = drawTextures[index];
                 }
+// Console.WriteLine ("FlushBatch C " + i);
 
                 if (texture != previousTexture)
                 {
                     if (i > offset)
                     {
+// Console.WriteLine ("FlushBatch D " + i);
                         DrawBatchPerTexture(previousTexture, spriteQueueForBatch, offset, i - offset);
+// Console.WriteLine ("FlushBatch E " + i);
+
                     }
 
                     offset = i;
                     previousTexture = texture;
                 }
             }
+// Console.WriteLine ("FlushBatch F ");
 
             // Draw the last batch
             DrawBatchPerTexture(previousTexture, spriteQueueForBatch, offset, drawsQueueCount - offset);
+// Console.WriteLine ("FlushBatch G ");
 
             // Reset the queue.
             Array.Clear(drawTextures, 0, drawsQueueCount);
@@ -405,6 +417,8 @@ namespace Stride.Graphics
             {
                 Array.Clear(sortedDraws, 0, sortedDraws.Length);
             }
+// Console.WriteLine ("FlushBatch H ");
+
         }
 
         private void DrawBatchPerTexture(Texture texture, ElementInfo[] sprites, int offset, int count)
@@ -425,6 +439,7 @@ namespace Stride.Graphics
         {
             while (count > 0)
             {
+// Console.WriteLine ("DrawBatch A ");                
                 // How many index/vertex do we want to draw?
                 var indexCount = 0;
                 var vertexCount = 0;
@@ -458,6 +473,7 @@ namespace Stride.Graphics
                     vertexCount += spriteElementInfo.VertexCount;
                     indexCount += spriteElementInfo.IndexCount;
                 }
+// Console.WriteLine ("DOTNET DrawBatch B ");                
 
                 // Sets the data directly to the buffer in memory
                 var offsetVertexInBytes = ResourceContext.VertexBufferPosition * vertexStructSize;
@@ -470,6 +486,7 @@ namespace Stride.Graphics
                     ResourceContext.VertexBuffer = GraphicsContext.Allocator.GetTemporaryBuffer(new BufferDescription(ResourceContext.VertexCount * vertexStructSize, BufferFlags.VertexBuffer, GraphicsResourceUsage.Dynamic));
                     GraphicsContext.CommandList.SetVertexBuffer(0, ResourceContext.VertexBuffer, 0, vertexStructSize);
                 }
+// Console.WriteLine ("DrawBatch C ");                
 
                 if (ResourceContext.IsIndexBufferDynamic && ResourceContext.IndexBufferPosition == 0)
                 {
@@ -478,6 +495,7 @@ namespace Stride.Graphics
                     ResourceContext.IndexBuffer = GraphicsContext.Allocator.GetTemporaryBuffer(new BufferDescription(ResourceContext.IndexCount * indexStructSize, BufferFlags.IndexBuffer, GraphicsResourceUsage.Dynamic));
                     GraphicsContext.CommandList.SetIndexBuffer(ResourceContext.IndexBuffer, 0, indexStructSize == sizeof(int));
                 }
+// Console.WriteLine ("DrawBatch D ");                
 
                 // ------------------------------------------------------------------------------------------------------------
                 // CAUTION: Performance problem under x64 resolved by this special codepath:
@@ -505,25 +523,35 @@ namespace Stride.Graphics
                 //}
                 //else
                 {
+// Console.WriteLine ("DrawBatch E ");                
+
                     var mappedIndices = new MappedResource();
                     var mappedVertices = GraphicsContext.CommandList.MapSubresource(ResourceContext.VertexBuffer, 0, MapMode.WriteNoOverwrite, false, offsetVertexInBytes, vertexCount * vertexStructSize);
                     if (ResourceContext.IsIndexBufferDynamic)
                         mappedIndices = GraphicsContext.CommandList.MapSubresource(ResourceContext.IndexBuffer, 0, MapMode.WriteNoOverwrite, false, offsetIndexInBytes, indexCount * indexStructSize);
+//                        else
+//                        {
+//                            Console.WriteLine ("Not dynamic");
+//                        }
 
                     var vertexPointer = mappedVertices.DataBox.DataPointer;
                     var indexPointer = mappedIndices.DataBox.DataPointer;
+// Console.WriteLine ("DOTNET DrawBatch F " + ResourceContext.IndexBuffer + " " + 0 + " " + MapMode.WriteNoOverwrite + " " +  false + " " +  offsetIndexInBytes + " " +  indexCount  + " " + indexStructSize);                
 
                     for (var i = 0; i < batchSize; i++)
                     {
                         var spriteIndex = offset + i;
                         ref var spriteElementInfo = ref sprites[spriteIndex];
+// Console.WriteLine ("DOTNET DrawBatch G " + i + " " + batchSize + " " + spriteIndex + " - " + spriteElementInfo + " - " + vertexPointer + " - " + indexPointer + " - " + ResourceContext.VertexBufferPosition);                
 
                         UpdateBufferValuesFromElementInfo(ref spriteElementInfo, vertexPointer, indexPointer, ResourceContext.VertexBufferPosition);
+// Console.WriteLine ("DOTNET DrawBatch H ");                
 
                         ResourceContext.VertexBufferPosition += spriteElementInfo.VertexCount;
                         vertexPointer += vertexStructSize * spriteElementInfo.VertexCount;
                         indexPointer += indexStructSize * spriteElementInfo.IndexCount;
                     }
+// Console.WriteLine ("DrawBatch I ");                
 
                     GraphicsContext.CommandList.UnmapSubresource(mappedVertices);
                     if (ResourceContext.IsIndexBufferDynamic)
@@ -533,8 +561,12 @@ namespace Stride.Graphics
 //                    GraphicsContext.CommandList.Clear2(color);
 
                 // Draw from the specified index
-                GraphicsContext.CommandList.DrawIndexed(indexCount, ResourceContext.IndexBufferPosition);
+// Console.WriteLine ("DrawBatch J " + indexCount + " " + ResourceContext.IndexBufferPosition);                
 
+                GraphicsContext.CommandList.DrawIndexed(indexCount, ResourceContext.IndexBufferPosition);
+// Console.WriteLine ("DrawBatch K ");
+
+// Console.WriteLine ("DrawBatch L ");                
 
                 // Update position, offset and remaining count
                 ResourceContext.IndexBufferPosition += indexCount;

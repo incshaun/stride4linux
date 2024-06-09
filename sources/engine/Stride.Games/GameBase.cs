@@ -367,6 +367,12 @@ namespace Stride.Games
 
                     // Setup the graphics device if it was not already setup.
                     SetupGraphicsDeviceEvents();
+                    
+                    
+//             Console.WriteLine ("DOTNET InitializeBeforeRun A " + GraphicsDevice.LockContext);                        
+                    
+             using (GraphicsDevice.LockContext ())
+             {
 
                     // Bind Graphics Context enabling initialize to use GL API eg. SetData to texture ...etc
                     BeginDraw();
@@ -388,6 +394,7 @@ namespace Stride.Games
 
                     // Unbind Graphics Context without presenting
                     EndDraw(false);
+                }
                 }
             }
             catch (Exception ex)
@@ -629,6 +636,10 @@ namespace Stride.Games
         {
             bool beginDrawSuccessful = false;
             TimeSpan totalElapsedTime = TimeSpan.Zero;
+//             Console.WriteLine ("DOTNET RawTick A " + GraphicsDevice.LockContext);                        
+                    
+             using (GraphicsDevice.LockContext ())
+             {            
             try
             {
                 beginDrawSuccessful = BeginDraw();
@@ -674,6 +685,7 @@ namespace Stride.Games
 
                 CheckEndRun();
             }
+             }
         }
 
         private void CheckEndRun()

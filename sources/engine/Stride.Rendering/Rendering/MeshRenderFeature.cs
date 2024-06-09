@@ -188,63 +188,58 @@ namespace Stride.Rendering
                 if (renderEffect.Effect == null)
                     continue;
 
-//#if STRIDE_GRAPHICS_API_OPENGL
-                using (commandList.GraphicsDevice.UseOpenGLCreationContext ())
-//#endif
+                // Bind VB
+                if (currentDrawData != drawData)
                 {
-                    // Bind VB
-                    if (currentDrawData != drawData)
+                    for (int slot = 0; slot < drawData.VertexBuffers.Length; slot++)
                     {
-                        for (int slot = 0; slot < drawData.VertexBuffers.Length; slot++)
-                        {
-                            var vertexBuffer = drawData.VertexBuffers[slot];
-                            commandList.SetVertexBuffer(slot, vertexBuffer.Buffer, vertexBuffer.Offset, vertexBuffer.Stride);
-                        }
-
-                        // If the mesh's vertex buffers miss any input streams, an additional input binding will have been added to the pipeline state.
-                        // We bind an additional empty vertex buffer to that slot handle those streams gracefully.
-                        if (emptyBufferSlot != drawData.VertexBuffers.Length)
-                        {
-                            commandList.SetVertexBuffer(drawData.VertexBuffers.Length, emptyBuffer, 0, 0);
-                            emptyBufferSlot = drawData.VertexBuffers.Length;
-                        }
-
-                        if (drawData.IndexBuffer != null)
-                            commandList.SetIndexBuffer(drawData.IndexBuffer.Buffer, drawData.IndexBuffer.Offset, drawData.IndexBuffer.Is32Bit);
-                        currentDrawData = drawData;
+                        var vertexBuffer = drawData.VertexBuffers[slot];
+                        commandList.SetVertexBuffer(slot, vertexBuffer.Buffer, vertexBuffer.Offset, vertexBuffer.Stride);
                     }
 
-                    var resourceGroupOffset = ComputeResourceGroupOffset(renderNodeReference);
-                    
-                    // Update cbuffer
-                    renderEffect.Reflection.BufferUploader.Apply(context.CommandList, ResourceGroupPool, resourceGroupOffset);
-
-                    // Bind descriptor sets
-                    for (int i = 0; i < descriptorSetsLocal.Length; ++i)
+                    // If the mesh's vertex buffers miss any input streams, an additional input binding will have been added to the pipeline state.
+                    // We bind an additional empty vertex buffer to that slot handle those streams gracefully.
+                    if (emptyBufferSlot != drawData.VertexBuffers.Length)
                     {
-                        var resourceGroup = ResourceGroupPool[resourceGroupOffset++];
-                        if (resourceGroup != null)
-                            descriptorSetsLocal[i] = resourceGroup.DescriptorSet;
+                        commandList.SetVertexBuffer(drawData.VertexBuffers.Length, emptyBuffer, 0, 0);
+                        emptyBufferSlot = drawData.VertexBuffers.Length;
                     }
 
-                    commandList.SetPipelineState(renderEffect.PipelineState);
-                    commandList.SetDescriptorSets(0, descriptorSetsLocal);
+                    if (drawData.IndexBuffer != null)
+                        commandList.SetIndexBuffer(drawData.IndexBuffer.Buffer, drawData.IndexBuffer.Offset, drawData.IndexBuffer.Is32Bit);
+                    currentDrawData = drawData;
+                }
+
+                var resourceGroupOffset = ComputeResourceGroupOffset(renderNodeReference);
                 
-                    // Draw
-                    if (drawData.IndexBuffer == null)
-                    {
-                        if (renderMesh.InstanceCount > 0)
-                            commandList.DrawInstanced(drawData.DrawCount, renderMesh.InstanceCount, drawData.StartLocation);
-                        else
-                            commandList.Draw(drawData.DrawCount, drawData.StartLocation);
-                    }
+                // Update cbuffer
+                renderEffect.Reflection.BufferUploader.Apply(context.CommandList, ResourceGroupPool, resourceGroupOffset);
+
+                // Bind descriptor sets
+                for (int i = 0; i < descriptorSetsLocal.Length; ++i)
+                {
+                    var resourceGroup = ResourceGroupPool[resourceGroupOffset++];
+                    if (resourceGroup != null)
+                        descriptorSetsLocal[i] = resourceGroup.DescriptorSet;
+                }
+
+                commandList.SetPipelineState(renderEffect.PipelineState);
+                commandList.SetDescriptorSets(0, descriptorSetsLocal);
+            
+                // Draw
+                if (drawData.IndexBuffer == null)
+                {
+                    if (renderMesh.InstanceCount > 0)
+                        commandList.DrawInstanced(drawData.DrawCount, renderMesh.InstanceCount, drawData.StartLocation);
                     else
-                    {
-                        if (renderMesh.InstanceCount > 0)
-                            commandList.DrawIndexedInstanced(drawData.DrawCount, renderMesh.InstanceCount, drawData.StartLocation);
-                        else
-                            commandList.DrawIndexed(drawData.DrawCount, drawData.StartLocation);
-                    }
+                        commandList.Draw(drawData.DrawCount, drawData.StartLocation);
+                }
+                else
+                {
+                    if (renderMesh.InstanceCount > 0)
+                        commandList.DrawIndexedInstanced(drawData.DrawCount, renderMesh.InstanceCount, drawData.StartLocation);
+                    else
+                        commandList.DrawIndexed(drawData.DrawCount, drawData.StartLocation);
                 }
             }
         }
