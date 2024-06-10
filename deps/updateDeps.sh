@@ -41,6 +41,9 @@ fi
 # FreeImage
 if [ ! -f ../externals/FreeImage/libfreeimage-3.16.0.so ]; then
   git clone --recursive https://github.com/stride3d/freeimage.git ../externals/FreeImage
+  cp FreeImage/Plugin.cpp ../externals/FreeImage/Source/FreeImage/Plugin.cpp 
+  cp FreeImage/GetType.cpp ../externals/FreeImage/Source/FreeImage/GetType.cpp 
+  cp FreeImage/Makefile.gnu ../externals/FreeImage/Makefile.gnu
   (
   cd ../externals/FreeImage
   sed -i -e 's/-fvisibility=hidden -Wno-ctor-dtor-privacy/-fvisibility=hidden -std=c++14 -Wno-narrowing -Wno-ctor-dtor-privacy -fshort-wchar/g' Makefile.gnu
