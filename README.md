@@ -16,11 +16,10 @@
 These steps should be enough to help build, run, create a (simple) project, compile and run that project. This version is still rough, so some features don't work, others may behave erratically.
 
 * Clone the repository: git lfs clone git@github.com:incshaun/stride4linux.git
-* Switch to the Linux Alpha branch: cd stride4linux; git checkout LinuxAlpha01
+* Switch to the Linux Alpha branch: cd stride4linux; git checkout LinuxAlpha02
+
 * Change to the GameStudio folder: cd sources/editor/Stride.GameStudio.Avalonia
 * Build (assumes dotnet already installed): dotnet build /nologo /nr:false /m /verbosity:n /p:Configuration=Debug /p:Platform="Linux" /p:StrideSkipUnitTests=false Stride.GameStudio.Avalonia.csproj /p:DeployExtension=false
-* When this fails, because it can't pack CompilerApp.exe: ln -s Stride.Core.Assets.CompilerApp ../../assets/Stride.Core.Assets.CompilerApp/bin/Debug/net8.0/Stride.Core.Assets.CompilerApp.exe
-* Repeat the build: dotnet build /nologo /nr:false /m /verbosity:n /p:Configuration=Debug /p:Platform="Linux" /p:StrideSkipUnitTests=false Stride.GameStudio.Avalonia.csproj /p:DeployExtension=false
 * Should now have: bin/Debug/net8.0/Stride.GameStudio.Avalonia
 * This can be run as: ./bin/Debug/net8.0/Stride.GameStudio.Avalonia
 
@@ -51,23 +50,56 @@ These steps should be enough to help build, run, create a (simple) project, comp
 
 * Run the GameStudio editor.
   * You should be able to create a new project. Use "New Project" in the left column, and "New game" as the template. Press the Select button.
-  * From the project configuration screen, deselect Windows, and select Linux. Press OK.
+  * From the project configuration screen, deselect Windows, and select Linux. You might also want to try adding Android. Press OK.
   * Game studio window should start. Icons will be trashed until we install the support libraries (later step).
 
   * Support libraries:
   * Go to the deps folder: cd stride4linux/deps
   * ./updateDeps.sh
+  * This should build third party dependency libraries.
+  * In sources/editor/Stride.GameStudio.Avalonia, run: sh ./copyDeps.sh 
+  * This should copy third party dependency libraries into the folder containing the GameStudio executables.
 
 
 * To build the game, expand the project in the Solution Explorer pane, right click on the .Linux project and Set as current project.
   * To run, menu option: Project/Start project.
-  * This will probably fail - the nupkg doesn't copy enough across yet. Try (from the Stride.GameStudio.Avalonia folder): cp -r ../../assets/Stride.Core.Assets.CompilerApp/bin/Debug/net8.0 ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/
-  * cp bin/Debug/net8.0/runtimes/linux-x64/native/lib*.so ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/net8.0/
+  * This will probably fail - the nupkg doesn't copy enough across yet. Try (from the Stride.GameStudio.Avalonia folder): 
+    * cp -r ../../assets/Stride.Core.Assets.CompilerApp/bin/Debug/net8.0 ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/
+    * cp bin/Debug/net8.0/runtimes/linux-x64/native/lib*.so ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/net8.0/
+    * cp bin/Debug/net8.0/*.so ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/net8.0/
   * Try the Project/Start menu option again - hopefully should work.
   * If issues, try compile and run the game manually. In the game project folder:
-  dotnet build MyGame.Linux/MyGame.Linux.csproj 
-  ./Bin/Linux/Debug/linux-x64/MyGame.Linux
+  dotnet build /p:Configuration=Release MyGame.Linux/MyGame.Linux.csproj 
+  * ./Bin/Linux/Debug/linux-x64/MyGame.Linux
 
+* To build an Android project:
+  * Edit MyGame.Android/AndroidManifest.xml, to look like:
+  ```
+    <?xml version="1.0" encoding="utf-8"?>
+  <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />  
+    <application android:allowBackup="true" android:icon="@mipmap/gameicon" android:label="@string/app_name" android:supportsRtl="true" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+    </application>
+  </manifest>
+
+  ```
+  * Build the editor in Release mode, in sources/editor/Stride.GameStudio.Avalonia: dotnet build /nologo /nr:false /m /verbosity:n /p:Configuration=Release /p:Platform="Linux" /p:StrideSkipUnitTests=false Stride.GameStudio.Avalonia.csproj /p:DeployExtension=false
+  * In the sources directory, run: dotnet build ../build/Stride.Android.sln /p:Configuration=Release
+  * This should build the packages in release mode for desktop and android.
+  * In the game directory: dotnet build /p:Configuration=Release MyGame.Android/MyGame.Android.csproj   /p:PackageFormat=Apk
+  * If missing an assembly reference, try building the Linux version first.
+  * Double check that you've not got any packages active from other builds of the Stride engine.
+  * Install on Android device: adb install Bin/Android/Release/MyGame.MyGame-Signed.apk
+  * If the first run fails, open up settings on the device, and grant all permissions required (e.g. nearby devices).
+  * It may take a few seconds after the splash screen to show on the first run.
+  
+  
 Your experience may vary ;-)
 
 ![Stride Editor in Linux](https://media.githubusercontent.com/media/incshaun/stride4linux/LinuxAlpha01/samples/linuxalpha01.png)
