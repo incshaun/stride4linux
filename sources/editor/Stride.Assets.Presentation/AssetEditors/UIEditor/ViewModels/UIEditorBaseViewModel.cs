@@ -49,7 +49,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.ViewModels
         public static readonly ILogger EditorLogger = GlobalLogger.GetLogger("UI");
 
         private UIElementViewModel activeRoot;
-        private readonly ObservableSet<IUIElementFactory> factories = new ObservableSet<IUIElementFactory>();
+        private readonly List<IUIElementFactory> factories = new List<IUIElementFactory>();
         private IReadOnlyCollection<IUIElementFactory> panelFactories;
         private UIElementViewModel lastSelectedElement;
         private readonly ObservableSet<UIElementViewModel> selectableElements = new ObservableSet<UIElementViewModel>();
@@ -102,7 +102,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.ViewModels
 
         public UIElementViewModel LastSelectedElement { get { return lastSelectedElement; } private set { SetValue(ref lastSelectedElement, value); } }
 
-        public IReadOnlyObservableCollection<IUIElementFactory> Factories => factories;
+        public List<IUIElementFactory> Factories => factories;
 
         public ILogger Logger => EditorLogger;
 
@@ -177,7 +177,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.ViewModels
         internal new UIBaseViewModel Asset => (UIBaseViewModel)base.Asset;
 
         [NotNull]
-        internal new UIEditorController Controller => (UIEditorController)base.Controller;
+        public new UIEditorController Controller => (UIEditorController)base.Controller;
 
         [NotNull]
         public ICommandBase BreakLinkToLibraryCommand { get; }

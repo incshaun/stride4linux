@@ -97,8 +97,7 @@ namespace Stride.Core.Assets.Editor.View
         /// <summary>
         /// Gets the command that initiate the edition of the currently selected item.
         /// </summary>
-        private ICommandBase _BeginEditCommand;
-        public ICommandBase BeginEditCommand { get { return _BeginEditCommand; }  }
+        public static ICommand BeginEditCommand;
 
         /// <summary>
         /// Gets the command that will increase the size of thumbnails.
@@ -116,8 +115,11 @@ namespace Stride.Core.Assets.Editor.View
 			AssetContextMenuProperty.Changed.AddClassHandler<AssetViewUserControl>(OnAssetContextMenuChanged);
 
 //             var serviceProvider = new ViewModelServiceProvider(new[] { new DispatcherService(Dispatcher.UIThread) });
+//             BeginEditCommand = new AnonymousCommand<AssetViewUserControl>(serviceProvider, CanBeginEditCommand);
+            
+//             var serviceProvider = new ViewModelServiceProvider(new[] { new DispatcherService(Dispatcher.UIThread) });
 //             _BeginEditCommand = new AnonymousCommand<AssetViewUserControl>(serviceProvider, CanBeginEditCommand);
-//             BeginEditCommand = new ICommand(nameof(BeginEditCommand), typeof(AssetViewUserControl));
+            BeginEditCommand = new RoutedCommand<AssetViewUserControl>(CanBeginEditCommand);
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), new CommandBinding(BeginEditCommand, BeginEdit, CanBeginEditCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(AssetViewUserControl), new InputBinding(BeginEditCommand, new KeyGesture(Key.F2)));
 // 
@@ -137,13 +139,17 @@ namespace Stride.Core.Assets.Editor.View
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), zoomOutCommandBinding);
         }
 
+//         [ModuleInitializer]
+//         public static void Initialize()
+//         {
+//             var instance = new AssetViewUserControl ();
+//         }
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetViewUserControl"/> class.
         /// </summary>
         public AssetViewUserControl()
         {
-            var serviceProvider = new ViewModelServiceProvider(new[] { new DispatcherService(Dispatcher.UIThread) });
-            _BeginEditCommand = new AnonymousCommand<AssetViewUserControl>(serviceProvider, CanBeginEditCommand);
             
             InitializeComponent();
         }
