@@ -151,7 +151,7 @@
         <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGesture="Ctrl+D" Command="{Binding DataContext.DuplicateSelectionCommand, Source={sd:XamlRoot}, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
         <MenuItem Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
         <MenuItem Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Paste}" CommandParameter="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type uevm:UIRootViewModel}, FallbackValue={sd:True}}" Icon="{sd:Image {StaticResource ImagePaste}}" />
+<!--         <MenuItem Command="{x:Static sd:ApplicationCommands.Paste}" CommandParameter="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type uevm:UIRootViewModel}, FallbackValue={sd:True}}" Icon="{sd:Image {StaticResource ImagePaste}}" /> -->
         <MenuItem Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}" InputGesture="F2" />
@@ -322,6 +322,7 @@
               </ItemsControl>
             </StackPanel>
             <Grid>
+            <TextBlock Text="{Binding RootPart.Children, Mode=OneWay}" />
               <sd:TreeView x:Name="HierarchyTreeView" ItemsSource="{Binding RootPart.Children, Mode=OneWay}" 
                              Grid.IsSharedSizeScope="True" >
 <!--              <sd:TreeView x:Name="HierarchyTreeView" ItemsSource="{Binding RootPart.Children, Mode=OneWay}"  AllowDrop="True"
@@ -364,22 +365,22 @@
                   <sd:TreeViewDragDropBehavior DragVisualTemplate="{StaticResource DragVisualTemplate}" CanInsert="True" AllowDropOnEmptyArea="True" />
                   <sd:TreeViewBindableSelectedItemsBehavior SelectedItems="{Binding SelectedContent}" GiveFocusOnSelectionChange="False" />
                 </i:Interaction.Behaviors>
-                <ItemsControl.ItemsPanel>
+                <sd:TreeView.ItemsPanel>
                   <ItemsPanelTemplate>
                     <sd:AVirtualizingTreePanel Background="Transparent" DataContext="{Binding RootPart}"
                                                 ContextMenu="{StaticResource TreeViewContextMenu}"/>
                   </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemContainerTheme>
+                </sd:TreeView.ItemsPanel>
+                <sd:TreeView.ItemContainerTheme>
                   <ControlTheme TargetType="{x:Type sd:TreeViewItem}" BasedOn="{StaticResource {x:Type sd:TreeViewItem}}" >
 	<Design.DataContext>
 		<uevm:UIElementViewModel />
 	</Design.DataContext>
                     <Setter Property="ContextMenu" Value="{StaticResource TreeViewContextMenu}" />
-                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+<!--                    <Setter Property="HorizontalAlignment" Value="Stretch" />
                     <Setter Property="IsEditable" Value="{Binding IsEditable, Mode=OneTime}" />
-                    <Setter Property="IsEditing" Value="{Binding IsEditing, Mode=TwoWay}" />
-                    <Setter Property="TemplateEdit">
+                    <Setter Property="IsEditing" Value="{Binding IsEditing, Mode=TwoWay}" />-->
+<!--                    <Setter Property="TemplateEdit">
                       <Setter.Value>
                         <DataTemplate DataType="{x:Type uevm:UIElementViewModel}">
                           <StackPanel Orientation="Horizontal">
@@ -387,16 +388,16 @@
                           </StackPanel>
                         </DataTemplate>
                       </Setter.Value>
-                    </Setter>
-                    <Setter Property="sd:Interaction.Behaviors">
+                    </Setter>-->
+<!--                    <Setter Property="sd:Interaction.Behaviors">
                       <Setter.Value>
                         <sd:BehaviorCollection>
                           <sd:TreeViewStopEditOnLostFocusBehavior />
                         </sd:BehaviorCollection>
                       </Setter.Value>
-                    </Setter>
+                    </Setter>-->
                   </ControlTheme>
-                </ItemsControl.ItemContainerTheme>
+                </sd:TreeView.ItemContainerTheme>
               </sd:TreeView>
             </Grid>
           </DockPanel>

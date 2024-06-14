@@ -534,7 +534,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
                 }
             }
 
-            if (CanDrop)
+//            if (CanDrop)
             {
 //             Console.WriteLine ("OnDropSub CanDrop");
                 // Check if we can drop and if we have a valid target.
@@ -592,6 +592,8 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
                 if (CanDrag)
                 {
 //                     OnDragLeaveSub ();
+                    var rootWindow = TopLevel.GetTopLevel (AssociatedObject);
+                    OnDropSub (container, e.GetPosition(rootWindow));
                 }
                 if (CanDrop)
                 {

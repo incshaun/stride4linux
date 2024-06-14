@@ -1,6 +1,6 @@
 # Get rid of all old packages.
 
-rm -r ~/.nuget/packages/stride
+rm -r ~/.nuget/packages/stride.*
 rm ../bin/packages/Stride.*
 
 # Build the editor.
