@@ -41,7 +41,7 @@ namespace Stride.Assets.Presentation.AssetEditors.UIEditor.Views
                 return false;
             }
 
-            SceneView.Content = uiEditor.Controller.EditorHost;
+            SceneView.Content = uiEditor.Controller.EditorHost.GetHost ();
             SceneView.InvalidateVisual();
 
             editorInitializationNotifier.SetResult();
