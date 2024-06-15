@@ -22,6 +22,8 @@ using Avalonia.VisualTree;
 using Avalonia.Platform;
 using Avalonia.Controls.Platform;
 
+using Stride.Graphics.SDL;
+
 namespace Stride.Core.Presentation.Controls
 {
     /// <summary>
@@ -38,6 +40,8 @@ namespace Stride.Core.Presentation.Controls
         private Int4 lastBoundingBox;
         private bool attached;
         private bool isDisposed;
+        
+        private object Window;
 
        [ModuleInitializer]
         public static void Initialize ()
@@ -45,9 +49,9 @@ namespace Stride.Core.Presentation.Controls
             GameEngineHostBase.builder = Build;
         }
 
-        public static GameEngineHostInterface Build (IntPtr childHandle) 
+        public static GameEngineHostInterface Build (IntPtr childHandle, object window) 
         {
-            return new GameEngineHost (childHandle);
+            return new GameEngineHost (childHandle, window);
         }
 
         
@@ -60,9 +64,10 @@ namespace Stride.Core.Presentation.Controls
         /// Initializes a new instance of the <see cref="GameEngineHost"/> class.
         /// </summary>
         /// <param name="childHandle">The hwnd of the child (hosted) window.</param>
-        public GameEngineHost(IntPtr childHandle)
+        public GameEngineHost(IntPtr childHandle, object window)
         {
             Handle = childHandle;
+            Window = window;
             MinWidth = 32;
             MinHeight = 32;
             Loaded += OnLoaded;
@@ -154,6 +159,8 @@ namespace Stride.Core.Presentation.Controls
 
 //             NativeHelper.SetWindowLong(Handle, NativeHelper.GWL_STYLE, style);
 //             NativeHelper.ShowWindow(Handle, NativeHelper.SW_HIDE);
+            Stride.Graphics.SDL.Window w = (Stride.Graphics.SDL.Window) Window;
+            w.Visible = false;
 
             // Update the parent to be the parent of the host
 //             NativeHelper.SetParent(Handle, hwndParent);
@@ -170,6 +177,8 @@ namespace Stride.Core.Presentation.Controls
 
             // Hide window, clear parent
 //             NativeHelper.ShowWindow(Handle, NativeHelper.SW_HIDE);
+            Stride.Graphics.SDL.Window w = (Stride.Graphics.SDL.Window) Window;
+            w.Visible = false;
 
             // Unregister keyboard sink
 //             var site = ((IKeyboardInputSink)this).KeyboardInputSite;
@@ -191,32 +200,37 @@ namespace Stride.Core.Presentation.Controls
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 updateRequested = false;
-                Visual root = null;
+//                 Visual root = null;
                 var shouldShow = true;
-                var parent = (Visual)global::Avalonia.VisualTree.VisualExtensions.GetVisualParent(this);
-                while (parent != null)
-                {
-                    root = parent;
-
-                    var parentElement = parent as Control;
-                    if (parentElement != null)
-                    {
-                        if (!parentElement.IsLoaded || !parentElement.IsVisible)
-                            shouldShow = false;
-                    }
-
-                    parent = global::Avalonia.VisualTree.VisualExtensions.GetVisualParent(root) as Visual;
-                }
-
-                if (root == null)
-                    return;
+//                 var parent = (Visual)global::Avalonia.VisualTree.VisualExtensions.GetVisualParent(this);
+//                 while (parent != null)
+//                 {
+//                     root = parent;
+// 
+//                     var parentElement = parent as Control;
+//                     if (parentElement != null)
+//                     {
+//                         if (!parentElement.IsLoaded || !parentElement.IsVisible)
+//                             shouldShow = false;
+//                     }
+// 
+//                     parent = global::Avalonia.VisualTree.VisualExtensions.GetVisualParent(root) as Visual;
+//                 }
+// 
+//                 if (root == null)
+//                     return;
 
                 // Find proper position for the game
-                var positionTransform = this.TransformToVisual ((Visual) root);
-                var areaPosition = positionTransform?.Transform(new Point(0, 0));
+                var studioWindow = TopLevel.GetTopLevel (this);
+                var studioPosition = Avalonia.VisualExtensions.PointToScreen (studioWindow, new Point ());
+                var positionTransform = this.TransformToVisual ((Visual) studioWindow);
+                var areaPosition = positionTransform?.Transform(new Point(studioPosition.X, studioPosition.Y));
                 var DpiScaleX = dpiScale;
                 var DpiScaleY = dpiScale;
+
                 var boundingBox = new Int4((int)(areaPosition?.X*DpiScaleX), (int)(areaPosition?.Y*DpiScaleY), (int)(Bounds.Width*DpiScaleX), (int)(Bounds.Height*DpiScaleY));
+                Console.WriteLine ("Pos: " + " - " + studioWindow + " - " + " - " + Avalonia.VisualExtensions.PointToScreen (studioWindow, new Point ()) + " - " + areaPosition);
+                
                 if (boundingBox != lastBoundingBox)
                 {
                     lastBoundingBox = boundingBox;
@@ -224,6 +238,11 @@ namespace Stride.Core.Presentation.Controls
                     // TODO: do we want SWP_NOCOPYBITS?
 //                     const int flags = NativeHelper.SWP_ASYNCWINDOWPOS | NativeHelper.SWP_NOACTIVATE | NativeHelper.SWP_NOZORDER;
 //                     NativeHelper.SetWindowPos(Handle, NativeHelper.HWND_TOP, boundingBox.X, boundingBox.Y, boundingBox.Z, boundingBox.W, flags);
+                    Console.WriteLine ("Resizing: " + boundingBox.X + " - " + boundingBox.Y + " - " + boundingBox.Z + " - " + boundingBox.W);
+                    Stride.Graphics.SDL.Window w = (Stride.Graphics.SDL.Window) Window;
+                    Console.WriteLine ("Resizing: " + w);
+                    w.Size = new Size2 (boundingBox.Z, boundingBox.W);
+                    w.Location = new Stride.Core.Mathematics.Point(boundingBox.X, boundingBox.Y);
                 }
                 
                 if (attached)
@@ -233,6 +252,9 @@ namespace Stride.Core.Presentation.Controls
 //                     INativeControlHostControlTopLevelAttachment native = nativeHost.CreateNewAttachment(Handle);
                     
 //                     NativeHelper.ShowWindow(Handle, shouldShow ? NativeHelper.SW_SHOWNOACTIVATE : NativeHelper.SW_HIDE);
+                    Stride.Graphics.SDL.Window w = (Stride.Graphics.SDL.Window) Window;
+                    Console.WriteLine ("Showing: " + w + " - " + shouldShow);
+                    w.Visible = shouldShow;
                 }
             }, DispatcherPriority.Input); // This code must be dispatched after the DispatcherPriority.Loaded to properly work since it's checking the IsLoaded flag!
         }
