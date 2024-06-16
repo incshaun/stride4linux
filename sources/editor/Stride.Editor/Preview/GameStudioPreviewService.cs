@@ -32,10 +32,12 @@ namespace Stride.Editor.Preview
         private readonly SessionViewModel session;
 
         private readonly AutoResetEvent initializationSignal = new AutoResetEvent(false);
-        private readonly GameEngineHostBase host;
+        private readonly GameEngineHostInterface host;
         private readonly IDebugPage loggerDebugPage;
         private IAssetPreview currentPreview;
         private IntPtr windowHandle;
+        private object windowWindow;
+        
 //         private EmbeddedGameForm gameForm;
         private object previewView;
 
@@ -84,7 +86,7 @@ namespace Stride.Editor.Preview
 
             // Wait for the window handle to be generated on the proper thread
             initializationSignal.WaitOne();
-            host = new GameEngineHostBase(windowHandle);
+            host = new GameEngineHostBase(windowHandle, windowWindow).GetHost ();
 
             session.AssetPropertiesChanged += OnAssetPropertyChanged;
             gameSettingsProvider.GameSettingsChanged += OnGameSettingsChanged;
@@ -142,12 +144,14 @@ namespace Stride.Editor.Preview
 //            gameForm = new EmbeddedGameForm { TopLevel = false, Visible = false };
 //            windowHandle = gameForm.Handle;
 
-            initializationSignal.Set();
-
             PreviewGame = new PreviewGame(AssetBuilderService.EffectCompiler);
 //            var context = new GameContextWinforms(gameForm) { InitializeDatabase = false };
-//             var context = GameContextFactory.NewGameContext(AppContextType.DesktopSDL);
-//             context.InitializeDatabase = false;
+            var context = GameContextFactory.NewGameContext(AppContextType.DesktopSDL);
+            context.InitializeDatabase = false;
+            windowHandle = ((GameContextSDL)context).Control.Handle;
+            windowWindow = ((GameContextSDL)context).Control;
+            
+            initializationSignal.Set();
 
             // Wait for shaders to be loaded
             AssetBuilderService.WaitForShaders();
@@ -156,9 +160,9 @@ namespace Stride.Editor.Preview
             // Ideally, we should try to recreate the game.
             if (!DisablePreview)
             {
-//                PreviewGame.GraphicsDeviceManager.DeviceCreated += GraphicsDeviceManagerDeviceCreated;
-//                PreviewGame.Run(context);
-//                PreviewGame.Dispose();
+               PreviewGame.GraphicsDeviceManager.DeviceCreated += GraphicsDeviceManagerDeviceCreated;
+               PreviewGame.Run(context);
+               PreviewGame.Dispose();
             }
         }
 

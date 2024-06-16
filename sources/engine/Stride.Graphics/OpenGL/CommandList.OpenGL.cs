@@ -636,6 +636,8 @@ if (!init)
 
         internal unsafe void CopyScaler2D(Texture sourceTexture, Texture destTexture, Rectangle sourceRectangle, Rectangle destRectangle, bool flipY = false)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -724,6 +726,7 @@ if (!init)
             // Restore FBO and viewport
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, boundFBO);
             GL.Viewport((int)viewports[0].X, (int)viewports[0].Y, (uint)viewports[0].Width, (uint)viewports[0].Height);
+            }
         }
 
         internal unsafe void CopyScaler2D(Texture sourceTexture, Rectangle sourceRectangle, Rectangle destRectangle, bool needSRgbConversion = false, bool flipY = false)
@@ -1835,6 +1838,8 @@ if (!init)
 
         public void SetVertexBuffer(int index, Buffer buffer, int offset, int stride)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1844,16 +1849,17 @@ if (!init)
                 vboDirty = true;
                 vertexBuffers[index] = newVertexBuffer;
             }
+            }
         }
 
         public void SetIndexBuffer(Buffer buffer, int offset, bool is32bits)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
 
-//             using (GraphicsDevice.UseOpenGLCreationContext())
-            {
             var newIndexBuffer = new IndexBufferView(buffer, offset, is32bits);
             if (indexBuffer != newIndexBuffer)
             {

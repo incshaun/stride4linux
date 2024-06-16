@@ -2133,7 +2133,19 @@ def translateXAML (sourceFile):
 #translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/UIEditor/Views/UIEditorView.xaml.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/XamlRootExtension.cs")
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/GuidExtension.cs")
-translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/AssetCompositeGameEditor/Views/AssetCompositeHierarchyTreeViewHelper.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/AssetCompositeGameEditor/Views/AssetCompositeHierarchyTreeViewHelper.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/AnimationPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/EntityPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/HeightmapPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/MaterialPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/ModelPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/ScenePreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/SkyboxPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/SoundPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/SpriteFontPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/SpriteSheetPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/TexturePreviewView.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/SliderDragFromTrackBehavior.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -2189,6 +2201,8 @@ translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/AssetCompositeG
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/PackagePickerWindow.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/FixAssetReferences/Views/FixAssetReferencesWindow.xaml")
 #translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/UIEditor/Views/UIEditorView.xaml")
+#translateXAML ("editor/Stride.Editor.Wpf/Themes/Generic.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/Themes/Generic.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector

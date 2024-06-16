@@ -1,5 +1,6 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
+using System;
 using Avalonia;
 using Avalonia.Controls;
 
@@ -28,6 +29,13 @@ namespace Stride.Editor.Preview.View
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 		{
 			base.OnApplyTemplate(e);
+            var strideViewPresenter = e.NameScope.Find<ContentPresenter>("PART_StrideView");
+            if (strideViewPresenter != null && builder != null)
+            {
+                var strideView = builder.GetStrideView();
+                strideViewPresenter.Content = strideView;
+            }
+
             UpdateStrideView();
         }
 
@@ -64,11 +72,23 @@ namespace Stride.Editor.Preview.View
 
         private void UpdateStrideView()
         {
-            var strideViewPresenter = this.FindNameScope().Find<ContentPresenter>("PART_StrideView");
-            if (strideViewPresenter != null && builder != null)
+            try
             {
-                var strideView = builder.GetStrideView();
-                strideViewPresenter.Content = strideView;
+            var a = this;
+            var b = this.FindNameScope();
+            if (this.FindNameScope() != null)
+            {
+                var strideViewPresenter = this.FindNameScope().Find<ContentPresenter>("PART_StrideView");
+                if (strideViewPresenter != null && builder != null)
+                {
+                    var strideView = builder.GetStrideView();
+                    strideViewPresenter.Content = strideView;
+                }
+            }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine ("UpdateStrideView ex: " + ex);
             }
         }
     }
