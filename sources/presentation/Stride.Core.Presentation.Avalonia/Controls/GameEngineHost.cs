@@ -21,6 +21,7 @@ using Avalonia.VisualTree;
 
 using Avalonia.Platform;
 using Avalonia.Controls.Platform;
+using Avalonia.Controls.Presenters;
 
 using Stride.Graphics.SDL;
 
@@ -180,6 +181,17 @@ namespace Stride.Core.Presentation.Controls
             Stride.Graphics.SDL.Window w = (Stride.Graphics.SDL.Window) Window;
             w.Visible = false;
 
+                Console.WriteLine ("******* Dispose Clearing parent " + Parent);
+            if (Parent != null)
+            {
+                Console.WriteLine ("Clearing parent " + Parent);
+                if (Parent is ContentPresenter && ((ContentPresenter)Parent).Name == "PART_StrideView")
+                {
+                    ((ContentPresenter)Parent).Content = null;
+                }
+                Console.WriteLine ("Clearing parent2 " + Parent);
+            }
+            
             // Unregister keyboard sink
 //             var site = ((IKeyboardInputSink)this).KeyboardInputSite;
 //             ((IKeyboardInputSink)this).KeyboardInputSite = null;
@@ -228,10 +240,10 @@ namespace Stride.Core.Presentation.Controls
                 var DpiScaleX = dpiScale;
                 var DpiScaleY = dpiScale;
 
-                var boundingBox = new Int4((int)(areaPosition?.X*DpiScaleX), (int)(areaPosition?.Y*DpiScaleY), (int)(Bounds.Width*DpiScaleX), (int)(Bounds.Height*DpiScaleY));
-                Console.WriteLine ("Pos: " + " - " + studioWindow + " - " + " - " + Avalonia.VisualExtensions.PointToScreen (studioWindow, new Point ()) + " - " + areaPosition);
+                var boundingBox = new Int4((int)(areaPosition?.X*DpiScaleX), (int)(areaPosition?.Y*DpiScaleY), (int)(Bounds.Width*DpiScaleX), (int)(Bounds.Height*DpiScaleY)-50); //FIXME Fudge factor included.
+                Console.WriteLine ("Pos: " + " - " + studioWindow + " - " + " - " + Avalonia.VisualExtensions.PointToScreen (studioWindow, new Point ()) + " - " + areaPosition + " ---" + Height + " x " + Width);
                 
-                if (boundingBox != lastBoundingBox)
+//                if (boundingBox != lastBoundingBox)
                 {
                     lastBoundingBox = boundingBox;
                     // Move the window asynchronously, without activating it, without touching the Z order
@@ -243,6 +255,9 @@ namespace Stride.Core.Presentation.Controls
                     Console.WriteLine ("Resizing: " + w);
                     w.Size = new Size2 (boundingBox.Z, boundingBox.W);
                     w.Location = new Stride.Core.Mathematics.Point(boundingBox.X, boundingBox.Y);
+                    w.TopMost = true;
+                    w.BringToFront ();
+                    Console.WriteLine ("Final: " + w.Size + " - " + w.Location + " - " + w.TopMost);
                 }
                 
                 if (attached)

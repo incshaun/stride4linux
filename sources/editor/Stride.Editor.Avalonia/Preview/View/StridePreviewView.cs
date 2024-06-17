@@ -33,10 +33,19 @@ namespace Stride.Editor.Preview.View
             if (strideViewPresenter != null && builder != null)
             {
                 var strideView = builder.GetStrideView();
-                strideViewPresenter.Content = strideView;
+                Console.WriteLine ("App Temp " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent );
+//                strideViewPresenter.Content = null;
+//                strideViewPresenter.UpdateLayout ();
+                Console.WriteLine ("App Temp2 " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent + " - " + (strideViewPresenter != ((Control) strideView).Parent) + " - " + strideViewPresenter);
+//                ((Control) strideView).Parent = null;
+//                if (((Control) strideView).Parent == null) // already made the content.
+                {
+                    strideViewPresenter.Content = strideView;
+                }
+                Console.WriteLine ("App Temp3 " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent );
             }
 
-            UpdateStrideView();
+ //           UpdateStrideView();
         }
 
         public void InitializeView(IPreviewBuilder previewBuilder, IAssetPreview assetPreview)
@@ -72,7 +81,7 @@ namespace Stride.Editor.Preview.View
 
         private void UpdateStrideView()
         {
-            try
+ /*           try
             {
             var a = this;
             var b = this.FindNameScope();
@@ -89,7 +98,7 @@ namespace Stride.Editor.Preview.View
             catch (Exception ex)
             {
                 Console.WriteLine ("UpdateStrideView ex: " + ex);
-            }
+            }*/
         }
     }
 }
