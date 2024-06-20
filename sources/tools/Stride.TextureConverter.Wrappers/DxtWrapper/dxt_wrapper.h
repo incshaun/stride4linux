@@ -14,6 +14,7 @@
 #endif
 
 #include "DirectXTex.h"
+#include <string>
 
 extern "C" {
 
@@ -35,10 +36,10 @@ extern "C" {
 	DXT_API HRESULT dxtPremultiplyAlpha( const DirectX::Image* srcImages, int nimages, const DirectX::TexMetadata& metadata, DirectX::TEX_PMALPHA_FLAGS flags, DirectX::ScratchImage& result );
 
 	// I/O functions
-	DXT_API HRESULT dxtLoadTGAFile(LPCWSTR szFile, DirectX::TexMetadata* metadata, DirectX::ScratchImage& image);
-	DXT_API HRESULT dxtLoadDDSFile(LPCWSTR szFile, DirectX::DDS_FLAGS flags, DirectX::TexMetadata* metadata, DirectX::ScratchImage& image);
-	DXT_API HRESULT dxtSaveToDDSFile( const DirectX::Image& image, DirectX::DDS_FLAGS flags, LPCWSTR szFile );
-    DXT_API HRESULT dxtSaveToDDSFileArray( const DirectX::Image* images, int nimages, const DirectX::TexMetadata& metadata, DirectX::DDS_FLAGS flags, LPCWSTR szFile );
+	DXT_API HRESULT dxtLoadTGAFile(const char* szFile, DirectX::TexMetadata* metadata, DirectX::ScratchImage& image);
+	DXT_API HRESULT dxtLoadDDSFile(const char* szFile, DirectX::DDS_FLAGS flags, DirectX::TexMetadata* metadata, DirectX::ScratchImage& image);
+	DXT_API HRESULT dxtSaveToDDSFile( const DirectX::Image& image, DirectX::DDS_FLAGS flags, const char* szFile );
+    DXT_API HRESULT dxtSaveToDDSFileArray( const DirectX::Image* images, int nimages, const DirectX::TexMetadata& metadata, DirectX::DDS_FLAGS flags, const char* szFile );
 
 	// Scratch Image
 	DXT_API DirectX::ScratchImage * dxtCreateScratchImage();

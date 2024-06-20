@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 #include "dxt_wrapper.h"
+#include <string>
 
 // Utilities functions
 void dxtComputePitch( DXGI_FORMAT fmt, int width, int height, int& rowPitch, int& slicePitch, DirectX::CP_FLAGS flags = DirectX::CP_FLAGS_NONE )
@@ -9,6 +10,17 @@ void dxtComputePitch( DXGI_FORMAT fmt, int width, int height, int& rowPitch, int
 	DirectX::ComputePitch(fmt, width, height, rowPitchT, slicePitchT, flags);
 	rowPitch = rowPitchT;
 	slicePitch = slicePitchT;
+}
+
+// For handling different encodings
+const wchar_t* narrowToWideString(const char* szFile)
+{
+	std::string nstr(szFile);
+    std::wstring wstr = std::wstring(nstr.begin(), nstr.end());
+    wchar_t* filePath = new wchar_t[wstr.size() + 1];
+    std::copy(wstr.begin(), wstr.end(), filePath);
+    filePath[wstr.size()] = L'\0'; // Null-terminate the wide string
+    return filePath;
 }
 
 bool dxtIsCompressed(DXGI_FORMAT fmt) { return DirectX::IsCompressed(fmt); }
@@ -63,7 +75,7 @@ HRESULT dxtGenerateMipMaps3DArray( const DirectX::Image* srcImages, int nimages,
 	return DirectX::GenerateMipMaps3D(srcImages, nimages, metadata, filter, levels, mipChain);
 }
 
-HRESULT dxtResize(const DirectX::Image* srcImages, int nimages, const DirectX::TexMetadata& metadata, int width, int height, DirectX::TEX_FILTER_FLAGS filter, DirectX::ScratchImage& result )
+HRESULT dxtResize( const DirectX::Image* srcImages, int nimages, const DirectX::TexMetadata& metadata, int width, int height, DirectX::TEX_FILTER_FLAGS filter, DirectX::ScratchImage& result )
 {
 	return DirectX::Resize(srcImages, nimages, metadata, width, height, filter, result);
 }
@@ -80,24 +92,37 @@ HRESULT dxtPremultiplyAlpha( const DirectX::Image* srcImages, int nimages, const
 
 
 // I/O functions
-HRESULT dxtLoadDDSFile(LPCWSTR szFile, DirectX::DDS_FLAGS flags, DirectX::TexMetadata* metadata, DirectX::ScratchImage& image)
+HRESULT dxtLoadDDSFile( const char* szFile, DirectX::DDS_FLAGS flags, DirectX::TexMetadata* metadata, DirectX::ScratchImage& image)
 {
-	return DirectX::LoadFromDDSFile(szFile, flags, metadata, image);
+	const wchar_t* filePath = narrowToWideString(szFile);
+	auto result = DirectX::LoadFromDDSFile(filePath, flags, metadata, image);
+	delete[] filePath;
+	return result;
 }
 
-HRESULT dxtLoadTGAFile(LPCWSTR szFile, DirectX::TexMetadata* metadata, DirectX::ScratchImage& image)
+
+HRESULT dxtLoadTGAFile( const char* szFile, DirectX::TexMetadata* metadata, DirectX::ScratchImage& image)
 {
-	return DirectX::LoadFromTGAFile(szFile, metadata, image);
+	const wchar_t* filePath = narrowToWideString(szFile);
+	auto result = DirectX::LoadFromTGAFile(filePath, metadata, image);
+	delete[] filePath;
+	return result;
 }
 
-HRESULT dxtSaveToDDSFile( const DirectX::Image& image, DirectX::DDS_FLAGS flags, LPCWSTR szFile )
+HRESULT dxtSaveToDDSFile( const DirectX::Image& image, DirectX::DDS_FLAGS flags, const char* szFile )
 {
-	return DirectX::SaveToDDSFile(image, flags, szFile);
+	const wchar_t* filePath = narrowToWideString(szFile);
+	auto result = DirectX::SaveToDDSFile(image, flags, filePath);
+	delete[] filePath;
+	return result;
 }
 
-HRESULT dxtSaveToDDSFileArray( const DirectX::Image* images, int nimages, const DirectX::TexMetadata& metadata, DirectX::DDS_FLAGS flags, LPCWSTR szFile )
+HRESULT dxtSaveToDDSFileArray( const DirectX::Image* images, int nimages, const DirectX::TexMetadata& metadata, DirectX::DDS_FLAGS flags, const char* szFile )
 {
-	return DirectX::SaveToDDSFile(images, nimages, metadata, flags, szFile);
+	const wchar_t* filePath = narrowToWideString(szFile);
+	auto result = DirectX::SaveToDDSFile(images, nimages, metadata, flags, filePath);
+	delete[] filePath;
+	return result;
 }
 
 // Scratch Image
