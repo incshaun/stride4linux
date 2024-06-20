@@ -20,6 +20,7 @@ Stride comes with an editor that allows you to create and manage the content of 
 ## Linux progress
 
 * First alpha released. Download the LinuxAlpha01 branch, and follow the instructions (on that branch). Partially functional editor, able to create and run a basic project.
+* Second alpha released. Use the LinuxAlpha02 branch, with instructions in the README.md on that branch. Editor allows some scene and property manipulation, adding new assets, rudimentary drag and drop. Also some refinements to Android export.
 
 ![Stride Editor](https://stride3d.net/images/external/script-editor.png)
 
