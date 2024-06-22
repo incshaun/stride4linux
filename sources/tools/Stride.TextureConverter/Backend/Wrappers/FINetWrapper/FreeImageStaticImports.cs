@@ -47,7 +47,7 @@ namespace FreeImageAPI
 		/// <summary>
 		/// Filename of the FreeImage library.
 		/// </summary>
-		private const string FreeImageLibrary = "freeimage";
+		private const string FreeImageLibrary = "FreeImage";
 
 		/// <summary>
 		/// Number of bytes to shift left within a 4 byte block.

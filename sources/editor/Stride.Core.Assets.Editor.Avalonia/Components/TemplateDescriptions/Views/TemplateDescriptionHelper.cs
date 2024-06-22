@@ -10,6 +10,7 @@ using Stride.Core.Extensions;
 using Stride.Core.IO;
 using Stride.Core.Presentation.ViewModels;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 
 namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
 {
@@ -28,6 +29,11 @@ namespace Stride.Core.Assets.Editor.Components.TemplateDescriptions.ViewModels
                 if (!path.StartsWith("pack:", StringComparison.Ordinal) && !File.Exists(path))
                 {
                     return null;
+                }
+
+                if (path.Equals ("pack://application:,,,/Stride.Core.Assets.Editor;component/Resources/Images/default-template-icon.png"))
+                {
+                    return new Bitmap (AssetLoader.Open(new Uri("avares://Stride.Core.Assets.Editor.Avalonia/Resources/Images/default-template-icon.png")));
                 }
 
                 return new Bitmap(path);

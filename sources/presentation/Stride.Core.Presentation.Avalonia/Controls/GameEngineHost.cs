@@ -266,7 +266,7 @@ namespace Stride.Core.Presentation.Controls
                     w.Size = new Size2 (boundingBox.Z, boundingBox.W);
 //                     w.Location = new Stride.Core.Mathematics.Point(boundingBox.X, boundingBox.Y);
 //                     w.Location = new Stride.Core.Mathematics.Point(0, 0);
-                     w.Location = new Stride.Core.Mathematics.Point(-boundingBox.X, -boundingBox.Y);
+                    w.Location = new Stride.Core.Mathematics.Point(-boundingBox.X, -boundingBox.Y);
                     w.TopMost = true;
                     w.BringToFront ();
                     Console.WriteLine ("Final: " + w.Size + " - " + w.Location + " - " + w.TopMost);
