@@ -31,7 +31,7 @@ namespace Stride.Core.Presentation.Controls
     /// A <see cref="FrameworkElement"/> that can host a game engine window. This control is faster than <see cref="HwndHost"/> but might behave
     /// a bit less nicely on certain cases (such as resize, etc.).
     /// </summary>
-    public class GameEngineHost : Control, IDisposable, GameEngineHostInterface//, IWin32Window, IKeyboardInputSink
+    public class GameEngineHost : NativeControlHost, IDisposable, GameEngineHostInterface//, IWin32Window, IKeyboardInputSink
     {
         private readonly List<IPlatformHandle> contextMenuSources = new List<IPlatformHandle>();
         private bool updateRequested;
@@ -82,6 +82,15 @@ namespace Stride.Core.Presentation.Controls
 
 //         IKeyboardInputSite IKeyboardInputSink.KeyboardInputSite { get; set; }
 
+        protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
+        {
+            return new PlatformHandle(Handle, "Sdl2Hwnd");
+        }
+         
+        protected override void DestroyNativeControlCore(IPlatformHandle control)
+        {
+        }
+        
         public void Dispose()
         {
             if (isDisposed)
@@ -165,6 +174,7 @@ namespace Stride.Core.Presentation.Controls
 
             // Update the parent to be the parent of the host
 //             NativeHelper.SetParent(Handle, hwndParent);
+//             w.SetParent (this);
 
             // Register keyboard sink to make shortcuts work
 //             ((IKeyboardInputSink)this).KeyboardInputSite = ((IKeyboardInputSink)hwndSource).RegisterKeyboardInputSink(this);
@@ -240,7 +250,7 @@ namespace Stride.Core.Presentation.Controls
                 var DpiScaleX = dpiScale;
                 var DpiScaleY = dpiScale;
 
-                var boundingBox = new Int4((int)(areaPosition?.X*DpiScaleX), (int)(areaPosition?.Y*DpiScaleY), (int)(Bounds.Width*DpiScaleX), (int)(Bounds.Height*DpiScaleY)-50); //FIXME Fudge factor included.
+                var boundingBox = new Int4((int)(areaPosition?.X*DpiScaleX), (int)(areaPosition?.Y*DpiScaleY), (int)(Bounds.Width*DpiScaleX), (int)(Bounds.Height*DpiScaleY));
                 Console.WriteLine ("Pos: " + " - " + studioWindow + " - " + " - " + Avalonia.VisualExtensions.PointToScreen (studioWindow, new Point ()) + " - " + areaPosition + " ---" + Height + " x " + Width);
                 
 //                if (boundingBox != lastBoundingBox)
@@ -254,7 +264,9 @@ namespace Stride.Core.Presentation.Controls
                     Stride.Graphics.SDL.Window w = (Stride.Graphics.SDL.Window) Window;
                     Console.WriteLine ("Resizing: " + w);
                     w.Size = new Size2 (boundingBox.Z, boundingBox.W);
-                    w.Location = new Stride.Core.Mathematics.Point(boundingBox.X, boundingBox.Y);
+//                     w.Location = new Stride.Core.Mathematics.Point(boundingBox.X, boundingBox.Y);
+//                     w.Location = new Stride.Core.Mathematics.Point(0, 0);
+                     w.Location = new Stride.Core.Mathematics.Point(-boundingBox.X, -boundingBox.Y);
                     w.TopMost = true;
                     w.BringToFront ();
                     Console.WriteLine ("Final: " + w.Size + " - " + w.Location + " - " + w.TopMost);
@@ -270,6 +282,7 @@ namespace Stride.Core.Presentation.Controls
                     Stride.Graphics.SDL.Window w = (Stride.Graphics.SDL.Window) Window;
                     Console.WriteLine ("Showing: " + w + " - " + shouldShow);
                     w.Visible = shouldShow;
+                    w.Show ();
                 }
             }, DispatcherPriority.Input); // This code must be dispatched after the DispatcherPriority.Loaded to properly work since it's checking the IsLoaded flag!
         }
