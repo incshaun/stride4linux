@@ -77,7 +77,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+// using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -85,6 +85,11 @@ using Stride.Graphics.Font;
 
 using System.Linq;
 using Stride.Graphics;
+
+using SkiaSharp;
+using Color = SkiaSharp.SKColor;
+using Rectangle = SkiaSharp.SKRect;
+using Bitmap = SkiaSharp.SKBitmap;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {

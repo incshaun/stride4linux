@@ -9,11 +9,14 @@ using Stride.Core.Assets;
 using Stride.Core.IO;
 
 using SkiaSharp;
+using Bitmap = SkiaSharp.SKBitmap;
+using Rectangle = SkiaSharp.SKRect;
+using Color = SkiaSharp.SKColor;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {
-    using System.Drawing;
-    using System.Drawing.Imaging;
+//     using System.Drawing;
+//     using System.Drawing.Imaging;
     using System.Reflection;
 //     using SharpDX.DirectWrite;
 //     using Factory = SharpDX.DirectWrite.Factory;
@@ -88,7 +91,7 @@ namespace Stride.Assets.SpriteFont.Compiler
 //             }
 
             // If font generation failed for any reason, ignore it and return an empty glyph
-            return new Bitmap(1, 1, PixelFormat.Format32bppArgb);
+            return new Bitmap(1, 1, SKColorType.Rgba8888, SKAlphaType.Opaque);
         }
 
         /// <summary>
@@ -102,9 +105,9 @@ namespace Stride.Assets.SpriteFont.Compiler
             // Case 1 - corner pixel is negative (outside), do not invert
             var firstPixel = bitmap.GetPixel(0, 0);
             var colorChannels = 0;
-            if (firstPixel.R > 0) colorChannels++;
-            if (firstPixel.G > 0) colorChannels++;
-            if (firstPixel.B > 0) colorChannels++;
+            if (firstPixel.Red > 0) colorChannels++;
+            if (firstPixel.Green > 0) colorChannels++;
+            if (firstPixel.Blue > 0) colorChannels++;
             if (colorChannels <= 1)
                 return;
 
@@ -114,10 +117,11 @@ namespace Stride.Assets.SpriteFont.Compiler
                 {
                     var pixel = bitmap.GetPixel(i, j);
 
-                    int invertR = ((int)255 - pixel.R);
-                    int invertG = ((int)255 - pixel.G);
-                    int invertB = ((int)255 - pixel.B);
-                    var invertedPixel = Color.FromArgb((invertR << 16) + (invertG << 8) + (invertB));
+                    int invertR = ((int)255 - pixel.Red);
+                    int invertG = ((int)255 - pixel.Green);
+                    int invertB = ((int)255 - pixel.Blue);
+//                     var invertedPixel = Color.FromArgb((invertR << 16) + (invertG << 8) + (invertB));
+                    var invertedPixel = new Color((byte) invertR, (byte) invertG, (byte) invertB);
 
                     bitmap.SetPixel(i, j, invertedPixel);
                 }
@@ -203,11 +207,11 @@ namespace Stride.Assets.SpriteFont.Compiler
             Bitmap bitmap;
             if (char.IsWhiteSpace(character))
             {
-                bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
+                bitmap = new Bitmap(1, 1, SKColorType.Rgba8888, SKAlphaType.Opaque);
             }
             else
             {
-                bitmap = new Bitmap(pixelWidth, pixelHeight, PixelFormat.Format32bppArgb);
+                bitmap = new Bitmap(pixelWidth, pixelHeight, SKColorType.Rgba8888, SKAlphaType.Opaque);
                 SKBitmap texture =  new SKBitmap (pixelWidth, pixelHeight);
                 SKCanvas bitmapCanvas = new SKCanvas(texture);
                 bitmapCanvas.Clear(new SKColor(1, 1, 1)); // Bug in skiasharp seems to not clear if using perfect black.
@@ -217,7 +221,8 @@ namespace Stride.Assets.SpriteFont.Compiler
                     for (int x = 0; x < pixelWidth; x++)
                     {
                         SKColor col = texture.GetPixel (x, y);
-                        var color = Color.FromArgb(col.Red, col.Green, col.Blue);
+//                         var color = Color.FromArgb(col.Red, col.Green, col.Blue);
+                        var color = new Color(col.Red, col.Green, col.Blue);
 
                         bitmap.SetPixel(x, y, color);
                     }

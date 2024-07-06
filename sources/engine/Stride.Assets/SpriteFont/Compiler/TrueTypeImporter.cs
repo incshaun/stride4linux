@@ -26,12 +26,16 @@ using System.Collections.Generic;
 using System.IO;
 
 using SkiaSharp;
+using Color = SkiaSharp.SKColor;
+using Rectangle = SkiaSharp.SKRect;
+using Bitmap = SkiaSharp.SKBitmap;
+
 using Stride.Graphics.Font;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {
-    using System.Drawing;
-    using System.Drawing.Imaging;
+//     using System.Drawing;
+//     using System.Drawing.Imaging;
 
     // This code was originally taken from DirectXTk but rewritten with DirectWrite
     // for more accuracy in font rendering
@@ -85,15 +89,20 @@ namespace Stride.Assets.SpriteFont.Compiler
         private Glyph ImportGlyph(SKFont fontFace, char character, SKFontMetrics fontMetrics, float fontSize, FontAntiAliasMode antiAliasMode)
         {
             SKPaint textPaint = new SKPaint { Color = SKColors.White, TextSize = fontSize, TextAlign = SKTextAlign.Center };
-            SKRect rect = new SKRect ();
-            textPaint.MeasureText ("" + character, ref rect);
+            Rectangle rect = new Rectangle ();
+            string text = "" + character;
+//             text = "-";
+            textPaint.MeasureText (text, ref rect);
             int width = (int) rect.Width;
             int height = (int) rect.Height;
 
-            int yOffset = (int) (fontSize * ((rect.Top + rect.Bottom) / 22.0f));
+            float xOffset = (int) (0 * fontSize);
+            float yOffset = (int) (fontSize * ((rect.Top + rect.Bottom) / 22.0f));
             yOffset = (int) (-4 * fontSize) + (int) (rect.Top - ((rect.Top + rect.Bottom) / 2) / 2.0f); // not sure why the -4, fits text onto gizmo camera, will have to explore further.
+//             yOffset = (int) (-4f * fontSize);
+//             yOffset = -0.5f;
 
-            var advanceWidth = 2 + (int) textPaint.GetGlyphWidths ("" + character)[0];
+            var advanceWidth = 2 + (int) textPaint.GetGlyphWidths (text)[0];
 
             var pixelWidth = width + 10;
             var pixelHeight = height + 10;
@@ -101,30 +110,41 @@ namespace Stride.Assets.SpriteFont.Compiler
             Bitmap bitmap;
             if (char.IsWhiteSpace(character))
             {
-                bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
+                bitmap = new Bitmap(1, 1, SKColorType.Rgba8888, SKAlphaType.Opaque);
             }
             else
             {
-                bitmap = new Bitmap(pixelWidth, pixelHeight, PixelFormat.Format32bppArgb);
-                SKBitmap texture =  new SKBitmap (pixelWidth, pixelHeight);
-                SKCanvas bitmapCanvas = new SKCanvas(texture);
+//                 bitmap = new Bitmap(pixelWidth, pixelHeight, SKColorType.Rgba8888/*PixelFormat.Format32bppArgb*/, SKAlphaType.Opaque);
+                bitmap = new Bitmap (pixelWidth, pixelHeight);
+                SKCanvas bitmapCanvas = new SKCanvas(bitmap);
                 bitmapCanvas.Clear(new SKColor(1, 1, 1)); // Bug in skiasharp seems to not clear if using perfect black.
-                bitmapCanvas.DrawText("" + character, pixelWidth / 2, (pixelHeight - (rect.Bottom + rect.Top)) / 2, textPaint);
-                for (int y = 0; y < pixelHeight; y++)
-                {
-                    for (int x = 0; x < pixelWidth; x++)
-                    {
-                        SKColor col = texture.GetPixel (x, y);
-                        var color = Color.FromArgb(col.Red, col.Green, col.Blue);
-
-                        bitmap.SetPixel(x, y, color);
-                    }
-                }
+                Console.WriteLine ("Imp: " + character + " - " + rect + " - " + pixelWidth + " : " + pixelHeight + " -- " + yOffset + " -- " + width + " - " + height + " :: " + advanceWidth + " --- " + rect.MidX + " - " + rect.MidY + " -- " + fontSize);
+//                 bitmapCanvas.DrawText("XTesting" + character, pixelWidth / 2, (pixelHeight - (rect.Bottom + rect.Top)) / 2, textPaint);
+                bitmapCanvas.DrawText(text, pixelWidth / 2 - rect.Left, pixelHeight / 2 - rect.MidY, textPaint);
+//                 for (int y = 0; y < pixelHeight; y++)
+//                 {
+//                     Console.Write (y + ": ");
+//                     for (int x = 0; x < pixelWidth; x++)
+//                     {
+//                         Console.Write (bitmap.GetPixel (x, y).Red > 50 ? "X" : " " );
+//                     }
+//                     Console.WriteLine ();
+//                 }
+//                 for (int y = 0; y < pixelHeight; y++)
+//                 {
+//                     for (int x = 0; x < pixelWidth; x++)
+//                     {
+//                         SKColor col = texture.GetPixel (x, y);
+//                         var color = Color.FromArgb(col.Red, col.Green, col.Blue);
+// 
+//                         bitmap.SetPixel(x, y, color);
+//                     }
+//                 }
             }
 
             var glyph = new Glyph(character, bitmap)
             {
-                XOffset = 0,
+                XOffset = xOffset,
                 XAdvance = advanceWidth,
                 YOffset = yOffset,
             };

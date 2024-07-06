@@ -76,11 +76,16 @@
 //--------------------------------------------------------------------
 
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+// using System.Drawing;
+// using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Stride.Core.Mathematics;
 using Stride.Graphics.Font;
+
+using SkiaSharp;
+using Color = SkiaSharp.SKColor;
+using Rectangle = SkiaSharp.SKRect;
+using Bitmap = SkiaSharp.SKBitmap;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {
@@ -106,7 +111,7 @@ namespace Stride.Assets.SpriteFont.Compiler
                 fontGlyphs[i] = new Graphics.Font.Glyph
                 {
                     Character = glyph.Character,
-                    Subrect = new Core.Mathematics.Rectangle(glyph.Subrect.X, glyph.Subrect.Y, glyph.Subrect.Width, glyph.Subrect.Height),
+                    Subrect = new Core.Mathematics.Rectangle((int) glyph.Subrect.Left, (int) glyph.Subrect.Top, (int) glyph.Subrect.Width, (int) glyph.Subrect.Height),
                     Offset = new Vector2(glyph.XOffset, glyph.YOffset),
                     XAdvance = glyph.XAdvance,
                 };
@@ -128,14 +133,15 @@ namespace Stride.Assets.SpriteFont.Compiler
             // TODO Maybe switch to 3-channel texture
             var image = Graphics.Image.New2D(bitmap.Width, bitmap.Height, 1, Graphics.PixelFormat.R8G8B8A8_UNorm);
             var pixelBuffer = image.PixelBuffer[0];
-            using (var bitmapData = new BitmapUtils.PixelAccessor(bitmap, ImageLockMode.ReadOnly))
+//             using (var bitmapData = new BitmapUtils.PixelAccessor(bitmap, ImageLockMode.ReadOnly))
             {
                 for (int y = 0; y < bitmap.Height; y++)
                 {
                     for (int x = 0; x < bitmap.Width; x++)
                     {
-                        var color = bitmapData[x, y];
-                        pixelBuffer.SetPixel(x, y, new Core.Mathematics.Color(color.R, color.G, color.B, color.A));
+//                         var color = bitmapData[x, y];
+                        var color = bitmap.GetPixel (x, y);
+                        pixelBuffer.SetPixel(x, y, new Core.Mathematics.Color(color.Red, color.Green, color.Blue, color.Alpha));
                     }
                 }
             }
