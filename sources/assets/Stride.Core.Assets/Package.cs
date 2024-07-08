@@ -631,8 +631,7 @@ namespace Stride.Core.Assets
 
                 // Find the .csproj next to .sdpkg (if any)
                 // Note that we use package.FullPath since we must first perform package upgrade from 3.0 to 3.1+ (might move package in .csproj folder)
-//                 var projectPath = Path.ChangeExtension(package.FullPath.ToWindowsPath(), ".csproj");
-                var projectPath = Path.ChangeExtension(package.FullPath, ".csproj");
+                var projectPath = Path.ChangeExtension(package.FullPath.ToOSPath(), ".csproj");
                 if (File.Exists(projectPath))
                 {
                     return new SolutionProject(package, Guid.NewGuid(), projectPath);
@@ -885,8 +884,8 @@ namespace Stride.Core.Assets
 //                     System.Threading.Tasks.Task.Factory.StartNew(() => LoadAsset(new AssetMigrationContext(this, assetFile.ToReference(), assetFile.FilePath.ToWindowsPath(), log), assetFile), cancelToken.Value) : 
 //                     System.Threading.Tasks.Task.Factory.StartNew(() => LoadAsset(new AssetMigrationContext(this, assetFile.ToReference(), assetFile.FilePath.ToWindowsPath(), log), assetFile));
                 var task = cancelToken.HasValue ?
-                    System.Threading.Tasks.Task.Factory.StartNew(() => LoadAsset(new AssetMigrationContext(this, assetFile.ToReference(), assetFile.FilePath, log), assetFile), cancelToken.Value) : 
-                    System.Threading.Tasks.Task.Factory.StartNew(() => LoadAsset(new AssetMigrationContext(this, assetFile.ToReference(), assetFile.FilePath, log), assetFile));
+                    System.Threading.Tasks.Task.Factory.StartNew(() => LoadAsset(new AssetMigrationContext(this, assetFile.ToReference(), assetFile.FilePath.ToOSPath(), log), assetFile), cancelToken.Value) : 
+                    System.Threading.Tasks.Task.Factory.StartNew(() => LoadAsset(new AssetMigrationContext(this, assetFile.ToReference(), assetFile.FilePath.ToOSPath(), log), assetFile));
 
                 tasks.Add(task);
             }
@@ -1058,8 +1057,7 @@ namespace Stride.Core.Assets
                 // If csproj, we might need to compile it
                 if (projectReference != null)
                 {
-//                     var fullProjectLocation = projectReference.Location.ToWindowsPath();
-                    var fullProjectLocation = projectReference.Location;
+                    var fullProjectLocation = projectReference.Location.ToOSPath();
                     if (loadParameters.AutoCompileProjects || string.IsNullOrWhiteSpace(assemblyPath))
                     {
                         assemblyPath = VSProjectHelper.GetOrCompileProjectAssembly(Session?.SolutionPath, fullProjectLocation, forwardingLogger, "Build", loadParameters.AutoCompileProjects, loadParameters.BuildConfiguration, extraProperties: loadParameters.ExtraCompileProperties, onlyErrors: true);

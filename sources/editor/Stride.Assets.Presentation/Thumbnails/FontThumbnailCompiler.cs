@@ -25,8 +25,9 @@ namespace Stride.Assets.Presentation.Thumbnails
 
         protected override void CompileThumbnail(ThumbnailCompilerContext context, string thumbnailStorageUrl, AssetItem assetItem, Package originalPackage, AssetCompilerResult result)
         {
-            UFile fontPathOnDisk = Asset.FontSource.GetFontPath();
-            bool sourceIsValid = (fontPathOnDisk != null && File.Exists(fontPathOnDisk));
+//            UFile fontPathOnDisk = Asset.FontSource.GetFontPath();
+//            bool sourceIsValid = (fontPathOnDisk != null && File.Exists(fontPathOnDisk));
+bool sourceIsValid = true;
 
             if (sourceIsValid)
             {
