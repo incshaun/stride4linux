@@ -540,7 +540,7 @@
                           WatermarkContent="{Binding WatermarkContent, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}}"
                           Text="{Binding Text, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}}"
                           CancelWithEscape="False" />
-            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False"
+            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="PART_Popup" Focusable="False"
                     >
               <Grid>
                 <ListBox x:Name="PART_ListBox"  MaxHeight="380"
@@ -581,7 +581,7 @@
                           ValidateOnLostFocus="False" ValidateWithEnter="False" UseTimedValidation="True"
                           Text="{Binding SearchText, RelativeSource={RelativeSource AncestorType=ctrl:SearchComboBox}, Mode=OneWayToSource}"
                           CancelWithEscape="False" />
-            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False"
+            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="PART_Popup" Focusable="False"
                     >
               <Grid>
                 <ListBox x:Name="PART_ListBox"  MaxHeight="380"

@@ -625,7 +625,7 @@
                               IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                   <Image Source="{StaticResource ImageAdd}" Width="16" Height="16" Margin="-1"/>
                 </ToggleButton>
-                <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Left" 
+                <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Left" 
                        VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource TemplatedParent}}"
                        HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                        PlacementTarget="{Binding ElementName=ToggleButton}" >
@@ -686,7 +686,7 @@
                               IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                   <Image Source="{StaticResource ImageAdd}" Width="16" Height="16" Margin="-1"/>
                 </ToggleButton>
-                <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Left" 
+                <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Left" 
                        VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource TemplatedParent}}"
                        HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                        PlacementTarget="{Binding ElementName=ToggleButton}" >
@@ -694,10 +694,14 @@
                              Background="{DynamicResource ControlBackgroundBrush}" Margin="10">
                     <TextBlock DockPanel.Dock="Left" Margin="8,0,0,0" VerticalAlignment="Center"
                                Text="{sd:Localize Key name:}"/>
-                    <sd:TextBox sd:FocusManager.IsFocused="{Binding IsOpen, ElementName=Popup}" CancelOnLostFocus="True"
+                    <sd:TextBox CancelOnLostFocus="True"
                                   Text="{sd:Localize New key}" Margin="8" SelectAllOnFocus="True" Width="160"
                                   ValidateCommand="{Binding AddPrimitiveKey}" x:Name="TextBox"
                                   ValidateCommandParameter="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+<!--                    <sd:TextBox sd:FocusManager.IsFocused="{Binding IsOpen, ElementName=Popup}" CancelOnLostFocus="True"
+                                  Text="{sd:Localize New key}" Margin="8" SelectAllOnFocus="True" Width="160"
+                                  ValidateCommand="{Binding AddPrimitiveKey}" x:Name="TextBox"
+                                  ValidateCommandParameter="{Binding Text, RelativeSource={RelativeSource Self}}"/>-->
                   </DockPanel>
                 </Popup>
               </Grid>
@@ -747,7 +751,7 @@
                               IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                   <Image Source="{StaticResource ImageAdd}" Width="16" Height="16" Margin="-1"/>
                 </ToggleButton>
-                <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Left" 
+                <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Left" 
                        VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource TemplatedParent}}"
                        HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                        PlacementTarget="{Binding ElementName=ToggleButton}" >
