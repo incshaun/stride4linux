@@ -99,7 +99,10 @@
               <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}"  x:Name="DropDown" >
                 <Border x:Name="DropDownBorder" Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="3,3,3,3" />
                 <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  >
-                  <StackPanel   />
+<!--                   <StackPanel   /> -->
+                  <ItemsPresenter Name="PART_ItemsPresenter"
+                                  Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                                  ItemsPanel="{TemplateBinding ItemsPanel}" />
                 </ScrollViewer>
               </Grid>
             </Popup>

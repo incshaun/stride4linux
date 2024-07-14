@@ -344,11 +344,14 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
             }
             object data = null;
             var container = GetContainer(originalSource);
-            var itemsToDrag = GetItemsToDrag(container).ToList();
-            if (itemsToDrag.Count > 0)
+            if (GetItemsToDrag(container) != null)
             {
-                var dragContainer = new DragContainer(itemsToDrag);
-                data = dragContainer;
+                var itemsToDrag = GetItemsToDrag(container).ToList();
+                if (itemsToDrag.Count > 0)
+                {
+                    var dragContainer = new DragContainer(itemsToDrag);
+                    data = dragContainer;
+                }
             }
             return data;
         }

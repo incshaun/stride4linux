@@ -47,7 +47,8 @@
         </Button>
       </UniformGrid>
     </StackPanel>
-    <DataGrid Margin="20" Grid.Row="4" ItemsSource="{Binding CurrentReplacements}" AutoGenerateColumns="False" CanUserReorderColumns="False" RowHeaderWidth="0" IsReadOnly="True">
+<!--     <DataGrid Margin="20" Grid.Row="4" ItemsSource="{Binding CurrentReplacements}" AutoGenerateColumns="False" CanUserReorderColumns="False" RowHeaderWidth="0" IsReadOnly="True"> -->
+    <DataGrid Margin="20" Grid.Row="4" ItemsSource="{Binding CurrentReplacements}" AutoGenerateColumns="False" CanUserReorderColumns="False" IsReadOnly="True">
       <DataGrid.Columns>
         <DataGridTemplateColumn Header="{sd:Localize Referencer}" Width="2*"  >
           <DataGridTemplateColumn.CellTemplate>
