@@ -114,7 +114,18 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         /// <summary>
         /// Gets or sets the value of the nodes represented by this view model.
         /// </summary>
-        public object NodeValue { get => GetNodeValue(); set => SetNodeValue(ConvertValue(value)); }
+        public object NodeValue { get => GetNodeValue(); 
+            set
+            {
+                if (value == null)
+                {
+                    Console.WriteLine ("Warning: setting null NodeValue, possible issue with template. " + this + " [" + value + "]");
+                }
+                else
+                {
+                  SetNodeValue(ConvertValue(value)); 
+                }
+            } }
 
         /// <summary>
         /// Gets the expected type of <see cref="NodeValue"/>.

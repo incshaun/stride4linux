@@ -26,6 +26,8 @@ using Avalonia.Controls.Metadata;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
+// FIXME: not doing any filtering at the moment, presumably because no collectionview in avalonia.
+// Not reliably hiding dropdown, because events to listbox are lost if the dropdown is hidden too early (e.g. by lost focus in the text box).
 namespace Stride.Core.Presentation.Controls
 {
     [TemplatePart(Name = "PART_EditableTextBox", Type = typeof(TextBox))]
@@ -278,7 +280,7 @@ namespace Stride.Core.Presentation.Controls
 			base.OnGotFocus(e);
             if (OpenDropDownOnFocus && !listBoxClicking)
             {
-                IsDropDownOpen = true;
+//                 IsDropDownOpen = true;
             }
             listBoxClicking = false;
         }
@@ -320,18 +322,23 @@ namespace Stride.Core.Presentation.Controls
                 if (editableTextBox.Text != null)
                 {
                     editableTextBox.CaretIndex = editableTextBox.Text.Length;
+                    if (IsDropDownOpen)
+                    {
+                        IsDropDownOpen = false;
+                    }
                 }
             }
 
             // Update the source of the text property binding
 //             expression = GetBindingExpression(TextProperty);
 //             expression?.UpdateSource();
+            Text = editableTextBox.Text;
 
             // Close the dropdown
-            if (IsDropDownOpen)
-            {
-                IsDropDownOpen = false;
-            }
+//             if (IsDropDownOpen)
+//             {
+//                 IsDropDownOpen = false;
+//             }
 
             validating = false;
 
@@ -392,7 +399,7 @@ namespace Stride.Core.Presentation.Controls
                 editableTextBox.Validate();
             }
             // Make sure the drop down is closed
-            IsDropDownOpen = false;
+//             IsDropDownOpen = false;
             clearing = false;
         }
 
@@ -440,7 +447,8 @@ namespace Stride.Core.Presentation.Controls
 //             }
         }
 
-        private void EditableTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
+//         private void EditableTextBoxPreviewKeyDown(object sender, KeyEventArgs e)
+        protected override void OnKeyDown(KeyEventArgs e)
         {
             updatingSelection = true;
 
@@ -589,7 +597,7 @@ namespace Stride.Core.Presentation.Controls
             try
             {
 //                 SetBinding(InternalValuePathProperty, new Binding(SortMemberPath) { Source = obj });
-                value = GetValue(InternalValuePathProperty);
+//                 value = GetValue(InternalValuePathProperty);
             }
             catch (Exception e)
             {
