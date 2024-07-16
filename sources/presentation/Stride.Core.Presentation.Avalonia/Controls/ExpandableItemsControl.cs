@@ -24,7 +24,7 @@ namespace Stride.Core.Presentation.Controls
         /// <summary>
         /// Identifies the <see cref="IsExpanded"/> dependency property.
         /// </summary>
-        public static readonly StyledProperty<bool> IsExpandedProperty = StyledProperty<bool>.Register<ExpandableItemsControl, bool>(nameof(IsExpanded), false);
+        public static readonly StyledProperty<bool> IsExpandedProperty = StyledProperty<bool>.Register<ExpandableItemsControl, bool>(nameof(IsExpanded), true);
 
         /// <summary>
         /// Identifies the <see cref="Expanded"/> routed event.
