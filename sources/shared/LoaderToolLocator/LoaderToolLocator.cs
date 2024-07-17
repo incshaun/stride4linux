@@ -24,6 +24,13 @@ namespace Stride.Core
                     return exeLocation;
             }
 
+            // Linux version of exe has no extension.
+            {
+                var exeLocation = Path.ChangeExtension(assemblyLocation, null);
+                if (File.Exists(exeLocation))
+                    return exeLocation;
+            }
+
             // Remap lib\TFM to tools\TFM (nuget package)
             var tfmPath = Path.GetDirectoryName(assemblyLocation);
             if (tfmPath != null)

@@ -188,7 +188,7 @@ namespace Stride.GameStudio.Avalonia.View
                 return;
             }
             // We need to run async stuff before closing, so let's always cancel the close at first.
-            e.Cancel = true;
+//            e.Cancel = true;
             // This method will shutdown the application if the session has been successfully closed.
             SaveAndClose().Forget();
         }
@@ -328,7 +328,7 @@ namespace Stride.GameStudio.Avalonia.View
 
                 closingTask?.SetResult(true);
                 // Shutdown after all other operations have completed
-                Dispatcher.UIThread.InvokeShutdown ();
+//                Dispatcher.UIThread.InvokeShutdown ();
             }
             finally
             {

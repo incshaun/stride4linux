@@ -170,9 +170,10 @@ public partial class AvaloniaApp : Application
         {
             // If a session was correctly loaded, show the main window
             var mainWindow = new GameStudioWindow(editor);
-            //System.Windows.Application.Current.MainWindow = mainWindow;
-            //WindowManager.ShowMainWindow(mainWindow);
-            mainWindow.Show();
+            IClassicDesktopStyleApplicationLifetime desktop = (IClassicDesktopStyleApplicationLifetime) ApplicationLifetime;
+            desktop.MainWindow = mainWindow;
+
+            mainWindow.Show(mainWindowRoot);
         }
         else
         {
@@ -223,6 +224,7 @@ public partial class AvaloniaApp : Application
                 {
                     // Environment.GetCommandLineArgs correctly process arguments regarding the presence of '\' and '"'
                     var args = Environment.GetCommandLineArgs().Skip(1).ToList();
+                  Console.WriteLine ("Args: " + args + " - " + args[0]);
 
                     // Handle arguments
                     for (var i = 0; i < args.Count; i++)
@@ -287,62 +289,58 @@ public partial class AvaloniaApp : Application
                 }
             }
 
-            InitializeLanguageSettings();
-            var serviceProvider = InitializeServiceProvider();
+            Dispatcher.UIThread.InvokeAsync(() => Startup(initialSessionPath));
+        }
+    }   
+    
+    private async void Startup(UFile initialSessionPath)     
+    {
+        InitializeLanguageSettings();
+        var serviceProvider = InitializeServiceProvider();
 
-            try
+        try
+        {
+            PackageSessionPublicHelper.FindAndSetMSBuildVersion();
+        }
+        catch (Exception e)
+        {
+            var message = "Could not find a compatible version of MSBuild.\r\n\r\n" +
+                          "Check that you have a valid installation with the required workloads, or go to [www.visualstudio.com/downloads](https://www.visualstudio.com/downloads) to install a new one.\r\n" +
+                          "Also make sure you have the latest [.NET 6 SDK](https://dotnet.microsoft.com/) \r\n\r\n" +
+                          e;
+            //await serviceProvider.Get<IEditorDialogService>().MessageBox(message, Core.Presentation.Services.MessageBoxButton.OK, Core.Presentation.Services.MessageBoxImage.Error);
+            //app.Shutdown();
+            return;
+        }
+
+        // We use a MRU that contains the older version projects to display in the editor
+        var mru = new MostRecentlyUsedFileCollection(InternalSettings.LoadProfileCopy, InternalSettings.MostRecentlyUsedSessions, InternalSettings.WriteFile);
+        mru.LoadFromSettings();
+        var editor = new GameStudioViewModel(serviceProvider, mru);
+        AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
+        AssetsPlugin.RegisterPlugin(typeof(StrideDefaultPresentationAssetsPlugin)); // include non-view Stride.Assets.Presentation.
+        AssetsPlugin.RegisterPlugin(typeof(StrideEditorPlugin));
+
+        IClassicDesktopStyleApplicationLifetime desktop = (IClassicDesktopStyleApplicationLifetime) ApplicationLifetime;
+        var mainAvaloniaWindow = new AvaloniaMainWindow();
+        desktop.MainWindow = mainAvaloniaWindow;
+        WindowManager.ShowMainWindow(mainAvaloniaWindow);
+        // Attempt to load the startup session, if available
+        if (!UPath.IsNullOrEmpty(initialSessionPath))
+        {
+            var sessionLoaded = await editor.OpenInitialSession(initialSessionPath);
+            
+            if (sessionLoaded == true)
             {
-                PackageSessionPublicHelper.FindAndSetMSBuildVersion();
-            }
-            catch (Exception e)
-            {
-                var message = "Could not find a compatible version of MSBuild.\r\n\r\n" +
-                              "Check that you have a valid installation with the required workloads, or go to [www.visualstudio.com/downloads](https://www.visualstudio.com/downloads) to install a new one.\r\n" +
-                              "Also make sure you have the latest [.NET 6 SDK](https://dotnet.microsoft.com/) \r\n\r\n" +
-                              e;
-                //await serviceProvider.Get<IEditorDialogService>().MessageBox(message, Core.Presentation.Services.MessageBoxButton.OK, Core.Presentation.Services.MessageBoxImage.Error);
-                //app.Shutdown();
+                var mainWindow = new GameStudioWindow(editor);
+                mainWindow.Show (mainAvaloniaWindow);
                 return;
             }
-
-            // We use a MRU that contains the older version projects to display in the editor
-            //var mru = new MostRecentlyUsedFileCollection(InternalSettings.LoadProfileCopy, InternalSettings.MostRecentlyUsedSessions, InternalSettings.WriteFile);
-            //mru.LoadFromSettings();
-            var editor = new GameStudioViewModel(serviceProvider, mru);
-            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultAssetsPlugin));
-            AssetsPlugin.RegisterPlugin(typeof(StrideDefaultPresentationAssetsPlugin)); // include non-view Stride.Assets.Presentation.
-            AssetsPlugin.RegisterPlugin(typeof(StrideEditorPlugin));
-
-            // Attempt to load the startup session, if available
- /*           if (!UPath.IsNullOrEmpty(initialSessionPath))
-            {
-                var sessionLoaded = await editor.OpenInitialSession(initialSessionPath);
-                if (sessionLoaded == true)
-                {
-                    var mainWindow = new GameStudioWindow(editor);
-                    System.Windows.Application.Current.MainWindow = mainWindow;
-                    WindowManager.ShowMainWindow(mainWindow);
-                    return;
-                }
-            }*/
-// 
-              var viewModel = new NewOrOpenSessionTemplateCollectionViewModel(serviceProvider/*, startupWindow*/);
-//            var startupWindow = new AProjectSelectionWindow(viewModel);
-
-//            startupWindow.Templates = viewModel;
-
-            var mainWindow = new AvaloniaMainWindow();
-            desktop.MainWindow = mainWindow;
-
-            //desktop.MainWindow = startupWindow;
-            //startupWindow.ShowModal();
-            doDialog = (s, e) => DoShowProjectSelectionDialogAsync(viewModel, mainWindow, serviceProvider, editor);
-            mainWindow.Activated += doDialog;
-            //await startupWindow.ShowDialog(mainWindow);
-
-            WindowManager.ShowMainWindow(mainWindow);
-//             mainWindow.Show();
         }
+
+        var viewModel = new NewOrOpenSessionTemplateCollectionViewModel(serviceProvider/*, startupWindow*/);
+        doDialog = (s, e) => DoShowProjectSelectionDialogAsync(viewModel, mainAvaloniaWindow, serviceProvider, editor);
+        mainAvaloniaWindow.Activated += doDialog;
 
         base.OnFrameworkInitializationCompleted();
         
