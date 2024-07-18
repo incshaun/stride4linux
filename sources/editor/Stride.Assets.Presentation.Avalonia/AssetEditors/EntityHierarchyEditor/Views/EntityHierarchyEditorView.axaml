@@ -14,6 +14,7 @@
              xmlns:svm="clr-namespace:Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels;assembly=Stride.Assets.Presentation"
              xmlns:entityFactories="clr-namespace:Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.EntityFactories;assembly=Stride.Assets.Presentation"
              xmlns:views="clr-namespace:Stride.Assets.Presentation.AssetEditors.AssetCompositeGameEditor.Views;assembly=Stride.Assets.Presentation.Avalonia"
+             xmlns:native="clr-namespace:Stride.Assets.Presentation.View;assembly=Stride.Assets.Presentation.Avalonia"
              xmlns:cmd="clr-namespace:Stride.Core.Presentation.Commands;assembly=Stride.Core.Presentation.Avalonia"
              xmlns:core="clr-namespace:Stride.Core.Presentation.Core;assembly=Stride.Core.Presentation"
              xmlns:sd="http://schemas.stride3d.net/xaml/presentation"
@@ -111,10 +112,10 @@
         <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding Editor.CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <Separator/>
         <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGesture="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
-<!--        <MenuItem Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
-        <MenuItem Command="ApplicationCommands.Copy" Icon="{sd:Image {StaticResource ImageCopy}}" />
-        <MenuItem Command="ApplicationCommands.Paste" CommandParameter="{sd:True}" Icon="{sd:Image {StaticResource ImagePaste}}" />
-        <MenuItem Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
+        <MenuItem Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
+        <MenuItem Command="{x:Static sd:ApplicationCommands.Paste}" CommandParameter="{sd:True}" Icon="{sd:Image {StaticResource ImagePaste}}" />
+        <MenuItem Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="Rename" InputGesture="F2" Command="{Binding Editor.EntityWithGizmo.RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>
       </ContextMenu>
@@ -168,10 +169,10 @@
         <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding Editor.CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <Separator/>
         <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGesture="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
-<!--        <MenuItem Command="ApplicationCommands.Cut" Icon="{sd:Image {StaticResource ImageCut}}" />
-        <MenuItem Command="ApplicationCommands.Copy" Icon="{sd:Image {StaticResource ImageCopy}}" />
-        <MenuItem Command="ApplicationCommands.Paste" Icon="{sd:Image {StaticResource ImagePaste}}" />
-        <MenuItem Command="ApplicationCommands.Delete" Icon="{sd:Image {StaticResource ImageDelete}}"/>-->
+        <MenuItem Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
+        <MenuItem Command="{x:Static sd:ApplicationCommands.Paste}" Icon="{sd:Image {StaticResource ImagePaste}}" />
+        <MenuItem Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Rename, Context=Menu}" InputGesture="F2" Command="{Binding RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>
       </ContextMenu>
@@ -180,15 +181,16 @@
   </UserControl.Resources>
   <i:Interaction.Behaviors>
     <!-- These commands are available globally in the editor -->
-    <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding DeleteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
-    <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Paste" Command="{Binding PasteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
-<!--    <sd:CommandBindingBehavior RoutedCommand="{x:Static ehv:EntityHierarchyEditorView.FocusOnSelection}" Command="{Binding EntityWithGizmo.FocusOnEntityCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
+    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Delete}" Command="{Binding DeleteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Paste}" Command="{Binding PasteCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+<!--     <sd:CommandBindingBehavior RoutedCommand="{x:Static ehv:EntityHierarchyEditorView.FocusOnSelection}" Command="{Binding EntityWithGizmo.FocusOnEntityCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> -->
   </i:Interaction.Behaviors>
   <Grid>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding SceneInitialized}">
       <TextBlock Text="{sd:Localize Loading scene...}" Margin="20" HorizontalAlignment="Center"/>
       <TextBlock Text="{sd:Localize This might take a few minutes the first time.}" Margin="20" HorizontalAlignment="Center"/>
       <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="20" BorderThickness="1"/>
+<!--       <native:SDLNativeControl Width="200" Height="200" /> -->
     </StackPanel>
     <Grid IsVisible="{Binding SceneInitialized}">
       <Grid.ColumnDefinitions>

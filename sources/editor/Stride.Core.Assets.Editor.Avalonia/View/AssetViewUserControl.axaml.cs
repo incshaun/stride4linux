@@ -17,6 +17,7 @@ using Stride.Core.Presentation.Extensions;
 using Stride.Core.Presentation.Commands;
 using Stride.Core.Presentation.ViewModels;
 using Stride.Core.Presentation.View;
+using Stride.Core.Annotations;
 
 using Avalonia.Interactivity;
 
@@ -97,7 +98,7 @@ namespace Stride.Core.Assets.Editor.View
         /// <summary>
         /// Gets the command that initiate the edition of the currently selected item.
         /// </summary>
-        public static ICommand BeginEditCommand;
+        public ICommand BeginEditCommand { get; }
 
         /// <summary>
         /// Gets the command that will increase the size of thumbnails.
@@ -118,8 +119,7 @@ namespace Stride.Core.Assets.Editor.View
 //             BeginEditCommand = new AnonymousCommand<AssetViewUserControl>(serviceProvider, CanBeginEditCommand);
             
 //             var serviceProvider = new ViewModelServiceProvider(new[] { new DispatcherService(Dispatcher.UIThread) });
-//             _BeginEditCommand = new AnonymousCommand<AssetViewUserControl>(serviceProvider, CanBeginEditCommand);
-            BeginEditCommand = new RoutedCommand<AssetViewUserControl>(CanBeginEditCommand);
+//             BeginEditCommand = new AnonymousCommand<AssetViewUserControl>(serviceProvider, CanBeginEditCommand);
 //             CommandManager.RegisterClassCommandBinding(typeof(AssetViewUserControl), new CommandBinding(BeginEditCommand, BeginEdit, CanBeginEditCommand));
 //             CommandManager.RegisterClassInputBinding(typeof(AssetViewUserControl), new InputBinding(BeginEditCommand, new KeyGesture(Key.F2)));
 // 
@@ -150,6 +150,7 @@ namespace Stride.Core.Assets.Editor.View
         /// </summary>
         public AssetViewUserControl()
         {
+            BeginEditCommand = new RoutedCommand<AssetViewUserControl>((a) => CanBeginEditCommand(this));
             
             InitializeComponent();
         }
@@ -331,11 +332,14 @@ namespace Stride.Core.Assets.Editor.View
             return !asset?.IsLocked ?? true;
         }
 
-        private static void CanBeginEditCommand(AssetViewUserControl sender)
+        private static void CanBeginEditCommand([NotNull] AssetViewUserControl sender)
         {
             var control = (AssetViewUserControl)sender;
 //             e.CanExecute = control.CanBeginEdit();
-            control.CanBeginEdit();
+            if (control.CanBeginEdit())
+            {
+              control.BeginEdit ();
+            }
         }
 
         private static void BeginEdit(object sender, RoutedEventArgs e)

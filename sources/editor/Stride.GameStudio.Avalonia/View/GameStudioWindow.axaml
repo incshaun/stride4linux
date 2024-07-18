@@ -118,7 +118,7 @@
         <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Copy asset URL, Context=Menu}" Command="{Binding CopyAssetUrlCommand}" />
-<!--         <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding sd:AssetViewUserControl.BeginEditCommand}" Icon="{sd:Image {StaticResource ImageRename}}" InputGesture="F2"/> -->
+        <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding $parent[sd:AssetViewUserControl].BeginEditCommand}" Icon="{sd:Image {StaticResource ImageRename}}" InputGesture="F2"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Create folder, Context=Menu}" Command="{Binding Session.NewDirectoryCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageNewFolder}}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}" />
         <MenuItem Header="{sd:Localize Add asset..., Context=Menu}" Command="{Binding Session.ActiveAssetView.ShowAddAssetDialogCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" InputGesture="{x:Static strings:KeyGestures.AddAsset}" Icon="{sd:Image {StaticResource ImageNewAsset}}" IsVisible="{Binding Session.ActiveAssetView.ShowAddAssetDialogCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
@@ -653,7 +653,7 @@
                                            >-->
 <!--                    <sd:AssetViewUserControl AssetCollection="{Binding Session.ActiveAssetView}" AssetContextMenu="{StaticResource AssetContextMenu}"
                                            AssetDoubleClick="{Binding Session.EditSelectedContentCommand}">-->
-                      <sd:AssetViewUserControl AssetCollection="{Binding Session.ActiveAssetView, Source={x:Static vm:GameStudioViewModel.GameStudio}}" AssetContextMenu="{StaticResource AssetContextMenu}"
+                      <sd:AssetViewUserControl AssetCollection="{Binding Session.ActiveAssetView, Source={x:Static vm:GameStudioViewModel.GameStudio}}" AssetContextMenu="{DynamicResource AssetContextMenu}"
                       AssetDoubleClick="{Binding Session.EditSelectedContentCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}">
                       
                       <i:Interaction.Behaviors>
