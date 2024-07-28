@@ -65,6 +65,7 @@ namespace Stride.Core
                         cpu = "x64";
                         break;
                     case Architecture.Arm:
+                    case Architecture.Arm64:
                         cpu = "ARM";
                         break;
                     default:

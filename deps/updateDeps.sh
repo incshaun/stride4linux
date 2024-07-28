@@ -2,7 +2,7 @@
 
 # Bullet physics
 if [ ! -f ../externals/BulletSharpPInvoke/src/x64/libbulletc.so ]; then
-  git clone --recursive git@github.com:Eideren/BulletSharpPInvoke.git ../externals/BulletSharpPInvoke
+  git clone --recursive https://github.com/stride3d/BulletSharpPInvoke.git ../externals/BulletSharpPInvoke
   (
     # Any issues, try a variation of: sudo apt install libc++abi-dev libstdc++-dev
     cd ../externals/BulletSharpPInvoke/src
@@ -32,8 +32,8 @@ if [ ! -f ../externals/BulletSharpPInvoke/src/x64/libVHACD.so ]; then
   touch ../inc/omp.h
   clang++ -m64 --shared -I../inc/ -O3 -Wall -Wno-unused-variable -stdlib=libc++ -std=c++14 -fPIC  *.cpp -o ../../x64/libVHACD.so -ldl
   mkdir ../../../../../deps/VHACD/linux-x64
-  cp ../../x64/libVHACD.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native
-  cp ../../x64/libVHACD.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/
+  cp ../../x64/libVHACD.so ../../../../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native
+  cp ../../x64/libVHACD.so ../../../../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/
   cp ../../x64/libVHACD.so ../../../../../deps/VHACD/linux-x64
 )
 fi
@@ -62,8 +62,8 @@ if [ ! -f PVRTT/linux-x64/libPVRTexLib.so ]; then
   mkdir ../linux-x64
   clang++ -m64 --shared -I../include/ -O3 -Wall -Wno-unused-variable -stdlib=libc++ -std=c++14 -fPIC  *.cpp -o ../linux-x64/libPVRTexLib.so -ldl
   # copy to somewhere relevant.
-  cp PVRTT/linux-x64/libPVRTexLib.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native/
-  cp PVRTT/linux-x64/libPVRTexLib.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/
+  cp ../linux-x64/libPVRTexLib.so ../../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native/
+  cp ../linux-x64/libPVRTexLib.so ../../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/
 
   )
 fi
