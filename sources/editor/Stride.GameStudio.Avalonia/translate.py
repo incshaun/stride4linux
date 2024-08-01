@@ -1205,6 +1205,7 @@ def translateTags (contents):
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ActiveCaptionTextBrushKey\}\}", r'{StaticResource ActiveCaptionTextBrushKey}', contents) # one line style  
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ControlTextBrushKey\}\}", r'{StaticResource ControlTextBrushKey}', contents) # one line style  
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.GrayTextBrushKey\}\}", r'{StaticResource GrayTextBrushKey}', contents) # one line style  
+  contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.HighlightTextBrushKey\}\}", r'{StaticResource HighlightTextBrushKey}', contents) # one line style  
   
   # Styles become various forms of Theme.
   contents = re.sub ("\<Style TargetType=\"([^\"].*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1"\2></ControlTheme>', contents) # one line style

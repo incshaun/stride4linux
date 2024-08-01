@@ -239,7 +239,6 @@ namespace Stride.Assets.Presentation.ViewModel
                 return true;
 
             return !TextDocument.UndoStack.IsOriginalFile;
-return true;
         }
 
         private void TrackDocument()
@@ -454,7 +453,6 @@ return true;
                     var sourceText = SourceText.From(script.mirroredText.ToString());
                     return Task.FromResult(TextAndVersion.Create(sourceText, VersionStamp.Create()));
                 }
-// return Task.FromResult((TextAndVersion)null);        
             }
         }
 
@@ -478,7 +476,6 @@ return true;
                 {
                     return asset.mirroredText.ToString();
                 }
-// return "";
             }
 
             public void Set([NotNull] string value)

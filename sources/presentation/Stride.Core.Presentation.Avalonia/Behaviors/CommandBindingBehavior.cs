@@ -82,7 +82,7 @@ namespace Stride.Core.Presentation.Behaviors
         {
         }
 
-        private void OnCanExecute([NotNull] RoutedEventArgs? canExecuteRoutedEventArgs)
+        private void OnCanExecute([NotNull] object? canExecuteRoutedEventArgs)
         {
             if (Command != null)
             {
@@ -103,14 +103,14 @@ namespace Stride.Core.Presentation.Behaviors
 //             }
         }
 
-        private void OnExecuted([NotNull] RoutedEventArgs? executedRoutedEventArgs)
+        private void OnExecuted([NotNull] object? executedRoutedEventArgs)
         {
             if (Command != null && IsEnabled)
             {
                 Command.Execute(executedRoutedEventArgs);
                 if (executedRoutedEventArgs != null)
                 {
-                  executedRoutedEventArgs.Handled = true;
+                   ((RoutedEventArgs) executedRoutedEventArgs).Handled = true;
                 }
             }
         }

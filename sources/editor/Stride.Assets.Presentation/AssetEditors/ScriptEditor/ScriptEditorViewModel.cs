@@ -10,6 +10,9 @@ using Stride.Core.Assets.Editor.ViewModel;
 using Stride.Core.Annotations;
 using Stride.Assets.Presentation.ViewModel;
 using Stride.Core.Assets.Editor.Annotations;
+using Stride.Core.Presentation.Commands;
+using Stride.Core.Presentation.ViewModels;
+using System.IO;
 
 namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
 {
@@ -24,6 +27,8 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
         {
             Code = StrideAssetsViewModel.Instance.Code;
             SourceTextContainer = script.TextContainer;
+            
+            SaveDocumentCommand = new AnonymousCommand(ServiceProvider, SaveDocument);
         }
 
         /// <summary>
@@ -60,6 +65,8 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
         public event EventHandler DocumentClosed;
         public event EventHandler<DiagnosticsUpdatedArgs> ProcessDiagnostics;
 
+        public ICommandBase SaveDocumentCommand { get; }
+        
         /// <inheritdoc/>
         public sealed override async Task<bool> Initialize()
         {
@@ -109,6 +116,16 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
             Workspace.HostDocumentClosed -= WorkspaceHostDocumentClosed;
 
             base.Destroy();
+        }
+        
+        private void SaveDocument ()
+        {
+            var fn = Asset.AssetItem.FullPath;
+            Console.WriteLine ("Saving document " + fn);
+            using (var stream = new FileStream(fn, FileMode.Create, FileAccess.Write, FileShare.Write))
+            {
+                SourceTextContainer.Editor.Save (stream);
+            }
         }
     }
 }
