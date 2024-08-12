@@ -13,6 +13,7 @@ using Stride.Core.Diagnostics;
 using Stride.Graphics.Font;
 using System;
 using System.Linq;
+using SharpFont;
 
 using SkiaSharp;
 
@@ -84,17 +85,79 @@ namespace Stride.Assets.SpriteFont
 
         public override string GetFontPath(AssetCompilerResult result = null)
         {
-            SKFont font = GetFontFace ();
-/*              var fontFace = new FontFace(font);
+            if (OperatingSystem.IsWindows())
+                return GetFontPathWindows(result);
+            if (OperatingSystem.IsLinux())
+            {
+                var fontPath = GetFontPathLinux(result);
+                var defaultFont = GetDefaultFontName();
+                if (fontPath == null && FontName != defaultFont)
+                {
+                    result?.Warning($"Cannot find font family '{FontName}'. Loading default font '{defaultFont}' instead");
+                    FontName = defaultFont;
+                    fontPath = GetFontPathLinux(result);
+                }
+                return fontPath;
+            }
+            return null;
+        }
 
-                // get the font path on the hard drive
-                var file = fontFace.GetFiles().First();
-                var referenceKey = file.GetReferenceKey();
-                var originalLoader = (FontFileLoaderNative)file.Loader;
-                var loader = originalLoader.QueryInterface<LocalFontFileLoader>();
-                return loader.GetFilePath(referenceKey);
-            }*/
-            return ""; // path not relevant here, return empty string.
+        private string GetFontPathLinux(AssetCompilerResult result)
+        {
+            StyleFlags flags = StyleFlags.None;
+            if (Style.IsBold())
+                flags |= StyleFlags.Bold;
+            if (Style.IsItalic())
+                flags |= StyleFlags.Italic;
+
+            string systemFontDirectory = "/usr/share/fonts";
+            var files = System.IO.Directory.EnumerateFiles(systemFontDirectory, "*.ttf", System.IO.SearchOption.AllDirectories);
+
+            var library = new SharpFont.Library();
+            foreach (string file in files)
+            {              
+                var face = new Face(library, file);
+                if (face.FamilyName.Contains(FontName) && face.StyleFlags == flags)
+                {
+                    return file;
+                }
+            }
+            result?.Warning($"Cannot find style '{Style}' for font family '{FontName}'. Make sure it is installed on this machine.");
+            return null;
+        }
+
+        private string GetFontPathWindows(AssetCompilerResult result)
+        {
+//             using var factory = new Factory();
+//             Font font;
+
+//             using (var fontCollection = factory.GetSystemFontCollection(false))
+//             {
+//                 if (!fontCollection.FindFamilyName(FontName, out var index))
+//                 {
+//                     result?.Error($"Cannot find system font '{FontName}'. Make sure it is installed on this machine.");
+                    return null;
+//                 }
+// 
+//                 using var fontFamily = fontCollection.GetFontFamily(index);
+//                 var weight = Style.IsBold() ? FontWeight.Bold : FontWeight.Regular;
+//                 var style = Style.IsItalic() ? SharpDX.DirectWrite.FontStyle.Italic : SharpDX.DirectWrite.FontStyle.Normal;
+//                 font = fontFamily.GetFirstMatchingFont(weight, FontStretch.Normal, style);
+//                 if (font == null)
+//                 {
+//                     result?.Error($"Cannot find style '{Style}' for font family {FontName}. Make sure it is installed on this machine.");
+//                     return null;
+//                 }
+//             }
+
+//             var fontFace = new FontFace(font);
+// 
+//             // get the font path on the hard drive
+//             var file = fontFace.GetFiles().First();
+//             var referenceKey = file.GetReferenceKey();
+//             var originalLoader = (FontFileLoaderNative)file.Loader;
+//             var loader = originalLoader.QueryInterface<LocalFontFileLoader>();
+//             return loader.GetFilePath(referenceKey);
         }
 
         /// <inheritdoc/>
