@@ -75,7 +75,11 @@
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
 
-using System.Drawing;
+// using System.Drawing;
+using SkiaSharp;
+using Color = SkiaSharp.SKColor;
+using Rectangle = SkiaSharp.SKRect;
+using Bitmap = SkiaSharp.SKBitmap;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {
@@ -85,33 +89,35 @@ namespace Stride.Assets.SpriteFont.Compiler
         public static void Crop(Glyph glyph)
         {
             // Crop the top.
-            while ((glyph.Subrect.Height > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.X, glyph.Subrect.Y, glyph.Subrect.Width, 1)))
+            while ((glyph.Subrect.Height > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.Left, glyph.Subrect.Top, glyph.Subrect.Left + glyph.Subrect.Width, glyph.Subrect.Top + 1)))
             {
-                glyph.Subrect.Y++;
-                glyph.Subrect.Height--;
+                glyph.Subrect.Top++;
+//                 glyph.Subrect.Height--;
 
                 glyph.YOffset++;
             }
 
             // Crop the bottom.
-            while ((glyph.Subrect.Height > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.X, glyph.Subrect.Bottom - 1, glyph.Subrect.Width, 1)))
+            while ((glyph.Subrect.Height > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.Left, glyph.Subrect.Top - 1, glyph.Subrect.Left + glyph.Subrect.Width, glyph.Subrect.Top - 1 + 1)))
             {
-                glyph.Subrect.Height--;
+                glyph.Subrect.Bottom--;
+//                 glyph.Subrect.Height--;
             }
 
             // Crop the left.
-            while ((glyph.Subrect.Width > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.X, glyph.Subrect.Y, 1, glyph.Subrect.Height)))
+            while ((glyph.Subrect.Width > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.Left, glyph.Subrect.Top, glyph.Subrect.Left + 1, glyph.Subrect.Top + glyph.Subrect.Height)))
             {
-                glyph.Subrect.X++;
-                glyph.Subrect.Width--;
+                glyph.Subrect.Left++;
+//                 glyph.Subrect.Width--;
 
                 glyph.XOffset++;
             }
 
             // Crop the right.
-            while ((glyph.Subrect.Width > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.Right - 1, glyph.Subrect.Y, 1, glyph.Subrect.Height)))
+            while ((glyph.Subrect.Width > 1) && BitmapUtils.IsAlphaEntirely(0, glyph.Bitmap, new Rectangle(glyph.Subrect.Right - 1, glyph.Subrect.Top, glyph.Subrect.Right - 1 + 1, glyph.Subrect.Top + glyph.Subrect.Height)))
             {
-                glyph.Subrect.Width--;
+                glyph.Subrect.Right--;
+//                 glyph.Subrect.Width--;
             }
         }
     }

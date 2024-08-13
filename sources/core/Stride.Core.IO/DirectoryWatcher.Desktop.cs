@@ -135,8 +135,8 @@ namespace Stride.Core.IO
 
             if (path != null && Directory.Exists(path))
             {
-                info = new DirectoryInfo(path);
-//                 info = new DirectoryInfo(path.ToLowerInvariant()); // Does horrible things on case sensitive file systems.
+                // TODO : Need to investigate later whether ToLower method is safe to remove for Windows OS
+                info = new DirectoryInfo(OperatingSystem.IsLinux() ? path :  path.ToLowerInvariant());
             }
             else
             {
@@ -327,8 +327,8 @@ namespace Stride.Core.IO
         {
             public DirectoryWatcherItem(DirectoryInfo path)
             {
-                Path = path.FullName;
-                //Path = path.FullName.ToLowerInvariant(); // Does horrible things on case sensitive file systems.
+                // TODO : Need to investigate later whether ToLower method is safe to remove for Windows OS
+                Path = OperatingSystem.IsLinux() ? path.FullName : path.FullName.ToLowerInvariant(); 
             }
 
             public DirectoryWatcherItem Parent;

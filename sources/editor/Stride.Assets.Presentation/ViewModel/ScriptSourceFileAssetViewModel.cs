@@ -200,7 +200,7 @@ namespace Stride.Assets.Presentation.ViewModel
             Dispatcher.Invoke(() =>
             {
                 // Update source file location with latest FullPath (in case it changed)
-                workspace.UpdateFilePath(DocumentId?.Result, FullPath.ToWindowsPath());
+                workspace.UpdateFilePath(DocumentId?.Result, FullPath.ToOSPath());
 
                 // TODO: This doesn't take into account the case where you move and then undo,
                 //  to fix this case the file would need to check for modifications after it has been moved
@@ -239,7 +239,6 @@ namespace Stride.Assets.Presentation.ViewModel
                 return true;
 
             return !TextDocument.UndoStack.IsOriginalFile;
-return true;
         }
 
         private void TrackDocument()
@@ -248,7 +247,7 @@ return true;
             AssetItem.UpdateSourceFolders();
 
             // Capture full path before going in a Task (might be renamed in between)
-            var fullPath = AssetItem.FullPath.ToWindowsPath();
+            var fullPath = AssetItem.FullPath.ToOSPath();
 
             DocumentId = Task.Run(async () =>
             {
@@ -257,7 +256,7 @@ return true;
                 workspace = await strideAssets.Code.Workspace;
 
                 AssetItem.UpdateSourceFolders();
-                var sourceProject = ((SolutionProject)AssetItem.Package.Container).FullPath.ToWindowsPath();
+                var sourceProject = ((SolutionProject)AssetItem.Package.Container).FullPath.ToOSPath();
                 if (sourceProject == null)
                     throw new InvalidOperationException($"Could not find project associated to asset [{AssetItem}]");
 
@@ -454,7 +453,6 @@ return true;
                     var sourceText = SourceText.From(script.mirroredText.ToString());
                     return Task.FromResult(TextAndVersion.Create(sourceText, VersionStamp.Create()));
                 }
-// return Task.FromResult((TextAndVersion)null);        
             }
         }
 
@@ -478,7 +476,6 @@ return true;
                 {
                     return asset.mirroredText.ToString();
                 }
-// return "";
             }
 
             public void Set([NotNull] string value)

@@ -122,7 +122,7 @@ namespace Stride.Core.Assets
             }
             catch (Exception ex)
             {
-                log.Error($"Unexpected exception while loading project [{project.FullPath.ToWindowsPath()}]", ex);
+                log.Error($"Unexpected exception while loading project [{project.FullPath.ToOSPath()}]", ex);
             }
 
             foreach (var packageReference in packageReferences)
@@ -185,7 +185,7 @@ namespace Stride.Core.Assets
                     try
                     {
                         var projectFile = project.FullPath;
-                        var msbuildProject = VSProjectHelper.LoadProject(projectFile.ToWindowsPath());
+                        var msbuildProject = VSProjectHelper.LoadProject(projectFile.ToOSPath());
                         var isProjectDirty = false;
 
                         foreach (var packageReference in msbuildProject.GetItems("PackageReference").ToList())
@@ -241,7 +241,7 @@ namespace Stride.Core.Assets
                 }
                 catch (Exception ex)
                 {
-                    log.Error($"Unexpected exception while loading project [{project.FullPath.ToWindowsPath()}]", ex);
+                    log.Error($"Unexpected exception while loading project [{project.FullPath.ToOSPath()}]", ex);
                 }
             }
 

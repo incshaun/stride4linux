@@ -75,7 +75,10 @@
 // particular purpose and non-infringement.
 //--------------------------------------------------------------------
 
-using System.Drawing;
+// using System.Drawing;
+using SkiaSharp;
+using Bitmap = SkiaSharp.SKBitmap;
+using Rectangle = SkiaSharp.SKRect;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {

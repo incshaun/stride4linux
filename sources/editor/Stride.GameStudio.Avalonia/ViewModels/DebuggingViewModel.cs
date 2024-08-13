@@ -404,8 +404,8 @@ namespace Stride.GameStudio.Avalonia.ViewModels
                     if (!string.IsNullOrEmpty(Session.SolutionPath))
                     {
                         var solutionPath = UPath.Combine(Environment.CurrentDirectory, Session.SolutionPath);
-                        extraProperties.Add("SolutionPath", solutionPath.ToWindowsPath());
-                        extraProperties.Add("SolutionDir", solutionPath.GetParent().ToWindowsPath() + Path.DirectorySeparatorChar);
+                        extraProperties.Add("SolutionPath", solutionPath.ToOSPath());
+                        extraProperties.Add("SolutionDir", solutionPath.GetParent().ToOSPath() + Path.DirectorySeparatorChar);
                     }
                     else
                     {
@@ -427,7 +427,7 @@ namespace Stride.GameStudio.Avalonia.ViewModels
 
                             // On Android, directly install on device
                             platformName = "Android";
-                            target = "GetAndroidPackage;Install";
+//                            target = "GetAndroidPackage;Install";
 
                             // For now, use first android device
                             // TODO: Android device selector (together with platform selector)

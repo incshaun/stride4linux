@@ -118,8 +118,9 @@ namespace Stride.Core.Collections
         public void Remove(T item)
         {
             int removeIndex = IndexOf(item);
-            if (removeIndex == -1)
-                throw new InvalidOperationException();
+            if (removeIndex == -1) 
+                return;
+//                throw new InvalidOperationException();
 
             RemoveAt(removeIndex);
         }

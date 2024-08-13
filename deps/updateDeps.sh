@@ -49,9 +49,9 @@ if [ ! -f ../externals/FreeImage/libfreeimage-3.16.0.so ]; then
   sed -i -e 's/-fvisibility=hidden -Wno-ctor-dtor-privacy/-fvisibility=hidden -std=c++14 -Wno-narrowing -Wno-ctor-dtor-privacy -fshort-wchar/g' Makefile.gnu
   make
   mkdir ../../deps/FreeImage/Release/linux-x64/
-  cp libfreeimage-3.16.0.so ../../deps/FreeImage/Release/linux-x64/libFreeImage.so
-  cp libfreeimage-3.16.0.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native/libFreeImage.so
-  cp libfreeimage-3.16.0.so ../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/libFreeImage.so
+  cp libfreeimage-3.16.0.so ../../deps/FreeImage/Release/linux-x64/libfreeimage.so
+  cp libfreeimage-3.16.0.so ../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/runtimes/linux-x64/native/libfreeimage.so
+  cp libfreeimage-3.16.0.so ../../sources/editor/Stride.GameStudio.Avalonia/bin/Debug/net8.0/libfreeimage.so
   )
 fi
 

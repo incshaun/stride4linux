@@ -77,8 +77,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+// using System.Drawing;
+// using System.Drawing.Imaging;
+using SkiaSharp;
+using Color = SkiaSharp.SKColor;
+using Rectangle = SkiaSharp.SKRect;
+using Bitmap = SkiaSharp.SKBitmap;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {
@@ -97,8 +101,8 @@ namespace Stride.Assets.SpriteFont.Compiler
                 glyph.Source = sourceGlyphs[i];
 
                 // Leave a one pixel border around every glyph in the output bitmap.
-                glyph.Width = sourceGlyphs[i].Subrect.Width + 2;
-                glyph.Height = sourceGlyphs[i].Subrect.Height + 2;
+                glyph.Width = (int) sourceGlyphs[i].Subrect.Width + 2;
+                glyph.Height = (int) sourceGlyphs[i].Subrect.Height + 2;
 
                 glyphs.Add(glyph);
             }
@@ -128,13 +132,13 @@ namespace Stride.Assets.SpriteFont.Compiler
         // Once arranging is complete, copies each glyph to its chosen position in the single larger output bitmap.
         static Bitmap CopyGlyphsToOutput(List<ArrangedGlyph> glyphs, int width, int height)
         {
-            Bitmap output = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            Bitmap output = new Bitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque);
 
             foreach (ArrangedGlyph glyph in glyphs)
             {
                 Glyph sourceGlyph = glyph.Source;
                 Rectangle sourceRegion = sourceGlyph.Subrect;
-                Rectangle destinationRegion = new Rectangle(glyph.X + 1, glyph.Y + 1, sourceRegion.Width, sourceRegion.Height);
+                Rectangle destinationRegion = new Rectangle(glyph.X + 1, glyph.Y + 1, glyph.X + 1 + sourceRegion.Width, glyph.Y + 1 + sourceRegion.Height);
 
                 BitmapUtils.CopyRect(sourceGlyph.Bitmap, sourceRegion, output, destinationRegion);
 
@@ -243,8 +247,8 @@ namespace Stride.Assets.SpriteFont.Compiler
 
             foreach (Glyph glyph in sourceGlyphs)
             {
-                maxWidth = Math.Max(maxWidth, glyph.Subrect.Width);
-                totalSize += glyph.Subrect.Width * glyph.Subrect.Height;
+                maxWidth = Math.Max(maxWidth, (int) glyph.Subrect.Width);
+                totalSize += (int) (glyph.Subrect.Width * glyph.Subrect.Height);
             }
 
             int width = Math.Max((int)Math.Sqrt(totalSize), maxWidth);

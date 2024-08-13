@@ -29,6 +29,7 @@ using Stride.Editor;
 using Stride.Engine;
 using Stride.Core.Assets.Templates;
 using Stride.Core.Packages;
+using Stride.Engine.Gizmos;
 using Stride.Editor.Annotations;
 using Stride.Editor.Preview.View;
 using System.Collections.Generic;
@@ -105,7 +106,7 @@ namespace Stride.Assets.Presentation
                 var packageFile = PackageStore.Instance.GetPackageFileName(packageInfo.Name, new PackageVersionRange(new PackageVersion(packageInfo.Version)));
                 if (packageFile is null)
                     throw new InvalidOperationException($"Could not find package {packageInfo.Name} {packageInfo.Version}. Ensure packages have been resolved.");
-                var package = Package.Load(logger, packageFile.ToWindowsPath());
+                var package = Package.Load(logger, packageFile.ToOSPath());
                 if (logger.HasErrors)
                     throw new InvalidOperationException($"Could not load package {packageInfo.Name}:{Environment.NewLine}{logger.ToText()}");
 

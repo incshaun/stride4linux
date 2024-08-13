@@ -27,9 +27,9 @@ namespace Stride.Core.Assets.Editor.View.Controls
 
         public static readonly StyledProperty<bool> CanEditProperty = StyledProperty<bool>.Register<EditableContentListBox, bool>("CanEdit", true); // T2
 
-        public static readonly StyledProperty<DataTemplate> EditItemTemplateProperty = StyledProperty<DataTemplate>.Register<EditableContentListBox, DataTemplate>("EditItemTemplate"); // T1
+        public static readonly StyledProperty<IDataTemplate> EditItemTemplateProperty = StyledProperty<IDataTemplate>.Register<EditableContentListBox, IDataTemplate>("EditItemTemplate"); // T1
 
-        public static readonly StyledProperty<IDataTemplate> EditItemTemplateSelectorProperty = StyledProperty<IDataTemplate>.Register<EditableContentListBox, IDataTemplate>("EditItemTemplateSelector"); // T1
+//        public static readonly StyledProperty<IDataTemplate> EditItemTemplateSelectorProperty = StyledProperty<IDataTemplate>.Register<EditableContentListBox, IDataTemplate>("EditItemTemplateSelector"); // T1
 
         public static ICommand BeginEditCommand { get; private set; }
 
@@ -48,9 +48,9 @@ namespace Stride.Core.Assets.Editor.View.Controls
 
         public bool CanEdit { get { return (bool)GetValue(CanEditProperty); } set { SetValue(CanEditProperty, value); } }
 
-        public DataTemplate EditItemTemplate { get { return (DataTemplate)GetValue(EditItemTemplateProperty); } set { SetValue(EditItemTemplateProperty, value); } }
+        public IDataTemplate EditItemTemplate { get { return (IDataTemplate)GetValue(EditItemTemplateProperty); } set { SetValue(EditItemTemplateProperty, value); } }
 
-        public IDataTemplate EditItemTemplateSelector { get { return (IDataTemplate)GetValue(EditItemTemplateSelectorProperty); } set { SetValue(EditItemTemplateSelectorProperty, value); } }
+//        public IDataTemplate EditItemTemplateSelector { get { return (IDataTemplate)GetValue(EditItemTemplateSelectorProperty); } set { SetValue(EditItemTemplateSelectorProperty, value); } }
 
 
         public void BeginEdit()
@@ -88,8 +88,7 @@ namespace Stride.Core.Assets.Editor.View.Controls
 
         protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
         {
-//             return new EditableContentListBoxItem(ItemTemplate, ItemTemplateSelector, EditItemTemplate, EditItemTemplateSelector);
-            return new EditableContentListBoxItem(null, ItemTemplate, EditItemTemplate, EditItemTemplateSelector); // FIXME: resolve datatemplate and idatatemplate.
+            return new EditableContentListBoxItem(ItemTemplate, EditItemTemplate);
         }
 
         private void ScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -97,10 +96,10 @@ namespace Stride.Core.Assets.Editor.View.Controls
             if (Math.Abs(e.ExtentDelta.Y) < 1e-3 && Math.Abs(e.ExtentDelta.X) < 1e-3)
                 return;
 
-//             if (!ReferenceEquals(e.OriginalSource, scrollViewer))
-//             {
-//                 return;
-//             }
+            if (!ReferenceEquals(e.Source, scrollViewer))
+            {
+                return;
+            }
 
             var selectedItem = SelectedItems
                 .Cast<object>()
@@ -129,11 +128,11 @@ namespace Stride.Core.Assets.Editor.View.Controls
     {
 //         private static readonly MethodInfo NotifyListItemClickedMethod;
 
-        private readonly DataTemplate regularContentTemplate;
-        private readonly IDataTemplate regularContentTemplateSelector;
+        private readonly IDataTemplate regularContentTemplate;
+//        private readonly IDataTemplate regularContentTemplateSelector;
 
-        private readonly DataTemplate editContentTemplate;
-        private readonly IDataTemplate editContentTemplateSelector;
+        private readonly IDataTemplate editContentTemplate;
+//        private readonly IDataTemplate editContentTemplateSelector;
 
         private bool mouseDown;
 
@@ -151,15 +150,11 @@ namespace Stride.Core.Assets.Editor.View.Controls
         }
 
         internal EditableContentListBoxItem(
-            DataTemplate regularContentTemplate,
-            IDataTemplate regularContentTemplateSelector,
-            DataTemplate editContentTemplate,
-            IDataTemplate editContentTemplateSelector)
+            IDataTemplate regularContentTemplate,
+            IDataTemplate editContentTemplate)
         {
             this.regularContentTemplate = regularContentTemplate;
-            this.regularContentTemplateSelector = regularContentTemplateSelector;
             this.editContentTemplate = editContentTemplate;
-            this.editContentTemplateSelector = editContentTemplateSelector;
         }
 
         public bool IsEditing { get { return (bool)GetValue(IsEditingProperty); } set { SetValue(IsEditingProperty, value); } }
@@ -174,11 +169,13 @@ namespace Stride.Core.Assets.Editor.View.Controls
 
             if (container.IsEditing)
 //                 check = ApplyTemplate(container, container.editContentTemplate, container.editContentTemplateSelector);
-                ApplyTemplate(container, container.editContentTemplate, container.editContentTemplateSelector);
+            {
+                ApplyTemplate(container, container.editContentTemplate);
+            }
             else
             {
 //                 check = ApplyTemplate(container, container.regularContentTemplate, container.regularContentTemplateSelector);
-                ApplyTemplate(container, container.regularContentTemplate, container.regularContentTemplateSelector);
+                ApplyTemplate(container, container.regularContentTemplate);
                 if ((bool)e.OldValue)
                 {
                     container.Focus();
@@ -187,7 +184,7 @@ namespace Stride.Core.Assets.Editor.View.Controls
 //             Console.WriteLine(check);
         }
 
-        private static void ApplyTemplate(ContentControl container, DataTemplate dt, IDataTemplate dts)
+        private static void ApplyTemplate(ContentControl container, IDataTemplate dt/*, IDataTemplate dts*/)
         {
             container.ContentTemplate = dt;
 //             container.ContentTemplateSelector = dts;
@@ -214,6 +211,11 @@ namespace Stride.Core.Assets.Editor.View.Controls
                 }
             }
             mouseDown = false;
+        }
+
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            IsEditing = false;
         }
     }
 }

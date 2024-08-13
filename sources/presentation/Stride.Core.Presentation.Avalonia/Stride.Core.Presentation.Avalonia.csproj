@@ -31,6 +31,7 @@
     <ProjectReference Include="..\..\presentation\Stride.Core.Translation.Presentation\Stride.Core.Translation.Presentation.csproj" />
     <ProjectReference Include="..\..\presentation\Stride.Core.Translation.Presentation.Avalonia\Stride.Core.Translation.Presentation.Avalonia.csproj" />
     <ProjectReference Include="..\Stride.Core.Presentation\Stride.Core.Presentation.csproj" />
+    <PackageReference Include="Stride.Graphics" />  <!--FIXME - must be a better way to do this, just giving compile errors when using a project reference.-->
   </ItemGroup>
 
   <ItemGroup>

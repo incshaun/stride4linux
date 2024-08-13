@@ -179,7 +179,7 @@
               <behaviors:ListBoxDragDropBehavior DragVisualTemplate="{StaticResource DragVisualTemplate}"/>
               <behaviors:TilePanelThumbnailPrioritizationBehavior/>
               <behaviors:BringSelectionToViewBehavior/>
-              <!-- <sd:CommandBindingBehavior RoutedCommand="ApplicationCommands.Delete" Command="{Binding DeleteContentCommand}"/> -->
+              <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Delete}" Command="{Binding DeleteContentCommand}"/>
             </i:Interaction.Behaviors>
           </controls:EditableContentListBox>
         </DataTemplate>

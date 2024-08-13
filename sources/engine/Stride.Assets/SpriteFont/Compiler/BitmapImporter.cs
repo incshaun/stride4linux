@@ -77,8 +77,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+// using System.Drawing;
+// using System.Drawing.Imaging;
+using SkiaSharp;
+
+using Rectangle = SkiaSharp.SKRect;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {
@@ -102,12 +105,12 @@ namespace Stride.Assets.SpriteFont.Compiler
         public void Import(SpriteFontAsset options, List<char> characters)
         {
             // Load the source bitmap.
-            Bitmap bitmap;
+            SKBitmap bitmap;
 
             try
             {
                 // TODO Check if source can be used as is from here
-                bitmap = new Bitmap(options.FontSource.GetFontPath());
+                bitmap = SKBitmap.Decode (options.FontSource.GetFontPath());
             }
             catch
             {
@@ -115,7 +118,8 @@ namespace Stride.Assets.SpriteFont.Compiler
             }
 
             // Convert to our desired pixel format.
-            bitmap = BitmapUtils.ChangePixelFormat(bitmap, PixelFormat.Format32bppArgb);
+//             bitmap = BitmapUtils.ChangePixelFormat(bitmap, PixelFormat.Format32bppArgb);
+            bitmap = BitmapUtils.ChangePixelFormat(bitmap, SKColorType.Rgba8888);
 
             // What characters are included in this font?
             int characterIndex = 0;
@@ -148,33 +152,33 @@ namespace Stride.Assets.SpriteFont.Compiler
 
         // Seems to be the same as this one: http://www.tonicodes.net/blog/creating-custom-fonts-with-outline-for-wp7-and-xna/
         // Searches a 2D bitmap for characters that are surrounded by a marker pink color.
-        static IEnumerable<Rectangle> FindGlyphs(Bitmap bitmap)
+        static IEnumerable<Rectangle> FindGlyphs(SKBitmap bitmap)
         {
-            using (var bitmapData = new BitmapUtils.PixelAccessor(bitmap, ImageLockMode.ReadOnly))
+//             using (var bitmapData = new BitmapUtils.PixelAccessor(bitmap, ImageLockMode.ReadOnly))
             {
                 for (int y = 1; y < bitmap.Height; y++)
                 {
                     for (int x = 1; x < bitmap.Width; x++)
                     {
                         // Look for the top left corner of a character (a pixel that is not pink, but was pink immediately to the left and above it)
-                        if (!IsMarkerColor(bitmapData[x, y]) &&
-                             IsMarkerColor(bitmapData[x - 1, y]) &&
-                             IsMarkerColor(bitmapData[x, y - 1]))
+                        if (!IsMarkerColor(bitmap.GetPixel (x, y)) &&
+                             IsMarkerColor(bitmap.GetPixel (x - 1, y)) &&
+                             IsMarkerColor(bitmap.GetPixel (x, y - 1)))
                         {
                             // Measure the size of this character.
                             int w = 1, h = 1;
 
-                            while ((x + w < bitmap.Width) && !IsMarkerColor(bitmapData[x + w, y]))
+                            while ((x + w < bitmap.Width) && !IsMarkerColor(bitmap.GetPixel (x + w, y)))
                             {
                                 w++;
                             }
 
-                            while ((y + h < bitmap.Height) && !IsMarkerColor(bitmapData[x, y + h]))
+                            while ((y + h < bitmap.Height) && !IsMarkerColor(bitmap.GetPixel (x, y + h)))
                             {
                                 h++;
                             }
 
-                            yield return new Rectangle(x, y, w, h);
+                            yield return new Rectangle(x, y, x + w, y + h);
                         }
                     }
                 }
@@ -183,9 +187,9 @@ namespace Stride.Assets.SpriteFont.Compiler
 
 
         // Checks whether a color is the magic magenta marker value.
-        static bool IsMarkerColor(Color color)
+        static bool IsMarkerColor(SKColor color)
         {
-            return color.ToArgb() == Color.Magenta.ToArgb();
+            return color == SKColors.Magenta;
         }
     }
 }

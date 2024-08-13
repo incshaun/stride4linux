@@ -12,5 +12,6 @@
   <SolidColorBrush x:Key="ActiveCaptionTextBrushKey" Color="#F5F500" />
   <SolidColorBrush x:Key="ControlTextBrushKey" Color="#F5F500" />
   <SolidColorBrush x:Key="GrayTextBrushKey" Color="#F5F500" />
+  <SolidColorBrush x:Key="HighlightTextBrushKey" Color="#F5F500" />
   
 </ResourceDictionary>

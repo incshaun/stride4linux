@@ -522,7 +522,7 @@
     </Setter>
   </ControlTheme>
 
-  <ControlTheme x:Key="{x:Type ctrl:FilteringComboBox}" TargetType="ctrl:FilteringComboBox">
+  <ControlTheme x:Key="{x:Type ctrl:FilteringComboBox}" TargetType="ctrl:FilteringComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
     
 <!--     <Setter Property="IsSynchronizedWithCurrentItem" Value="False" /> -->
     <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -538,24 +538,24 @@
             <ctrl:TextBox x:Name="PART_EditableTextBox" ValidateOnLostFocus="False" VerticalAlignment="Center"
                           Focusable="True"
                           WatermarkContent="{Binding WatermarkContent, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}}"
-                          Text="{Binding Text, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}}"
-                          CancelWithEscape="False" />
-            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False"
+                          Text="{Binding $parent[ctrl:FilteringComboBox].Text, Mode=TwoWay}"
+                          IsEnabled="{TemplateBinding IsEnabled}" CancelWithEscape="False" />
+            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="PART_Popup" Focusable="False"
                     >
               <Grid>
                 <ListBox x:Name="PART_ListBox"  MaxHeight="380"
                          
                          
-                         ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}}"
-                         ItemContainerTheme="{Binding ItemContainerStyle, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}}"
-                         SelectedIndex="{Binding SelectedIndex, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}, Mode=TwoWay}"
-                         SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}, Mode=TwoWay}"
-                         SelectedValue="{Binding SelectedValue, RelativeSource={RelativeSource AncestorType=ctrl:FilteringComboBox}, Mode=TwoWay}"
+                         ItemsSource="{Binding $parent[ctrl:FilteringComboBox].ItemsSource}"
+                         ItemContainerTheme="{Binding $parent[ctrl:FilteringComboBox].ItemContainerStyle}"
+                         SelectedIndex="{Binding $parent[ctrl:FilteringComboBox].SelectedIndex, Mode=TwoWay}"
+                         SelectedItem="{Binding $parent[ctrl:FilteringComboBox].SelectedItem, Mode=TwoWay}"
+                         SelectedValue="{Binding $parent[ctrl:FilteringComboBox].SelectedValue, Mode=TwoWay}"
                          
                          ItemTemplate="{TemplateBinding ItemTemplate}"
                          
                          
-                         IsVisible="{Binding Items.Count, RelativeSource={RelativeSource Self}}" />
+                         IsVisible="{Binding ItemCount, RelativeSource={RelativeSource Self}, Converter={cvt:NumericToBool}}" />
               </Grid>
             </Popup>
           </Grid>
@@ -581,7 +581,7 @@
                           ValidateOnLostFocus="False" ValidateWithEnter="False" UseTimedValidation="True"
                           Text="{Binding SearchText, RelativeSource={RelativeSource AncestorType=ctrl:SearchComboBox}, Mode=OneWayToSource}"
                           CancelWithEscape="False" />
-            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="Popup" Focusable="False"
+            <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="PART_Popup" Focusable="False"
                     >
               <Grid>
                 <ListBox x:Name="PART_ListBox"  MaxHeight="380"

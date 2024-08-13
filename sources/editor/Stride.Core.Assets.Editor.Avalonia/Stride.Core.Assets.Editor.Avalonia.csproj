@@ -41,6 +41,7 @@
     <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Icons/reimport-24.png" Link="Resources/Icons/reimport-24.png" />
     <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Icons/teapot-24.png" Link="Resources/Icons/teapot-24.png" />
     <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Images/exception.png" Link="Resources/Images/exception.png" />
+    <AvaloniaResource Include="../Stride.Core.Assets.Editor/Resources/Images/default-template-icon.png" Link="Resources/Images/default-template-icon.png" />
   </ItemGroup>
 
   <Import Project="$(StrideSdkTargets)" />

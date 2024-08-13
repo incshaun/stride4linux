@@ -16,14 +16,14 @@
 These steps should be enough to help build, run, create a (simple) project, compile and run that project. This version is still rough, so some features don't work, others may behave erratically.
 
 * Clone the repository: git lfs clone git@github.com:incshaun/stride4linux.git
-* Switch to the Linux Alpha branch: cd stride4linux; git checkout LinuxAlpha02
+* Switch to the Linux Alpha branch: cd stride4linux; git checkout LinuxAlpha03
 
 * Change to the GameStudio folder: cd sources/editor/Stride.GameStudio.Avalonia
 * Build (assumes dotnet already installed): dotnet build /nologo /nr:false /m /verbosity:n /p:Configuration=Debug /p:Platform="Linux" /p:StrideSkipUnitTests=false Stride.GameStudio.Avalonia.csproj /p:DeployExtension=false
 * Should now have: bin/Debug/net8.0/Stride.GameStudio.Avalonia
 * This can be run as: ./bin/Debug/net8.0/Stride.GameStudio.Avalonia
 
-* This will probably fail on the first run, as it is looking for "package Stride.Assets.Presentation 4.2.0.1". These should be in: ../../../bin/packages/ if the build succeeded, but need to be installed. One strategy to try to get these installed:
+* This will probably fail on the first run, as it is looking for "package Stride.Assets.Presentation 4.2.0.2129". These should be in: ../../../bin/packages/ if the build succeeded, but need to be installed. One strategy to try to get these installed:
   * Edit ~/.nuget/NuGet/NuGet.Config, add a line referencing your packages. Something like:
   ```
     <add key="local2" value="/YOURPATH/stride4linux/bin/packages/" />
@@ -39,14 +39,14 @@ These steps should be enough to help build, run, create a (simple) project, comp
       </PropertyGroup>
 
       <ItemGroup>
-        <PackageReference Include="Stride.Assets.Presentation" Version="4.2.0.2125" />
-        <PackageReference Include="Stride.Samples.Templates" Version="4.2.0.2125" />
-        <PackageReference Include="Stride.Samples.Templates" Version="4.2.0.2125" />
+        <PackageReference Include="Stride.Assets.Presentation" Version="4.2.0.2129" />
+        <PackageReference Include="Stride.Samples.Templates" Version="4.2.0.2129" />
+        <PackageReference Include="Stride.Samples.Templates" Version="4.2.0.2129" />
       </ItemGroup>
     </Project>
   ```  
   * dotnet restore
-  * This should produce the folder: 4.2.0.2125, in ~/.nuget/packages/stride.assets.presentation/
+  * This should produce the folder: 4.2.0.2129, in ~/.nuget/packages/stride.assets.presentation/
 
 * Run the GameStudio editor.
   * You should be able to create a new project. Use "New Project" in the left column, and "New game" as the template. Press the Select button.
@@ -64,15 +64,19 @@ These steps should be enough to help build, run, create a (simple) project, comp
 * To build the game, expand the project in the Solution Explorer pane, right click on the .Linux project and Set as current project.
   * To run, menu option: Project/Start project.
   * This will probably fail - the nupkg doesn't copy enough across yet. Try (from the Stride.GameStudio.Avalonia folder): 
-    * cp -r ../../assets/Stride.Core.Assets.CompilerApp/bin/Debug/net8.0 ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/
-    * cp bin/Debug/net8.0/runtimes/linux-x64/native/lib*.so ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/net8.0/
-    * cp bin/Debug/net8.0/*.so ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2125/lib/net8.0/
+    * cp -r ../../assets/Stride.Core.Assets.CompilerApp/bin/Debug/net8.0 ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2129/lib/
+    * cp bin/Debug/net8.0/runtimes/linux-x64/native/lib*.so ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2129/lib/net8.0/
+    * cp bin/Debug/net8.0/*.so ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2129/lib/net8.0/
   * Try the Project/Start menu option again - hopefully should work.
   * If issues, try compile and run the game manually. In the game project folder:
   dotnet build /p:Configuration=Release MyGame.Linux/MyGame.Linux.csproj 
-  * ./Bin/Linux/Debug/linux-x64/MyGame.Linux
+  * Potential fixes:
+    * If an issue with CompilerApp.exe, try copying the Linux binary to that name: cp -r ../../assets/Stride.Core.Assets.CompilerApp/bin/Debug/net8.0/Stride.Core.Assets.CompilerApp ~/.nuget/packages/stride.core.assets.compilerapp/4.2.0.2129/lib/net8.0/Stride.Core.Assets.CompilerApp.exe
+    * If looking for packages other than those ending in 2129, edit the MyGame/MyGame.csproj, and update the package references to use version Version="4.2.0.2129"
+    * If failing on asset building, just try running the command again (!?).
+  * ./Bin/Linux/Release/linux-x64/MyGame.Linux
 
-* To build an Android project:
+* To build an Android project (untested in LinuxAlpha03):
   * Edit MyGame.Android/AndroidManifest.xml, to look like:
   ```
     <?xml version="1.0" encoding="utf-8"?>

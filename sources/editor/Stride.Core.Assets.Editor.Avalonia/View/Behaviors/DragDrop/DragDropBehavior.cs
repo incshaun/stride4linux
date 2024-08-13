@@ -344,11 +344,14 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
             }
             object data = null;
             var container = GetContainer(originalSource);
-            var itemsToDrag = GetItemsToDrag(container).ToList();
-            if (itemsToDrag.Count > 0)
+            if (GetItemsToDrag(container) != null)
             {
-                var dragContainer = new DragContainer(itemsToDrag);
-                data = dragContainer;
+                var itemsToDrag = GetItemsToDrag(container).ToList();
+                if (itemsToDrag.Count > 0)
+                {
+                    var dragContainer = new DragContainer(itemsToDrag);
+                    data = dragContainer;
+                }
             }
             return data;
         }
@@ -534,7 +537,7 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
                 }
             }
 
-            if (CanDrop)
+//            if (CanDrop)
             {
 //             Console.WriteLine ("OnDropSub CanDrop");
                 // Check if we can drop and if we have a valid target.
@@ -592,6 +595,8 @@ namespace Stride.Core.Assets.Editor.View.Behaviors
                 if (CanDrag)
                 {
 //                     OnDragLeaveSub ();
+                    var rootWindow = TopLevel.GetTopLevel (AssociatedObject);
+                    OnDropSub (container, e.GetPosition(rootWindow));
                 }
                 if (CanDrop)
                 {

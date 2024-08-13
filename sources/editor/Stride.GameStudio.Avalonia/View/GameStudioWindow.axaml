@@ -26,6 +26,8 @@
       <ResourceDictionary.MergedDictionaries>
 <!--         <ResourceInclude Source="/Theme.AvalonDock.axaml" /> -->
         <ResourceInclude Source="avares://Stride.Core.Assets.Editor.Avalonia/View/CommonResources.axaml" />
+        <ResourceInclude Source="avares://Stride.Editor.Avalonia/Themes/Generic.axaml" />
+        <ResourceInclude Source="avares://Stride.Assets.Presentation.Avalonia/Themes/Generic.axaml" />
       </ResourceDictionary.MergedDictionaries>
       <DataTemplate x:Key="AvalonDock_GameStudio_TitleTemplate">
         <DockPanel LastChildFill="False">
@@ -72,7 +74,7 @@
         </DrawingImage.Drawing>
       </DrawingImage>
 
-      <ContextMenu x:Key="AssetContextMenu" >
+      <ContextMenu x:Key="AssetContextMenu" Name="ContextMenu10" >
 	<Design.DataContext>
 		<sd:AssetCollectionViewModel />
 	</Design.DataContext>
@@ -114,9 +116,10 @@
         <MenuItem Header="{sd:Localize Copy with dependencies, Context=Menu}" Command="{Binding CopyAssetsRecursivelyCommand}" InputGesture="{x:Static strings:KeyGestures.CopyAssetRecursively}" Icon="{sd:Image {StaticResource ImageCopyRecursively}}"/>
         <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Paste}" CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImagePaste}}"/>
         <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" CommandParameter="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
+        <MenuItem Header="{sd:Localize Delete2, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" CommandParameter="{Binding $parent[Popup].PlacementTarget}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Copy asset URL, Context=Menu}" Command="{Binding CopyAssetUrlCommand}" />
-<!--         <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding sd:AssetViewUserControl.BeginEditCommand}" Icon="{sd:Image {StaticResource ImageRename}}" InputGesture="F2"/> -->
+        <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding $parent[sd:AssetViewUserControl].BeginEditCommand}" Icon="{sd:Image {StaticResource ImageRename}}" InputGesture="F2"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Create folder, Context=Menu}" Command="{Binding Session.NewDirectoryCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageNewFolder}}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}" />
         <MenuItem Header="{sd:Localize Add asset..., Context=Menu}" Command="{Binding Session.ActiveAssetView.ShowAddAssetDialogCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" InputGesture="{x:Static strings:KeyGestures.AddAsset}" Icon="{sd:Image {StaticResource ImageNewAsset}}" IsVisible="{Binding Session.ActiveAssetView.ShowAddAssetDialogCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
@@ -150,8 +153,9 @@
     <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.New}" Command="{Binding NewSessionCommand}"/>
     <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Open}" Command="{Binding OpenSessionCommand}"/>
      <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Save}" Command="{Binding Session.SaveSessionCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/> 
-    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Undo}" Command="{Binding Session.ActionHistory.UndoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
-    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Redo}" Command="{Binding Session.ActionHistory.RedoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+     <!--These impact on undo/redo in the text editor, so are disabled for the moment.-->
+<!--    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Undo}" Command="{Binding Session.ActionHistory.UndoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>
+    <sd:CommandBindingBehavior RoutedCommand="{x:Static sd:ApplicationCommands.Redo}" Command="{Binding Session.ActionHistory.RedoCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"/>-->
   </i:Interaction.Behaviors>
 
   <Grid>
@@ -547,7 +551,7 @@
                       <!-- TODO: SearchText -->
                       <sd:TreeView x:Name="DirectoryTreeView" ItemsSource="{Binding Session.PackageCategories.Values, Source={x:Static vm:GameStudioViewModel.GameStudio}}" IsVirtualizing="False" ContextMenu="{StaticResource ContextMenu}">
                         <sd:TreeView.Resources>
-                          <ContextMenu x:Key="ContextMenu">
+                          <ContextMenu x:Key="ContextMenu" Name="ContextMenu11" >
                             <MenuItem Header="{sd:Localize Folder, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
                             <MenuItem Header="{sd:Localize Create folder, Context=Menu}" Command="{Binding Session.NewDirectoryCommand, Source={x:Static vm:GameStudioViewModel.GameStudio}}" CommandParameter="{Binding Session.ActiveAssetView.SelectedLocations, Source={x:Static vm:GameStudioViewModel.GameStudio}}" Icon="{sd:Image {StaticResource ImageNewFolder}}" IsVisible="{Binding Session.NewDirectoryCommand.IsEnabled, Source={x:Static vm:GameStudioViewModel.GameStudio}}"/>
 
@@ -881,7 +885,7 @@
                           <Setter Property="Background" Value="Transparent"/>
                           <Setter Property="ContextMenu">
                             <Setter.Value>
-                              <ContextMenu IsVisible="{Binding HasItems, RelativeSource={RelativeSource Self}}">
+                              <ContextMenu IsVisible="{Binding HasItems, RelativeSource={RelativeSource Self}}" Name="ContextMenu12">
                                 <MenuItem Header="{sd:Localize Reset to base value, Context=Menu}" Command="{Binding ResetOverride, FallbackValue={x:Static cmd:DisabledCommand.Instance}, Mode=OneWay}"
                                          />
                                 <Separator />

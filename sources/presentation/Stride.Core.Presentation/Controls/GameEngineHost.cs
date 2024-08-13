@@ -19,15 +19,15 @@ namespace Stride.Core.Presentation.Controls
     /// </summary>
     public class GameEngineHostBase : IDisposable
     {
-        public delegate GameEngineHostInterface Builder (IntPtr childHandle);
+        public delegate GameEngineHostInterface Builder (IntPtr childHandle, object window);
         public static Builder builder;
         private GameEngineHostInterface impl = null;
         
-        public GameEngineHostBase(IntPtr childHandle)
+        public GameEngineHostBase(IntPtr childHandle, object window)
         {
             if (builder != null)
             {
-              impl = builder (childHandle);
+              impl = builder (childHandle, window);
             }
         }
         

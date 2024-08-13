@@ -1,5 +1,6 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
+using System;
 using Avalonia;
 using Avalonia.Controls;
 
@@ -28,7 +29,23 @@ namespace Stride.Editor.Preview.View
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 		{
 			base.OnApplyTemplate(e);
-            UpdateStrideView();
+            var strideViewPresenter = e.NameScope.Find<ContentPresenter>("PART_StrideView");
+            if (strideViewPresenter != null && builder != null)
+            {
+                var strideView = builder.GetStrideView();
+                Console.WriteLine ("App Temp " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent );
+//                strideViewPresenter.Content = null;
+//                strideViewPresenter.UpdateLayout ();
+                Console.WriteLine ("App Temp2 " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent + " - " + (strideViewPresenter != ((Control) strideView).Parent) + " - " + strideViewPresenter);
+//                ((Control) strideView).Parent = null;
+//                if (((Control) strideView).Parent == null) // already made the content.
+                {
+                    strideViewPresenter.Content = strideView;
+                }
+                Console.WriteLine ("App Temp3 " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent );
+            }
+
+ //           UpdateStrideView();
         }
 
         public void InitializeView(IPreviewBuilder previewBuilder, IAssetPreview assetPreview)
@@ -64,12 +81,24 @@ namespace Stride.Editor.Preview.View
 
         private void UpdateStrideView()
         {
-            var strideViewPresenter = this.FindNameScope().Find<ContentPresenter>("PART_StrideView");
-            if (strideViewPresenter != null && builder != null)
+ /*           try
             {
-                var strideView = builder.GetStrideView();
-                strideViewPresenter.Content = strideView;
+            var a = this;
+            var b = this.FindNameScope();
+            if (this.FindNameScope() != null)
+            {
+                var strideViewPresenter = this.FindNameScope().Find<ContentPresenter>("PART_StrideView");
+                if (strideViewPresenter != null && builder != null)
+                {
+                    var strideView = builder.GetStrideView();
+                    strideViewPresenter.Content = strideView;
+                }
             }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine ("UpdateStrideView ex: " + ex);
+            }*/
         }
     }
 }

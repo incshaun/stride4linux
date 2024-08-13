@@ -84,12 +84,13 @@ namespace Stride.Assets.Presentation.AssetEditors.ScriptEditor
 
             // Context Actions
             contextActionsRenderer = new ContextActionsRenderer(this, textMarkerService) { IconImage = ContextActionsIcon };
-// FIXME: issue with finding a CodeFix service.            
+// FIXME: something crashes out here.            
 //            contextActionProvider = new RoslynContextActionProvider(documentId, workspace.Host);
 //            contextActionsRenderer.Providers.Add(contextActionProvider);
 
             // Completion provider
-            CompletionProvider = new RoslynCodeEditorCompletionProvider(documentId, workspace.Host);
+// FIXME: also bombing things out, if keys pressed too fast.            
+//            CompletionProvider = new RoslynCodeEditorCompletionProvider(documentId, workspace.Host);
             // TODO: Warmup() is internal
 
             // Quick info

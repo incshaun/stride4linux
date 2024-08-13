@@ -131,7 +131,7 @@ namespace Stride.Graphics
 
         public void Clear(Texture renderTarget, Color4 color)
         {
-//             using (GraphicsDevice.UseOpenGLCreationContext())
+            using (GraphicsDevice.UseOpenGLCreationContext())
             {            
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
@@ -636,6 +636,8 @@ if (!init)
 
         internal unsafe void CopyScaler2D(Texture sourceTexture, Texture destTexture, Rectangle sourceRectangle, Rectangle destRectangle, bool flipY = false)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -724,6 +726,7 @@ if (!init)
             // Restore FBO and viewport
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, boundFBO);
             GL.Viewport((int)viewports[0].X, (int)viewports[0].Y, (uint)viewports[0].Width, (uint)viewports[0].Height);
+            }
         }
 
         internal unsafe void CopyScaler2D(Texture sourceTexture, Rectangle sourceRectangle, Rectangle destRectangle, bool needSRgbConversion = false, bool flipY = false)
@@ -1264,16 +1267,20 @@ if (!init)
 
         public unsafe MappedResource MapSubresource(GraphicsResource resource, int subResourceIndex, MapMode mapMode, bool doNotWait = false, int offsetInBytes = 0, int lengthInBytes = 0)
         {
+// Console.WriteLine ("MapSubresource A ");                
+            
             using (GraphicsDevice.UseOpenGLCreationContext())
             {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
+// Console.WriteLine ("MapSubresource B ");                
 
             // This resource has just been recycled by the GraphicsResourceAllocator, we force a rename to avoid GPU=>GPU sync point
             if (resource.DiscardNextMap && mapMode == MapMode.WriteNoOverwrite)
                 mapMode = MapMode.WriteDiscard;
 
+// Console.WriteLine ("MapSubresource C ");                
 
             var buffer = resource as Buffer;
             if (buffer != null)
@@ -1282,35 +1289,43 @@ if (!init)
                     lengthInBytes = buffer.Description.SizeInBytes;
 
                 IntPtr mapResult = IntPtr.Zero;
+// Console.WriteLine ("MapSubresource D ");                
 
                 GL.BindBuffer(buffer.BufferTarget, buffer.BufferId);
+// Console.WriteLine ("MapSubresource E ");                
 
 #if !STRIDE_GRAPHICS_API_OPENGLES
                 //if (mapMode != MapMode.WriteDiscard && mapMode != MapMode.WriteNoOverwrite)
                 //    mapResult = GL.MapBuffer(buffer.bufferTarget, mapMode.ToOpenGL());
                 //else
 #endif
+// Console.WriteLine ("MapSubresource F " + mapMode + " -" +buffer.BufferTarget + "-"+ buffer.Description.SizeInBytes+ "-"+ IntPtr.Zero+ "-"+ buffer.BufferUsageHint);                
                 {
                     // Orphan the buffer (let driver knows we don't need it anymore)
                     if (mapMode == MapMode.WriteDiscard)
                     {
                         doNotWait = true;
-                        GL.BufferData(buffer.BufferTarget, (UIntPtr)buffer.Description.SizeInBytes, IntPtr.Zero, buffer.BufferUsageHint);
+  //                     GL.BufferData(buffer.BufferTarget, (UIntPtr)buffer.Description.SizeInBytes, IntPtr.Zero, buffer.BufferUsageHint);
                     }
+// Console.WriteLine ("MapSubresource G ");                
 
                     var unsynchronized = doNotWait && mapMode != MapMode.Read && mapMode != MapMode.ReadWrite;
 
                     mapResult = (IntPtr)GL.MapBufferRange(buffer.BufferTarget, (IntPtr)offsetInBytes, (UIntPtr)lengthInBytes, mapMode.ToOpenGLMask() | (unsynchronized ? MapBufferAccessMask.MapUnsynchronizedBit : 0));
+// Console.WriteLine ("MapSubresource H ");                
+                    
                 }
 
                 return new MappedResource(resource, subResourceIndex, new DataBox { DataPointer = mapResult, SlicePitch = 0, RowPitch = 0 });
             }
+// Console.WriteLine ("MapSubresource I ");                
 
             var texture = resource as Texture;
             if (texture != null)
             {
                 if (lengthInBytes == 0)
                     lengthInBytes = texture.ComputeSubresourceSize(subResourceIndex);
+// Console.WriteLine ("MapSubresource J ");                
 
                 if (mapMode == MapMode.Read)
                 {
@@ -1327,21 +1342,25 @@ if (!init)
                             return new MappedResource(resource, subResourceIndex, new DataBox(), offsetInBytes, lengthInBytes);
                         }
                     }
+// Console.WriteLine ("MapSubresource K ");                
 
                     return MapTexture(texture, true, BufferTargetARB.PixelPackBuffer, texture.PixelBufferObjectId, subResourceIndex, mapMode, offsetInBytes, lengthInBytes);
                 }
                 else if (mapMode == MapMode.WriteDiscard)
                 {
+// Console.WriteLine ("MapSubresource L ");                
                     if (texture.Description.Usage != GraphicsResourceUsage.Dynamic)
                         throw new NotSupportedException("Only dynamic texture can be mapped.");
 
                     // Create a temporary unpack pixel buffer
                     // TODO: Pool/allocator? (it's an upload buffer basically)
                     var pixelBufferObjectId = texture.GeneratePixelBufferObject(BufferTargetARB.PixelUnpackBuffer, PixelStoreParameter.UnpackAlignment, BufferUsageARB.DynamicCopy, texture.ComputeSubresourceSize(subResourceIndex));
+// Console.WriteLine ("MapSubresource M ");                
 
                     return MapTexture(texture, false, BufferTargetARB.PixelUnpackBuffer, pixelBufferObjectId, subResourceIndex, mapMode, offsetInBytes, lengthInBytes);
                 }
             }
+// Console.WriteLine ("MapSubresource N ");                
 
             throw Internal.Refactor.NewNotImplementedException("MapSubresource not implemented for type " + resource.GetType());
             }
@@ -1639,7 +1658,11 @@ if (!init)
                 if (depthStencilBuffer != null)
                 {
                     if (expectedWidth != depthStencilBuffer.Width || expectedHeight != depthStencilBuffer.Height)
-                        throw new Exception("Depth buffer is not the same size as the render target");
+                    {
+//                         throw new Exception("Depth buffer is not the same size as the render target");
+                        Console.WriteLine("Depth buffer is not the same size as the render target");
+                        return;
+                    }
                 }
                 for (int i = 1; i < renderTargetCount; ++i)
                 {
@@ -1819,6 +1842,8 @@ if (!init)
 
         public void SetVertexBuffer(int index, Buffer buffer, int offset, int stride)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
@@ -1828,16 +1853,17 @@ if (!init)
                 vboDirty = true;
                 vertexBuffers[index] = newVertexBuffer;
             }
+            }
         }
 
         public void SetIndexBuffer(Buffer buffer, int offset, bool is32bits)
         {
+            using (GraphicsDevice.UseOpenGLCreationContext())
+            {
 #if DEBUG
             GraphicsDevice.EnsureContextActive();
 #endif
 
-//             using (GraphicsDevice.UseOpenGLCreationContext())
-            {
             var newIndexBuffer = new IndexBufferView(buffer, offset, is32bits);
             if (indexBuffer != newIndexBuffer)
             {

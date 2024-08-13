@@ -68,6 +68,8 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
         /// The handle of the game form.
         /// </summary>
         private IntPtr windowHandle;
+
+        private object windowWindow;
         /// <summary>
         /// The last click position.
         /// </summary>
@@ -235,7 +237,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             await gameStartedTaskSource.Task;
 //             GameForm.MouseDown += (sender, e) => lastClickPosition = Control.MousePosition;
             // Initialize the WPF GameEngineHwndHost on this thread
-            EditorHost = new GameEngineHostBase(windowHandle);
+            EditorHost = new GameEngineHostBase(windowHandle, windowWindow);
 
             // TODO: we could check if the game fails to create.
             return true;
@@ -414,6 +416,7 @@ namespace Stride.Assets.Presentation.AssetEditors.GameEditor.Services
             var context = GameContextFactory.NewGameContext(AppContextType.DesktopSDL);
             context.InitializeDatabase = false;
             windowHandle = ((GameContextSDL)context).Control.Handle;
+            windowWindow = ((GameContextSDL)context).Control;
             RegisterToDragDropEvents();
 
             // Wait for shaders to be loaded

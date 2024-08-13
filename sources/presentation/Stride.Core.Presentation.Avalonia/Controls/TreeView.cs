@@ -851,7 +851,16 @@ namespace Stride.Core.Presentation.Controls
                 SelectedItems.Remove(itemToUnSelect);
             }
 
-            ((NonGenericObservableListWrapper<object>)SelectedItems).AddRange(itemsToSelect);
+            try
+            {
+              ((NonGenericObservableListWrapper<object>)SelectedItems).AddRange(itemsToSelect);
+            }
+            catch (InvalidCastException e)
+            {
+                // FIXME: erratic issue, need to resolve, but probably rewrite treeview first.
+                Console.WriteLine ("Unable to cast " + e);
+            }
+            
             allowedSelectionChanges = false;
 
             if (itemsToUnselect.Contains(lastShiftRoot))

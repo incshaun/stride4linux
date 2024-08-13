@@ -10,7 +10,9 @@ using Stride.Core.Annotations;
 using Stride.Core.Presentation.View;
 using Stride.Core.Presentation.ViewModels;
 using Stride.Core.Presentation.Windows;
+using Stride.Core.Presentation.Behaviors;
 using System.Windows.Input;
+using Avalonia.Input;
 
 namespace Stride.Core.Presentation.Commands
 {
@@ -52,6 +54,7 @@ namespace Stride.Core.Presentation.Commands
         private static ApplicationCommands instance = null;
         private static bool initialized = false;
         private static Dictionary<CommandId, ICommand> commands = new Dictionary<CommandId, ICommand> ();
+        private static Dictionary<CommandId, KeyGesture> gestureTable = new Dictionary<CommandId, KeyGesture> ();
         static ApplicationCommands ()
         {
             Console.WriteLine ("Creating static ApplicationCommands");
@@ -76,8 +79,27 @@ namespace Stride.Core.Presentation.Commands
             var serviceProvider = new ViewModelServiceProvider(new[] { new DispatcherService(Dispatcher.UIThread) });
             foreach (CommandId cid in Enum.GetValues (typeof (CommandId)))
             {
-              commands[cid] = new AnonymousCommand<RoutedEventArgs?>(serviceProvider, (v) => OnApplicationCommand(cid, v));
+              commands[cid] = new AnonymousCommand<object?>(serviceProvider, (v) => OnApplicationCommand(cid, v));
             }
+            
+            gestureTable[CommandId.Cut] = new KeyGesture(Key.X, KeyModifiers.Control);
+            gestureTable[CommandId.Copy] = new KeyGesture(Key.C, KeyModifiers.Control);
+            gestureTable[CommandId.Paste] = new KeyGesture(Key.V, KeyModifiers.Control);
+            gestureTable[CommandId.Undo] = new KeyGesture(Key.Z, KeyModifiers.Control);
+            gestureTable[CommandId.Redo] = new KeyGesture(Key.Y, KeyModifiers.Control);
+            gestureTable[CommandId.Delete] = new KeyGesture(Key.Delete);
+            gestureTable[CommandId.Find] = new KeyGesture(Key.F, KeyModifiers.Control);
+            gestureTable[CommandId.Replace] = new KeyGesture(Key.H, KeyModifiers.Control);
+            gestureTable[CommandId.Help] = new KeyGesture(Key.F1);
+            gestureTable[CommandId.SelectAll] = new KeyGesture(Key.A, KeyModifiers.Control);
+            gestureTable[CommandId.New] = new KeyGesture(Key.N, KeyModifiers.Control);
+            gestureTable[CommandId.Open] = new KeyGesture(Key.O, KeyModifiers.Control);
+            gestureTable[CommandId.Save] = new KeyGesture(Key.S, KeyModifiers.Control);
+            gestureTable[CommandId.Print] = new KeyGesture(Key.P, KeyModifiers.Control);
+            gestureTable[CommandId.PrintPreview] = new KeyGesture(Key.F2, KeyModifiers.Control);
+            gestureTable[CommandId.Properties] = new KeyGesture(Key.F4);
+            gestureTable[CommandId.ContextMenu] = new KeyGesture(Key.F10, KeyModifiers.Shift);
+            gestureTable[CommandId.Stop] = new KeyGesture(Key.Escape);
         }
         
         public static ICommand Cut { get { initialize (); return commands[CommandId.Cut]; } }
@@ -103,8 +125,9 @@ namespace Stride.Core.Presentation.Commands
         public static ICommand CorrectionList { get { initialize (); return commands[CommandId.CorrectionList]; } }
         public static ICommand Stop { get { initialize (); return commands[CommandId.Stop]; } }
         
-        private void OnApplicationCommand (CommandId name, RoutedEventArgs? v)
+        private void OnApplicationCommand (CommandId name, object? v)
         {
+                Console.WriteLine (name + " called");
             if (executedTable.Keys.Contains (name))
             {
                 Console.WriteLine (name + " triggered");
@@ -112,14 +135,22 @@ namespace Stride.Core.Presentation.Commands
             }
         }
         
-        private static Dictionary<CommandId, Action<RoutedEventArgs?>> executedTable = new Dictionary<CommandId, Action<RoutedEventArgs?>> ();
-        public static void AddCommandBinding (ICommand c, Action<RoutedEventArgs?> executed, Action<RoutedEventArgs?> canExecute)
+        private static Dictionary<CommandId, Action<object?>> executedTable = new Dictionary<CommandId, Action<object?>> ();
+        public static void AddCommandBinding (ICommand c, Action<object?> executed, Action<object?> canExecute)
         {
+            Console.WriteLine ("AddCommandBinding " + c + " added " + executed + " - " + canExecute);
+            
             foreach (KeyValuePair <CommandId, ICommand> entry in commands)
             {
                 if (entry.Value == c)
                 {
                     executedTable[entry.Key] = executed;
+                    
+                    if (gestureTable.ContainsKey (entry.Key))
+                    {
+                        var binding = new KeyBinding() { Gesture = gestureTable[entry.Key], Command = c };
+                        ((CommandBindingBehavior) executed.Target).AssociatedObject.KeyBindings.Add(binding);
+                    }
                 }
             }
         }

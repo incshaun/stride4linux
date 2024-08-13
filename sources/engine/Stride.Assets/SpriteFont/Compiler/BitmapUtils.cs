@@ -76,14 +76,18 @@
 //--------------------------------------------------------------------
 
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+// using System.Drawing;
+// using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+
 
 using Stride.Core.Mathematics;
 
-using DrawingColor = System.Drawing.Color;
-using Rectangle = System.Drawing.Rectangle;
+using SkiaSharp;
+using DrawingColor = SkiaSharp.SKColor;
+using Rectangle = SkiaSharp.SKRect;
+using Bitmap = SkiaSharp.SKBitmap;
+using PixelFormat = SkiaSharp.SKColorType;
 
 namespace Stride.Assets.SpriteFont.Compiler
 {
@@ -99,14 +103,15 @@ namespace Stride.Assets.SpriteFont.Compiler
                 throw new ArgumentException();
             }
 
-            using (var sourceData = new PixelAccessor(source, ImageLockMode.ReadOnly, sourceRegion))
-            using (var outputData = new PixelAccessor(output, ImageLockMode.WriteOnly, outputRegion))
+//             using (var sourceData = new PixelAccessor(source/*, ImageLockMode.ReadOnly*/, sourceRegion))
+//             using (var outputData = new PixelAccessor(output/*, ImageLockMode.WriteOnly*/, outputRegion))
             {
                 for (int y = 0; y < sourceRegion.Height; y++)
                 {
                     for (int x = 0; x < sourceRegion.Width; x++)
                     {
-                        outputData[x, y] = sourceData[x, y];
+//                         outputData[x, y] = sourceData[x, y];
+                        output.SetPixel (x + (int) outputRegion.Left, y + (int) outputRegion.Top, source.GetPixel (x + (int) sourceRegion.Left, y + (int) sourceRegion.Top));
                     }
                 }
             }
@@ -116,13 +121,14 @@ namespace Stride.Assets.SpriteFont.Compiler
         // Checks whether an area of a bitmap contains entirely the specified alpha value.
         public static bool IsAlphaEntirely(byte expectedAlpha, Bitmap bitmap, Rectangle? region = null)
         {
-            using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadOnly, region))
+//             using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadOnly, region))
             {
-                for (int y = 0; y < bitmapData.Region.Height; y++)
+                for (int y = 0; y < region?.Height; y++)
                 {
-                    for (int x = 0; x < bitmapData.Region.Width; x++)
+                    for (int x = 0; x < region?.Width; x++)
                     {
-                        byte alpha = bitmapData[x, y].A;
+//                         byte alpha = bitmapData[x, y].A;
+                        byte alpha = bitmap.GetPixel (x + (int) region?.Left, y + (int) region?.Top).Alpha;
 
                         if (alpha != expectedAlpha)
                             return false;
@@ -137,20 +143,20 @@ namespace Stride.Assets.SpriteFont.Compiler
         // Checks whether a bitmap contains entirely the specified RGB value.
         public static bool IsRgbEntirely(DrawingColor expectedRgb, Bitmap bitmap)
         {
-            using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadOnly))
+//             using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadOnly))
             {
                 for (int y = 0; y < bitmap.Height; y++)
                 {
                     for (int x = 0; x < bitmap.Width; x++)
                     {
-                        DrawingColor color = bitmapData[x, y];
+                        DrawingColor color = bitmap.GetPixel (x, y);
 
-                        if (color.A == 0)
+                        if (color.Alpha == 0)
                             continue;
 
-                        if ((color.R != expectedRgb.R) ||
-                            (color.G != expectedRgb.G) ||
-                            (color.B != expectedRgb.B))
+                        if ((color.Red != expectedRgb.Red) ||
+                            (color.Green != expectedRgb.Green) ||
+                            (color.Blue != expectedRgb.Blue))
                         {
                             return false;
                         }
@@ -165,18 +171,18 @@ namespace Stride.Assets.SpriteFont.Compiler
         // Converts greyscale luminosity to alpha data.
         public static void ConvertGreyToAlpha(Bitmap bitmap, Rectangle region)
         {
-            using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite, region))
+//             using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite, region))
             {
                 for (int y = 0; y < region.Height; y++)
                 {
                     for (int x = 0; x < region.Width; x++)
                     {
-                        var color = bitmapData[x, y];
+                        var color = bitmap.GetPixel (x + (int) region.Left, y + (int) region.Top);
 
                         // Average the red, green and blue values to compute brightness.
-                        var alpha = (color.R + color.G + color.B) / 3;
+                        var alpha = (color.Red + color.Green + color.Blue) / 3;
 
-                        bitmapData[x, y] = DrawingColor.FromArgb(alpha, 255, 255, 255);
+                        bitmap.SetPixel (x, y, new DrawingColor(255, 255, 255, (byte) alpha));
                     }
                 }
             }
@@ -185,30 +191,30 @@ namespace Stride.Assets.SpriteFont.Compiler
         // Converts a bitmap to premultiplied alpha format.
         public static void PremultiplyAlphaClearType(Bitmap bitmap, bool srgb)
         {
-            using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite))
+//             using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite))
             {
                 for (int y = 0; y < bitmap.Height; y++)
                 {
                     for (int x = 0; x < bitmap.Width; x++)
                     {
-                        DrawingColor color = bitmapData[x, y];
+                        DrawingColor color = bitmap.GetPixel (x, y);
 
                         int a;
                         if (srgb)
                         {
-                            var colorLinear = new Color4(new Stride.Core.Mathematics.Color(color.R, color.G, color.B)).ToLinear();
+                            var colorLinear = new Color4(new Stride.Core.Mathematics.Color(color.Red, color.Green, color.Blue)).ToLinear();
                             var alphaLinear = (colorLinear.R + colorLinear.G + colorLinear.B) / 3.0f;
                             a = MathUtil.Clamp((int)Math.Round(alphaLinear * 255), 0, 255);
                         }
                         else
                         {
-                            a = (color.R + color.G + color.B) / 3;
+                            a = (color.Red + color.Green + color.Blue) / 3;
                         }
-                        int r = color.R;
-                        int g = color.G;
-                        int b = color.B;
+                        int r = color.Red;
+                        int g = color.Green;
+                        int b = color.Blue;
 
-                        bitmapData[x, y] = DrawingColor.FromArgb(a, r, g, b);
+                        bitmap.SetPixel (x, y, new DrawingColor((byte) r, (byte) g, (byte) b, (byte) a));
                     }
                 }
             }
@@ -217,21 +223,21 @@ namespace Stride.Assets.SpriteFont.Compiler
         // Converts a bitmap to premultiplied alpha format.
         public static void PremultiplyAlpha(Bitmap bitmap, bool srgb)
         {
-            using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite))
+//             using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite))
             {
                 for (int y = 0; y < bitmap.Height; y++)
                 {
                     for (int x = 0; x < bitmap.Width; x++)
                     {
-                        DrawingColor color = bitmapData[x, y];
-                        int a = color.A;
+                        DrawingColor color = bitmap.GetPixel (x, y);
+                        int a = color.Alpha;
                         int r;
                         int g;
                         int b;
                         if (srgb)
                         {
-                            var colorLinear = new Color4(new Stride.Core.Mathematics.Color(color.R, color.G, color.B)).ToLinear();
-                            colorLinear *= color.A / 255.0f;
+                            var colorLinear = new Color4(new Stride.Core.Mathematics.Color(color.Red, color.Green, color.Blue)).ToLinear();
+                            colorLinear *= color.Alpha / 255.0f;
                             var colorSRgb = (Stride.Core.Mathematics.Color)colorLinear.ToSRgb();
                             r = colorSRgb.R;
                             g = colorSRgb.G;
@@ -239,12 +245,12 @@ namespace Stride.Assets.SpriteFont.Compiler
                         }
                         else
                         {
-                            r = color.R * a / 255;
-                            g = color.G * a / 255;
-                            b = color.B * a / 255;
+                            r = color.Red * a / 255;
+                            g = color.Green * a / 255;
+                            b = color.Blue * a / 255;
                         }
 
-                        bitmapData[x, y] = DrawingColor.FromArgb(a, r, g, b);
+                        bitmap.SetPixel (x, y, new DrawingColor((byte) r, (byte) g, (byte) b, (byte) a));
                     }
                 }
             }
@@ -257,46 +263,48 @@ namespace Stride.Assets.SpriteFont.Compiler
         // alpha, because the premultiply conversion will change the RGB of all such zero alpha pixels to black.
         public static void PadBorderPixels(Bitmap bitmap, Rectangle region)
         {
-            using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite))
+//             using (var bitmapData = new PixelAccessor(bitmap, ImageLockMode.ReadWrite))
             {
                 // Pad the top and bottom.
-                for (int x = region.Left; x < region.Right; x++)
+                for (int x = (int) region.Left; x < (int) region.Right; x++)
                 {
-                    CopyBorderPixel(bitmapData, x, region.Top, x, region.Top - 1);
-                    CopyBorderPixel(bitmapData, x, region.Bottom - 1, x, region.Bottom);
+                    CopyBorderPixel(bitmap, x, (int) region.Top, x, (int) region.Top - 1);
+                    CopyBorderPixel(bitmap, x, (int) region.Bottom - 1, x, (int) region.Bottom);
                 }
 
                 // Pad the left and right.
-                for (int y = region.Top; y < region.Bottom; y++)
+                for (int y = (int) region.Top; y < (int) region.Bottom; y++)
                 {
-                    CopyBorderPixel(bitmapData, region.Left, y, region.Left - 1, y);
-                    CopyBorderPixel(bitmapData, region.Right - 1, y, region.Right, y);
+                    CopyBorderPixel(bitmap, (int) region.Left, y, (int) region.Left - 1, y);
+                    CopyBorderPixel(bitmap, (int) region.Right - 1, y, (int) region.Right, y);
                 }
 
                 // Pad the four corners.
-                CopyBorderPixel(bitmapData, region.Left, region.Top, region.Left - 1, region.Top - 1);
-                CopyBorderPixel(bitmapData, region.Right - 1, region.Top, region.Right, region.Top - 1);
-                CopyBorderPixel(bitmapData, region.Left, region.Bottom - 1, region.Left - 1, region.Bottom);
-                CopyBorderPixel(bitmapData, region.Right - 1, region.Bottom - 1, region.Right, region.Bottom);
+                CopyBorderPixel(bitmap, (int) region.Left, (int) region.Top, (int) region.Left - 1, (int) region.Top - 1);
+                CopyBorderPixel(bitmap, (int) region.Right - 1, (int) region.Top, (int) region.Right, (int) region.Top - 1);
+                CopyBorderPixel(bitmap, (int) region.Left, (int) region.Bottom - 1, (int) region.Left - 1, (int) region.Bottom);
+                CopyBorderPixel(bitmap, (int) region.Right - 1, (int) region.Bottom - 1, (int) region.Right, (int) region.Bottom);
             }
         }
 
 
         // Copies a single pixel within a bitmap, preserving RGB but forcing alpha to zero.
-        static void CopyBorderPixel(PixelAccessor bitmapData, int sourceX, int sourceY, int destX, int destY)
+        static void CopyBorderPixel(/*PixelAccessor*/Bitmap bitmap, int sourceX, int sourceY, int destX, int destY)
         {
-            DrawingColor color = bitmapData[sourceX, sourceY];
+            DrawingColor color = bitmap.GetPixel(sourceX, sourceY);
 
-            bitmapData[destX, destY] = DrawingColor.FromArgb(0, color);
+            bitmap.SetPixel (destX, destY, new DrawingColor(color.Red, color.Green, color.Blue, 0));
         }
 
         
         // Converts a bitmap to the specified pixel format.
+//         public static Bitmap ChangePixelFormat(Bitmap bitmap, PixelFormat format)
         public static Bitmap ChangePixelFormat(Bitmap bitmap, PixelFormat format)
         {
-            Rectangle bounds = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+//             Rectangle bounds = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 
-            return bitmap.Clone(bounds, format);
+//             return bitmap.Clone(bounds, format);
+            return bitmap.Copy (format);
         }
 
 
@@ -304,25 +312,25 @@ namespace Stride.Assets.SpriteFont.Compiler
         public sealed class PixelAccessor : IDisposable
         {
             // Constructor locks the bitmap.
-            public PixelAccessor(Bitmap bitmap, ImageLockMode mode, Rectangle? region = null)
+            public PixelAccessor(Bitmap bitmap/*, ImageLockMode mode*/, Rectangle? region = null)
             {
                 this.bitmap = bitmap;
 
                 Region = region.GetValueOrDefault(new Rectangle(0, 0, bitmap.Width, bitmap.Height));
 
-                data = bitmap.LockBits(Region, mode, PixelFormat.Format32bppArgb);
+//                data = bitmap.LockBits(Region, mode, PixelFormat.Format32bppArgb);
             }
 
 
             // Dispose unlocks the bitmap.
             public void Dispose()
             {
-                if (data != null)
-                {
-                    bitmap.UnlockBits(data);
-
-                    data = null;
-                }
+//                 if (data != null)
+//                 {
+//                     bitmap.UnlockBits(data);
+// 
+//                     data = null;
+//                 }
             }
 
 
@@ -331,29 +339,29 @@ namespace Stride.Assets.SpriteFont.Compiler
 
 
             // Get or set a pixel value.
-            public DrawingColor this[int x, int y]
-            {
-                get
-                {
-                    return DrawingColor.FromArgb(Marshal.ReadInt32(PixelAddress(x, y)));
-                }
-
-                set
-                {
-                    Marshal.WriteInt32(PixelAddress(x, y), value.ToArgb()); 
-                }
-            }
+//             public DrawingColor this[int x, int y]
+//             {
+//                 get
+//                 {
+//                     return new DrawingColor((uint) Marshal.ReadInt32(PixelAddress(x, y)));
+//                 }
+// 
+//                 set
+//                 {
+//                     Marshal.WriteInt32(PixelAddress(x, y), (int) (uint) value); 
+//                 }
+//             }
 
 
             // Helper computes the address of the specified pixel.
-            unsafe IntPtr PixelAddress(int x, int y)
-            {
-                return new IntPtr((byte*)data.Scan0 + (y * data.Stride) + (x * sizeof(int)));
-            }
+//             unsafe IntPtr PixelAddress(int x, int y)
+//             {
+//                 return new IntPtr((byte*)data.Scan0 + (y * data.Stride) + (x * sizeof(int)));
+//             }
 
             // Fields.
             Bitmap bitmap;
-            BitmapData data;
+//             BitmapData data;
         }
     }
 }

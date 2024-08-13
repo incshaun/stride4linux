@@ -41,10 +41,7 @@
     <ProjectReference Include="../Stride.Editor/Stride.Editor.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <AvaloniaResource Include="Themes/Generic.axaml" />
   </ItemGroup>
   <!-- Resources -->
   <ItemGroup>

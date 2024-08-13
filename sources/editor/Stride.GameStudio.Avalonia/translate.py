@@ -1093,11 +1093,17 @@ def translateTags (contents):
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:Chained {cvt:ObjectToBool}, {cvt:VisibleOrCollapsed}}}\"", r'IsVisible="{Binding \1, Converter={cvt:ObjectToBool}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrHidden}, FallbackValue={me:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:Chained {cvt:IsEqual}, {cvt:VisibleOrCollapsed}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}\"", r'IsVisible="{Binding \1, Converter={cvt:IsEqual}, ConverterParameter={me:Int {x:Static ctrl:VectorEditingMode.Length}}, RelativeSource={RelativeSource Mode=TemplatedParent}}"', contents)
-  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:Chained {cvt:IsEqual}, {cvt:InvertBool}, {cvt:VisibleOrCollapsed}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}\"", r'IsVisible="{Binding \1, Converter={cvt:Chained {cvt:IsEqual}, {cvt:InvertBool}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:Chained {cvt:IsEqual}, {cvt:InvertBool}, {cvt:VisibleOrCollapsed}, Parameter1={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}\"", r'IsVisible="{Binding \1, Converter={cvt:Chained {cvt:IsEqual}, {cvt:InvertBool}, ConverterParameter={me:Int {x:Static ctrl:VectorEditingMode.Length}}}, RelativeSource={RelativeSource Mode=TemplatedParent}}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrHidden},FallbackValue={me:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"{Binding (.*?), Converter={cvt:VisibleOrCollapsed}, FallbackValue={me:Hidden}}\"", r'IsVisible="{Binding \1}"', contents)
   contents = re.sub ("Visibility=\"Visible\"", r'IsVisible="true"', contents)
   contents = re.sub ("Visibility=\"{TemplateBinding ([a-zA-Z]*?)}\"", r'IsVisible="{TemplateBinding \1}"', contents)
+
+  contents = re.sub ("Visibility=\"{Binding Converter={sd:Chained {sd:MatchType}, {sd:VisibleOrCollapsed}, Parameter1={(.*?)}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding Converter={sd:MatchType}, ConverterParameter={\1}, FallbackValue={sd:False}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding (.*?), Converter={sd:Chained {sd:MatchType}, {sd:VisibleOrCollapsed}, Parameter1={(.*?)}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding \1, Converter={sd:MatchType}, ConverterParameter={\2}, FallbackValue={sd:False}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrCollapsed}}, FallbackValue={sd:Collapsed}}\"", r'IsVisible="{Binding Converter={sd:ObjectToBool}}, FallbackValue={sd:False}}"', contents)
+  contents = re.sub ("Visibility=\"{Binding Converter={sd:Chained {sd:ObjectToBool}, {sd:VisibleOrCollapsed}, Parameter2={sd:False}}, FallbackValue={sd:Visible}}\"", r'IsVisible="{Binding Converter={sd:ObjectToBool}, ConverterParameter={sd:False}, FallbackValue={sd:True}}"', contents)
+
 
   contents = re.sub ("Property=\"Visibility\" Value=\"Hidden\"", r'Property="IsVisible" Value="false"', contents)
   contents = re.sub ("Property=\"Visibility\" Value=\"Collapsed\"", r'Property="IsVisible" Value="false"', contents)
@@ -1199,6 +1205,7 @@ def translateTags (contents):
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ActiveCaptionTextBrushKey\}\}", r'{StaticResource ActiveCaptionTextBrushKey}', contents) # one line style  
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.ControlTextBrushKey\}\}", r'{StaticResource ControlTextBrushKey}', contents) # one line style  
   contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.GrayTextBrushKey\}\}", r'{StaticResource GrayTextBrushKey}', contents) # one line style  
+  contents = re.sub ("\{DynamicResource \{x:Static SystemColors\.HighlightTextBrushKey\}\}", r'{StaticResource HighlightTextBrushKey}', contents) # one line style  
   
   # Styles become various forms of Theme.
   contents = re.sub ("\<Style TargetType=\"([^\"].*?)\"(.*?)\/\>", r'<ControlTheme TargetType="\1"\2></ControlTheme>', contents) # one line style
@@ -1255,6 +1262,8 @@ def translateTags (contents):
   contents = re.sub ("</RichTextBox", r"</TextBox", contents)
 
   # textbox
+  contents = re.sub ("<TextBox([^>]*?)ScrollViewer.HorizontalScrollBarVisibility=\"Auto\"([^>]*?)>", r"<TextBox\1\2>", contents)
+  contents = re.sub ("<TextBox([^>]*?)ScrollViewer.VerticalScrollBarVisibility=\"Auto\"([^>]*?)>", r"<TextBox\1\2>", contents)
   contents = re.sub ("<TextBox([^>]*?)HorizontalScrollBarVisibility=\"Auto\"([^>]*?)>", r"<TextBox\1\2>", contents)
   contents = re.sub ("<TextBox([^>]*?)VerticalScrollBarVisibility=\"Auto\"([^>]*?)>", r"<TextBox\1\2>", contents)
 
@@ -1491,10 +1500,11 @@ def translateTags (contents):
   contents = re.sub (re.compile ("SelectedValuePath=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("ContentStringFormat=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("IsEditable=\"(.*?)\"", re.DOTALL), "", contents) # might need to look for the FluentAvalonia editable combobox if this is true?
-  contents = re.sub (re.compile ("<Setter Property=\"IsEditable\" Value=\"(.*?)\"/>", re.DOTALL), "", contents) 
+  #contents = re.sub (re.compile ("<Setter Property=\"IsEditable\" Value=\"(.*?)\"/>", re.DOTALL), "", contents) 
   contents = re.sub (re.compile ("Theme=\"{StaticResource {x:Static ItemsControl.ToggleButtonStyleKey}}\"", re.DOTALL), "", contents) 
   contents = re.sub (re.compile ("ToolTipService\.InitialShowDelay=\"1\"", re.DOTALL), "", contents) 
-  contents = re.sub (re.compile ("<CollectionViewSource ([^/]*?)/>", re.DOTALL), "", contents) 
+  contents = re.sub (re.compile ("<CollectionViewSource (.*?)/CollectionViewSource>", re.DOTALL), r"<!--<CollectionViewSource \1)/CollectionViewSource>-->", contents) 
+  #contents = re.sub (re.compile ("<CollectionViewSource ([^/]*?)/>", re.DOTALL), "", contents) 
   contents = re.sub (re.compile ("VirtualizingPanel\.IsVirtualizing=\"True\"", re.DOTALL), "", contents) 
   contents = re.sub (re.compile ("<Setter Property=\"VirtualizingStackPanel.IsVirtualizing\" Value=\"False\" />", re.DOTALL), "", contents) 
   contents = re.sub (re.compile ("VirtualizingPanel\.VirtualizationMode=\"Recycling\"", re.DOTALL), "", contents) 
@@ -2119,7 +2129,24 @@ def translateXAML (sourceFile):
 #translateCS ("presentation/Stride.Core.Presentation.Wpf/Core/ValidationRoutedEvent.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragContainer.cs")
 #translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragWindow.cs")
-translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragDropHelper.cs")
+#translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragDropHelper.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/UIPageEditor/Views/UIPageEditorView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/UIEditor/Views/UIEditorView.xaml.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/XamlRootExtension.cs")
+#translateCS ("presentation/Stride.Core.Presentation.Wpf/MarkupExtensions/GuidExtension.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/AssetCompositeGameEditor/Views/AssetCompositeHierarchyTreeViewHelper.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/AnimationPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/EntityPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/HeightmapPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/MaterialPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/ModelPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/ScenePreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/SkyboxPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/SoundPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/SpriteFontPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/SpriteSheetPreviewView.cs")
+#translateCS ("editor/Stride.Assets.Presentation.Wpf/Preview/Views/TexturePreviewView.cs")
+translateCS ("presentation/Stride.Core.Presentation.Wpf/Behaviors/SliderDragFromTrackBehavior.cs")
 
 
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/CommonResources.xaml")
@@ -2174,6 +2201,9 @@ translateCS ("editor/Stride.Core.Assets.Editor.Wpf/View/Behaviors/DragDrop/DragD
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/AddAssets/View/ItemTemplatesWindow.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/View/PackagePickerWindow.xaml")
 #translateXAML ("editor/Stride.Core.Assets.Editor.Wpf/Components/FixAssetReferences/Views/FixAssetReferencesWindow.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/AssetEditors/UIEditor/Views/UIEditorView.xaml")
+#translateXAML ("editor/Stride.Editor.Wpf/Themes/Generic.xaml")
+#translateXAML ("editor/Stride.Assets.Presentation.Wpf/Themes/Generic.xaml")
 
 #PriorityBinding
 #TreeViewTemplateSelector
