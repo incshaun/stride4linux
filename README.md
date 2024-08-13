@@ -106,7 +106,7 @@ These steps should be enough to help build, run, create a (simple) project, comp
   
 Your experience may vary ;-)
 
-![Stride Editor in Linux](https://media.githubusercontent.com/media/incshaun/stride4linux/LinuxAlpha01/samples/linuxalpha01.png)
+![Stride Editor in Linux](https://media.githubusercontent.com/media/incshaun/stride4linux/LinuxAlpha03/samples/linuxalpha03.png)
 
 Welcome to the Stride source code repository!
 
