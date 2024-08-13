@@ -17,13 +17,13 @@ Stride is an open-source C# game engine for realistic rendering and VR.
 The engine is highly modular and aims at giving game makers more flexibility in their development.
 Stride comes with an editor that allows you to create and manage the content of your games or applications visually and intuitively.
 
-<span style="color:blue">
+$${\color{blue}
 ## Linux progress
 
 * (2024-05-19) First alpha released. Download the LinuxAlpha01 branch, and follow the instructions (on that branch). Partially functional editor, able to create and run a basic project.
 * (2024-06-10) Second alpha released. Use the LinuxAlpha02 branch, with instructions in the README.md on that branch. Editor allows some scene and property manipulation, adding new assets, rudimentary drag and drop. Also some refinements to Android export.
 * (2024-08-13) Third alpha released. Use the LinuxAlpha03 branch, with instructions in the README.md on that branch. Improved functionality although building projects for Linux and Android is still better done from the command line (see the instructions in the branch README). 
-</span>
+}$$
 
 ![Stride Editor](https://stride3d.net/images/external/script-editor.png)
 
