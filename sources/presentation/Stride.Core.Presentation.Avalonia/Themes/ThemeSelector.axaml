@@ -160,11 +160,28 @@
                 </Button>
                 <TextBlock x:Name="Caption" Foreground="{StaticResource MainWindowInactiveCaptionTextBrush}" Text="{TemplateBinding Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
               </DockPanel>
-              <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                <StackPanel>
-                  <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
-                </StackPanel>
-              </Border>
+              <Panel Background="Transparent" Margin="{TemplateBinding WindowDecorationMargin}" />
+              <VisualLayerManager>
+                <VisualLayerManager.ChromeOverlayLayer>
+                  <TitleBar />
+                </VisualLayerManager.ChromeOverlayLayer>
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  Content="{TemplateBinding Content}"
+                                  Margin="{TemplateBinding Padding}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+              </VisualLayerManager>
+<!--               <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"> -->
+<!--                <StackPanel>
+                  <ContentPresenter Name="PART_ContentPresenter"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Content="{TemplateBinding Content}"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </StackPanel>-->
+<!--               </Border> -->
             </DockPanel>
           </Border>
           <!-- <ControlTemplate.Triggers>
