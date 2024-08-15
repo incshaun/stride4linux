@@ -92,6 +92,10 @@
                 </DataTemplate>
               </ListBox.ItemTemplate>
               <i:Interaction.Behaviors>
+                <behaviors:ListBoxHighlightedItemBehavior IsEnabled="{Binding Text, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}, Converter={sd:EmptyStringToBool}}"
+                                                          HighlightedItem="{Binding SelectedGroup, Mode=OneWayToSource}"
+                                                          SelectHighlightedWhenEnteringControl="{Binding ElementName=PART_ListBox}"
+                                                          UseSelectedItemIfAvailable="True" DelayToUpdate="0.2"/>
               </i:Interaction.Behaviors>
             </ListBox>
           </DockPanel>
