@@ -73,7 +73,7 @@
         <MenuItem Header="{sd:Localize Folder, Context=Menu}" Command="{Binding Editor.CreateFolderInRootCommand}"/>
         <MenuItem Header="{sd:Localize Empty entity, Context=Menu}" Command="{Binding Editor.CreateEntityInRootCommand}"/>
         <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
-        <MenuItem ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
+        <MenuItem Header="{sd:Localize Assets, Context=Menu}" ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
 	<Design.DataContext>
 		<entityFactories:EntityFactoryCategory />
 	</Design.DataContext>
@@ -112,10 +112,10 @@
         <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding Editor.CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <Separator/>
         <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGesture="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Paste}" CommandParameter="{sd:True}" Icon="{sd:Image {StaticResource ImagePaste}}" />
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
+        <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
+        <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Paste}" CommandParameter="{sd:True}" Icon="{sd:Image {StaticResource ImagePaste}}" />
+        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="Rename" InputGesture="F2" Command="{Binding Editor.EntityWithGizmo.RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>
       </ContextMenu>
@@ -128,7 +128,7 @@
         <MenuItem Header="{sd:Localize Folder, Context=Menu}" Command="{Binding Editor.CreateFolderInSelectionCommand}"/>
         <MenuItem Header="{sd:Localize Empty entity, Context=Menu}" Command="{Binding Editor.CreateEntityInSelectionCommand}"/>
         <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
-        <MenuItem ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
+        <MenuItem Header="{sd:Localize Assets, Context=Menu}" ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
 	<Design.DataContext>
 		<entityFactories:EntityFactoryCategory />
 	</Design.DataContext>
@@ -169,10 +169,10 @@
         <MenuItem Header="{sd:Localize Create prefab from selection, Context=Menu}" Command="{Binding Editor.CreatePrefabFromSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <Separator/>
         <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGesture="Ctrl+D" Command="{Binding Editor.DuplicateSelectionCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Paste}" Icon="{sd:Image {StaticResource ImagePaste}}" />
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
+        <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
+        <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Paste}" Icon="{sd:Image {StaticResource ImagePaste}}" />
+        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Rename, Context=Menu}" InputGesture="F2" Command="{Binding RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}"/>
       </ContextMenu>
@@ -221,7 +221,7 @@
                 <!-- For some reason I have to set the style explicitly for this menu item, otherwise it is wrong-->
                 <MenuItem Header="{sd:Localize Empty entity, Context=Menu}" Command="{Binding Editor.CreateEntityInRootCommand}" Theme="{StaticResource {x:Type MenuItem}}"/>
                 <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
-                <MenuItem ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
+                <MenuItem Header="{sd:Localize Assets, Context=Menu}" ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}"  >
 	<Design.DataContext>
 		<entityFactories:EntityFactoryCategory />
 	</Design.DataContext>
@@ -848,7 +848,7 @@
               <MenuItem Header="{sd:Localize Create, Context=Menu}" Theme="{StaticResource MenuGroupSeparatorStyle}"/>
               <MenuItem Header="{sd:Localize Empty entity, Context=Menu}" Command="{Binding CreateEntityCommand}"/>
               <!-- IsCheckable=True is a hack to prevent WPF from clearing the selected sub menu item -->
-              <MenuItem ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}" >
+              <MenuItem Header="{sd:Localize Assets, Context=Menu}" ItemsSource="{x:Static p:StrideDefaultAssetsPlugin.EntityFactoryCategories}" >
                 <MenuItem.ItemContainerTheme>
                   <ControlTheme  TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}" >
 	<Design.DataContext>

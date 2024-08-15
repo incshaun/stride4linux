@@ -149,10 +149,10 @@
         <MenuItem Header="{sd:Localize Create library from selection, Context=Menu}" Command="{Binding DataContext.CreateLibraryCommand, Source={sd:XamlRoot}, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" />
         <Separator/>
         <MenuItem Header="{sd:Localize Duplicate, Context=Menu}" InputGesture="Ctrl+D" Command="{Binding DataContext.DuplicateSelectionCommand, Source={sd:XamlRoot}, FallbackValue={x:Static cmd:DisabledCommand.Instance}}"/>
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
-<!--         <MenuItem Command="{x:Static sd:ApplicationCommands.Paste}" CommandParameter="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type uevm:UIRootViewModel}, FallbackValue={sd:True}}" Icon="{sd:Image {StaticResource ImagePaste}}" /> -->
-        <MenuItem Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
+        <MenuItem Header="{sd:Localize Cut, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Cut}" Icon="{sd:Image {StaticResource ImageCut}}" />
+        <MenuItem Header="{sd:Localize Copy, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Copy}" Icon="{sd:Image {StaticResource ImageCopy}}" />
+<!--         <MenuItem Header="{sd:Localize Paste, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Paste}" CommandParameter="{Binding Converter={sd:MatchType}, ConverterParameter={x:Type uevm:UIRootViewModel}, FallbackValue={sd:True}}" Icon="{sd:Image {StaticResource ImagePaste}}" /> -->
+        <MenuItem Header="{sd:Localize Delete, Context=Menu}" Command="{x:Static sd:ApplicationCommands.Delete}" Icon="{sd:Image {StaticResource ImageDelete}}"/>
         <Separator/>
         <MenuItem Header="{sd:Localize Rename, Context=Menu}" Command="{Binding RenameCommand, FallbackValue={x:Static cmd:DisabledCommand.Instance}}" Icon="{sd:Image {StaticResource ImageRename}}" InputGesture="F2" />
       </ContextMenu>
