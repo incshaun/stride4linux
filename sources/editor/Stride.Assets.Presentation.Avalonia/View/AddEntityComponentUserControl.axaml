@@ -26,7 +26,7 @@
       </i:Interaction.Behaviors>
     </ToggleButton>
     <Popup IsOpen="{Binding IsChecked, Mode=TwoWay, ElementName=ToggleButton}" Placement="Bottom" x:Name="PART_Popup"
-                    >
+                  IsLightDismissEnabled="True"  >
       <sd:FilteringComboBox x:Name="FilteringComboBox"
                         ItemsSource="{Binding ComponentTypes}"
                         Text="{Binding SearchToken, Mode=TwoWay}"

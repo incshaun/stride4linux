@@ -144,7 +144,7 @@
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="8"/>
         <ColumnDefinition Width="{Binding NameColumnSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sd:PropertyView}}, Mode=TwoWay}"
-                          MinWidth="64"/>
+                          MinWidth="256"/>
         <ColumnDefinition Width="5"/>
         <ColumnDefinition Width="*" MinWidth="64"/>
       </Grid.ColumnDefinitions>
@@ -190,12 +190,13 @@
           <TextBlock x:Name="PropertyNameBlock" Grid.Column="2" Text="{Binding DisplayName}" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                      TextTrimming="CharacterEllipsis" IsVisible="{Binding HasCommand_RenameStringKey, Converter={sd:InvertBool}}"/>
           <sd:TextBox x:Name="PropertyNameBox" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                      FontSize="10"
                         CancelOnLostFocus="True" SelectAllOnFocus="True" sd:Trimming.TextTrimming="WordEllipsis"
                         Text="{Binding DisplayName, Mode=OneWay}"
                         ValidateCommand="{Binding RenameStringKey}"
                         ValidateCommandParameter="{Binding Text, RelativeSource={RelativeSource Self}}"
                         IsVisible="{Binding HasCommand_RenameStringKey}"
-                        ContextMenu="{Binding ContextMenu, RelativeSource={RelativeSource AncestorType={x:Type sd:PropertyViewItem}}}">
+                        ContextMenu="{Binding ContextMenu, RelativeSource={RelativeSource AncestorType={x:Type sd:PropertyViewItem}}}" Name="ContextMenu40">
             <sd:TextBox.Theme>
               <ControlTheme TargetType="{x:Type sd:TextBox}" BasedOn="{StaticResource {x:Type sd:TextBox}}">
                 <!-- <ControlTheme.Triggers>
@@ -869,7 +870,7 @@
           <behaviors:TextBoxPropertyValueValidationBehavior />
         </i:Interaction.Behaviors>
       </sd:TextBox>
-      <Popup Grid.Column="0" IsOpen="{Binding ElementName=PickerToggleButton, Path=IsChecked}" >
+      <Popup Grid.Column="0" IsOpen="{Binding ElementName=PickerToggleButton, Path=IsChecked}" IsLightDismissEnabled="True">
         <Grid Background="{StaticResource BackgroundBrush}" MinWidth="200" MinHeight="200" MaxWidth="400" MaxHeight="400">
           <TabControl>
             <TabItem Header="Color picker">
@@ -1395,7 +1396,7 @@
             <sd:ToggleButtonPopupBehavior/>
           </i:Interaction.Behaviors>
         </ToggleButton>
-        <Popup Grid.Column="0" IsOpen="{Binding ElementName=ToggleButton, Path=IsChecked}" >
+        <Popup Grid.Column="0" IsOpen="{Binding ElementName=ToggleButton, Path=IsChecked}" IsLightDismissEnabled="True">
           <Grid Background="{StaticResource BackgroundBrush}" MinWidth="200" MaxWidth="400" MaxHeight="200">
             <DockPanel>
               <UniformGrid DockPanel.Dock="Bottom" Columns="3">
@@ -1527,7 +1528,7 @@
 </pvdr:EnumTemplateProvider.Template>
 </pvdr:EnumTemplateProvider>
 
-  <ContextMenu x:Key="ReferenceContextMenu">
+  <ContextMenu x:Key="ReferenceContextMenu" Name="ContextMenu70">
     <MenuItem Icon="{sd:Image {StaticResource ImageFetchAsset}}"
               Header="{sd:Localize Select the referenced asset}"
               Command="{Binding FetchAsset}"

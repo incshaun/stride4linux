@@ -10,6 +10,11 @@ using Avalonia.Xaml.Interactivity;
 using Stride.Core.Presentation.Extensions;
 using Avalonia.Interactivity;
 
+using Dock.Model.Avalonia.Controls;
+using Dock.Model.Avalonia.Core;
+using Dock.Model.Avalonia.Internal;
+using Dock.Model.Controls;
+
 namespace Stride.GameStudio.Avalonia.Layout.Behaviors
 {
     // TODO: this behavior was previously broken, it might work now (migration to AvalonDock) but has not been tested!
@@ -17,23 +22,23 @@ namespace Stride.GameStudio.Avalonia.Layout.Behaviors
     {
         protected override void OnAttached()
         {
-//             AssociatedObject.GotKeyboardFocus += GotFocus;
+            AssociatedObject.GotFocus += GotFocus;
             base.OnAttached();
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
-//             AssociatedObject.GotKeyboardFocus -= GotFocus;
+            AssociatedObject.GotFocus -= GotFocus;
         }
 
         private void GotFocus(object sender, RoutedEventArgs e)
         {
-//             var pane = AssociatedObject.FindVisualParentOfType<LayoutAnchorableControl>();
-//             if (pane != null)
-//             {
-//                 pane.Model.IsActive = true;
-//             }
+            var pane = global::Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<Dock.Avalonia.Controls.DocumentControl> ((Visual) AssociatedObject);
+            if (pane != null)
+            {
+//                pane.Model.IsActive = true;
+            }
         }
     }
 }

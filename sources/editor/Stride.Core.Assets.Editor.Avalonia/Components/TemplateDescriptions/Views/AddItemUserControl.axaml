@@ -99,11 +99,6 @@
                      IsVisible="true"/>
 <!--          <Separator Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="1" Background="{StaticResource NormalBrush}"
                      IsVisible="{Binding Items.Count, ElementName=PART_ListBox}"/>-->
-<!--            <TextBlock Text="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType=sd:FilteringComboBox}, Converter={sd:ObjectToFullTypeName}}" />
-            <TextBlock Text="{Binding $parent[sd:FilteringComboBox].ItemTemplate, Converter={sd:ObjectToFullTypeName}}" />-->
-<!--             <TextBlock Text="{Binding $parent[sd:FilteringComboBox].ItemsSource.Count}" /> -->
-<!--             <TextBlock Text="{Binding $parent[sd:FilteringComboBox].SelectedIndex}" /> -->
-          
           <ListBox x:Name="PART_ListBox"  Width="{x:Static view:AddItemUserControl.TemplateListWidth}"
                     Margin="4" Grid.Column="2" Height="{Binding ActualHeight, ElementName=LeftPanel}"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"

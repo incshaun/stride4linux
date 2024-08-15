@@ -259,7 +259,7 @@
                             Grid.Row="0">
 <!--                    <avaloniaedit:DropDownButton Height="24">
                         <avaloniaedit:DropDownButton.DropDownContent>
-                            <Popup StaysOpen="False">
+                            <Popup IsLightDismissEnabled="True">
                                 <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                         BorderThickness="1">

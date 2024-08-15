@@ -1855,7 +1855,7 @@
               <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImagePickDateTime}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </ToggleButton>
             <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" 
-                   MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:DateTimeEditor}}" 
+                   MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:DateTimeEditor}}" IsLightDismissEnabled="True"
                    PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=ctrl:DateTimeEditor}}" >
               <Border  Background="{StaticResource BackgroundBrush}" BorderBrush="Black" BorderThickness="1">
                 <Grid>
@@ -3247,7 +3247,7 @@
             <Grid DockPanel.Dock="Right" x:Name="OverflowGrid">
               
               <Border VerticalAlignment="Bottom" HorizontalAlignment="Right" x:Name="PopupPlacementTarget"/>
-              <Popup Focusable="false"  IsOpen="{Binding IsOverflowOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Left" PlacementTarget="{Binding ElementName=PopupPlacementTarget}"  >
+              <Popup Focusable="false"  IsOpen="{Binding IsOverflowOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Left" PlacementTarget="{Binding ElementName=PopupPlacementTarget}" IsLightDismissEnabled="False" >
                 <Border BorderThickness="1,1,1,1" Background="{DynamicResource DropdownButtonBackgroundBrush}" BorderBrush="{DynamicResource DropdownButtonBackgroundBrush}">
                   
                 </Border>
@@ -3744,7 +3744,7 @@
               <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImageAdvancedEditionVector}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </ToggleButton>
             <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" 
-                                       MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int2Editor}}" 
+                                       MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int2Editor}}" IsLightDismissEnabled="True"
                                        PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=ctrl:Int2Editor}}" >
               <Border  Background="{StaticResource BackgroundBrush}" BorderBrush="Black" BorderThickness="1">
                 <ctrl:KeyValueGrid>
@@ -3813,7 +3813,7 @@
               <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImageAdvancedEditionVector}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </ToggleButton>
             <Popup x:Name="PART_Popup" Placement="Bottom"  IsOpen="{TemplateBinding IsDropDownOpen}"
-                                       MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int3Editor}}" 
+                                       MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int3Editor}}" IsLightDismissEnabled="True"
                                        PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=ctrl:Int3Editor}}" >
               <Border  Background="{StaticResource BackgroundBrush}" BorderBrush="Black" BorderThickness="1">
                 <ctrl:KeyValueGrid>
@@ -3893,7 +3893,7 @@
               <Image Width="16" Height="16" Margin="-1" Source="{Binding Source={StaticResource ImageAdvancedEditionVector}, Path=Source}" RenderOptions.BitmapInterpolationMode="LowQuality"/>
             </ToggleButton>
             <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" 
-                                       MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int4Editor}}" 
+                                       MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ctrl:Int4Editor}}" IsLightDismissEnabled="True"
                                        PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=ctrl:Int4Editor}}" >
               <Border  Background="{StaticResource BackgroundBrush}" BorderBrush="Black" BorderThickness="1">
                 <ctrl:KeyValueGrid>

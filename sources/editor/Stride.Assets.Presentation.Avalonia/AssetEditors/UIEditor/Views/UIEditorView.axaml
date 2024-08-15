@@ -452,7 +452,7 @@
                 <sd:ToggleButtonPopupBehavior/>
               </i:Interaction.Behaviors>
             </ToggleButton>
-            <Popup IsOpen="{Binding ElementName=ToggleSettings, Path=IsChecked}"  PlacementTarget="{Binding ElementName=ToggleSettings}">
+            <Popup IsOpen="{Binding ElementName=ToggleSettings, Path=IsChecked}" IsLightDismissEnabled="True" PlacementTarget="{Binding ElementName=ToggleSettings}">
               <StackPanel Background="{StaticResource BackgroundBrush}">
                 <Border Padding="8,2" Background="{StaticResource NormalBrush}" HorizontalAlignment="Stretch">
                   <TextBlock Text="{sd:Localize Colors}" FontWeight="Bold"/>
@@ -479,7 +479,7 @@
                       <sd:ToggleButtonPopupBehavior/>
                     </i:Interaction.Behaviors>
                   </ToggleButton>
-                  <Popup Grid.Row="0" Grid.Column="1" IsOpen="{Binding IsChecked, ElementName=GuidelineToggle}" >
+                  <Popup Grid.Row="0" Grid.Column="1" IsOpen="{Binding IsChecked, ElementName=GuidelineToggle}" IsLightDismissEnabled="True">
                     <Grid Background="{StaticResource BackgroundBrush}">
                       <sd:ColorPicker Color="{Binding GuidelineColor, Converter={sd:ColorConverter}}"/>
                     </Grid>
@@ -495,7 +495,7 @@
                       <sd:ToggleButtonPopupBehavior/>
                     </i:Interaction.Behaviors>
                   </ToggleButton>
-                  <Popup Grid.Row="1" Grid.Column="1" IsOpen="{Binding IsChecked, ElementName=HighlightToggle}" >
+                  <Popup Grid.Row="1" Grid.Column="1" IsOpen="{Binding IsChecked, ElementName=HighlightToggle}" IsLightDismissEnabled="True">
                     <Grid Background="{StaticResource BackgroundBrush}">
                       <sd:ColorPicker Color="{Binding HighlightColor, Converter={sd:ColorConverter}}"/>
                     </Grid>
@@ -511,7 +511,7 @@
                       <sd:ToggleButtonPopupBehavior/>
                     </i:Interaction.Behaviors>
                   </ToggleButton>
-                  <Popup Grid.Row="2" Grid.Column="1" IsOpen="{Binding IsChecked, ElementName=SelectionToggle}" >
+                  <Popup Grid.Row="2" Grid.Column="1" IsOpen="{Binding IsChecked, ElementName=SelectionToggle}" IsLightDismissEnabled="True">
                     <Grid Background="{StaticResource BackgroundBrush}">
                       <sd:ColorPicker Color="{Binding SelectionColor, Converter={sd:ColorConverter}}"/>
                     </Grid>
@@ -527,7 +527,7 @@
                       <sd:ToggleButtonPopupBehavior/>
                     </i:Interaction.Behaviors>
                   </ToggleButton>
-                  <Popup Grid.Row="3" Grid.Column="1" IsOpen="{Binding IsChecked, ElementName=SizingToggle}" >
+                  <Popup Grid.Row="3" Grid.Column="1" IsOpen="{Binding IsChecked, ElementName=SizingToggle}" IsLightDismissEnabled="True">
                     <Grid Background="{StaticResource BackgroundBrush}">
                       <sd:ColorPicker Color="{Binding SizingColor, Converter={sd:ColorConverter}}"/>
                     </Grid>

@@ -1496,7 +1496,8 @@ def translateTags (contents):
   contents = re.sub (re.compile (" IsEnabled=\"(.*?)\"", re.DOTALL), "", contents)
   #contents = re.sub (re.compile (" Visibility=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("DisplayMemberPath=\"(.*?)\"", re.DOTALL), "", contents)
-  contents = re.sub (re.compile ("StaysOpen=\"(.*?)\"", re.DOTALL), "", contents)
+  #contents = re.sub (re.compile ("StaysOpen=\"(.*?)\"", re.DOTALL), "", contents)
+  contents = re.sub (re.compile ("StaysOpen=\"False\"", re.DOTALL), "IsLightDismissEnabled=\"True\"", contents)
   contents = re.sub (re.compile ("SelectedValuePath=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("ContentStringFormat=\"(.*?)\"", re.DOTALL), "", contents)
   contents = re.sub (re.compile ("IsEditable=\"(.*?)\"", re.DOTALL), "", contents) # might need to look for the FluentAvalonia editable combobox if this is true?

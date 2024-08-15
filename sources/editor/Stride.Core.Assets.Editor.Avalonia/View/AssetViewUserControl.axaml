@@ -220,7 +220,7 @@
             <sd:ToggleButtonPopupBehavior/>
           </i:Interaction.Behaviors>
         </ToggleButton>
-        <Popup IsOpen="{Binding IsChecked, ElementName=Toggle, Mode=TwoWay}"  >
+        <Popup IsOpen="{Binding IsChecked, ElementName=Toggle, Mode=TwoWay}" IsLightDismissEnabled="True" >
           <Border MinHeight="300" Margin="6" Background="{StaticResource ControlBackgroundBrush}"
                   BorderBrush="{StaticResource NormalBrush}" BorderThickness="1">
             <Border.Effect>
