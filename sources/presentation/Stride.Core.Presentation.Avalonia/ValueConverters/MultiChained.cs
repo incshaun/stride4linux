@@ -34,6 +34,11 @@ namespace Stride.Core.Presentation.ValueConverters
         {
         }
 
+        public MultiChained(object multiConverter)
+            : this((IMultiValueConverter) multiConverter, null, null, null, null, null, null, null, null)
+        {
+        }
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiChained"/> class with the given instances of <see cref="IValueConverter"/>.
         /// </summary>

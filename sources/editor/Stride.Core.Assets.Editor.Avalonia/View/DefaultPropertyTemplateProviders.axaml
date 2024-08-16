@@ -117,7 +117,8 @@
     <Setter Property="Height" Value="16"/>
     <Setter Property="BorderBrush" Value="Transparent"/>
     <Setter Property="VerticalAlignment" Value="Center"/>
-    
+    <Setter Property="IsVisible" Value="{sd:MultiBinding {Binding HasCommand_AddNewItem}, {Binding HasCollection}, {Binding HasAssociatedData_AbstractNodeMatchingEntries},
+                                                            Converter={sd:MultiChained {sd:AndMultiConverter}}, FallbackValue=false}"/>
     <Setter Property="ToolTip.Tip" Value="{sd:Localize Add..., Context=ToolTip}" />
     <Setter Property="Tag" Value="{StaticResource ImageAdd}"/>
   </ControlTheme>
