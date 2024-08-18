@@ -23,7 +23,10 @@
   
 
   <ControlTheme x:Key="AddNewItemButtonStyle" BasedOn="{StaticResource ImageButtonStyle}" TargetType="Button">
-    
+    <Setter Property="IsVisible" Value="{sd:MultiBinding {Binding HasCommand_AddNewItem}, {Binding HasCollection},
+                                                            {Binding HasAssociatedData_ReadOnlyCollection, Converter={sd:InvertBool}},
+                                                            {Binding HasAssociatedData_AbstractNodeMatchingEntries, Converter={sd:InvertBool}},
+                                                            Converter={sd:MultiChained {sd:AndMultiConverter}}, FallbackValue=false}"/>
     <Setter Property="Command" Value="{Binding AddNewItem}"/>
     <Setter Property="ToolTip.Tip" Value="{sd:Localize Add..., Context=ToolTip}"/>
     <Setter Property="ContentTemplate">
@@ -52,7 +55,10 @@
     
     <Setter Property="ToolTip.Tip" Value="{sd:Localize Replace..., Context=ToolTip}"/>
     <!-- Visible if: we have the command to create a new instance, we're not read-only, we not a collection -->
-    
+    <Setter Property="IsVisible" Value="{sd:MultiBinding {Binding HasCommand_CreateNewInstance},
+                                                            {Binding IsReadOnly, Converter={sd:InvertBool}},
+                                                            {Binding HasCollection, Converter={sd:InvertBool}},
+                                         Converter={sd:MultiChained {sd:AndMultiConverter}}}"/>
     <Setter Property="BorderBrush" Value="{StaticResource NormalBorderBrush}"/>
     <Setter Property="BorderThickness" Value="0"/>
     <Setter Property="Tag" Value="{StaticResource ImageDropDown}"/>
@@ -124,7 +130,9 @@
   </ControlTheme>
 
   <ControlTheme x:Key="RemoveItemButtonStyle" BasedOn="{StaticResource ImageButtonStyle}" TargetType="Button">
-    
+    <Setter Property="IsVisible" Value="{sd:MultiBinding {Binding HasCommand_RemoveItem}, 
+                                                            {Binding HasAssociatedData_ReadOnlyCollection, Converter={sd:InvertBool}},
+                                          Converter={sd:MultiChained {sd:AndMultiConverter}}}"/>
     <Setter Property="Command" Value="{Binding RemoveItem}"/>
     <Setter Property="ToolTip.Tip" Value="{sd:Localize Delete, Context=ToolTip}"/>
     <Setter Property="ContentTemplate">
@@ -149,7 +157,7 @@
         <ColumnDefinition Width="5"/>
         <ColumnDefinition Width="*" MinWidth="64"/>
       </Grid.ColumnDefinitions>
-      <Border Width="8" Margin="4,4,0,4" Background="Transparent">
+      <Border Width="8" Margin="4,4,0,4" IsVisible="{Binding ReorderCollectionItem, Converter={sd:ObjectToBool}, FallbackValue=false}" Background="Transparent">
         <Rectangle Focusable="False" Cursor="SizeAll">
           <Rectangle.Fill>
             <DrawingBrush TileMode="Tile" >
@@ -187,7 +195,7 @@
           </Grid.ColumnDefinitions>
           <ToggleButton Grid.Column="1" Template="{StaticResource TreeExpanderToggleButton}" Width="8" Height="8" HorizontalAlignment="Left"
                                         IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=sd:PropertyViewItem}}"
-                                       />
+                                       IsVisible="{Binding VisibleChildrenCount, Converter={sd:NumericToBool}}"/>
           <TextBlock x:Name="PropertyNameBlock" Grid.Column="2" Text="{Binding DisplayName}" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                      TextTrimming="CharacterEllipsis" IsVisible="{Binding HasCommand_RenameStringKey, Converter={sd:InvertBool}}"/>
           <sd:TextBox x:Name="PropertyNameBox" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"
@@ -262,7 +270,7 @@
         </StackPanel>
         <ToggleButton DockPanel.Dock="Left" Template="{StaticResource PropertyGridHeaderExpanderToggleButton}" Width="8" Height="8"
                                     IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=sd:PropertyViewItem}}"
-                                   />
+                                   IsVisible="{Binding VisibleChildrenCount, Converter={sd:NumericToBool}}"/>
         <StackPanel Orientation="Horizontal" Margin="8,0,0,0">
           <CheckBox Margin="4,0" VerticalAlignment="Center"
                     IsThreeState="{Binding Enabled.NodeValue, Converter={sd:IsEqualToParam}, ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"
@@ -337,7 +345,8 @@
         <ComboBox x:Name="InstanceTypeSelectionComboBox" DockPanel.Dock="Right" Theme="{StaticResource AbstractTypeSelectionComboBox}"
                   ItemsSource="{Binding AbstractNodeMatchingEntries}"
                   
-                 >
+                 IsVisible="{sd:MultiBinding {Binding HasCommand_CreateNewInstance}, {Binding IsReadOnly, Converter={sd:InvertBool}},
+                                                 Converter={sd:MultiChained {sd:AndMultiConverter}}}">
           <i:Interaction.Behaviors>
             <behaviors:OnComboBoxClosedWithSelectionBehavior Command="{Binding CreateNewInstance}"
                                                              CommandParameter="{Binding SelectedItem, ElementName=InstanceTypeSelectionComboBox}"/>
@@ -381,11 +390,13 @@
       <Grid>
         <!-- Fallback when the node has multiple values to display -->
         <TextBlock Margin="2,0" VerticalAlignment="Center" Text="{sd:Localize (Different values)}"
-                  />
+                  IsVisible="{Binding NodeValue, Converter={sd:IsEqualToParam},
+                               ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"/>
         <!-- Fallback when the value does not have an inline property -->
         <ContentControl x:Name="ContentControl" Content="{sd:PriorityBinding {Binding InlinedProperty}, {Binding}}"
                         ContentTemplate="{x:Static edvw:PropertyViewHelper.EditorProviders}"
-                       />
+                       IsVisible="{Binding NodeValue, Converter={sd:Chained {sd:IsEqualToParam}, {sd:InvertBool}},
+                                    ConverterParameter={x:Static qvm:NodeViewModel.DifferentValues}}"/>
       </Grid>
     </DataTemplate>
 </pvdr:InlinedPropertyTemplateProvider.Template>
@@ -433,7 +444,9 @@
 		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid x:Name="Grid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BackgroundBrush}"
-           >
+           IsVisible="{sd:MultiBinding {Binding IsVisible}, {Binding HasCommand_AddNewItem}, {Binding HasCollection},
+                                           {Binding VisibleChildrenCount, Converter={sd:IsGreater}, ConverterParameter={sd:Int 0}},
+                                           Converter={sd:MultiChained {sd:AndMultiConverter}}, FallbackValue=false}">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="8"/>
           <ColumnDefinition Width="{Binding NameColumnSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type sd:PropertyView}}, Mode=TwoWay}"

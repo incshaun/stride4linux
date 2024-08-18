@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Stride.Core.Annotations;
 using Stride.Core.Extensions;
@@ -18,7 +19,7 @@ using Stride.Core.Quantum;
 using Stride.Core.TypeConverters;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Data;
-using Expression = System.Linq.Expressions.Expression;
+//using Expression = System.Linq.Expressions.Expression;
 
 namespace Stride.Core.Presentation.Quantum.ViewModels
 {
@@ -29,23 +30,41 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         {
             NodeViewModel.InitializerExtension = FinishInitialization;
         }
-        
+                
         public class AssociatedDataPropertyAccessorPlugin : IPropertyAccessorPlugin
         {
             private NodeViewModel datasource;
             public AssociatedDataPropertyAccessorPlugin (NodeViewModel source)
             {
                 datasource = source;
-            }
+            }            
+            
             public bool Match(object obj, string propertyName)
             {
-                var name = NodeViewModel.EscapeName(propertyName);
                 if (!(obj is NodeViewModel))
                     return false;
                 var source = (NodeViewModel) obj;
-//                var value = datasource.GetChild(name) ?? datasource.GetCommand(name) ?? datasource.GetAssociatedData(name) ?? null;
-                var value = source.GetChild(name) ?? source.GetCommand(name) ?? source.GetAssociatedData(name) ?? null;
-                return value != null;
+                var value = NodeViewModel.UnsetValue;
+                
+                // Include functionality from NodeViewModelDynamicMetaObject.
+                if (propertyName.StartsWith(GraphViewModel.HasChildPrefix, StringComparison.Ordinal))
+                {
+                    value = source.GetChild (propertyName.Substring(GraphViewModel.HasChildPrefix.Length));
+                }
+                else if (propertyName.StartsWith(GraphViewModel.HasCommandPrefix, StringComparison.Ordinal))
+                {
+                    value = source.GetCommand (propertyName.Substring(GraphViewModel.HasCommandPrefix.Length));
+                }
+                else if (propertyName.StartsWith(GraphViewModel.HasAssociatedDataPrefix, StringComparison.Ordinal))
+                {
+                    value = source.GetAssociatedData (propertyName.Substring(GraphViewModel.HasAssociatedDataPrefix.Length));
+                }
+                else
+                {
+                    value = source.GetDynamicObject (propertyName);
+                }                    
+                
+                return value != NodeViewModel.UnsetValue;
             }
 
             public IPropertyAccessor? Start(WeakReference<object?> reference, string propertyName)
@@ -60,8 +79,25 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
                 {
                     get
                     {
-                        var name = NodeViewModel.EscapeName(propertyName);
-                        var value = datasource.GetChild(name) ?? datasource.GetCommand(name) ?? datasource.GetAssociatedData(name) ?? null;
+                        var value = NodeViewModel.UnsetValue;
+
+                        if (propertyName.StartsWith(GraphViewModel.HasChildPrefix, StringComparison.Ordinal))
+                        {
+                            value = datasource.GetChild (propertyName.Substring(GraphViewModel.HasChildPrefix.Length)) != null;
+                        }
+                        else if (propertyName.StartsWith(GraphViewModel.HasCommandPrefix, StringComparison.Ordinal))
+                        {
+                            value = datasource.GetCommand (propertyName.Substring(GraphViewModel.HasCommandPrefix.Length)) != null;
+                        }
+                        else if (propertyName.StartsWith(GraphViewModel.HasAssociatedDataPrefix, StringComparison.Ordinal))
+                        {
+                            value = datasource.GetAssociatedData (propertyName.Substring(GraphViewModel.HasAssociatedDataPrefix.Length)) != null;
+                        }
+                        else
+                        {
+                            value = datasource.GetDynamicObject (propertyName);
+                        }
+
                         return value;
                     }
                 }

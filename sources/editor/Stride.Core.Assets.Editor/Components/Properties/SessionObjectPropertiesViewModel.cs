@@ -42,7 +42,7 @@ namespace Stride.Core.Assets.Editor.Components.Properties
 
 //            RegisterNodePresenterCommand(new CopyPropertyCommand());
 //            RegisterNodePresenterCommand(new PastePropertyCommand());
-//            RegisterNodePresenterCommand(new ReplacePropertyCommand());
+            RegisterNodePresenterCommand(new ReplacePropertyCommand());
             RegisterNodePresenterCommand(new BrowseDirectoryCommand(dialogService, new SessionInitialDirectoryProvider(session)));
             RegisterNodePresenterCommand(new BrowseFileCommand(dialogService, new SessionInitialDirectoryProvider(session)));
             RegisterNodePresenterCommand(new FetchAssetCommand(session));
