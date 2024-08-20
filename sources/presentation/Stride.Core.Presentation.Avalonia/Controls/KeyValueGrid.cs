@@ -21,6 +21,8 @@ namespace Stride.Core.Presentation.Controls
     /// <remarks>The column for the values has an <see cref="GridUnitType.Star"/> width.</remarks>
     public class KeyValueGrid : Grid
     {
+        protected override Type StyleKeyOverride { get { return typeof(Grid); } }
+        
         private bool gridParametersInvalidated;
 
         public static readonly AttachedProperty<bool> UseFullRowProperty = AvaloniaProperty<bool>.RegisterAttached<KeyValueGrid, Control, bool>("UseFullRow"); // T12A
@@ -32,6 +34,7 @@ namespace Stride.Core.Presentation.Controls
         {
             ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0.0, GridUnitType.Auto) });
             ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.0, GridUnitType.Star) });
+            VisualChildren.CollectionChanged += OnVisualChildrenChanged;
         }
 
         public static bool GetUseFullRow([NotNull] AvaloniaObject obj)
@@ -108,10 +111,10 @@ namespace Stride.Core.Presentation.Controls
         }
 
         /// <inheritdoc/>
-//         protected override void OnVisualChildrenChanged(AvaloniaObject visualAdded, AvaloniaObject visualRemoved)
-//         {
-//             gridParametersInvalidated = true;
+        protected void OnVisualChildrenChanged(object? sender, EventArgs e)
+        {
+            gridParametersInvalidated = true;
 //             base.OnVisualChildrenChanged(visualAdded, visualRemoved);
-//         }
+        }
     }
 }

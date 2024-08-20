@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation and Contributors (https://dotnetfoundation.org/ & https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.ComponentModel;
 
@@ -29,6 +30,15 @@ namespace Stride.Core.Presentation.ValueConverters
             if (brush != null)
                 value = brush.Color;
             
+/*            if (value.GetType ().IsGenericType && value.GetType ().GetGenericTypeDefinition() == typeof (KeyValuePair<, >))
+            {
+                var t = Convert (value.GetType ().GetProperty("Value").GetValue (value, null), targetType, parameter, culture);
+                if (t != null)
+                {
+                    return t;
+                }
+            }*/
+
             if (value is Color)
             {
                 var color = (Color)value;
@@ -185,6 +195,7 @@ namespace Stride.Core.Presentation.ValueConverters
        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
        {
            return (sourceType == typeof(Avalonia.Media.Color));
+//           return (sourceType == typeof(Avalonia.Media.Color)) || (sourceType == typeof(Avalonia.Media.SolidColorBrush));
        }
  
        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)

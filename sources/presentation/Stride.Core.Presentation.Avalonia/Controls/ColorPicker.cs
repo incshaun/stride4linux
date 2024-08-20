@@ -396,13 +396,14 @@ namespace Stride.Core.Presentation.Controls
                             rawImage[(i + j * width) * 4 + 0] = color.B;
                             rawImage[(i + j * width) * 4 + 1] = color.G;
                             rawImage[(i + j * width) * 4 + 2] = color.R;
+                            rawImage[(i + j * width) * 4 + 3] = 255;
                         }
                     }
 
                     int size = Marshal.SizeOf(rawImage[0]) * rawImage.Length;
 					IntPtr pnt = Marshal.AllocHGlobal(size);
 					Marshal.Copy(rawImage, 0, pnt, rawImage.Length);
-					colorPickerRenderSurface.Fill = new ImageBrush(new Avalonia.Media.Imaging.Bitmap(pf, AlphaFormat.Premul, pnt, new PixelSize (width, height), new Vector (96, 96), rawStride));
+					colorPickerRenderSurface.Fill = new ImageBrush(new Avalonia.Media.Imaging.Bitmap(pf, AlphaFormat.Unpremul, pnt, new PixelSize (width, height), new Vector (96, 96), rawStride));
 					Marshal.FreeHGlobal(pnt);
                 }
             }
@@ -542,7 +543,8 @@ namespace Stride.Core.Presentation.Controls
         {
             if (!suspendBindingUpdates && dependencyProperty != initializingProperty)
             {
-//                 var expression = GetBindingExpression(dependencyProperty);
+// awaiting new avalonia version.                
+//                 var expression = BindingOperations.GetBindingExpressionBase(dependencyProperty);
 //                 expression?.UpdateSource();
             }
         }

@@ -892,8 +892,8 @@
                                 ShowAlpha="{Binding Type, Mode=OneWay, Converter={sd:Chained {sd:IsEqualToParam}, {sd:InvertBool}, Parameter1={x:Type math:Color3}}}"/>
             </TabItem>
             <TabItem Header="Palette">
-              <ListBox ItemsSource="{x:Static viewModel:ColorPaletteViewModel.Colors}" 
-                       SelectedValue="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:ColorConverter}}}">
+              <ListBox ItemsSource="{x:Static viewModel:ColorPaletteViewModel.Colors}" SelectedValueBinding="{Binding Value, Converter={sd:ColorConverter}}"
+                       SelectedValue="{Binding NodeValue, Converter={sd:Chained {cvt:DifferentValuesToNull}, {sd:ColorConverter}, TargetType2={x:Type math:Color3}}}">
                 <ListBox.ItemTemplate>
                   <DataTemplate>
                     <DockPanel>

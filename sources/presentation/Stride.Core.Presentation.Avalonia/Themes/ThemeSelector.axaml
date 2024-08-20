@@ -539,7 +539,7 @@
               <Canvas x:Name="PART_HuePickerRenderSurface" Width="{Binding PickupAreaSize.Width, RelativeSource={RelativeSource TemplatedParent}}"
                                     Height="{TemplateBinding StripsHeight}">
                 <Canvas.Background>
-                  <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                  <LinearGradientBrush StartPoint="0,0" EndPoint="{Binding PickupAreaSize.Width, RelativeSource={RelativeSource TemplatedParent}},{TemplateBinding StripsHeight}">
                     <GradientStop Color="Red" Offset="0.0"/>
                     <GradientStop Color="Yellow" Offset="0.166666666667"/>
                     <GradientStop Color="Lime" Offset="0.333333333333"/>
@@ -611,7 +611,7 @@
                   <TextBlock Margin="4,0" Text="{sd:Localize R:, Context=RGBA}" ToolTip.Tip="{sd:Localize Red, Context=ToolTip}" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False"/>
                   <StackPanel Margin="0,2">
                     <ctrl:NumericTextBox x:Name="RedTextBox" Value="{Binding Red, RelativeSource={RelativeSource Mode=TemplatedParent}}" SelectionBrush="{StaticResource RedBrush}" Minimum="0" Maximum="255" Margin="0" MouseValidationTrigger="OnMouseMove"/>
-                    <Rectangle Height="3" Fill="{StaticResource RedBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Rectangle Height="3" Fill="{StaticResource RedBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RenderTransformOrigin="0,0">
                       <Rectangle.RenderTransform>
                         <ScaleTransform ScaleX="{Binding ValueRatio, ElementName=RedTextBox}"/>
                       </Rectangle.RenderTransform>
@@ -620,7 +620,7 @@
                   <TextBlock Margin="4,0" Text="{sd:Localize G:, Context=RGBA}" ToolTip.Tip="{sd:Localize Green, Context=ToolTip}" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False"/>
                   <StackPanel Margin="0,2">
                     <ctrl:NumericTextBox x:Name="GreenTextBox" Value="{Binding Green, RelativeSource={RelativeSource Mode=TemplatedParent}}" SelectionBrush="{StaticResource GreenBrush}" Minimum="0" Maximum="255" Margin="0" MouseValidationTrigger="OnMouseMove"/>
-                    <Rectangle Height="3" Fill="{StaticResource GreenBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Rectangle Height="3" Fill="{StaticResource GreenBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RenderTransformOrigin="0,0">
                       <Rectangle.RenderTransform>
                         <ScaleTransform ScaleX="{Binding ValueRatio, ElementName=GreenTextBox}"/>
                       </Rectangle.RenderTransform>
@@ -629,7 +629,7 @@
                   <TextBlock Margin="4,0" Text="{sd:Localize B:, Context=RGBA}" ToolTip.Tip="{sd:Localize Blue, Context=ToolTip}" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False"/>
                   <StackPanel Margin="0,2">
                     <ctrl:NumericTextBox x:Name="BlueTextBox" Value="{Binding Blue, RelativeSource={RelativeSource Mode=TemplatedParent}}" SelectionBrush="{StaticResource BlueBrush}" Minimum="0" Maximum="255" Margin="0" MouseValidationTrigger="OnMouseMove"/>
-                    <Rectangle Height="3" Fill="{StaticResource BlueBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Rectangle Height="3" Fill="{StaticResource BlueBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RenderTransformOrigin="0,0">
                       <Rectangle.RenderTransform>
                         <ScaleTransform ScaleX="{Binding ValueRatio, ElementName=BlueTextBox}"/>
                       </Rectangle.RenderTransform>
@@ -638,7 +638,7 @@
                   <TextBlock x:Name="AlphaTextBlock" Margin="4,0" Text="{sd:Localize A:, Context=RGBA}" ToolTip.Tip="{sd:Localize Alpha, Context=ToolTip}" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False"/>
                   <StackPanel Margin="0,2" x:Name="AlphaValue">
                     <ctrl:NumericTextBox x:Name="AlphaTextBox" Value="{Binding Alpha, RelativeSource={RelativeSource Mode=TemplatedParent}}" SelectionBrush="{StaticResource AlphaBrush}" Minimum="0" Maximum="255" Margin="0"/>
-                    <Rectangle Height="3" Fill="{StaticResource AlphaBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Rectangle Height="3" Fill="{StaticResource AlphaBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RenderTransformOrigin="0,0">
                       <Rectangle.RenderTransform>
                         <ScaleTransform ScaleX="{Binding ValueRatio, ElementName=AlphaTextBox}"/>
                       </Rectangle.RenderTransform>
@@ -651,7 +651,7 @@
                   <TextBlock Margin="4,0" Text="{sd:Localize H:, Context=HSB}" ToolTip.Tip="{sd:Localize Hue, Context=ToolTip}" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False"/>
                   <StackPanel Margin="0,2">
                     <ctrl:NumericTextBox x:Name="HueTextBox" Value="{Binding Hue, RelativeSource={RelativeSource Mode=TemplatedParent}}" DecimalPlaces="0" SelectionBrush="{StaticResource AlphaBrush}" Minimum="0" Maximum="360" Margin="0" MouseValidationTrigger="OnMouseMove"/>
-                    <Rectangle Height="3" Fill="{StaticResource AlphaBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Rectangle Height="3" Fill="{StaticResource AlphaBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RenderTransformOrigin="0,0">
                       <Rectangle.RenderTransform>
                         <ScaleTransform ScaleX="{Binding ValueRatio, ElementName=HueTextBox}"/>
                       </Rectangle.RenderTransform>
@@ -660,7 +660,7 @@
                   <TextBlock Margin="4,0" Text="{sd:Localize S:, Context=HSB}" ToolTip.Tip="{sd:Localize Saturation, Context=ToolTip}" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False"/>
                   <StackPanel Margin="0,2">
                     <ctrl:NumericTextBox x:Name="SaturationTextBox" Value="{Binding Saturation, RelativeSource={RelativeSource Mode=TemplatedParent}}" DecimalPlaces="0" SelectionBrush="{StaticResource AlphaBrush}" Minimum="0" Maximum="100" Margin="0" MouseValidationTrigger="OnMouseMove"/>
-                    <Rectangle Height="3" Fill="{StaticResource AlphaBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Rectangle Height="3" Fill="{StaticResource AlphaBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RenderTransformOrigin="0,0">
                       <Rectangle.RenderTransform>
                         <ScaleTransform ScaleX="{Binding ValueRatio, ElementName=SaturationTextBox}"/>
                       </Rectangle.RenderTransform>
@@ -669,7 +669,7 @@
                   <TextBlock Margin="4,0" Text="{sd:Localize B:, Context=HSB}" ToolTip.Tip="{sd:Localize Value, Context=ToolTip}" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False"/>
                   <StackPanel Margin="0,2">
                     <ctrl:NumericTextBox x:Name="BrightnessTextBox" Value="{Binding Brightness, RelativeSource={RelativeSource Mode=TemplatedParent}}" DecimalPlaces="0" SelectionBrush="{StaticResource AlphaBrush}" Minimum="0" Maximum="100" Margin="0" MouseValidationTrigger="OnMouseMove"/>
-                    <Rectangle Height="3" Fill="{StaticResource AlphaBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Rectangle Height="3" Fill="{StaticResource AlphaBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" RenderTransformOrigin="0,0">
                       <Rectangle.RenderTransform>
                         <ScaleTransform ScaleX="{Binding ValueRatio, ElementName=BrightnessTextBox}"/>
                       </Rectangle.RenderTransform>

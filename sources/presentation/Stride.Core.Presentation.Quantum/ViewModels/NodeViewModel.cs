@@ -125,6 +125,11 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
                 {
                   SetNodeValue(ConvertValue(value)); 
                 }
+
+                // Seems needed until Avalonia supports explicit updating of bindings.
+                OnValueChanging();
+                OnValueChanged();
+
             } }
 
         /// <summary>
@@ -613,9 +618,11 @@ namespace Stride.Core.Presentation.Quantum.ViewModels
         {
             if (value == null)
                 return null;
-            object convertedValue;
+            object convertedValue = null;
             if (!TypeConverterHelper.TryConvert(value, Type, out convertedValue))
+            {
                 throw new InvalidCastException("Can not convert value to the required type");
+            }
             return convertedValue;
         }
 
