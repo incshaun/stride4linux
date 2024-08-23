@@ -1383,7 +1383,7 @@
 		<DataTemplate DataType="qvm:NodeViewModel">
 	
       <Grid>
-        <ComboBox Theme="{StaticResource EnumComboBox}" PlaceholderText=""/>
+        <ComboBox Theme="{StaticResource EnumComboBox}"/>
         <TextBlock x:Name="TextBlock" VerticalAlignment="Center" Margin="9,0,30,0" HorizontalAlignment="Left" IsHitTestVisible="False"/>
       </Grid>
       <!-- <DataTemplate.Triggers>

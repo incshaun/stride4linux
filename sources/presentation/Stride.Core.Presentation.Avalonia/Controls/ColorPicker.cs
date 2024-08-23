@@ -34,7 +34,7 @@ namespace Stride.Core.Presentation.Controls
     [TemplatePart(Name = "PART_ColorPickerRenderSurface", Type = typeof(Rectangle))]
     [TemplatePart(Name = "PART_ColorPreviewRenderSurface", Type = typeof(Rectangle))]
     [TemplatePart(Name = "PART_HuePickerSelector", Type = typeof(Control))]
-    [TemplatePart(Name = "PART_HuePickerRenderSurface", Type = typeof(Rectangle))]
+    [TemplatePart(Name = "PART_HuePickerRenderSurface", Type = typeof(Canvas))]
     public sealed class ColorPicker : TemplatedControl
     {
         static ColorPicker()

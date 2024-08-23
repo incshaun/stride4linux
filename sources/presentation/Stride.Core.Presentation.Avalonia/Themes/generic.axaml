@@ -188,7 +188,21 @@
               <ScrollViewer x:Name="PART_ContentHost" 
                             Padding="{TemplateBinding Padding}"
                             IsVisible="{TemplateBinding IsFocused}">
-                <TextPresenter x:Name="PART_TextPresenter" />
+                    <TextPresenter Name="PART_TextPresenter"
+                                   CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                   CaretBrush="{TemplateBinding CaretBrush}"
+                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                   LineHeight="{TemplateBinding LineHeight}"
+                                   LetterSpacing="{TemplateBinding LetterSpacing}"
+                                   PasswordChar="{TemplateBinding PasswordChar}"
+                                   RevealPassword="{TemplateBinding RevealPassword}"
+                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                   Text="{TemplateBinding Text,Mode=TwoWay}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   TextWrapping="{TemplateBinding TextWrapping}" />
               </ScrollViewer>
               <ContentControl x:Name="Watermark" Content="{TemplateBinding WatermarkContent}"
                               ContentTemplate="{TemplateBinding WatermarkContentTemplate}" VerticalAlignment="Center"
@@ -256,7 +270,23 @@
                 </RepeatButton>
               </UniformGrid>
               <ScrollViewer x:Name="PART_ContentHost" 
-                            Padding="{TemplateBinding Padding}" />
+                            Padding="{TemplateBinding Padding}" >
+                    <TextPresenter Name="PART_TextPresenter"
+                                   CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                   CaretBrush="{TemplateBinding CaretBrush}"
+                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                   LineHeight="{TemplateBinding LineHeight}"
+                                   LetterSpacing="{TemplateBinding LetterSpacing}"
+                                   PasswordChar="{TemplateBinding PasswordChar}"
+                                   RevealPassword="{TemplateBinding RevealPassword}"
+                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                   Text="{TemplateBinding Text,Mode=TwoWay}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   TextWrapping="{TemplateBinding TextWrapping}" />                
+              </ScrollViewer>
             </DockPanel>
           </ListBox>
           <!-- <ControlTemplate.Triggers>

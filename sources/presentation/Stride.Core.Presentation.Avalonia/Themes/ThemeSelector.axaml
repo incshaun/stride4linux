@@ -385,7 +385,7 @@
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition Width="16" />
       </Grid.ColumnDefinitions>
-      <Rectangle Grid.ColumnSpan="2" HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch" Fill="{DynamicResource DropdownButtonBackgroundBrush}" Stroke="{DynamicResource NormalBorderBrush}" />
+      <Rectangle Grid.ColumnSpan="2" HorizontalAlignment="Stretch" x:Name="Rectangle" VerticalAlignment="Stretch" Fill="{DynamicResource DropdownButtonBackgroundBrush}" Stroke="{DynamicResource NormalBorderBrush}" Height="20" />
       <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{DynamicResource ComboBoxBackground}" Stroke="{DynamicResource NormalBorderBrush}" />
       <Border Margin="1" Grid.Column="1" CornerRadius="2" Background="{DynamicResource ComboToggleButtonBackground}" x:Name="border" />
       <Path Grid.Column="1" HorizontalAlignment="Center" x:Name="Arrow" VerticalAlignment="Center" Data="M0.5,0.5 L3,6.5 5.5,0.5" Stroke="{DynamicResource TextBrush}" Margin="0" Height="5.5" StrokeThickness="2" Stretch="Fill" Width="9.8" />
@@ -428,13 +428,12 @@
 --></ControlTemplate>
 
   <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
-    <Grid x:Name="grid">
-      <ToggleButton Grid.Column="2" Template="{DynamicResource ComboBoxToggleButton}" x:Name="ToggleButton" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" />
-      <ContentPresenter HorizontalAlignment="Left" Margin="3,2,23,2" x:Name="ContentSite" VerticalAlignment="Center" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding ItemTemplate}"  IsHitTestVisible="False" />
-	<!-- <ContentPresenter HorizontalAlignment="Left" Margin="3,2,23,2" x:Name="ContentSite" VerticalAlignment="Center" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding ItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplate}" IsHitTestVisible="False" /> -->
-      <TextBox IsVisible="false" Template="{DynamicResource ComboBoxTextBox}" HorizontalAlignment="Left" Margin="3,2,23,2" x:Name="PART_EditableTextBox" Theme="{x:Null}" VerticalAlignment="Center" Focusable="True" Background="{TemplateBinding Background}"  BorderBrush="{DynamicResource NormalBorderBrush}" Foreground="{DynamicResource TextBrush}" />
-      <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="PART_Popup" Focusable="False"  >
-        <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}"  x:Name="DropDown" >
+    <Grid x:Name="grid" ColumnDefinitions="*,Auto,Auto">
+      <ToggleButton Grid.Column="2" Template="{DynamicResource ComboBoxToggleButton}" x:Name="ToggleButton" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" HorizontalAlignment="Right" />
+      <ContentPresenter IsVisible="{Binding $parent[ComboBox].SelectedItem, Converter={x:Static ObjectConverters.IsNotNull}}" HorizontalAlignment="Left" Margin="3,2,23,2" x:Name="ContentSite" VerticalAlignment="Center" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"  IsHitTestVisible="False" />
+      <TextBox IsVisible="{Binding $parent[ComboBox].SelectedItem, Converter={x:Static ObjectConverters.IsNull}}" Template="{DynamicResource ComboBoxTextBox}" HorizontalAlignment="Left" Margin="3,2,23,2" x:Name="PART_EditableTextBox" Theme="{x:Null}" VerticalAlignment="Center" Focusable="True" Background="{TemplateBinding Background}"  BorderBrush="{DynamicResource NormalBorderBrush}" Foreground="{DynamicResource TextBrush}" Text="{Binding NodeValue, Converter={sd:EnumToDisplayName}}" />
+      <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" x:Name="PART_Popup" Focusable="False" IsLightDismissEnabled="True" >
+        <Grid MaxHeight="{TemplateBinding MaxDropDownHeight}" Width="{TemplateBinding Width}" x:Name="DropDown" >
           <Border x:Name="DropDownBorder" Background="{DynamicResource ControlBackgroundBrush}" CornerRadius="3"/>
           <ScrollViewer Margin="1" Theme="{DynamicResource NuclearScrollViewer}"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Foreground="{StaticResource ActiveCaptionTextBrushKey}">
             <ItemsPresenter Name="PART_ItemsPresenter" Margin="{DynamicResource ComboBoxDropdownContentMargin}" ItemsPanel="{TemplateBinding ItemsPanel}" />
@@ -470,7 +469,24 @@
 --></ControlTemplate>
 
   <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
+    <Panel>
     <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+    <TextPresenter Name="PART_TextPresenter"
+               CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+               CaretBrush="{TemplateBinding CaretBrush}"
+               CaretIndex="{TemplateBinding CaretIndex}"
+               LineHeight="{TemplateBinding LineHeight}"
+               LetterSpacing="{TemplateBinding LetterSpacing}"
+               PasswordChar="{TemplateBinding PasswordChar}"
+               RevealPassword="{TemplateBinding RevealPassword}"
+               SelectionBrush="{TemplateBinding SelectionBrush}"
+               SelectionEnd="{TemplateBinding SelectionEnd}"
+               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+               SelectionStart="{TemplateBinding SelectionStart}"
+               Text="{TemplateBinding Text,Mode=TwoWay}"
+               TextAlignment="{TemplateBinding TextAlignment}"
+               TextWrapping="{TemplateBinding TextWrapping}" />
+  </Panel>
   </ControlTemplate>
 
   <ControlTheme x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
@@ -3082,7 +3098,7 @@
       	</Style>
 </ControlTheme>
 
-  <ControlTheme x:Key="ItemsControl.ComboBoxStyleKey" TargetType="{x:Type ComboBox}">
+  <ControlTheme x:Key="ItemsControl.ComboBoxStyleKey" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
     
     <Setter Property="Background" Value="{DynamicResource ComboBoxBackground}"/>
     <Setter Property="Template" Value="{DynamicResource ComboBoxTemplate}" />

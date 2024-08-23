@@ -1276,7 +1276,7 @@ def translateTags (contents):
   contents = re.sub ("{TemplateBinding ScrollableWidth}", r"{TemplateBinding Extent}", contents)
 
   contents = re.sub ("{TemplateBinding ItemTemplateSelector}", r"{TemplateBinding ItemTemplate}", contents)
-  contents = re.sub ("{TemplateBinding SelectionBoxItemTemplate}", r"{TemplateBinding ItemTemplate}", contents)
+  #contents = re.sub ("{TemplateBinding SelectionBoxItemTemplate}", r"{TemplateBinding ItemTemplate}", contents)
   contents = re.sub ("IsReadOnly=\"{TemplateBinding IsReadOnly}\"", r"", contents) # should limit this to templates that lack this property, such as combobox.
   contents = re.sub ("Padding=\"{TemplateBinding Control.Padding}\"", r"", contents)
   contents = re.sub ("Padding=\"0,3\"", r"", contents)
