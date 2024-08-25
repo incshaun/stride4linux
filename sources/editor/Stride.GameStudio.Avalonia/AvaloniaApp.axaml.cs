@@ -62,6 +62,9 @@ public partial class AvaloniaApp : Application
 //         System.Environment.Exit(1);
         
         Console.WriteLine ("Initializing App");
+        
+        Stride.Core.Assets.Editor.Avalonia.Module.Initialize ();
+        
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -224,7 +227,6 @@ public partial class AvaloniaApp : Application
                 {
                     // Environment.GetCommandLineArgs correctly process arguments regarding the presence of '\' and '"'
                     var args = Environment.GetCommandLineArgs().Skip(1).ToList();
-                  Console.WriteLine ("Args: " + args + " - " + args[0]);
 
                     // Handle arguments
                     for (var i = 0; i < args.Count; i++)

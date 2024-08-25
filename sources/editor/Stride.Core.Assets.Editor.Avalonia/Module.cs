@@ -7,7 +7,7 @@ using Stride.Core.Translation;
 using Stride.Core.Translation.Providers;
 using Avalonia;
 
-namespace Stride.Core.Assets.Editor
+namespace Stride.Core.Assets.Editor.Avalonia
 {
     internal class Module
     {
@@ -15,6 +15,9 @@ namespace Stride.Core.Assets.Editor
         public static void Initialize()
         {
             Presentation.Quantum.ViewModels.NodeViewModel.UnsetValue = AvaloniaProperty.UnsetValue;
+            
+            ResourceThumbnailData.Initialize ();
+            BitmapThumbnailData.Initialize ();
         }
     }
 }
