@@ -997,7 +997,12 @@
           <Rectangle  x:Name="ContentFocusVisualElement"  IsHitTestVisible="false" Opacity="0" Stroke="{DynamicResource HoverTextBorderBrush}" StrokeThickness="1" Margin="1" />
         </Grid>
       </Panel>
-      <ContentPresenter RecognizesAccessKey="True" Margin="5,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
+      <ContentPresenter x:Name="PART_ContentPresenter"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                Content="{TemplateBinding Content}"
+                Margin="5,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"
+                RecognizesAccessKey="True"
+                TextWrapping="Wrap" />
     </Panel>
     <!-- <ControlTemplate.Triggers>
       <Trigger Property="IsFocused" Value="True">

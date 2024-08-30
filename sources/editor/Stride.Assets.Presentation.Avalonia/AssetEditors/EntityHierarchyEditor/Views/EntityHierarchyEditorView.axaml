@@ -511,7 +511,7 @@
 
       <DockPanel Grid.Column="2">
         <DockPanel.Resources>
-<!--           <ControlTheme x:Key="{x:Type Separator}" TargetType="{x:Type Separator}" BasedOn="{StaticResource {x:Static ItemsControl.SeparatorStyleKey}}"></ControlTheme> -->
+          <ControlTheme x:Key="{x:Type Separator}" TargetType="{x:Type Separator}" BasedOn="{StaticResource ItemsControl.SeparatorStyleKey}"></ControlTheme>
         </DockPanel.Resources>
         <Border Background="{StaticResource BackgroundBrush}" DockPanel.Dock="Top" Padding="8,2">
           <DockPanel>
