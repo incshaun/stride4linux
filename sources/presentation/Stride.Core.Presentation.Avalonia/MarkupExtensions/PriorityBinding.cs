@@ -119,7 +119,8 @@ namespace Stride.Core.Presentation.MarkupExtensions
             _bindingList.Add((Binding) child);
         }
 
-        // FIXME: waiting for some test data.
+        // FIXME: waiting for some test data. Fails.
+        // Can potentially override IBinding2, but not until avalonia 12, and hope that the interface stops being internal.
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             foreach (Binding binding in _bindingList)

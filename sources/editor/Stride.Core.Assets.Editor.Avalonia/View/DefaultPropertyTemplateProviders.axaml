@@ -1701,11 +1701,16 @@
   <sd:DefaultTemplateProvider x:Key="ObjectPropertyTemplateProvider" edvw:PropertyViewHelper.TemplateCategory="PropertyEditor" OverrideRule="None">
 	<sd:DefaultTemplateProvider.Template>
 		<DataTemplate DataType="qvm:NodeViewModel">
-	
+      <StackPanel Orientation="Horizontal">	
+<!--        FIXME: need to fix prioritybinding, but until this is possible, just show all three options.-->
+      <TextBlock Text="{Binding AttributeDisplayName, Mode=OneWay}"/>
+      <TextBlock Text=" - "/>
+      <TextBlock Text="{Binding Type, Mode=OneWay, StringFormat={sd:Localize {}{0} (Not supported)}, Converter={sd:NotSupportedTypeToTypeName}}"/>
+      <TextBlock Text=" - "/>
+      <TextBlock Text="{Binding NodeValue, Mode=OneWay, Converter={sd:ObjectToTypeName}}"/>
 <!--      <TextBlock Margin="2,0" VerticalAlignment="Center" x:Name="DefaultTextBlock"
-                 Text="{Binding {Binding AttributeDisplayName, Mode=OneWay}, {Binding Type, Mode=OneWay, StringFormat={sd:Localize {}{0} (Not supported)}, Converter={sd:NotSupportedTypeToTypeName}}, {Binding NodeValue, Mode=OneWay, Converter={sd:ObjectToTypeName}}}"/>-->
-      <TextBlock Margin="2,0" VerticalAlignment="Center" x:Name="DefaultTextBlock"
-                 Text="{Binding AttributeDisplayName, Mode=OneWay}"/>
+                 Text="{sd:PriorityBinding {Binding AttributeDisplayName, Mode=OneWay}, {Binding Type, Mode=OneWay, StringFormat={sd:Localize {}{0} (Not supported)}, Converter={sd:NotSupportedTypeToTypeName}}, {Binding NodeValue, Mode=OneWay, Converter={sd:ObjectToTypeName}}}"/>-->
+      </StackPanel>
       <!-- <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding NodeValue}" Value="{x:Static qvm:NodeViewModel.DifferentValues}">
           <Setter TargetName="DefaultTextBlock" Property="Text" Value="{sd:Localize (Different values)}"/>

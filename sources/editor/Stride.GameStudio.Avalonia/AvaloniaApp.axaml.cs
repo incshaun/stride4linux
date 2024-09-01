@@ -44,6 +44,7 @@ using Stride.Metrics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Stride.Core.Presentation.Quantum.ViewModels;
+using Stride.Core.Presentation.ValueConverters;
 
 namespace Stride.GameStudio.Avalonia;
 
@@ -64,6 +65,8 @@ public partial class AvaloniaApp : Application
         Console.WriteLine ("Initializing App");
         
         Stride.Core.Assets.Editor.Avalonia.Module.Initialize ();
+        Color4TypeConverter.Initialize ();
+        Color3TypeConverter.Initialize ();
         
         AvaloniaXamlLoader.Load(this);
     }
