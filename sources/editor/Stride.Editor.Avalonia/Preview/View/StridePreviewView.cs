@@ -33,16 +33,16 @@ namespace Stride.Editor.Preview.View
             if (strideViewPresenter != null && builder != null)
             {
                 var strideView = builder.GetStrideView();
-                Console.WriteLine ("App Temp " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent );
+//                 Console.WriteLine ("App Temp " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent );
 //                strideViewPresenter.Content = null;
 //                strideViewPresenter.UpdateLayout ();
-                Console.WriteLine ("App Temp2 " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent + " - " + (strideViewPresenter != ((Control) strideView).Parent) + " - " + strideViewPresenter);
+//                 Console.WriteLine ("App Temp2 " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent + " - " + (strideViewPresenter != ((Control) strideView).Parent) + " - " + strideViewPresenter);
 //                ((Control) strideView).Parent = null;
 //                if (((Control) strideView).Parent == null) // already made the content.
                 {
                     strideViewPresenter.Content = strideView;
                 }
-                Console.WriteLine ("App Temp3 " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent );
+//                 Console.WriteLine ("App Temp3 " + strideView + " - " + strideViewPresenter.Content + " - " + ((Control) strideView).Parent );
             }
 
  //           UpdateStrideView();
