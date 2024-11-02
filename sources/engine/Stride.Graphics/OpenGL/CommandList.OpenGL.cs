@@ -1282,8 +1282,7 @@ if (!init)
 
 // Console.WriteLine ("MapSubresource C ");                
 
-            var buffer = resource as Buffer;
-            if (buffer != null)
+            if (resource is Buffer buffer)
             {
                 if (lengthInBytes == 0)
                     lengthInBytes = buffer.Description.SizeInBytes;
@@ -1294,34 +1293,45 @@ if (!init)
                 GL.BindBuffer(buffer.BufferTarget, buffer.BufferId);
 // Console.WriteLine ("MapSubresource E ");                
 
-#if !STRIDE_GRAPHICS_API_OPENGLES
-                //if (mapMode != MapMode.WriteDiscard && mapMode != MapMode.WriteNoOverwrite)
-                //    mapResult = GL.MapBuffer(buffer.bufferTarget, mapMode.ToOpenGL());
-                //else
-#endif
-// Console.WriteLine ("MapSubresource F " + mapMode + " -" +buffer.BufferTarget + "-"+ buffer.Description.SizeInBytes+ "-"+ IntPtr.Zero+ "-"+ buffer.BufferUsageHint);                
+// <<<<<<< HEAD
+// #if !STRIDE_GRAPHICS_API_OPENGLES
+//                 //if (mapMode != MapMode.WriteDiscard && mapMode != MapMode.WriteNoOverwrite)
+//                 //    mapResult = GL.MapBuffer(buffer.bufferTarget, mapMode.ToOpenGL());
+//                 //else
+// #endif
+// // Console.WriteLine ("MapSubresource F " + mapMode + " -" +buffer.BufferTarget + "-"+ buffer.Description.SizeInBytes+ "-"+ IntPtr.Zero+ "-"+ buffer.BufferUsageHint);                
+//                 {
+//                     // Orphan the buffer (let driver knows we don't need it anymore)
+//                     if (mapMode == MapMode.WriteDiscard)
+//                     {
+//                         doNotWait = true;
+//   //                     GL.BufferData(buffer.BufferTarget, (UIntPtr)buffer.Description.SizeInBytes, IntPtr.Zero, buffer.BufferUsageHint);
+//                     }
+// // Console.WriteLine ("MapSubresource G ");                
+// 
+//                     var unsynchronized = doNotWait && mapMode != MapMode.Read && mapMode != MapMode.ReadWrite;
+// 
+//                     mapResult = (IntPtr)GL.MapBufferRange(buffer.BufferTarget, (IntPtr)offsetInBytes, (UIntPtr)lengthInBytes, mapMode.ToOpenGLMask() | (unsynchronized ? MapBufferAccessMask.MapUnsynchronizedBit : 0));
+// // Console.WriteLine ("MapSubresource H ");                
+//                     
+// =======
+                // Orphan the buffer (let driver knows we don't need it anymore)
+                if (mapMode == MapMode.WriteDiscard)
                 {
-                    // Orphan the buffer (let driver knows we don't need it anymore)
-                    if (mapMode == MapMode.WriteDiscard)
-                    {
-                        doNotWait = true;
-  //                     GL.BufferData(buffer.BufferTarget, (UIntPtr)buffer.Description.SizeInBytes, IntPtr.Zero, buffer.BufferUsageHint);
-                    }
-// Console.WriteLine ("MapSubresource G ");                
-
-                    var unsynchronized = doNotWait && mapMode != MapMode.Read && mapMode != MapMode.ReadWrite;
-
-                    mapResult = (IntPtr)GL.MapBufferRange(buffer.BufferTarget, (IntPtr)offsetInBytes, (UIntPtr)lengthInBytes, mapMode.ToOpenGLMask() | (unsynchronized ? MapBufferAccessMask.MapUnsynchronizedBit : 0));
-// Console.WriteLine ("MapSubresource H ");                
-                    
+                    doNotWait = true;
+                    GL.BufferData(buffer.BufferTarget, (uint)buffer.Description.SizeInBytes, null, buffer.BufferUsageHint);
+// >>>>>>> master
                 }
+
+                var unsynchronized = doNotWait && mapMode != MapMode.Read && mapMode != MapMode.ReadWrite;
+
+                mapResult = (IntPtr)GL.MapBufferRange(buffer.BufferTarget, offsetInBytes, (UIntPtr)lengthInBytes, mapMode.ToOpenGLMask() | (unsynchronized ? MapBufferAccessMask.UnsynchronizedBit : 0));
 
                 return new MappedResource(resource, subResourceIndex, new DataBox { DataPointer = mapResult, SlicePitch = 0, RowPitch = 0 });
             }
 // Console.WriteLine ("MapSubresource I ");                
 
-            var texture = resource as Texture;
-            if (texture != null)
+            if (resource is Texture texture)
             {
                 if (lengthInBytes == 0)
                     lengthInBytes = texture.ComputeSubresourceSize(subResourceIndex);
@@ -1658,7 +1668,11 @@ if (!init)
                 if (depthStencilBuffer != null)
                 {
                     if (expectedWidth != depthStencilBuffer.Width || expectedHeight != depthStencilBuffer.Height)
-                        throw new Exception("Depth buffer is not the same size as the render target");
+                    {
+//                         throw new Exception("Depth buffer is not the same size as the render target");
+                        Console.WriteLine("Depth buffer is not the same size as the render target");
+                        return;
+                    }
                 }
                 for (int i = 1; i < renderTargetCount; ++i)
                 {
